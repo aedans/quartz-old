@@ -1,0 +1,77 @@
+Found FnDeclaration(name=main, args=[], rType=int)
+Found Declaration(name=one, type=long, mutable=false)
+Found NumberLiteral(value=1, type=1)
+Found Declaration(name=two, type=int, mutable=false)
+Found NumberLiteral(value=2, type=2)
+Found Declaration(name=three, type=short, mutable=false)
+Found NumberLiteral(value=3, type=3)
+Found Declaration(name=four, type=char, mutable=false)
+Found NumberLiteral(value=4, type=4)
+Found Declaration(name=result, type=null, mutable=false)
+Found FnCall(name=addFour)
+Found Identifier(name=one)
+Found Identifier(name=two)
+Found Identifier(name=three)
+Found Identifier(name=four)
+Found Return
+Found NumberLiteral(value=0, type=0)
+Found FnDeclaration(name=addFour, args=[(one, char), (two, short), (three, int), (four, long)], rType=double)
+Found Return
+Found FnCall(name=add)
+Found FnCall(name=add)
+Found Identifier(name=one)
+Found Identifier(name=four)
+Found FnCall(name=add)
+Found Identifier(name=three)
+Found Identifier(name=two)
+Found FnDeclaration(name=add, args=[(one, short), (two, int)], rType=long)
+Found Return
+Found InlineC
+
+Program
+|   FnDeclaration(name=main, args=[], rType=int)
+|   |   Declaration(name=one, type=long, mutable=false)
+|   |   |   NumberLiteral(value=1, type=1)
+|   |   Declaration(name=two, type=int, mutable=false)
+|   |   |   NumberLiteral(value=2, type=2)
+|   |   Declaration(name=three, type=short, mutable=false)
+|   |   |   NumberLiteral(value=3, type=3)
+|   |   Declaration(name=four, type=char, mutable=false)
+|   |   |   NumberLiteral(value=4, type=4)
+|   |   Declaration(name=result, type=null, mutable=false)
+|   |   |   FnCall(name=addFour)
+|   |   |   |   Identifier(name=one)
+|   |   |   |   Identifier(name=two)
+|   |   |   |   Identifier(name=three)
+|   |   |   |   Identifier(name=four)
+|   |   Return
+|   |   |   NumberLiteral(value=0, type=0)
+|   FnDeclaration(name=addFour, args=[(one, char), (two, short), (three, int), (four, long)], rType=double)
+|   |   Return
+|   |   |   FnCall(name=add)
+|   |   |   |   FnCall(name=add)
+|   |   |   |   |   Identifier(name=one)
+|   |   |   |   |   Identifier(name=four)
+|   |   |   |   FnCall(name=add)
+|   |   |   |   |   Identifier(name=three)
+|   |   |   |   |   Identifier(name=two)
+|   FnDeclaration(name=add, args=[(one, short), (two, int)], rType=long)
+|   |   Return
+|   |   |   InlineC
+
+main(): int
+    val one: long = (long) (1: int)
+    val two: int = 2: int
+    val three: short = (short) (3: int)
+    val four: char = (char) (4: int)
+    val result: double = addFour((char) (one: long), (short) (two: int), (int) (three: short), (long) (four: char)): double
+    return 0: int
+
+addFour(one: char, two: short, three: int, four: long): double
+    return (double) (add((short) (add((short) (one: char), (int) (four: long)): long), (int) (add((short) (three: int), (int) (two: short)): long)): long)
+
+add(one: short, two: int): long
+    return (long) (%one + two%)
+
+
+Compiled in 66ms

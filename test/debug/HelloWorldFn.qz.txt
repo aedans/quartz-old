@@ -1,0 +1,35 @@
+Found FnDeclaration(name=main, args=[], rType=int)
+Found FnCall(name=print)
+Found FnCall(name=helloWorld)
+Found Return
+Found NumberLiteral(value=0, type=0)
+Found FnDeclaration(name=helloWorld, args=[], rType=char[])
+Found Return
+Found StringLiteral(value=Hello, World!)
+Found FnDeclaration(name=print, args=[(msg, char[])], rType=void)
+Found InlineC
+
+Program
+|   FnDeclaration(name=main, args=[], rType=int)
+|   |   FnCall(name=print)
+|   |   |   FnCall(name=helloWorld)
+|   |   Return
+|   |   |   NumberLiteral(value=0, type=0)
+|   FnDeclaration(name=helloWorld, args=[], rType=char[])
+|   |   Return
+|   |   |   StringLiteral(value=Hello, World!)
+|   FnDeclaration(name=print, args=[(msg, char[])], rType=void)
+|   |   InlineC
+
+main(): int
+    print(helloWorld(): char*): void
+    return 0: int
+
+helloWorld(): char*
+    return Hello, World!: char*
+
+print(msg: char*): void
+    %printf(msg)%
+
+
+Compiled in 61ms

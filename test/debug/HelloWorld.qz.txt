@@ -1,0 +1,28 @@
+Found InlineC
+Found FnDeclaration(name=main, args=[], rType=int)
+Found FnCall(name=print)
+Found StringLiteral(value=Hello, World!)
+Found Return
+Found NumberLiteral(value=0, type=0)
+Found FnDeclaration(name=print, args=[(msg, char[])], rType=void)
+Found InlineC
+
+Program
+|   InlineC
+|   FnDeclaration(name=main, args=[], rType=int)
+|   |   FnCall(name=print)
+|   |   |   StringLiteral(value=Hello, World!)
+|   |   Return
+|   |   |   NumberLiteral(value=0, type=0)
+|   FnDeclaration(name=print, args=[(msg, char[])], rType=void)
+|   |   InlineC
+
+main(): int
+    print(Hello, World!: char*): void
+    return 0: int
+
+print(msg: char*): void
+    %printf(msg)%
+
+
+Compiled in 63ms

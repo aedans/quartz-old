@@ -1,0 +1,11 @@
+%#include <stdio>%
+
+fn main(): int {
+    val helloWorld = "Hello, World!"
+    print(helloWorld)
+    return 0
+}
+
+fn print(msg: char[]) {
+    %printf(msg)%
+}

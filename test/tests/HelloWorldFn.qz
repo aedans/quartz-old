@@ -1,0 +1,12 @@
+fn main(): int {
+    print(helloWorld())
+    return 0
+}
+
+fn helloWorld(): char[] {
+    return "Hello, World!"
+}
+
+fn print(msg: char[]) {
+    %printf(msg)%
+}

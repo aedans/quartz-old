@@ -1,0 +1,16 @@
+fn main(): int {
+    val one: long = 1
+    val two: int = 2
+    val three: short = 3
+    val four: char = 4
+    val result = addFour(one, two, three, four)
+    return 0
+}
+
+fn addFour(one: char, two: short, three: int, four: long): double {
+    return add(add(one, four), add(three, two))
+}
+
+fn add(one: short, two: int): long {
+    return %one + two%
+}

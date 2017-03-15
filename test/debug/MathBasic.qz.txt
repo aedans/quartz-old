@@ -1,0 +1,86 @@
+Found FnDeclaration(name=main, args=[], rType=int)
+Found Declaration(name=added, type=null, mutable=false)
+Found FnCall(name=add)
+Found NumberLiteral(value=1, type=1)
+Found NumberLiteral(value=2, type=2)
+Found Declaration(name=subtracted, type=null, mutable=false)
+Found FnCall(name=sub)
+Found NumberLiteral(value=2, type=2)
+Found NumberLiteral(value=1, type=1)
+Found Declaration(name=multiplied, type=null, mutable=false)
+Found FnCall(name=mlt)
+Found Identifier(name=added)
+Found Identifier(name=subtracted)
+Found Declaration(name=divided, type=null, mutable=false)
+Found FnCall(name=div)
+Found Identifier(name=subtracted)
+Found Identifier(name=added)
+Found Return
+Found NumberLiteral(value=0, type=0)
+Found FnDeclaration(name=add, args=[(d1, double), (d2, double)], rType=double)
+Found Return
+Found InlineC
+Found FnDeclaration(name=sub, args=[(d1, double), (d2, double)], rType=double)
+Found Return
+Found InlineC
+Found FnDeclaration(name=mlt, args=[(d1, double), (d2, double)], rType=double)
+Found Return
+Found InlineC
+Found FnDeclaration(name=div, args=[(d1, double), (d2, double)], rType=double)
+Found Return
+Found InlineC
+
+Program
+|   FnDeclaration(name=main, args=[], rType=int)
+|   |   Declaration(name=added, type=null, mutable=false)
+|   |   |   FnCall(name=add)
+|   |   |   |   NumberLiteral(value=1, type=1)
+|   |   |   |   NumberLiteral(value=2, type=2)
+|   |   Declaration(name=subtracted, type=null, mutable=false)
+|   |   |   FnCall(name=sub)
+|   |   |   |   NumberLiteral(value=2, type=2)
+|   |   |   |   NumberLiteral(value=1, type=1)
+|   |   Declaration(name=multiplied, type=null, mutable=false)
+|   |   |   FnCall(name=mlt)
+|   |   |   |   Identifier(name=added)
+|   |   |   |   Identifier(name=subtracted)
+|   |   Declaration(name=divided, type=null, mutable=false)
+|   |   |   FnCall(name=div)
+|   |   |   |   Identifier(name=subtracted)
+|   |   |   |   Identifier(name=added)
+|   |   Return
+|   |   |   NumberLiteral(value=0, type=0)
+|   FnDeclaration(name=add, args=[(d1, double), (d2, double)], rType=double)
+|   |   Return
+|   |   |   InlineC
+|   FnDeclaration(name=sub, args=[(d1, double), (d2, double)], rType=double)
+|   |   Return
+|   |   |   InlineC
+|   FnDeclaration(name=mlt, args=[(d1, double), (d2, double)], rType=double)
+|   |   Return
+|   |   |   InlineC
+|   FnDeclaration(name=div, args=[(d1, double), (d2, double)], rType=double)
+|   |   Return
+|   |   |   InlineC
+
+main(): int
+    val added: double = add((double) (1: int), (double) (2: int)): double
+    val subtracted: double = sub((double) (2: int), (double) (1: int)): double
+    val multiplied: double = mlt(added: double, subtracted: double): double
+    val divided: double = div(subtracted: double, added: double): double
+    return 0: int
+
+add(d1: double, d2: double): double
+    return (double) (%d1 + d2%)
+
+sub(d1: double, d2: double): double
+    return (double) (%d1 - d2%)
+
+mlt(d1: double, d2: double): double
+    return (double) (%d1 * d2%)
+
+div(d1: double, d2: double): double
+    return (double) (%d1 / d2%)
+
+
+Compiled in 80ms
