@@ -4,4 +4,4 @@ main.c
 Quartz.iml
 lib
 src/META-INF
-out/
+a.out
