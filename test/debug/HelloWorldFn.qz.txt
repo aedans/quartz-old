@@ -32,4 +32,4 @@ print(msg: char[]): void
     %printf(msg)%
 
 
-Compiled in 66ms
+Compiled in 64ms

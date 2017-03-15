@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.nodes
 
+import quartz.compiler.generator.visitID
 import quartz.compiler.util.Type
 
 /**
@@ -21,15 +22,19 @@ class FnNode(val name: String, val args: List<Pair<String, Type>>, val returnTyp
 
     fun visit(builder: StringBuilder) {
         returnType.visit(builder)
-        builder.append(" $name(")
+        builder.append(" ")
+        name.visitID(builder)
+        builder.append("(")
         for (arg in args.dropLast(1)) {
             arg.second.visit(builder)
-            builder.append(" ${arg.first}")
+            builder.append(" ")
+            arg.first.visitID(builder)
             builder.append(", ")
         }
         if (!args.isEmpty()) {
             args.last().second.visit(builder)
-            builder.append(" ${args.last().first}")
+            builder.append(" ")
+            args.last().first.visitID(builder)
         }
 
         builder.append(")")

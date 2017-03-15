@@ -83,4 +83,4 @@ div(d1: double, d2: double): double
     return (double) (%d1 / d2%)
 
 
-Compiled in 81ms
+Compiled in 73ms

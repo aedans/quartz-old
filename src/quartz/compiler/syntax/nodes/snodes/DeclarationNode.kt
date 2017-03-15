@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.nodes.snodes
 
+import quartz.compiler.generator.visitID
 import quartz.compiler.syntax.nodes.ExpressionNode
 import quartz.compiler.syntax.nodes.StatementNode
 import quartz.compiler.util.Type
@@ -15,7 +16,9 @@ class DeclarationNode(val name: String, val type: Type, val mutable: Boolean, va
 
     override fun visit(builder: StringBuilder) {
         type.visit(builder)
-        builder.append(" $name = ")
+        builder.append(" ")
+        name.visitID(builder)
+        builder.append(" = ")
         expression.visit(builder)
     }
 }

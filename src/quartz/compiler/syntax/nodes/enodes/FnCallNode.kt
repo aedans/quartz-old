@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.nodes.enodes
 
+import quartz.compiler.generator.visitID
 import quartz.compiler.syntax.nodes.ExpressionNode
 import quartz.compiler.syntax.nodes.StatementNode
 import quartz.compiler.util.Type
@@ -14,7 +15,8 @@ class FnCallNode(val name: String, val args: List<ExpressionNode>, override val 
     }
 
     override fun visit(builder: StringBuilder) {
-        builder.append("$name(")
+        name.visitID(builder)
+        builder.append("(")
         for (arg in args.dropLast(1)) {
             arg.visit(builder)
             builder.append(", ")
