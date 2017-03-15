@@ -61,7 +61,7 @@ single statement C functions. (ex: return if-else)
 Here, the "theWorld'sGreeting" function would compile to
 
 <pre>
-char[] theWorld39sGreeting() { 
+char* theWorld39sGreeting() { 
     return "Hello, World!" 
 }
 </pre>
