@@ -22,12 +22,12 @@ Program
 |   |   InlineC
 
 main(): int
-    val helloWorld: char* = Hello, World!: char*
-    print(helloWorld: char*): void
+    val helloWorld: char[] = Hello, World!: char[]
+    print(helloWorld: char[]): void
     return 0: int
 
-print(msg: char*): void
+print(msg: char[]): void
     %printf(msg)%
 
 
-Compiled in 150ms
+Compiled in 70ms

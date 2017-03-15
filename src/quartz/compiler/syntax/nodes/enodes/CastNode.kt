@@ -13,7 +13,9 @@ class CastNode(val expressionNode: ExpressionNode, override val evalType: Type) 
     }
 
     override fun visit(builder: StringBuilder) {
-        builder.append("($evalType) (")
+        builder.append("(")
+        evalType.visit(builder)
+        builder.append(") (")
         expressionNode.visit(builder)
         builder.append(")")
     }

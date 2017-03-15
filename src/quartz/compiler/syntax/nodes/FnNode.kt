@@ -20,14 +20,16 @@ class FnNode(val name: String, val args: List<Pair<String, Type>>, val returnTyp
     }
 
     fun visit(builder: StringBuilder) {
-        builder.append("$returnType ")
-        builder.append("$name(")
+        returnType.visit(builder)
+        builder.append(" $name(")
         for (arg in args.dropLast(1)) {
-            builder.append("${arg.second} ${arg.first}")
+            arg.second.visit(builder)
+            builder.append(" ${arg.first}")
             builder.append(", ")
         }
         if (!args.isEmpty()) {
-            builder.append("${args.last().second} ${args.last().first}")
+            args.last().second.visit(builder)
+            builder.append(" ${args.last().first}")
         }
 
         builder.append(")")

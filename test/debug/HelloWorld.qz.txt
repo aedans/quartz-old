@@ -18,11 +18,11 @@ Program
 |   |   InlineC
 
 main(): int
-    print(Hello, World!: char*): void
+    print(Hello, World!: char[]): void
     return 0: int
 
-print(msg: char*): void
+print(msg: char[]): void
     %printf(msg)%
 
 
-Compiled in 63ms
+Compiled in 65ms

@@ -12,7 +12,11 @@ data class QArray(val type: Type) : Type {
     }
 
     override fun toString(): String {
-        return "$type*"
+        return "$type[]"
+    }
+
+    override fun visit(builder: StringBuilder) {
+        builder.append("$type*")
     }
 
     override fun equals(other: Any?): Boolean {

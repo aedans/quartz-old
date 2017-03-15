@@ -6,4 +6,8 @@ package quartz.compiler.util
 
 interface Type {
     fun canCastTo(type: Type): Boolean
+
+    fun visit(builder: StringBuilder) {
+        builder.append(toString())
+    }
 }

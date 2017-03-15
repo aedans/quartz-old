@@ -14,7 +14,8 @@ class DeclarationNode(val name: String, val type: Type, val mutable: Boolean, va
     }
 
     override fun visit(builder: StringBuilder) {
-        builder.append("$type $name = ")
+        type.visit(builder)
+        builder.append(" $name = ")
         expression.visit(builder)
     }
 }

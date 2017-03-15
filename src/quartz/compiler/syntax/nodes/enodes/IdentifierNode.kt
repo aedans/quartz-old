@@ -13,6 +13,6 @@ class IdentifierNode(val name: String, override val evalType: Type) : Expression
     }
 
     override fun visit(builder: StringBuilder) {
-        builder.append("$name")
+        builder.append(name)
     }
 }

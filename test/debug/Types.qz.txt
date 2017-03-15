@@ -74,4 +74,4 @@ add(one: short, two: int): long
     return (long) (%one + two%)
 
 
-Compiled in 66ms
+Compiled in 82ms

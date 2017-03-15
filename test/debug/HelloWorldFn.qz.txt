@@ -22,14 +22,14 @@ Program
 |   |   InlineC
 
 main(): int
-    print(helloWorld(): char*): void
+    print(helloWorld(): char[]): void
     return 0: int
 
-helloWorld(): char*
-    return Hello, World!: char*
+helloWorld(): char[]
+    return Hello, World!: char[]
 
-print(msg: char*): void
+print(msg: char[]): void
     %printf(msg)%
 
 
-Compiled in 61ms
+Compiled in 66ms
