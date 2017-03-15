@@ -14,7 +14,7 @@ import quartz.compiler.tokenizer.TokenType
 
 val fnCallParser: Parser = {
     tokens: TokenIterator, superNode: ParseNode -> tokens.parse {
-        if (!peek().equals(TokenType.IDENTIFIER) || !peek(1).equals(TokenType.SYMBOL, "(")) {
+        if (!hasNext(2) || !peek().equals(TokenType.IDENTIFIER) || !peek(1).equals(TokenType.SYMBOL, "(")) {
             false
         } else {
             val name = next().value // No need to double check

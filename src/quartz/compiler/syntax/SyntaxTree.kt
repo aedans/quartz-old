@@ -1,7 +1,7 @@
 package quartz.compiler.syntax
 
 import quartz.compiler.syntax.nodes.FnNode
-import quartz.compiler.util.symboltable.GlobalSymbolTable
+import quartz.compiler.syntax.symboltable.GlobalSymbolTable
 
 /**
  * Created by Aedan Smith.

@@ -2,6 +2,7 @@ package quartz.compiler.parser.parsers
 
 import quartz.compiler.parser.*
 import quartz.compiler.parser.parsers.parsenodes.FnDeclaration
+import quartz.compiler.parser.parsers.parsenodes.Return
 import quartz.compiler.syntax.type.types.Primitives
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
@@ -24,9 +25,20 @@ val fnDeclarationParser = {
 
             println("Found $functionNode")
 
-            next().verify { it.equals(TokenType.SYMBOL, "{") }
-            statementParsers.parse(tokens, functionNode, { tokens -> !tokens.peek().equals(TokenType.SYMBOL, "}")})
-            next() // No need to double check
+            when {
+                peek().equals(TokenType.SYMBOL, "{") -> {
+                    next() // No need to double check
+                    statementParsers.parse(tokens, functionNode, { tokens -> !tokens.peek().equals(TokenType.SYMBOL, "}") })
+                    next() // No need to double check
+                }
+                peek().equals(TokenType.SYMBOL, "=") -> {
+                    next() // no need to double check
+                    val returnNode = Return()
+                    statementParsers.parse(tokens, returnNode, 1)
+                    functionNode.add(returnNode)
+                }
+                else -> invalidToken(peek())
+            }
 
             superNode.add(functionNode)
             true
@@ -55,12 +67,11 @@ private fun parseFnArgs(tokens: TokenIterator): ArrayList<Pair<String, ProtoType
 private fun parseFnReturn(tokens: TokenIterator): ProtoType {
     return tokens.parse {
         when {
-            peek().equals(TokenType.SYMBOL, "{") -> ProtoType("void") { Primitives.void }
             peek().equals(TokenType.SYMBOL, ":") -> {
                 next() // No need to double check
                 parseType()
             }
-            else -> invalidToken(peek())
+            else -> ProtoType("void") { Primitives.void }
         }
     }
 }

@@ -3,7 +3,7 @@ package quartz.compiler.syntax.builder.fnbuilder.expression
 import quartz.compiler.parser.parsers.parsenodes.Cast
 import quartz.compiler.syntax.builder.fnbuilder.expression
 import quartz.compiler.syntax.nodes.enodes.CastNode
-import quartz.compiler.util.symboltable.SymbolTable
+import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.

@@ -4,7 +4,7 @@ import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.parsers.parsenodes.*
 import quartz.compiler.syntax.builder.fnbuilder.expression.toExpression
 import quartz.compiler.syntax.nodes.ExpressionNode
-import quartz.compiler.util.symboltable.SymbolTable
+import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.

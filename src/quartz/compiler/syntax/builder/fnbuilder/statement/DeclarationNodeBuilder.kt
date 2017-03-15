@@ -6,7 +6,7 @@ import quartz.compiler.syntax.nodes.enodes.CastNode
 import quartz.compiler.syntax.nodes.snodes.DeclarationNode
 import quartz.compiler.syntax.type.types.Primitives
 import quartz.compiler.util.Variable
-import quartz.compiler.util.symboltable.SymbolTable
+import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.

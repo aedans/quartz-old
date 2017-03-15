@@ -28,8 +28,7 @@ class Compiler(val src: String) {
             stringLiteralTokenizer,
             numberLiteralTokenizer,
             inlineCTokenizer,
-            symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ','),
-            operatorTokenizer("="),
+            symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ',', '='),
             wordTokenizer("fn", "val", "var", "return")
     )
 

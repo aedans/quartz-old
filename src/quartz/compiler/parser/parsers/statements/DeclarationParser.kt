@@ -26,7 +26,7 @@ val declarationParser = {
                 parseType()
             } else { null }
 
-            next().verify { it.equals(TokenType.OPERATOR, "=") }
+            next().verify { it.equals(TokenType.SYMBOL, "=") }
 
             val declarationNode = Declaration(name, type, mutable)
             println("Found $declarationNode")

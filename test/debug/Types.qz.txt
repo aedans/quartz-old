@@ -16,7 +16,6 @@ Found Identifier(name=four)
 Found Return
 Found NumberLiteral(value=0, type=0)
 Found FnDeclaration(name=addFour, args=[(one, char), (two, short), (three, int), (four, long)], rType=double)
-Found Return
 Found FnCall(name=add)
 Found FnCall(name=add)
 Found Identifier(name=one)
@@ -25,7 +24,6 @@ Found FnCall(name=add)
 Found Identifier(name=three)
 Found Identifier(name=two)
 Found FnDeclaration(name=add, args=[(one, short), (two, int)], rType=long)
-Found Return
 Found InlineC
 
 Program
@@ -74,4 +72,4 @@ add(one: short, two: int): long
     return (long) (%one + two%)
 
 
-Compiled in 84ms
+Compiled in 89ms

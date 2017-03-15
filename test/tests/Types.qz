@@ -7,10 +7,6 @@ fn main(): int {
     return 0
 }
 
-fn addFour(one: char, two: short, three: int, four: long): double {
-    return add(add(one, four), add(three, two))
-}
+fn addFour(one: char, two: short, three: int, four: long): double = add(add(one, four), add(three, two))
 
-fn add(one: short, two: int): long {
-    return %one + two%
-}
+fn add(one: short, two: int): long = %one + two%

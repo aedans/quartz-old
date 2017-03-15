@@ -9,7 +9,6 @@ enum class TokenType {
     STRING_LITERAL,
     KEYWORD,
     IDENTIFIER,
-    OPERATOR,
     SYMBOL,
     INLINE_C
 }

@@ -18,16 +18,12 @@ Found Identifier(name=added)
 Found Return
 Found NumberLiteral(value=0, type=0)
 Found FnDeclaration(name=add, args=[(d1, double), (d2, double)], rType=double)
-Found Return
 Found InlineC
 Found FnDeclaration(name=sub, args=[(d1, double), (d2, double)], rType=double)
-Found Return
 Found InlineC
 Found FnDeclaration(name=mlt, args=[(d1, double), (d2, double)], rType=double)
-Found Return
 Found InlineC
 Found FnDeclaration(name=div, args=[(d1, double), (d2, double)], rType=double)
-Found Return
 Found InlineC
 
 Program
@@ -83,4 +79,4 @@ div(d1: double, d2: double): double
     return (double) (%d1 / d2%)
 
 
-Compiled in 73ms
+Compiled in 76ms

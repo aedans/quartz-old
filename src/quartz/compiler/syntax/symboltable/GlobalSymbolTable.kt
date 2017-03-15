@@ -1,4 +1,4 @@
-package quartz.compiler.util.symboltable
+package quartz.compiler.syntax.symboltable
 
 import quartz.compiler.util.Function
 import quartz.compiler.util.Variable

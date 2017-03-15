@@ -46,8 +46,8 @@ fn greetTheWorld() {
     printf(`theWorld'sGreeting`())
 }
 
-// Single expression functions (TODO)
-// Single expressions' types can be inferenced
+// Single expression functions
+// Single expressions' types can be inferenced (TODO)
 fn `theWorld'sGreeting`() = "Hello, World!"
 </pre>
 

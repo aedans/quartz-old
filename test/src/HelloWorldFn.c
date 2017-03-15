@@ -14,5 +14,5 @@ char* helloWorld() {
 }
 
 void print(char* msg) {
-    printf(msg);
+    return printf(msg);
 }

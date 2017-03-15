@@ -3,10 +3,6 @@ fn main(): int {
     return 0
 }
 
-fn helloWorld(): char[] {
-    return "Hello, World!"
-}
+fn helloWorld(): char[] = "Hello, World!"
 
-fn print(msg: char[]) {
-    %printf(msg)%
-}
+fn print(msg: char[]) = %printf(msg)%

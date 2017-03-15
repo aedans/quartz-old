@@ -6,18 +6,10 @@ fn main(): int {
     return 0
 }
 
-fn add(d1: double, d2: double): double {
-    return %d1 + d2%
-}
+fn add(d1: double, d2: double): double = %d1 + d2%
 
-fn sub(d1: double, d2: double): double {
-    return %d1 - d2%
-}
+fn sub(d1: double, d2: double): double = %d1 - d2%
 
-fn mlt(d1: double, d2: double): double {
-    return %d1 * d2%
-}
+fn mlt(d1: double, d2: double): double = %d1 * d2%
 
-fn div(d1: double, d2: double): double {
-    return %d1 / d2%
-}
+fn div(d1: double, d2: double): double = %d1 / d2%

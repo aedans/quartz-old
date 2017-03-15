@@ -4,7 +4,6 @@ Found FnCall(name=helloWorld)
 Found Return
 Found NumberLiteral(value=0, type=0)
 Found FnDeclaration(name=helloWorld, args=[], rType=char[])
-Found Return
 Found StringLiteral(value=Hello, World!)
 Found FnDeclaration(name=print, args=[(msg, char[])], rType=void)
 Found InlineC
@@ -19,7 +18,8 @@ Program
 |   |   Return
 |   |   |   StringLiteral(value=Hello, World!)
 |   FnDeclaration(name=print, args=[(msg, char[])], rType=void)
-|   |   InlineC
+|   |   Return
+|   |   |   InlineC
 
 main(): int
     print(helloWorld(): char[]): void
@@ -29,7 +29,7 @@ helloWorld(): char[]
     return Hello, World!: char[]
 
 print(msg: char[]): void
-    %printf(msg)%
+    return %printf(msg)%
 
 
-Compiled in 64ms
+Compiled in 61ms

@@ -2,7 +2,7 @@ package quartz.compiler.syntax.builder.fnbuilder.expression
 
 import quartz.compiler.parser.parsers.parsenodes.Identifier
 import quartz.compiler.syntax.nodes.enodes.IdentifierNode
-import quartz.compiler.util.symboltable.SymbolTable
+import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.
