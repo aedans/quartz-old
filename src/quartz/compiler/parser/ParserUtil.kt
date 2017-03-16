@@ -35,7 +35,6 @@ fun TokenIterator.parseType(): ProtoType {
         loop@
         while (true) {
             when {
-                // TODO Peek
                 peek(0).equals(TokenType.SYMBOL, "[") && peek(1).equals(TokenType.SYMBOL, "]") -> {
                     next() // No need to double check
                     next() // No need to double check

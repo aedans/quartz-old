@@ -1,11 +1,8 @@
 package quartz.compiler.parser.parsers.statements
 
-import quartz.compiler.parser.ParseNode
-import quartz.compiler.parser.parse
-import quartz.compiler.parser.parseType
-import quartz.compiler.parser.parsers.expressionParsers
+import quartz.compiler.parser.*
+import quartz.compiler.parser.parsers.statements.expressions.expressionParsers
 import quartz.compiler.parser.parsers.parsenodes.VarDeclarationNode
-import quartz.compiler.parser.verify
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
 import quartz.compiler.util.ProtoType
@@ -14,7 +11,7 @@ import quartz.compiler.util.ProtoType
  * Created by Aedan Smith.
  */
 
-val declarationParser = {
+val declarationParser: Parser<ParseNode> = {
     tokens: TokenIterator, superNode: ParseNode -> tokens.parse {
         if (!peek().equals(TokenType.KEYWORD, "val") && !peek().equals(TokenType.KEYWORD, "var")) {
             false

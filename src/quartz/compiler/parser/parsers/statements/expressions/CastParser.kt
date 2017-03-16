@@ -1,7 +1,6 @@
-package quartz.compiler.parser.parsers.expressions
+package quartz.compiler.parser.parsers.statements.expressions
 
 import quartz.compiler.parser.*
-import quartz.compiler.parser.parsers.expressionParsers
 import quartz.compiler.parser.parsers.parsenodes.CastNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
@@ -10,7 +9,7 @@ import quartz.compiler.tokenizer.TokenType
  * Created by Aedan Smith.
  */
 
-val castParser: Parser = {
+val castParser: Parser<ParseNode> = {
     tokens: TokenIterator, superNode: ParseNode -> tokens.parse {
         if (!peek().equals(TokenType.SYMBOL, "(")) {
             false

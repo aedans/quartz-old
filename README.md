@@ -35,7 +35,7 @@ same line.
 <pre>
 // Return type goes after the declaration
 fn main(): int {
-    // Calling functions works as normal
+    // Calling fnDeclarations works as normal
     greetTheWorld()
     return 0
 }
@@ -46,7 +46,7 @@ fn greetTheWorld() {
     printf(`theWorld'sGreeting`())
 }
 
-// Single expression functions
+// Single expression fnDeclarations
 // Single expressions' types can be inferenced (TODO)
 fn `theWorld'sGreeting`() = "Hello, World!"
 </pre>
@@ -55,8 +55,8 @@ Illegal characters in function names will be replaced with
 the appropriate ascii code, and illegal names will be prepended
 with '_'.
 
-Single expression functions are not guaranteed to compile to
-single statement C functions. (ex: return if-else)
+Single expression fnDeclarations are not guaranteed to compile to
+single statement C fnDeclarations. (ex: return if-else)
 
 Here, the "theWorld'sGreeting" function would compile to
 

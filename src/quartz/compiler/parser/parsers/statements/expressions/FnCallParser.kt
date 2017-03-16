@@ -1,9 +1,8 @@
-package quartz.compiler.parser.parsers.expressions
+package quartz.compiler.parser.parsers.statements.expressions
 
 import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.Parser
 import quartz.compiler.parser.parse
-import quartz.compiler.parser.parsers.expressionParsers
 import quartz.compiler.parser.parsers.parsenodes.FnCallNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
@@ -12,7 +11,7 @@ import quartz.compiler.tokenizer.TokenType
  * Created by Aedan Smith.
  */
 
-val fnCallParser: Parser = {
+val fnCallParser: Parser<ParseNode> = {
     tokens: TokenIterator, superNode: ParseNode -> tokens.parse {
         if (!hasNext(2) || !peek().equals(TokenType.IDENTIFIER) || !peek(1).equals(TokenType.SYMBOL, "(")) {
             false

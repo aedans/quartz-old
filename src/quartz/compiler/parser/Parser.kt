@@ -6,23 +6,23 @@ import quartz.compiler.tokenizer.TokenIterator
  * Created by Aedan Smith.
  */
 
-typealias Parser = (TokenIterator, ParseNode) -> Boolean
+typealias Parser<T> = (TokenIterator, T) -> Boolean
 
-inline fun <T : ParseNode> Iterable<Parser>.parse(tokenIterator: TokenIterator, parseNode: T, test: (TokenIterator) -> Boolean): T {
+inline fun <T : ParseNode> Iterable<Parser<T>>.parse(tokenIterator: TokenIterator, t: T, test: (TokenIterator) -> Boolean): T {
     loop@
     while (test(tokenIterator)) {
         @Suppress("LoopToCallChain")
         for (parser in this) {
-            if (parser.invoke(tokenIterator, parseNode)) {
+            if (parser.invoke(tokenIterator, t)) {
                 continue@loop
             }
         }
         invalidToken(tokenIterator.peek())
     }
-    return parseNode
+    return t
 }
 
-fun Iterable<Parser>.parse(tokenIterator: TokenIterator, parseNode: ParseNode, n: Int) {
+fun <T : ParseNode> Iterable<Parser<T>>.parse(tokenIterator: TokenIterator, t: T, n: Int) {
     var i = 0
-    parse(tokenIterator, parseNode, { _ -> i++ < n })
+    parse(tokenIterator, t, { _ -> i++ < n })
 }

@@ -1,6 +1,4 @@
-package quartz.compiler.parser.parsers
-
-import quartz.compiler.parser.parsers.expressions.*
+package quartz.compiler.parser.parsers.statements.expressions
 
 /**
  * Created by Aedan Smith.

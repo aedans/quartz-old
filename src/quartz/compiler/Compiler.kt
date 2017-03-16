@@ -2,7 +2,7 @@ package quartz.compiler
 
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.parse
-import quartz.compiler.parser.parsers.expressions.inlineCParser
+import quartz.compiler.parser.parsers.statements.expressions.inlineCParser
 import quartz.compiler.parser.parsers.fnDeclarationParser
 import quartz.compiler.parser.parsers.parsenodes.ProgramNode
 import quartz.compiler.syntax.builder.toSyntaxTree

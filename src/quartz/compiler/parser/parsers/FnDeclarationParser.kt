@@ -2,7 +2,9 @@ package quartz.compiler.parser.parsers
 
 import quartz.compiler.parser.*
 import quartz.compiler.parser.parsers.parsenodes.FnDeclarationNode
+import quartz.compiler.parser.parsers.parsenodes.ProgramNode
 import quartz.compiler.parser.parsers.parsenodes.ReturnNode
+import quartz.compiler.parser.parsers.statements.statementParsers
 import quartz.compiler.syntax.type.types.Primitives
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
@@ -12,7 +14,7 @@ import quartz.compiler.util.ProtoType
  * Created by Aedan Smith.
  */
 
-val fnDeclarationParser = {
+val fnDeclarationParser: Parser<ProgramNode> = {
     tokens: TokenIterator, superNode: ParseNode -> tokens.parse {
         if (!peek().equals(TokenType.KEYWORD, "fn")){
             false
