@@ -7,7 +7,7 @@ import quartz.compiler.util.ProtoType
  * Created by Aedan Smith.
  */
 
-data class Declaration(val name: String, val type: ProtoType?, val mutable: Boolean) : ParseNode {
+data class VarDeclarationNode(val name: String, val type: ProtoType?, val mutable: Boolean) : ParseNode {
     private val nodes = mutableListOf<ParseNode>()
 
     override fun add(node: ParseNode) {

@@ -1,13 +1,13 @@
 package quartz.compiler.syntax.nodes.snodes
 
-import quartz.compiler.syntax.nodes.ExpressionNode
-import quartz.compiler.syntax.nodes.StatementNode
+import quartz.compiler.syntax.nodes.Expression
+import quartz.compiler.syntax.nodes.Statement
 
 /**
  * Created by Aedan Smith.
  */
 
-class ReturnNode(val expression: ExpressionNode) : StatementNode {
+class Return(val expression: Expression) : Statement {
     override fun toString(): String {
         return "return $expression"
     }

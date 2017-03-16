@@ -4,7 +4,7 @@ import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parseType
 import quartz.compiler.parser.parsers.expressionParsers
-import quartz.compiler.parser.parsers.parsenodes.Declaration
+import quartz.compiler.parser.parsers.parsenodes.VarDeclarationNode
 import quartz.compiler.parser.verify
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
@@ -28,7 +28,7 @@ val declarationParser = {
 
             next().verify { it.equals(TokenType.SYMBOL, "=") }
 
-            val declarationNode = Declaration(name, type, mutable)
+            val declarationNode = VarDeclarationNode(name, type, mutable)
             println("Found $declarationNode")
 
             expressionParsers.parse(tokens, declarationNode, 1)

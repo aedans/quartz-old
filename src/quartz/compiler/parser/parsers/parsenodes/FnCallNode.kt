@@ -6,7 +6,7 @@ import quartz.compiler.parser.ParseNode
  * Created by Aedan Smith.
  */
 
-class Program : ParseNode {
+data class FnCallNode(val name: String) : ParseNode {
     private val nodes = mutableListOf<ParseNode>()
 
     override fun add(node: ParseNode) {
@@ -15,9 +15,5 @@ class Program : ParseNode {
 
     override fun getNodes(): MutableList<ParseNode> {
         return nodes
-    }
-
-    override fun toString(): String {
-        return "Program"
     }
 }

@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers.expressions
 
 import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.parse
-import quartz.compiler.parser.parsers.parsenodes.Identifier
+import quartz.compiler.parser.parsers.parsenodes.IdentifierNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
 
@@ -15,7 +15,7 @@ val identifierParser = {
         if (!peek().equals(TokenType.IDENTIFIER)) {
             false
         } else {
-            val identifierNode = Identifier(next().value)
+            val identifierNode = IdentifierNode(next().value)
             println("Found $identifierNode")
             superNode.add(identifierNode)
             true

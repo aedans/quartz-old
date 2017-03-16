@@ -7,8 +7,8 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FnNode(val name: String, val args: List<Pair<String, Type>>, val returnType: Type) {
-    val statements = mutableListOf<StatementNode>()
+class FnDeclaration(val name: String, val args: List<Pair<String, Type>>, val returnType: Type) {
+    val statements = mutableListOf<Statement>()
 
     override fun toString(): String {
         var string ="$name("

@@ -1,13 +1,13 @@
 package quartz.compiler.syntax.nodes.enodes
 
-import quartz.compiler.syntax.nodes.ExpressionNode
+import quartz.compiler.syntax.nodes.Expression
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class NumberLiteralNode(val value: String, override val evalType: Type) : ExpressionNode {
+class NumberLiteral(val value: String, override val evalType: Type) : Expression {
     override fun toString(): String {
         return "$value: $evalType"
     }

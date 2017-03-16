@@ -1,18 +1,18 @@
 package quartz.compiler.syntax.builder.fnbuilder.statement
 
-import quartz.compiler.parser.parsers.parsenodes.Declaration
+import quartz.compiler.parser.parsers.parsenodes.VarDeclarationNode
 import quartz.compiler.syntax.builder.fnbuilder.expression
-import quartz.compiler.syntax.nodes.enodes.CastNode
-import quartz.compiler.syntax.nodes.snodes.DeclarationNode
+import quartz.compiler.syntax.nodes.enodes.Cast
+import quartz.compiler.syntax.nodes.snodes.VarDeclaration
+import quartz.compiler.syntax.symboltable.SymbolTable
 import quartz.compiler.syntax.type.types.Primitives
 import quartz.compiler.util.Variable
-import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.
  */
 
-fun Declaration.toStatement(symbolTable: SymbolTable): DeclarationNode {
+fun VarDeclarationNode.toStatement(symbolTable: SymbolTable): VarDeclaration {
     val expression = this.getNodes()!![0].expression(symbolTable)
     val type = if (this.type == null) { expression.evalType } else { this.type.toType() }
 
@@ -26,8 +26,8 @@ fun Declaration.toStatement(symbolTable: SymbolTable): DeclarationNode {
     symbolTable.add(this.name, Variable(this.name, type))
 
     return if (expression.evalType != type) {
-        DeclarationNode(this.name, type, this.mutable, CastNode(expression, type))
+        VarDeclaration(name, type, mutable, Cast(expression, type))
     } else {
-        DeclarationNode(this.name, type, this.mutable, expression)
+        VarDeclaration(name, type, mutable, expression)
     }
 }

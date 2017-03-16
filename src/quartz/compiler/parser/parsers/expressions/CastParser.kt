@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers.expressions
 
 import quartz.compiler.parser.*
 import quartz.compiler.parser.parsers.expressionParsers
-import quartz.compiler.parser.parsers.parsenodes.Cast
+import quartz.compiler.parser.parsers.parsenodes.CastNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
 
@@ -18,7 +18,7 @@ val castParser: Parser = {
             next() // No need to double check
             val type = parseType()
             next().verify { it.equals(TokenType.SYMBOL, ")") }
-            val castNode = Cast(type)
+            val castNode = CastNode(type)
             println("Found $castNode")
 
             expressionParsers.parse(tokens, castNode, 1)

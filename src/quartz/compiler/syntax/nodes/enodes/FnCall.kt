@@ -1,15 +1,15 @@
 package quartz.compiler.syntax.nodes.enodes
 
 import quartz.compiler.generator.visitID
-import quartz.compiler.syntax.nodes.ExpressionNode
-import quartz.compiler.syntax.nodes.StatementNode
+import quartz.compiler.syntax.nodes.Expression
+import quartz.compiler.syntax.nodes.Statement
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class FnCallNode(val name: String, val args: List<ExpressionNode>, override val evalType: Type) : ExpressionNode, StatementNode {
+class FnCall(val name: String, val args: List<Expression>, override val evalType: Type) : Expression, Statement {
     override fun toString(): String {
         return "$name(${args.toString().substring(1, args.toString().length-1)}): $evalType"
     }

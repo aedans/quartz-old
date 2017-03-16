@@ -1,6 +1,6 @@
 package quartz.compiler.syntax
 
-import quartz.compiler.syntax.nodes.FnNode
+import quartz.compiler.syntax.nodes.FnDeclaration
 import quartz.compiler.syntax.symboltable.GlobalSymbolTable
 
 /**
@@ -10,7 +10,7 @@ import quartz.compiler.syntax.symboltable.GlobalSymbolTable
 class SyntaxTree {
     val symbolTable = GlobalSymbolTable()
 
-    val functionNodes = mutableListOf<FnNode>()
+    val functionNodes = mutableListOf<FnDeclaration>()
 
     override fun toString(): String {
         var string = ""

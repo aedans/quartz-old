@@ -6,7 +6,7 @@ import quartz.compiler.parser.ParseNode
  * Created by Aedan Smith.
  */
 
-class InlineC(val src: String) : ParseNode {
+data class StringLiteralNode(val value: String) : ParseNode {
     override fun add(node: ParseNode) {
         throw RuntimeException("Could not add $node to $this")
     }
@@ -14,8 +14,5 @@ class InlineC(val src: String) : ParseNode {
     override fun getNodes(): Nothing? {
         return null
     }
-
-    override fun toString(): String {
-        return "InlineC"
-    }
 }
+

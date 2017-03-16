@@ -1,21 +1,21 @@
-Found InlineC
-Found FnDeclaration(name=main, args=[], rType=int)
-Found FnCall(name=print)
-Found StringLiteral(value=Hello, World!)
-Found Return
-Found NumberLiteral(value=0, type=0)
-Found FnDeclaration(name=print, args=[(msg, char[])], rType=void)
-Found InlineC
+Found InlineCNode
+Found FnDeclarationNode(name=main, args=[], rType=int)
+Found FnCallNode(name=print)
+Found StringLiteralNode(value=Hello, World!)
+Found ReturnNode
+Found NumberLiteralNode(value=0, type=0)
+Found FnDeclarationNode(name=print, args=[(msg, char[])], rType=void)
+Found InlineCNode
 
-Program
-|   InlineC
-|   FnDeclaration(name=main, args=[], rType=int)
-|   |   FnCall(name=print)
-|   |   |   StringLiteral(value=Hello, World!)
-|   |   Return
-|   |   |   NumberLiteral(value=0, type=0)
-|   FnDeclaration(name=print, args=[(msg, char[])], rType=void)
-|   |   InlineC
+ProgramNode
+|   InlineCNode
+|   FnDeclarationNode(name=main, args=[], rType=int)
+|   |   FnCallNode(name=print)
+|   |   |   StringLiteralNode(value=Hello, World!)
+|   |   ReturnNode
+|   |   |   NumberLiteralNode(value=0, type=0)
+|   FnDeclarationNode(name=print, args=[(msg, char[])], rType=void)
+|   |   InlineCNode
 
 main(): int
     print(Hello, World!: char[]): void
@@ -25,4 +25,4 @@ print(msg: char[]): void
     %printf(msg)%
 
 
-Compiled in 62ms
+Compiled in 118ms

@@ -4,7 +4,7 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.expressions.inlineCParser
 import quartz.compiler.parser.parsers.fnDeclarationParser
-import quartz.compiler.parser.parsers.parsenodes.Program
+import quartz.compiler.parser.parsers.parsenodes.ProgramNode
 import quartz.compiler.syntax.builder.toSyntaxTree
 import quartz.compiler.tokenizer.tokenize
 import quartz.compiler.tokenizer.tokenizers.*
@@ -17,7 +17,7 @@ import quartz.compiler.util.misc.StringIterator
 class Compiler(val src: String) {
     fun compile(): String {
         val tokens = tokenizers.tokenize(StringIterator(src))
-        val program = parsers.parse(tokens, Program()) { it.hasNext() }
+        val program = parsers.parse(tokens, ProgramNode()) { it.hasNext() }
         println('\n' + program.toString(0))
         val syntaxTree = program.toSyntaxTree()
         println(syntaxTree.toString())

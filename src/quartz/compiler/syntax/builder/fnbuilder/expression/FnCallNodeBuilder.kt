@@ -1,23 +1,23 @@
 package quartz.compiler.syntax.builder.fnbuilder.expression
 
-import quartz.compiler.parser.parsers.parsenodes.FnCall
+import quartz.compiler.parser.parsers.parsenodes.FnCallNode
 import quartz.compiler.syntax.builder.fnbuilder.expression
-import quartz.compiler.syntax.nodes.enodes.CastNode
-import quartz.compiler.syntax.nodes.enodes.FnCallNode
+import quartz.compiler.syntax.nodes.enodes.Cast
+import quartz.compiler.syntax.nodes.enodes.FnCall
 import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.
  */
 
-fun FnCall.toExpression(symbolTable: SymbolTable): FnCallNode {
+fun FnCallNode.toExpression(symbolTable: SymbolTable): FnCall {
     val function = symbolTable.getGlobalSymbolTable().getFunction(this.name)
-    return FnCallNode(
+    return FnCall(
             function.name,
-            this.getNodes().mapIndexed { i, it ->
+            getNodes().mapIndexed { i, it ->
                 val expression = it.expression(symbolTable)
                 if (expression.evalType != function.args[i]) {
-                    CastNode(it.expression(symbolTable), function.args[i])
+                    Cast(it.expression(symbolTable), function.args[i])
                 } else {
                     it.expression(symbolTable)
                 }

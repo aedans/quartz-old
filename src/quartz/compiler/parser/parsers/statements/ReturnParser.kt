@@ -3,7 +3,7 @@ package quartz.compiler.parser.parsers.statements
 import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.expressionParsers
-import quartz.compiler.parser.parsers.parsenodes.Return
+import quartz.compiler.parser.parsers.parsenodes.ReturnNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
 
@@ -18,7 +18,7 @@ val returnParser = {
         } else {
             next()
 
-            val returnNode = Return()
+            val returnNode = ReturnNode()
             println("Found $returnNode")
             expressionParsers.parse(tokens, returnNode, 1)
 

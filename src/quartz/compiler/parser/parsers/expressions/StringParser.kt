@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers.expressions
 
 import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.parse
-import quartz.compiler.parser.parsers.parsenodes.StringLiteral
+import quartz.compiler.parser.parsers.parsenodes.StringLiteralNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
 
@@ -15,7 +15,7 @@ val stringParser = {
         if (!peek().equals(TokenType.STRING_LITERAL)) {
             false
         } else {
-            val stringNode = StringLiteral(next().value)
+            val stringNode = StringLiteralNode(next().value)
             println("Found $stringNode")
             superNode.add(stringNode)
             true

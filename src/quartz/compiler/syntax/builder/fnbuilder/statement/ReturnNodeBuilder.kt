@@ -1,17 +1,17 @@
 package quartz.compiler.syntax.builder.fnbuilder.statement
 
-import quartz.compiler.parser.parsers.parsenodes.FnDeclaration
-import quartz.compiler.parser.parsers.parsenodes.Return
+import quartz.compiler.parser.parsers.parsenodes.FnDeclarationNode
+import quartz.compiler.parser.parsers.parsenodes.ReturnNode
 import quartz.compiler.syntax.builder.fnbuilder.expression
-import quartz.compiler.syntax.nodes.enodes.CastNode
-import quartz.compiler.syntax.nodes.snodes.ReturnNode
+import quartz.compiler.syntax.nodes.enodes.Cast
+import quartz.compiler.syntax.nodes.snodes.Return
 import quartz.compiler.syntax.symboltable.SymbolTable
 
 /**
  * Created by Aedan Smith.
  */
 
-fun Return.toStatement(symbolTable: SymbolTable, function: FnDeclaration): ReturnNode {
+fun ReturnNode.toStatement(symbolTable: SymbolTable, function: FnDeclarationNode): Return {
     val expression = this.getNodes()!![0].expression(symbolTable)
     val rType = function.rType.toType()
 
@@ -19,8 +19,8 @@ fun Return.toStatement(symbolTable: SymbolTable, function: FnDeclaration): Retur
         throw RuntimeException("Could not cast ${expression.evalType} to $rType")
 
     return if (expression.evalType != rType) {
-        ReturnNode(CastNode(expression, rType))
+        Return(Cast(expression, rType))
     } else {
-        ReturnNode(expression)
+        Return(expression)
     }
 }

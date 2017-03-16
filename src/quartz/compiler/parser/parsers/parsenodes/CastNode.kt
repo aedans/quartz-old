@@ -7,7 +7,7 @@ import quartz.compiler.util.ProtoType
  * Created by Aedan Smith.
  */
 
-data class Cast(val type: ProtoType) : ParseNode {
+data class CastNode(val type: ProtoType) : ParseNode {
     private val nodes = mutableListOf<ParseNode>()
 
     override fun add(node: ParseNode) {

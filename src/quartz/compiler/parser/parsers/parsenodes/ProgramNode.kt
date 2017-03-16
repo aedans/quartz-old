@@ -1,13 +1,12 @@
 package quartz.compiler.parser.parsers.parsenodes
 
 import quartz.compiler.parser.ParseNode
-import quartz.compiler.util.ProtoType
 
 /**
  * Created by Aedan Smith.
  */
 
-data class FnDeclaration(val name: String, val args: ArrayList<Pair<String, ProtoType>>, val rType: ProtoType) : ParseNode {
+class ProgramNode : ParseNode {
     private val nodes = mutableListOf<ParseNode>()
 
     override fun add(node: ParseNode) {
@@ -16,5 +15,9 @@ data class FnDeclaration(val name: String, val args: ArrayList<Pair<String, Prot
 
     override fun getNodes(): MutableList<ParseNode> {
         return nodes
+    }
+
+    override fun toString(): String {
+        return "ProgramNode"
     }
 }

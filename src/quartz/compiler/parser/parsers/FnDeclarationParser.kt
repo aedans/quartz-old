@@ -1,8 +1,8 @@
 package quartz.compiler.parser.parsers
 
 import quartz.compiler.parser.*
-import quartz.compiler.parser.parsers.parsenodes.FnDeclaration
-import quartz.compiler.parser.parsers.parsenodes.Return
+import quartz.compiler.parser.parsers.parsenodes.FnDeclarationNode
+import quartz.compiler.parser.parsers.parsenodes.ReturnNode
 import quartz.compiler.syntax.type.types.Primitives
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
@@ -21,7 +21,7 @@ val fnDeclarationParser = {
             val name = next().verify { it.equals(TokenType.IDENTIFIER) }.value
             val args = parseFnArgs(this)
             val rType = parseFnReturn(this)
-            val functionNode = FnDeclaration(name, args, rType)
+            val functionNode = FnDeclarationNode(name, args, rType)
 
             println("Found $functionNode")
 
@@ -33,7 +33,7 @@ val fnDeclarationParser = {
                 }
                 peek().equals(TokenType.SYMBOL, "=") -> {
                     next() // no need to double check
-                    val returnNode = Return()
+                    val returnNode = ReturnNode()
                     statementParsers.parse(tokens, returnNode, 1)
                     functionNode.add(returnNode)
                 }

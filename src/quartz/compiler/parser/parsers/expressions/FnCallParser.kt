@@ -4,7 +4,7 @@ import quartz.compiler.parser.ParseNode
 import quartz.compiler.parser.Parser
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.expressionParsers
-import quartz.compiler.parser.parsers.parsenodes.FnCall
+import quartz.compiler.parser.parsers.parsenodes.FnCallNode
 import quartz.compiler.tokenizer.TokenIterator
 import quartz.compiler.tokenizer.TokenType
 
@@ -19,7 +19,7 @@ val fnCallParser: Parser = {
         } else {
             val name = next().value // No need to double check
             next() // No need to double check
-            val fnCallNode = FnCall(name)
+            val fnCallNode = FnCallNode(name)
 
             println("Found $fnCallNode")
 
