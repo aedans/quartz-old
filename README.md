@@ -78,8 +78,10 @@ fn printTrueOrFalse(i: int) {
     }
 }
 
-fn halt(){
+fn halt() {
     // While loops work as normal
-    while (1) { }
+    while (1) {
+        doStuff()
+    }
 }
 </pre>
