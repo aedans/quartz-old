@@ -5,3 +5,7 @@ Quartz.iml
 lib
 src/META-INF
 a.out
+test/debug
+test/exe
+test/src
+test/out
