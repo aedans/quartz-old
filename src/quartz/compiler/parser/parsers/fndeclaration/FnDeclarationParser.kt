@@ -68,15 +68,7 @@ class FnDeclarationParser(
         val fnDeclarationNode = FnDeclarationNode(name, args, returnType)
         println("Found $fnDeclarationNode")
 
-        if (peek().equals(TokenType.SYMBOL, "{")) {
-            next()
-
-            loop@ while (!peek().equals(TokenType.SYMBOL, "}")) {
-                fnDeclarationNode.statements.add(statementParser(tokens))
-            }
-
-            next()
-        } else if (peek().equals(TokenType.SYMBOL, "=")) {
+        if (peek().equals(TokenType.SYMBOL, "=")) {
             next()
 
             if (returnType == Primitives.void) {
@@ -84,6 +76,8 @@ class FnDeclarationParser(
             } else {
                 fnDeclarationNode.statements.add(ReturnNode(expressionParser(tokens)))
             }
+        } else {
+            fnDeclarationNode.statements.addAll(parseBlock(statementParser))
         }
 
         fnDeclarationNode

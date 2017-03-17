@@ -9,4 +9,5 @@ fn main(): int {
 
 fn helloWorld(): char[] = "Hello, World!"
 
-fn print(msg: char[]) = %printf(msg)%
+fn print(msg: char[])
+    %printf(msg)%

@@ -1,8 +1,10 @@
 package quartz.compiler.parser
 
+import quartz.compiler.parser.parsers.fndeclaration.StatementParser
 import quartz.compiler.tokenizer.Token
 import quartz.compiler.tokenizer.TokenStream
 import quartz.compiler.tokenizer.TokenType
+import quartz.compiler.tree.StatementNode
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.QArray
 import types.Primitives
@@ -28,7 +30,6 @@ inline fun Token.verify(test: (Token) -> Boolean): Token {
     }
 }
 
-// TODO
 fun TokenStream.parseType(): Type {
     var type = when (peek().value) {
         "char" -> Primitives.char
@@ -51,4 +52,20 @@ fun TokenStream.parseType(): Type {
         }
     }
     return type
+}
+
+fun TokenStream.parseBlock(statementParser: StatementParser): List<StatementNode> {
+    val statements = mutableListOf<StatementNode>()
+    if (peek().equals(TokenType.SYMBOL, "{")) {
+        next()
+
+        loop@ while (!peek().equals(TokenType.SYMBOL, "}")) {
+            statements.add(statementParser(this))
+        }
+
+        next()
+    } else {
+        statements.add(statementParser(this))
+    }
+    return statements
 }

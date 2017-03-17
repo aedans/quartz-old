@@ -7,6 +7,5 @@ fn main(): int {
     return 0
 }
 
-fn print(msg: char[]) {
+fn print(msg: char[])
     %printf(msg)%
-}

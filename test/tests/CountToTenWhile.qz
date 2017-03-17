@@ -8,9 +8,8 @@ fn main() {
 
 fn countTo(max: int) {
     val i = 0
-    while (lessThan(i, max)) {
-       print(%i++%)
-    }
+    while (lessThan(i, max))
+        print(%i++%)
     print(max)
 }
 
