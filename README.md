@@ -35,7 +35,7 @@ same line.
 <pre>
 // Return type goes after the declaration
 fn main(): int {
-    // Calling function declarations works as normal
+    // Calling functions works as normal
     greetTheWorld()
     return 0
 }
@@ -55,8 +55,8 @@ Illegal characters in function names will be replaced with
 the appropriate ascii code, and illegal names will be prepended
 with '_'.
 
-Single expression function declarations are not guaranteed to compile to
-single statement C function declarations. (ex: return if-else)
+Single expression functions are not guaranteed to compile to
+single statement C functions. (ex: return if-else)
 
 Here, the "theWorld'sGreeting" function would compile to
 
