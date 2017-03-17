@@ -17,13 +17,15 @@ class IfNode(val test: ExpressionNode) : StatementNode {
     }
 
     override fun toString(i: Int): String {
-        var s = ("|   " * i) + toString() + "\n"
+        var s = ("|   " * i) + toString()
         trueStatements.forEach {
-            s += it.toString(i + 1) + "\n"
+            s += '\n' + it.toString(i + 1)
         }
-        s += ("|   " * i) + "else\n"
-        falseStatements.forEach {
-            s += it.toString(i + 1) + "\n"
+        if (!falseStatements.isEmpty()) {
+            s += '\n' + ("|   " * i) + "else"
+            falseStatements.forEach {
+                s += '\n' + it.toString(i + 1)
+            }
         }
         return s
     }

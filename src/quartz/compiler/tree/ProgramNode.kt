@@ -11,7 +11,7 @@ class ProgramNode {
 
     override fun toString(): String {
         var s = ""
-        fnDeclarations.forEach { s += it.toString() + '\n' }
+        fnDeclarations.forEach { s += it.toString() + "\n\n" }
         return s
     }
 }

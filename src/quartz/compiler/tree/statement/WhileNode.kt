@@ -16,9 +16,9 @@ class WhileNode(val test: ExpressionNode) : StatementNode {
     }
 
     override fun toString(i: Int): String {
-        var s = ("|   " * i) + toString() + "\n"
+        var s = ("|   " * i) + toString()
         statements.forEach {
-            s += it.toString(i + 1) + "\n"
+            s += '\n' + it.toString(i + 1)
         }
         return s
     }
