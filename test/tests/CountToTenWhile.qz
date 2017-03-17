@@ -1,0 +1,19 @@
+%
+#include <stdio.h>
+%
+
+fn main() {
+    countTo(10)
+}
+
+fn countTo(max: int) {
+    val i = 0
+    while (lessThan(i, max)) {
+       println(%i++%)
+    }
+    println(max)
+}
+
+fn lessThan(i1: int, i2: int): int = %i1 < i2%
+
+fn println(i: int) = %printf("\%d ", i)%

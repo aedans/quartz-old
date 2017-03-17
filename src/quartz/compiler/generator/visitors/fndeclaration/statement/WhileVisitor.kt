@@ -4,35 +4,26 @@ import quartz.compiler.generator.Visitor
 import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
 import quartz.compiler.generator.visitors.fndeclaration.StatementVisitor
 import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.IfNode
+import quartz.compiler.tree.statement.WhileNode
 import quartz.compiler.util.misc.times
 
 /**
  * Created by Aedan Smith.
  */
 
-class IfVisitor(val statementVisitor: StatementVisitor, val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
+class WhileVisitor(val statementVisitor: StatementVisitor, val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
     override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
-        if (node !is IfNode)
+        if (node !is WhileNode)
             return
 
-        string.append("if (")
+        string.append("while (")
         expressionVisitor(node.test, string, depth)
         string.appendln("){")
-        for (statement in node.trueStatements) {
+        for (statement in node.statements) {
             string.append("    " * (depth + 1))
             statementVisitor(statement, string, depth + 1)
             string.appendln(";")
         }
         string.append(("    " * depth) + "}")
-        if (!node.falseStatements.isEmpty()) {
-            string.appendln("else{")
-            for (statement in node.falseStatements) {
-                string.append("    " * (depth + 1))
-                statementVisitor(statement, string, depth + 1)
-                string.appendln(";")
-            }
-            string.append(("    " * depth) + "}")
-        }
     }
 }

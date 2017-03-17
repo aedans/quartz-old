@@ -7,14 +7,14 @@ fn main() {
 }
 
 fn countTo(i: int) {
-    println(i)
     if (greaterThan(i, 0)) {
-        countTo(dec(i))
+        countTo(sub(i, 1))
     }
+    println(i)
 }
 
 fn greaterThan(i1: int, i2: int): int = %i1 > i2%
 
-fn dec(i: int): int = %i - 1%
+fn sub(i1: int, i2: int): int = %i1 - i2%
 
 fn println(i: int) = %printf("\%d ", i)%

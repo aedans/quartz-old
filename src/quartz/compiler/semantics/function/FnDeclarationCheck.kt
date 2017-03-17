@@ -5,6 +5,7 @@ import quartz.compiler.semantics.function.expression.identifierCheck
 import quartz.compiler.semantics.function.statement.FnCallCheck
 import quartz.compiler.semantics.function.statement.IfCheck
 import quartz.compiler.semantics.function.statement.VarDeclarationCheck
+import quartz.compiler.semantics.function.statement.WhileCheck
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.tree.ProgramNode
@@ -24,6 +25,7 @@ class FnDeclarationCheck(
             add(VarDeclarationCheck(expressionCheck))
             add(FnCallCheck(expressionCheck))
             add(IfCheck(this@statementCheck, expressionCheck))
+            add(WhileCheck(this@statementCheck, expressionCheck))
         } }
 ) : SemanticCheck<ProgramNode> {
     override fun invoke(node: ProgramNode, symbolTable: SymbolTable) {

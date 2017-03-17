@@ -30,7 +30,8 @@ class FnDeclarationVisitor(
             add(VarDeclarationVisitor(expressionVisitor))
             add(ReturnVisitor(expressionVisitor))
             add(FnCallVisitor(expressionVisitor))
-            add(IfVisitor(expressionVisitor, this@statementVisitor))
+            add(IfVisitor(this@statementVisitor, expressionVisitor))
+            add(WhileVisitor(this@statementVisitor, expressionVisitor))
         } }
 ) : Visitor<FnDeclarationNode> {
     override fun invoke(node: FnDeclarationNode, string: StringBuilder, depth: Int) {

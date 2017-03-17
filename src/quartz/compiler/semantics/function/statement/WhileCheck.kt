@@ -6,16 +6,16 @@ import quartz.compiler.semantics.function.StatementCheck
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.IfNode
+import quartz.compiler.tree.statement.WhileNode
 import types.Primitives
 
 /**
  * Created by Aedan Smith.
  */
 
-class IfCheck(val statementCheck: StatementCheck, val expressionCheck: ExpressionCheck) : SemanticCheck<StatementNode> {
+class WhileCheck(val statementCheck: StatementCheck, val expressionCheck: ExpressionCheck) : SemanticCheck<StatementNode> {
     override fun invoke(node: StatementNode, table: SymbolTable) {
-        if (node !is IfNode)
+        if (node !is WhileNode)
             return
 
         expressionCheck(node.test, table)
@@ -30,10 +30,7 @@ class IfCheck(val statementCheck: StatementCheck, val expressionCheck: Expressio
 
         val localSymbolTable = LocalSymbolTable(table)
 
-        for (statement in node.trueStatements) {
-            statementCheck(statement, localSymbolTable)
-        }
-        for (statement in node.falseStatements) {
+        for (statement in node.statements) {
             statementCheck(statement, localSymbolTable)
         }
     }

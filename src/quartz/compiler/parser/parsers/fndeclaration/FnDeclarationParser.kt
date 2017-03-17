@@ -1,17 +1,14 @@
 package quartz.compiler.parser.parsers.fndeclaration
 
 import quartz.compiler.parser.*
-import quartz.compiler.tree.FnDeclarationNode
-import quartz.compiler.tree.statement.ReturnNode
 import quartz.compiler.parser.parsers.fndeclaration.expression.identifierParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.numberLiteralParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.stringLiteralParser
-import quartz.compiler.parser.parsers.fndeclaration.statement.FnCallParser
-import quartz.compiler.parser.parsers.fndeclaration.statement.IfParser
-import quartz.compiler.parser.parsers.fndeclaration.statement.ReturnParser
-import quartz.compiler.parser.parsers.fndeclaration.statement.VarDeclarationParser
+import quartz.compiler.parser.parsers.fndeclaration.statement.*
 import quartz.compiler.tokenizer.TokenStream
 import quartz.compiler.tokenizer.TokenType
+import quartz.compiler.tree.FnDeclarationNode
+import quartz.compiler.tree.statement.ReturnNode
 import quartz.compiler.util.Type
 import types.Primitives
 
@@ -33,6 +30,7 @@ class FnDeclarationParser(
             add(VarDeclarationParser(expressionParser))
             add(ReturnParser(expressionParser))
             add(IfParser(this@statementParser, expressionParser))
+            add(WhileParser(this@statementParser, expressionParser))
         } }
 ): Parser<FnDeclarationNode> {
     override fun invoke(tokens: TokenStream): FnDeclarationNode = tokens.parse {
