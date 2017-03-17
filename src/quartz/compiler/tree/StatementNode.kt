@@ -1,4 +1,4 @@
-package quartz.compiler.parser.nodes
+package quartz.compiler.tree
 
 import quartz.compiler.util.misc.times
 

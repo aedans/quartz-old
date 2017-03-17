@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers.fndeclaration
 
 import quartz.compiler.parser.ParseException
 import quartz.compiler.parser.Parser
-import quartz.compiler.parser.nodes.ExpressionNode
+import quartz.compiler.tree.ExpressionNode
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.fndeclaration.expression.identifierParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.numberLiteralParser

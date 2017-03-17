@@ -6,7 +6,7 @@ import quartz.compiler.parser.parseType
 import quartz.compiler.parser.parsers.fndeclaration.ExpressionParser
 import quartz.compiler.parser.verify
 import quartz.compiler.util.Type
-import quartz.compiler.parser.nodes.statement.VarDeclarationNode
+import quartz.compiler.tree.statement.VarDeclarationNode
 import quartz.compiler.tokenizer.TokenStream
 import quartz.compiler.tokenizer.TokenType
 

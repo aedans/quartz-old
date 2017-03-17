@@ -1,7 +1,7 @@
 package quartz.compiler.generator.visitors.fndeclaration
 
 import quartz.compiler.generator.Visitor
-import quartz.compiler.parser.nodes.StatementNode
+import quartz.compiler.tree.StatementNode
 
 /**
  * Created by Aedan Smith.

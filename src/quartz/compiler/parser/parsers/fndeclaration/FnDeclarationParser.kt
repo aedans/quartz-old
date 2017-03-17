@@ -1,8 +1,8 @@
 package quartz.compiler.parser.parsers.fndeclaration
 
 import quartz.compiler.parser.*
-import quartz.compiler.parser.nodes.FnDeclarationNode
-import quartz.compiler.parser.nodes.statement.ReturnNode
+import quartz.compiler.tree.FnDeclarationNode
+import quartz.compiler.tree.statement.ReturnNode
 import quartz.compiler.parser.parsers.fndeclaration.expression.identifierParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.numberLiteralParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.stringLiteralParser

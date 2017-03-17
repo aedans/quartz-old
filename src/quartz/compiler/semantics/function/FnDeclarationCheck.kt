@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.function
 
-import quartz.compiler.parser.nodes.ProgramNode
+import quartz.compiler.tree.ProgramNode
 import quartz.compiler.semantics.SemanticCheck
 import quartz.compiler.semantics.function.expression.identifierCheck
 import quartz.compiler.semantics.function.statement.FnCallCheck

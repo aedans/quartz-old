@@ -1,7 +1,7 @@
 package quartz.compiler.generator
 
 import quartz.compiler.generator.visitors.ProgramVisitor
-import quartz.compiler.parser.nodes.ProgramNode
+import quartz.compiler.tree.ProgramNode
 
 /**
  * Created by Aedan Smith.

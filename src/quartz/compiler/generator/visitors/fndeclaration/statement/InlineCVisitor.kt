@@ -1,8 +1,8 @@
 package quartz.compiler.generator.visitors.fndeclaration.statement
 
 import quartz.compiler.generator.Visitor
-import quartz.compiler.parser.nodes.InlineCNode
-import quartz.compiler.parser.nodes.StatementNode
+import quartz.compiler.tree.InlineCNode
+import quartz.compiler.tree.StatementNode
 
 /**
  * Created by Aedan Smith.

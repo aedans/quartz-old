@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.function
 
-import quartz.compiler.parser.nodes.ExpressionNode
+import quartz.compiler.tree.ExpressionNode
 import quartz.compiler.semantics.SemanticCheck
 import quartz.compiler.semantics.symboltable.SymbolTable
 

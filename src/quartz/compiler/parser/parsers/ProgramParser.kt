@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers
 
 import quartz.compiler.parser.Parser
 import quartz.compiler.parser.invalidToken
-import quartz.compiler.parser.nodes.ProgramNode
+import quartz.compiler.tree.ProgramNode
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.fndeclaration.FnDeclarationParser
 import quartz.compiler.parser.parsers.fndeclaration.inlineCParser

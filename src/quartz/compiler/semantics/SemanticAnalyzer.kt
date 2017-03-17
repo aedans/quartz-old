@@ -1,6 +1,6 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.parser.nodes.ProgramNode
+import quartz.compiler.tree.ProgramNode
 import quartz.compiler.semantics.function.FnDeclarationCheck
 import quartz.compiler.semantics.symboltable.GlobalSymbolTable
 

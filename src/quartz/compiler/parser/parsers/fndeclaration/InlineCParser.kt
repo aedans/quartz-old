@@ -1,7 +1,7 @@
 package quartz.compiler.parser.parsers.fndeclaration
 
 import quartz.compiler.parser.Parser
-import quartz.compiler.parser.nodes.InlineCNode
+import quartz.compiler.tree.InlineCNode
 import quartz.compiler.parser.verify
 import quartz.compiler.tokenizer.TokenType
 

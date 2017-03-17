@@ -1,6 +1,6 @@
-package quartz.compiler.parser.nodes.statement
+package quartz.compiler.tree.statement
 
-import quartz.compiler.parser.nodes.ExpressionNode
+import quartz.compiler.tree.ExpressionNode
 import quartz.compiler.util.Type
 
 /**

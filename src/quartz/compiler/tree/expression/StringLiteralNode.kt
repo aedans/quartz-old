@@ -1,6 +1,6 @@
-package quartz.compiler.parser.nodes.expression
+package quartz.compiler.tree.expression
 
-import quartz.compiler.parser.nodes.ExpressionNode
+import quartz.compiler.tree.ExpressionNode
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.QArray
 import types.Primitives

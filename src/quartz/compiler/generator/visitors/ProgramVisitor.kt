@@ -4,7 +4,7 @@ import quartz.compiler.generator.Visitor
 import quartz.compiler.generator.visitors.fndeclaration.FnDeclarationVisitor
 import quartz.compiler.generator.visitors.fndeclaration.FnPrototypeVisitor
 import quartz.compiler.generator.visitors.fndeclaration.statement.inlineCVisitor
-import quartz.compiler.parser.nodes.ProgramNode
+import quartz.compiler.tree.ProgramNode
 
 /**
  * Created by Aedan Smith.

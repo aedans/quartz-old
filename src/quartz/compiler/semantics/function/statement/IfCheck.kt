@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.function.statement
 
-import quartz.compiler.parser.nodes.StatementNode
-import quartz.compiler.parser.nodes.statement.IfNode
+import quartz.compiler.tree.StatementNode
+import quartz.compiler.tree.statement.IfNode
 import quartz.compiler.semantics.SemanticCheck
 import quartz.compiler.semantics.function.ExpressionCheck
 import quartz.compiler.semantics.function.StatementCheck

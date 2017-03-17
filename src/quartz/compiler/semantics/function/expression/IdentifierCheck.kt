@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.function.expression
 
-import quartz.compiler.parser.nodes.ExpressionNode
-import quartz.compiler.parser.nodes.expression.IdentifierNode
+import quartz.compiler.tree.ExpressionNode
+import quartz.compiler.tree.expression.IdentifierNode
 import quartz.compiler.semantics.SemanticCheck
 
 /**

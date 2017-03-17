@@ -1,7 +1,7 @@
 package quartz.compiler.parser.parsers.fndeclaration.statement
 
 import quartz.compiler.parser.Parser
-import quartz.compiler.parser.nodes.statement.IfNode
+import quartz.compiler.tree.statement.IfNode
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.fndeclaration.ExpressionParser
 import quartz.compiler.parser.parsers.fndeclaration.StatementParser

@@ -1,6 +1,6 @@
 package quartz.compiler.util
 
-import quartz.compiler.parser.nodes.FnDeclarationNode
+import quartz.compiler.tree.FnDeclarationNode
 
 /**
  * Created by Aedan Smith.

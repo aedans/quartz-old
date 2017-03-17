@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers.fndeclaration
 
 import quartz.compiler.parser.ParseException
 import quartz.compiler.parser.Parser
-import quartz.compiler.parser.nodes.StatementNode
+import quartz.compiler.tree.StatementNode
 import quartz.compiler.parser.parse
 import quartz.compiler.tokenizer.TokenStream
 

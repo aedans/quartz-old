@@ -2,7 +2,7 @@ package quartz.compiler.parser.parsers.fndeclaration.expression
 
 import quartz.compiler.parser.Parser
 import quartz.compiler.parser.verify
-import quartz.compiler.parser.nodes.expression.NumberLiteralNode
+import quartz.compiler.tree.expression.NumberLiteralNode
 import quartz.compiler.tokenizer.TokenType
 import types.Primitives
 
