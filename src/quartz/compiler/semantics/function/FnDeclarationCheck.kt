@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.function
 
-import quartz.compiler.tree.ProgramNode
 import quartz.compiler.semantics.SemanticCheck
 import quartz.compiler.semantics.function.expression.identifierCheck
 import quartz.compiler.semantics.function.statement.FnCallCheck
@@ -8,6 +7,8 @@ import quartz.compiler.semantics.function.statement.IfCheck
 import quartz.compiler.semantics.function.statement.VarDeclarationCheck
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.util.Variable
 import quartz.compiler.util.function
 
 /**
@@ -32,6 +33,9 @@ class FnDeclarationCheck(
 
         for (fnDeclarationNode in node.fnDeclarations) {
             val localSymbolTable = LocalSymbolTable(symbolTable)
+            for (arg in fnDeclarationNode.args) {
+                localSymbolTable.add(arg.first, Variable(arg.first, arg.second))
+            }
             for (statementNode in fnDeclarationNode.statements) {
                 statementCheck(statementNode, localSymbolTable)
             }

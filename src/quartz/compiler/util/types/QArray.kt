@@ -16,7 +16,7 @@ data class QArray(val type: Type) : Type {
     }
 
     override fun toCString(): String {
-        return "$type*"
+        return "${type.toCString()}*"
     }
 
     override fun equals(other: Any?): Boolean {

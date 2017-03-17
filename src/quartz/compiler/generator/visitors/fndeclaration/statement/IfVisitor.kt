@@ -18,18 +18,21 @@ class IfVisitor(val expressionVisitor: ExpressionVisitor, val statementVisitor: 
 
         string.append("if (")
         expressionVisitor(node.test, string, depth)
-        string.appendln(") {")
+        string.appendln("){")
         for (statement in node.trueStatements) {
             string.append("    " * (depth + 1))
             statementVisitor(statement, string, depth + 1)
             string.appendln(";")
         }
-        string.appendln(("    " * depth) + "} else {")
-        for (statement in node.falseStatements) {
-            string.append("    " * (depth + 1))
-            statementVisitor(statement, string, depth + 1)
-            string.appendln(";")
-        }
         string.append(("    " * depth) + "}")
+        if (!node.falseStatements.isEmpty()) {
+            string.appendln("else{")
+            for (statement in node.falseStatements) {
+                string.append("    " * (depth + 1))
+                statementVisitor(statement, string, depth + 1)
+                string.appendln(";")
+            }
+            string.append(("    " * depth) + "}")
+        }
     }
 }
