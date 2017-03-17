@@ -1,18 +1,18 @@
 package quartz.compiler.semantics.function.statement
 
+import quartz.compiler.semantics.SemanticAnalyzer
+import quartz.compiler.semantics.checkType
+import quartz.compiler.semantics.function.ExpressionAnalyzer
+import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.tree.StatementNode
 import quartz.compiler.tree.statement.FnCallNode
-import quartz.compiler.semantics.SemanticCheck
-import quartz.compiler.semantics.checkType
-import quartz.compiler.semantics.function.ExpressionCheck
-import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
  */
 
-class FnCallCheck(val expressionCheck: ExpressionCheck) : SemanticCheck<StatementNode> {
+class FnCallAnalyzer(val expressionAnalyzer: ExpressionAnalyzer) : SemanticAnalyzer<StatementNode> {
     override fun invoke(node: StatementNode, symbolTable: SymbolTable) {
         if (node !is FnCallNode)
             return
@@ -25,7 +25,7 @@ class FnCallCheck(val expressionCheck: ExpressionCheck) : SemanticCheck<Statemen
             throw Exception("Incorrect number of arguments for $node")
 
         for (i in 0 until node.expressions.size) {
-            expressionCheck(node.expressions[i], symbolTable)
+            expressionAnalyzer(node.expressions[i], symbolTable)
             checkType(
                     function.args[i],
                     { invalidArguments(node, function) },

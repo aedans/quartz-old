@@ -1,15 +1,15 @@
 package quartz.compiler.semantics.function
 
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.semantics.SemanticCheck
+import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.semantics.symboltable.SymbolTable
+import quartz.compiler.tree.StatementNode
 
 /**
  * Created by Aedan Smith.
  */
 
-class StatementCheck : SemanticCheck<StatementNode> {
-    val statementChecks = mutableListOf<SemanticCheck<StatementNode>>()
+class StatementAnalyzer : SemanticAnalyzer<StatementNode> {
+    val statementChecks = mutableListOf<SemanticAnalyzer<StatementNode>>()
 
     override fun invoke(node: StatementNode, symbolTable: SymbolTable) {
         statementChecks.forEach { it(node, symbolTable) }

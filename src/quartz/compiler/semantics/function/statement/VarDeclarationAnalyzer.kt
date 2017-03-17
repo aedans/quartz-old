@@ -1,23 +1,23 @@
 package quartz.compiler.semantics.function.statement
 
+import quartz.compiler.semantics.SemanticAnalyzer
+import quartz.compiler.semantics.checkType
+import quartz.compiler.semantics.function.ExpressionAnalyzer
+import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.tree.StatementNode
 import quartz.compiler.tree.statement.VarDeclarationNode
-import quartz.compiler.semantics.SemanticCheck
-import quartz.compiler.semantics.checkType
-import quartz.compiler.semantics.function.ExpressionCheck
-import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.util.Variable
 
 /**
  * Created by Aedan Smith.
  */
 
-class VarDeclarationCheck(val expressionCheck: ExpressionCheck) : SemanticCheck<StatementNode> {
+class VarDeclarationAnalyzer(val expressionAnalyzer: ExpressionAnalyzer) : SemanticAnalyzer<StatementNode> {
     override fun invoke(node: StatementNode, symbolTable: SymbolTable) {
         if (node !is VarDeclarationNode)
             return
 
-        expressionCheck(node.expression, symbolTable)
+        expressionAnalyzer(node.expression, symbolTable)
 
         checkType(
                 node.type,

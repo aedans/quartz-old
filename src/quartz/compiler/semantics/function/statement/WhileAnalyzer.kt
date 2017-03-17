@@ -1,24 +1,24 @@
 package quartz.compiler.semantics.function.statement
 
-import quartz.compiler.semantics.SemanticCheck
-import quartz.compiler.semantics.function.ExpressionCheck
-import quartz.compiler.semantics.function.StatementCheck
+import quartz.compiler.semantics.SemanticAnalyzer
+import quartz.compiler.semantics.function.ExpressionAnalyzer
+import quartz.compiler.semantics.function.StatementAnalyzer
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.IfNode
+import quartz.compiler.tree.statement.WhileNode
 import types.Primitives
 
 /**
  * Created by Aedan Smith.
  */
 
-class IfCheck(val statementCheck: StatementCheck, val expressionCheck: ExpressionCheck) : SemanticCheck<StatementNode> {
+class WhileAnalyzer(val statementAnalyzer: StatementAnalyzer, val expressionAnalyzer: ExpressionAnalyzer) : SemanticAnalyzer<StatementNode> {
     override fun invoke(node: StatementNode, table: SymbolTable) {
-        if (node !is IfNode)
+        if (node !is WhileNode)
             return
 
-        expressionCheck(node.test, table)
+        expressionAnalyzer(node.test, table)
 
         if (node.test.type == null) {
             node.test.type = Primitives.bool
@@ -30,11 +30,8 @@ class IfCheck(val statementCheck: StatementCheck, val expressionCheck: Expressio
 
         val localSymbolTable = LocalSymbolTable(table)
 
-        for (statement in node.trueStatements) {
-            statementCheck(statement, localSymbolTable)
-        }
-        for (statement in node.falseStatements) {
-            statementCheck(statement, localSymbolTable)
+        for (statement in node.statements) {
+            statementAnalyzer(statement, localSymbolTable)
         }
     }
 }
