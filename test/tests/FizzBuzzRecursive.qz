@@ -1,0 +1,37 @@
+%
+#include <stdio.h>
+%
+
+fn main() {
+    fizzBuzz(100)
+}
+
+fn fizzBuzz(i: int) {
+    if (greaterThan(i, 1))
+        fizzBuzz(sub(i, 1))
+
+    if (and(eq(mod(i, 3), 0), eq(mod(i, 5), 0)))
+        print("FizzBuzz ")
+    else if (eq(mod(i, 3), 0))
+        print("Fizz ")
+    else if (eq(mod(i, 5), 0))
+        print("Buzz ")
+    else
+        printInt(i)
+}
+
+fn greaterThan(i1: int, i2: int): int = %i1 > i2%
+
+fn eq(i1: int, i2: int): int = %i1 == i2%
+
+fn and(i1: int, i2: int): int = %i1 && i2%
+
+fn mod(i1: int, i2: int): int = %i1 \% i2%
+
+fn sub(i1: int, i2: int): int = %i1 - i2%
+
+fn print(s: char[])
+    %printf(s)%
+
+fn printInt(i: int)
+    %printf("\%d ", i)%

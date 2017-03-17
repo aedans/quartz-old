@@ -15,4 +15,5 @@ fn countTo(max: int) {
 
 fn lessThan(i1: int, i2: int): int = %i1 < i2%
 
-fn print(i: int) = %printf("\%d ", i)%
+fn print(i: int)
+    %printf("\%d ", i)%
