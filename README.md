@@ -73,15 +73,11 @@ fn printTrueOrFalse(i: int) {
     // If statements work as normal
     if (i) {
         print("true")
-    } else {
+    } else // Braces can be omitted for single-statement blocks
         print("false")
-    }
 }
 
-fn halt() {
+fn halt() // Braces can be omitted for single-statement functions, too
     // While loops work as normal
-    while (1) {
-        doStuff()
-    }
-}
+    while (1) { }
 </pre>
