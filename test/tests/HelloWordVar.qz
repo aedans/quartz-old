@@ -1,4 +1,6 @@
-%#include <stdio>%
+%
+#include <stdio.h>
+%
 
 fn main(): int {
     val helloWorld = "Hello, World!"

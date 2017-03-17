@@ -1,3 +1,7 @@
+%
+#include <stdio.h>
+%
+
 fn main(): int {
     print(helloWorld())
     return 0

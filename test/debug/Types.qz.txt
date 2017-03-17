@@ -1,75 +1,45 @@
-Found FnDeclarationNode(name=main, args=[], rType=int)
-Found VarDeclarationNode(name=one, type=long, mutable=false)
-Found NumberLiteralNode(value=1, type=1)
-Found VarDeclarationNode(name=two, type=int, mutable=false)
-Found NumberLiteralNode(value=2, type=2)
-Found VarDeclarationNode(name=three, type=short, mutable=false)
-Found NumberLiteralNode(value=3, type=3)
-Found VarDeclarationNode(name=four, type=char, mutable=false)
-Found NumberLiteralNode(value=4, type=4)
-Found VarDeclarationNode(name=result, type=null, mutable=false)
-Found FnCallNode(name=addFour)
-Found IdentifierNode(name=one)
-Found IdentifierNode(name=two)
-Found IdentifierNode(name=three)
-Found IdentifierNode(name=four)
-Found ReturnNode
-Found NumberLiteralNode(value=0, type=0)
-Found FnDeclarationNode(name=addFour, args=[(one, char), (two, short), (three, int), (four, long)], rType=double)
-Found FnCallNode(name=add)
-Found FnCallNode(name=add)
-Found IdentifierNode(name=one)
-Found IdentifierNode(name=four)
-Found FnCallNode(name=add)
-Found IdentifierNode(name=three)
-Found IdentifierNode(name=two)
-Found FnDeclarationNode(name=add, args=[(one, short), (two, int)], rType=long)
-Found InlineCNode
+Found main(): int
 
-ProgramNode
-|   FnDeclarationNode(name=main, args=[], rType=int)
-|   |   VarDeclarationNode(name=one, type=long, mutable=false)
-|   |   |   NumberLiteralNode(value=1, type=1)
-|   |   VarDeclarationNode(name=two, type=int, mutable=false)
-|   |   |   NumberLiteralNode(value=2, type=2)
-|   |   VarDeclarationNode(name=three, type=short, mutable=false)
-|   |   |   NumberLiteralNode(value=3, type=3)
-|   |   VarDeclarationNode(name=four, type=char, mutable=false)
-|   |   |   NumberLiteralNode(value=4, type=4)
-|   |   VarDeclarationNode(name=result, type=null, mutable=false)
-|   |   |   FnCallNode(name=addFour)
-|   |   |   |   IdentifierNode(name=one)
-|   |   |   |   IdentifierNode(name=two)
-|   |   |   |   IdentifierNode(name=three)
-|   |   |   |   IdentifierNode(name=four)
-|   |   ReturnNode
-|   |   |   NumberLiteralNode(value=0, type=0)
-|   FnDeclarationNode(name=addFour, args=[(one, char), (two, short), (three, int), (four, long)], rType=double)
-|   |   ReturnNode
-|   |   |   FnCallNode(name=add)
-|   |   |   |   FnCallNode(name=add)
-|   |   |   |   |   IdentifierNode(name=one)
-|   |   |   |   |   IdentifierNode(name=four)
-|   |   |   |   FnCallNode(name=add)
-|   |   |   |   |   IdentifierNode(name=three)
-|   |   |   |   |   IdentifierNode(name=two)
-|   FnDeclarationNode(name=add, args=[(one, short), (two, int)], rType=long)
-|   |   ReturnNode
-|   |   |   InlineCNode
+Found val one: long = 1: int
+Found val two: int = 2: int
+Found val three: short = 3: int
+Found val four: char = 4: int
+Found val result = addFour(one, two, three, four)
+Found return(0: int)
+Found addFour(char one, short two, int three, long four): double
+
+Found add(short one, int two): long
+
 
 main(): int
-    val one: long = (long) (1: int)
-    val two: int = 2: int
-    val three: short = (short) (3: int)
-    val four: char = (char) (4: int)
-    val result: double = addFour((char) (one: long), (short) (two: int), (int) (three: short), (long) (four: char)): double
-    return 0: int
+|   val one: long = 1: int
+|   val two: int = 2: int
+|   val three: short = 3: int
+|   val four: char = 4: int
+|   val result = addFour(one, two, three, four)
+|   return(0: int)
 
-addFour(one: char, two: short, three: int, four: long): double
-    return (double) (add((short) (add((short) (one: char), (int) (four: long)): long), (int) (add((short) (three: int), (int) (two: short)): long)): long)
+addFour(char one, short two, int three, long four): double
+|   return(add(add(one, four), add(three, two)))
 
-add(one: short, two: int): long
-    return (long) (%one + two%)
+add(short one, int two): long
+|   return(InlineCNode)
 
 
-Compiled in 88ms
+
+main(): int
+|   val one: long = (long) (1: int)
+|   val two: int = 2: int
+|   val three: short = (short) (3: int)
+|   val four: char = (char) (4: int)
+|   val result: double = addFour((char) (one), (short) (two), (int) (three), (long) (four))
+|   return(0: int)
+
+addFour(char one, short two, int three, long four): double
+|   return(add(add(one, four), add(three, two)))
+
+add(short one, int two): long
+|   return(InlineCNode)
+
+
+Compiled in 81ms

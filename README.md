@@ -35,7 +35,7 @@ same line.
 <pre>
 // Return type goes after the declaration
 fn main(): int {
-    // Calling fnDeclarations works as normal
+    // Calling function declarations works as normal
     greetTheWorld()
     return 0
 }
@@ -46,17 +46,17 @@ fn greetTheWorld() {
     printf(`theWorld'sGreeting`())
 }
 
-// Single expression fnDeclarations
-// Single expressions' types can be inferenced (TODO)
-fn `theWorld'sGreeting`() = "Hello, World!"
+fn `theWorld'sGreeting`(): char[] { 
+    return "Hello, World!"
+}
 </pre>
 
 Illegal characters in function names will be replaced with
 the appropriate ascii code, and illegal names will be prepended
 with '_'.
 
-Single expression fnDeclarations are not guaranteed to compile to
-single statement C fnDeclarations. (ex: return if-else)
+Single expression function declarations are not guaranteed to compile to
+single statement C function declarations. (ex: return if-else)
 
 Here, the "theWorld'sGreeting" function would compile to
 
@@ -65,24 +65,3 @@ char* theWorld39sGreeting() {
     return "Hello, World!" 
 }
 </pre>
-
-#### Casting
-
-<pre>
-fn intToLong(i: int): long {
-    // Cast int to long
-    return (long) i
-}
-
-fn charToInt(c: char): int {
-    // Compiler will implicity cast c to an int
-    return c
-}
-
-fn intToString(i: int): string {
-    // Compilation Error: Could not cast int to char[]
-    return (string) i
-}
-</pre>
-
-Non-redundant casts in Quartz are compiled directly to C casts.

@@ -1,14 +1,14 @@
-Found FnDeclarationNode(name=main, args=[], rType=int)
-Found ReturnNode
-Found NumberLiteralNode(value=0, type=0)
+Found main(): int
 
-ProgramNode
-|   FnDeclarationNode(name=main, args=[], rType=int)
-|   |   ReturnNode
-|   |   |   NumberLiteralNode(value=0, type=0)
+Found return(0: int)
 
 main(): int
-    return 0: int
+|   return(0: int)
 
 
-Compiled in 81ms
+
+main(): int
+|   return(0: int)
+
+
+Compiled in 75ms

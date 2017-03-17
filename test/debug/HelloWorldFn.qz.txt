@@ -1,35 +1,32 @@
-Found FnDeclarationNode(name=main, args=[], rType=int)
-Found FnCallNode(name=print)
-Found FnCallNode(name=helloWorld)
-Found ReturnNode
-Found NumberLiteralNode(value=0, type=0)
-Found FnDeclarationNode(name=helloWorld, args=[], rType=char[])
-Found StringLiteralNode(value=Hello, World!)
-Found FnDeclarationNode(name=print, args=[(msg, char[])], rType=void)
-Found InlineCNode
+Found main(): int
 
-ProgramNode
-|   FnDeclarationNode(name=main, args=[], rType=int)
-|   |   FnCallNode(name=print)
-|   |   |   FnCallNode(name=helloWorld)
-|   |   ReturnNode
-|   |   |   NumberLiteralNode(value=0, type=0)
-|   FnDeclarationNode(name=helloWorld, args=[], rType=char[])
-|   |   ReturnNode
-|   |   |   StringLiteralNode(value=Hello, World!)
-|   FnDeclarationNode(name=print, args=[(msg, char[])], rType=void)
-|   |   ReturnNode
-|   |   |   InlineCNode
+Found return(0: int)
+Found helloWorld(): char[]
+
+Found print(char[] msg): void
+
 
 main(): int
-    print(helloWorld(): char[]): void
-    return 0: int
+|   print(helloWorld())
+|   return(0: int)
 
 helloWorld(): char[]
-    return Hello, World!: char[]
+|   return("Hello, World!")
 
-print(msg: char[]): void
-    return %printf(msg)%
+print(char[] msg): void
+|   InlineCNode
 
 
-Compiled in 67ms
+
+main(): int
+|   print(helloWorld())
+|   return(0: int)
+
+helloWorld(): char[]
+|   return("Hello, World!")
+
+print(char[] msg): void
+|   InlineCNode
+
+
+Compiled in 59ms

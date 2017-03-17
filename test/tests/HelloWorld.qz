@@ -1,4 +1,6 @@
-%#include <stdio>%
+%
+#include <stdio.h>
+%
 
 fn main(): int {
     print("Hello, World!")

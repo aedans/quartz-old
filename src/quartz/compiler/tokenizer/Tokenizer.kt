@@ -1,9 +1,9 @@
 package quartz.compiler.tokenizer
 
-import quartz.compiler.util.misc.StringIterator
+import quartz.compiler.util.misc.CharStream
 
 /**
  * Created by Aedan Smith.
  */
 
-typealias Tokenizer = (StringIterator) -> Token?
+typealias Tokenizer = (CharStream) -> Token?

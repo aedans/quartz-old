@@ -1,27 +1,29 @@
 package quartz.compiler
 
 import quartz.compiler.generator.Generator
-import quartz.compiler.parser.parse
-import quartz.compiler.parser.parsers.statements.expressions.inlineCParser
-import quartz.compiler.parser.parsers.fnDeclarationParser
-import quartz.compiler.parser.parsers.parsenodes.ProgramNode
-import quartz.compiler.syntax.builder.toSyntaxTree
+import quartz.compiler.parser.parsers.ProgramParser
+import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.tokenizer.tokenize
 import quartz.compiler.tokenizer.tokenizers.*
-import quartz.compiler.util.misc.StringIterator
+import quartz.compiler.util.misc.CharStream
 
 /**
  * Created by Aedan Smith.
  */
 
-class Compiler(val src: String) {
+class Compiler(
+        val src: String,
+        val programParser: ProgramParser = ProgramParser(),
+        val semanticAnalyzer: SemanticAnalyzer = SemanticAnalyzer(),
+        val generator: Generator = Generator()
+) {
     fun compile(): String {
-        val tokens = tokenizers.tokenize(StringIterator(src))
-        val program = parsers.parse(tokens, ProgramNode()) { it.hasNext() }
-        println('\n' + program.toString(0))
-        val syntaxTree = program.toSyntaxTree()
-        println(syntaxTree.toString())
-        return Generator.generate(syntaxTree)
+        val tokens = tokenizers.tokenize(CharStream(src))
+        val program = programParser(tokens)
+        println('\n' + program.toString())
+        semanticAnalyzer.analyze(program)
+        println('\n' + program.toString())
+        return generator.generate(program)
     }
 
     val tokenizers = listOf(
@@ -30,10 +32,5 @@ class Compiler(val src: String) {
             inlineCTokenizer,
             symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ',', '='),
             wordTokenizer("fn", "val", "var", "return")
-    )
-
-    val parsers = listOf(
-            fnDeclarationParser,
-            inlineCParser
     )
 }

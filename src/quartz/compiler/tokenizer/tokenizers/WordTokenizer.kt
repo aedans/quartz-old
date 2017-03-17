@@ -2,7 +2,7 @@ package quartz.compiler.tokenizer.tokenizers
 
 import quartz.compiler.tokenizer.Token
 import quartz.compiler.tokenizer.TokenType
-import quartz.compiler.util.misc.StringIterator
+import quartz.compiler.util.misc.CharStream
 
 /**
  * Created by Aedan Smith.
@@ -12,7 +12,7 @@ private val idchars = ('a'..'z') + ('A'..'Z') + ('0'..'9') + '_' + '-'
 private val iidchars = ('a'..'z') + ('A'..'Z')+ '_'
 
 // TODO Migrate keywords to parser
-fun wordTokenizer(vararg keywords: String) = { src: StringIterator ->
+fun wordTokenizer(vararg keywords: String) = { src: CharStream ->
     if (src.peek() !in iidchars) null
     else {
         var string = ""

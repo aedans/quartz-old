@@ -1,82 +1,36 @@
-Found FnDeclarationNode(name=main, args=[], rType=int)
-Found VarDeclarationNode(name=added, type=null, mutable=false)
-Found FnCallNode(name=add)
-Found NumberLiteralNode(value=1, type=1)
-Found NumberLiteralNode(value=2, type=2)
-Found VarDeclarationNode(name=subtracted, type=null, mutable=false)
-Found FnCallNode(name=sub)
-Found NumberLiteralNode(value=2, type=2)
-Found NumberLiteralNode(value=1, type=1)
-Found VarDeclarationNode(name=multiplied, type=null, mutable=false)
-Found FnCallNode(name=mlt)
-Found IdentifierNode(name=added)
-Found IdentifierNode(name=subtracted)
-Found VarDeclarationNode(name=divided, type=null, mutable=false)
-Found FnCallNode(name=div)
-Found IdentifierNode(name=subtracted)
-Found IdentifierNode(name=added)
-Found ReturnNode
-Found NumberLiteralNode(value=0, type=0)
-Found FnDeclarationNode(name=add, args=[(d1, double), (d2, double)], rType=double)
-Found InlineCNode
-Found FnDeclarationNode(name=sub, args=[(d1, double), (d2, double)], rType=double)
-Found InlineCNode
-Found FnDeclarationNode(name=mlt, args=[(d1, double), (d2, double)], rType=double)
-Found InlineCNode
-Found FnDeclarationNode(name=div, args=[(d1, double), (d2, double)], rType=double)
-Found InlineCNode
+Found main(): int
 
-ProgramNode
-|   FnDeclarationNode(name=main, args=[], rType=int)
-|   |   VarDeclarationNode(name=added, type=null, mutable=false)
-|   |   |   FnCallNode(name=add)
-|   |   |   |   NumberLiteralNode(value=1, type=1)
-|   |   |   |   NumberLiteralNode(value=2, type=2)
-|   |   VarDeclarationNode(name=subtracted, type=null, mutable=false)
-|   |   |   FnCallNode(name=sub)
-|   |   |   |   NumberLiteralNode(value=2, type=2)
-|   |   |   |   NumberLiteralNode(value=1, type=1)
-|   |   VarDeclarationNode(name=multiplied, type=null, mutable=false)
-|   |   |   FnCallNode(name=mlt)
-|   |   |   |   IdentifierNode(name=added)
-|   |   |   |   IdentifierNode(name=subtracted)
-|   |   VarDeclarationNode(name=divided, type=null, mutable=false)
-|   |   |   FnCallNode(name=div)
-|   |   |   |   IdentifierNode(name=subtracted)
-|   |   |   |   IdentifierNode(name=added)
-|   |   ReturnNode
-|   |   |   NumberLiteralNode(value=0, type=0)
-|   FnDeclarationNode(name=add, args=[(d1, double), (d2, double)], rType=double)
-|   |   ReturnNode
-|   |   |   InlineCNode
-|   FnDeclarationNode(name=sub, args=[(d1, double), (d2, double)], rType=double)
-|   |   ReturnNode
-|   |   |   InlineCNode
-|   FnDeclarationNode(name=mlt, args=[(d1, double), (d2, double)], rType=double)
-|   |   ReturnNode
-|   |   |   InlineCNode
-|   FnDeclarationNode(name=div, args=[(d1, double), (d2, double)], rType=double)
-|   |   ReturnNode
-|   |   |   InlineCNode
+Found val added = add(1: int, 2: int)
+Found val subtracted = sub(2: int, 1: int)
+Found val multiplied = mlt(added, subtracted)
+Found val divided = div(subtracted, added)
+Found return(0: int)
+Found add(double d1, double d2): void
+
+Found sub(double d1, double d2): void
+
+Found mlt(double d1, double d2): void
+
+Found div(double d1, double d2): void
+
 
 main(): int
-    val added: double = add((double) (1: int), (double) (2: int)): double
-    val subtracted: double = sub((double) (2: int), (double) (1: int)): double
-    val multiplied: double = mlt(added: double, subtracted: double): double
-    val divided: double = div(subtracted: double, added: double): double
-    return 0: int
+|   val added = add(1: int, 2: int)
+|   val subtracted = sub(2: int, 1: int)
+|   val multiplied = mlt(added, subtracted)
+|   val divided = div(subtracted, added)
+|   return(0: int)
 
-add(d1: double, d2: double): double
-    return (double) (%d1 + d2%)
+add(double d1, double d2): void
+|   InlineCNode
 
-sub(d1: double, d2: double): double
-    return (double) (%d1 - d2%)
+sub(double d1, double d2): void
+|   InlineCNode
 
-mlt(d1: double, d2: double): double
-    return (double) (%d1 * d2%)
+mlt(double d1, double d2): void
+|   InlineCNode
 
-div(d1: double, d2: double): double
-    return (double) (%d1 / d2%)
+div(double d1, double d2): void
+|   InlineCNode
 
 
-Compiled in 75ms

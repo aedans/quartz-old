@@ -2,7 +2,7 @@ package quartz.compiler.tokenizer.tokenizers
 
 import quartz.compiler.tokenizer.Token
 import quartz.compiler.tokenizer.TokenType
-import quartz.compiler.util.misc.StringIterator
+import quartz.compiler.util.misc.CharStream
 
 /**
  * Created by Aedan Smith.
@@ -11,7 +11,7 @@ import quartz.compiler.util.misc.StringIterator
 private val numbers = ('0'..'9') + '.'
 
 // TODO Number formatting
-val numberLiteralTokenizer = { src: StringIterator ->
+val numberLiteralTokenizer = { src: CharStream ->
     if (src.peek() !in numbers) null
     else {
         var number = ""

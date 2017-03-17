@@ -2,13 +2,13 @@ package quartz.compiler.tokenizer.tokenizers
 
 import quartz.compiler.tokenizer.Token
 import quartz.compiler.tokenizer.TokenType
-import quartz.compiler.util.misc.StringIterator
+import quartz.compiler.util.misc.CharStream
 
 /**
  * Created by Aedan Smith.
  */
 
-fun symbolTokenizer(vararg symbols: Char) = { src: StringIterator ->
+fun symbolTokenizer(vararg symbols: Char) = { src: CharStream ->
     var token: Token? = null
     @Suppress("LoopToCallChain")
     for (symbol in symbols) {
@@ -16,5 +16,5 @@ fun symbolTokenizer(vararg symbols: Char) = { src: StringIterator ->
             token = Token(TokenType.SYMBOL, symbol.toString())
         }
     }
-    token?.apply { src.skip() }
+    token?.apply { src.next() }
 }

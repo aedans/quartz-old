@@ -1,33 +1,27 @@
-Found InlineCNode
-Found FnDeclarationNode(name=main, args=[], rType=int)
-Found VarDeclarationNode(name=helloWorld, type=null, mutable=false)
-Found StringLiteralNode(value=Hello, World!)
-Found FnCallNode(name=print)
-Found IdentifierNode(name=helloWorld)
-Found ReturnNode
-Found NumberLiteralNode(value=0, type=0)
-Found FnDeclarationNode(name=print, args=[(msg, char[])], rType=void)
-Found InlineCNode
+Found main(): int
 
-ProgramNode
-|   InlineCNode
-|   FnDeclarationNode(name=main, args=[], rType=int)
-|   |   VarDeclarationNode(name=helloWorld, type=null, mutable=false)
-|   |   |   StringLiteralNode(value=Hello, World!)
-|   |   FnCallNode(name=print)
-|   |   |   IdentifierNode(name=helloWorld)
-|   |   ReturnNode
-|   |   |   NumberLiteralNode(value=0, type=0)
-|   FnDeclarationNode(name=print, args=[(msg, char[])], rType=void)
-|   |   InlineCNode
+Found val helloWorld = "Hello, World!"
+Found return(0: int)
+Found print(char[] msg): void
+
 
 main(): int
-    val helloWorld: char[] = Hello, World!: char[]
-    print(helloWorld: char[]): void
-    return 0: int
+|   val helloWorld = "Hello, World!"
+|   print(helloWorld)
+|   return(0: int)
 
-print(msg: char[]): void
-    %printf(msg)%
+print(char[] msg): void
+|   InlineCNode
 
 
-Compiled in 68ms
+
+main(): int
+|   val helloWorld: char[] = "Hello, World!"
+|   print(helloWorld)
+|   return(0: int)
+
+print(char[] msg): void
+|   InlineCNode
+
+
+Compiled in 80ms
