@@ -10,11 +10,11 @@ fn countTo(i: int) {
     if (greaterThan(i, 0)) {
         countTo(sub(i, 1))
     }
-    println(i)
+    print(i)
 }
 
 fn greaterThan(i1: int, i2: int): int = %i1 > i2%
 
 fn sub(i1: int, i2: int): int = %i1 - i2%
 
-fn println(i: int) = %printf("\%d ", i)%
+fn print(i: int) = %printf("\%d ", i)%
