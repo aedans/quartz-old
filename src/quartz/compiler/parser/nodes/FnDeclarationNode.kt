@@ -15,8 +15,8 @@ class FnDeclarationNode(val name: String, val args: ArrayList<Pair<String, Type>
         var s = "$name("
         args.dropLast(1).forEach { s += it.string() + ", " }
         if (!args.isEmpty()) s += args.last().string()
-        s += "): $returnType\n"
-        statements.forEach { s += "|   " + it.toString() + '\n' }
+        s += "): $returnType"
+        statements.forEach { s += '\n' + it.toString(1) }
         return s
     }
 }

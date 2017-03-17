@@ -19,7 +19,7 @@ class StatementParser : Parser<StatementNode> {
             for (parser in subParsers) {
                 try {
                     val node = parser(this)
-                    tokens.flush()
+                    // TODO flush tokens
                     return@parse node
                 } catch (e: ParseException) {
                     tokens.index = fallback

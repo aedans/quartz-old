@@ -11,18 +11,18 @@ import quartz.compiler.parser.nodes.statement.FnCallNode
  */
 
 class FnCallVisitor(val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
-    override fun invoke(node: StatementNode, string: StringBuilder) {
+    override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
         if (node !is FnCallNode)
             return
 
-        nameVisitor(node.name, string)
+        nameVisitor(node.name, string, depth)
         string.append('(')
         node.expressions.dropLast(1).forEach {
-            expressionVisitor(it, string)
+            expressionVisitor(it, string, depth)
             string.append(", ")
         }
         if (!node.expressions.isEmpty())
-            expressionVisitor(node.expressions.last(), string)
+            expressionVisitor(node.expressions.last(), string, depth)
         string.append(')')
     }
 }

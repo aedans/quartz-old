@@ -10,7 +10,7 @@ import quartz.compiler.parser.nodes.ExpressionNode
 class ExpressionVisitor : Visitor<ExpressionNode> {
     val subVisitors = mutableListOf<Visitor<ExpressionNode>>()
 
-    override fun invoke(node: ExpressionNode, string: StringBuilder) {
-        subVisitors.forEach { it(node, string) }
+    override fun invoke(node: ExpressionNode, string: StringBuilder, depth: Int) {
+        subVisitors.forEach { it(node, string, depth) }
     }
 }

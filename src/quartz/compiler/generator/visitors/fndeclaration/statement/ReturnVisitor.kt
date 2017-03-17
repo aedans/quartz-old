@@ -10,11 +10,11 @@ import quartz.compiler.parser.nodes.statement.ReturnNode
  */
 
 class ReturnVisitor(val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
-    override fun invoke(node: StatementNode, string: StringBuilder) {
+    override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
         if (node !is ReturnNode)
             return
 
         string.append("return ")
-        expressionVisitor(node.expressionNode, string)
+        expressionVisitor(node.expressionNode, string, depth)
     }
 }

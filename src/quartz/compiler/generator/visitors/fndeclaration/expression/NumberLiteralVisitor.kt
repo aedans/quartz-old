@@ -9,7 +9,7 @@ import quartz.compiler.parser.nodes.expression.NumberLiteralNode
  */
 
 // TODO Escape characters
-val numberLiteralVisitor: Visitor<ExpressionNode> = { numberLiteral, string ->
+val numberLiteralVisitor: Visitor<ExpressionNode> = { numberLiteral, string, _ ->
     if (numberLiteral is NumberLiteralNode)
         string.append(numberLiteral.string)
 }

@@ -7,6 +7,6 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-val typeVisitor: Visitor<Type> = { type, string ->
+val typeVisitor: Visitor<Type> = { type, string, _ ->
     string.append(type.toCString())
 }

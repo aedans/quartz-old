@@ -12,14 +12,14 @@ import quartz.compiler.parser.nodes.statement.VarDeclarationNode
  */
 
 class VarDeclarationVisitor(val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
-    override fun invoke(node: StatementNode, string: StringBuilder) {
+    override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
         if (node !is VarDeclarationNode)
             return
 
-        typeVisitor(node.type ?: throw Exception("Unknown type for $node"), string)
+        typeVisitor(node.type ?: throw Exception("Unknown type for $node"), string, depth)
         string.append(' ')
-        nameVisitor(node.name, string)
+        nameVisitor(node.name, string, depth)
         string.append(" = ")
-        expressionVisitor(node.expression, string)
+        expressionVisitor(node.expression, string, depth)
     }
 }

@@ -9,7 +9,7 @@ import quartz.compiler.parser.nodes.expression.IdentifierNode
  * Created by Aedan Smith.
  */
 
-val identifierVisitor: Visitor<ExpressionNode> = { identifier, string ->
+val identifierVisitor: Visitor<ExpressionNode> = { identifier, string, depth ->
     if (identifier is IdentifierNode)
-        nameVisitor(identifier.name, string)
+        nameVisitor(identifier.name, string, depth)
 }

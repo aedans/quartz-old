@@ -11,11 +11,11 @@ import quartz.compiler.parser.nodes.FnDeclarationNode
  */
 
 class FnPrototypeVisitor : Visitor<FnDeclarationNode> {
-    override fun invoke(node: FnDeclarationNode, string: StringBuilder) {
-        typeVisitor(node.returnType, string)
+    override fun invoke(node: FnDeclarationNode, string: StringBuilder, depth: Int) {
+        typeVisitor(node.returnType, string, depth)
         string.append(' ')
-        nameVisitor(node.name, string)
-        argumentVisitor(node.args, string)
+        nameVisitor(node.name, string, depth)
+        argumentVisitor(node.args, string, depth)
         string.appendln(";")
     }
 }

@@ -65,3 +65,16 @@ char* theWorld39sGreeting() {
     return "Hello, World!" 
 }
 </pre>
+
+### Control flow 
+
+<pre>
+fn printTrueOrFalse(i: int) {
+    // If statements work as normal
+    if (i) {
+        print("true")
+    } else {
+        print("false")
+    }
+}
+</pre>

@@ -4,6 +4,7 @@ import quartz.compiler.parser.nodes.ProgramNode
 import quartz.compiler.semantics.SemanticCheck
 import quartz.compiler.semantics.function.expression.identifierCheck
 import quartz.compiler.semantics.function.statement.FnCallCheck
+import quartz.compiler.semantics.function.statement.IfCheck
 import quartz.compiler.semantics.function.statement.VarDeclarationCheck
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
@@ -18,9 +19,10 @@ class FnDeclarationCheck(
             add(identifierCheck)
             add(FnCallCheck(this@expressionCheck))
         } },
-        val statementCheck: StatementCheck = StatementCheck().apply { this.statementChecks.apply {
+        val statementCheck: StatementCheck = StatementCheck().apply statementCheck@ { this.statementChecks.apply {
             add(VarDeclarationCheck(expressionCheck))
             add(FnCallCheck(expressionCheck))
+            add(IfCheck(this@statementCheck, expressionCheck))
         } }
 ) : SemanticCheck<ProgramNode> {
     override fun invoke(node: ProgramNode, symbolTable: SymbolTable) {

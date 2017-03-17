@@ -14,12 +14,12 @@ class ProgramVisitor(
         val fnPrototypeVisitor: FnPrototypeVisitor = FnPrototypeVisitor(),
         val fnDeclarationVisitor: FnDeclarationVisitor = FnDeclarationVisitor()
 ) : Visitor<ProgramNode> {
-    override fun invoke(node: ProgramNode, string: StringBuilder) {
-        node.fnDeclarations.forEach { fnPrototypeVisitor(it, string) }
-        node.inlineCNodes.forEach { inlineCVisitor(it, string) }
+    override fun invoke(node: ProgramNode, string: StringBuilder, depth: Int) {
+        node.fnDeclarations.forEach { fnPrototypeVisitor(it, string, 0) }
+        node.inlineCNodes.forEach { inlineCVisitor(it, string, 0) }
         node.fnDeclarations.forEach {
             string.appendln()
-            fnDeclarationVisitor(it, string)
+            fnDeclarationVisitor(it, string, 0)
         }
     }
 }

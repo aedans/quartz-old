@@ -7,6 +7,7 @@ import quartz.compiler.parser.parsers.fndeclaration.expression.identifierParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.numberLiteralParser
 import quartz.compiler.parser.parsers.fndeclaration.expression.stringLiteralParser
 import quartz.compiler.parser.parsers.fndeclaration.statement.FnCallParser
+import quartz.compiler.parser.parsers.fndeclaration.statement.IfParser
 import quartz.compiler.parser.parsers.fndeclaration.statement.ReturnParser
 import quartz.compiler.parser.parsers.fndeclaration.statement.VarDeclarationParser
 import quartz.compiler.tokenizer.TokenStream
@@ -26,11 +27,12 @@ class FnDeclarationParser(
             add(FnCallParser(this@expressionParser))
             add(identifierParser)
         } },
-        val statementParser: StatementParser = StatementParser().apply { this.subParsers.apply {
+        val statementParser: StatementParser = StatementParser().apply statementParser@ { this.subParsers.apply {
             add(inlineCParser)
             add(FnCallParser(expressionParser))
             add(VarDeclarationParser(expressionParser))
             add(ReturnParser(expressionParser))
+            add(IfParser(this@statementParser, expressionParser))
         } }
 ): Parser<FnDeclarationNode> {
     override fun invoke(tokens: TokenStream): FnDeclarationNode = tokens.parse {

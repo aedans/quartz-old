@@ -11,14 +11,14 @@ import quartz.compiler.parser.nodes.expression.CastNode
  */
 
 class CastVisitor(val expressionVisitor: ExpressionVisitor): Visitor<ExpressionNode> {
-    override fun invoke(node: ExpressionNode, string: StringBuilder) {
+    override fun invoke(node: ExpressionNode, string: StringBuilder, depth: Int) {
         if (node !is CastNode)
             return
 
         string.append('(')
-        typeVisitor(node.type ?: throw Exception("Unknown type for $node"), string)
+        typeVisitor(node.type ?: throw Exception("Unknown type for $node"), string, depth)
         string.append(") (")
-        expressionVisitor(node.expression, string)
+        expressionVisitor(node.expression, string, depth)
         string.append(')')
     }
 }

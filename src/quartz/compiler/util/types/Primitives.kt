@@ -13,6 +13,7 @@ object Primitives {
     val long: Type = QLong()
     val float: Type = QFloat()
     val double: Type = QDouble()
+    val bool: Type = int
     val void: Type = QVoid()
 }
 

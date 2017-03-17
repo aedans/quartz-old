@@ -10,7 +10,7 @@ import quartz.compiler.parser.nodes.StatementNode
 class StatementVisitor : Visitor<StatementNode> {
     val subVisitors = mutableListOf<Visitor<StatementNode>>()
 
-    override fun invoke(node: StatementNode, string: StringBuilder) {
-        subVisitors.forEach { it(node, string) }
+    override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
+        subVisitors.forEach { it(node, string, depth) }
     }
 }

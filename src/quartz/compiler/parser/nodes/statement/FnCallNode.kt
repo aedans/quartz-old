@@ -1,14 +1,13 @@
 package quartz.compiler.parser.nodes.statement
 
 import quartz.compiler.parser.nodes.ExpressionNode
-import quartz.compiler.parser.nodes.StatementNode
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class FnCallNode(val name: String, val expressions: MutableList<ExpressionNode>) : ExpressionNode, StatementNode {
+class FnCallNode(val name: String, val expressions: MutableList<ExpressionNode>) : ExpressionNode {
     override var type: Type? = null
 
     override fun toString(): String {

@@ -31,6 +31,6 @@ class Compiler(
             numberLiteralTokenizer,
             inlineCTokenizer,
             symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ',', '='),
-            wordTokenizer("fn", "val", "var", "return")
+            wordTokenizer("fn", "val", "var", "return", "if", "else")
     )
 }

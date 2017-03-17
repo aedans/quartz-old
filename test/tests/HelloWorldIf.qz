@@ -1,0 +1,21 @@
+%
+#include <stdio.h>
+%
+
+fn main(): int {
+    if (true()) {
+        print(helloWorld())
+    }
+    if (false()) {
+        print("Failed")
+    }
+    return 0
+}
+
+fn helloWorld(): char[] = "Hello, World!"
+
+fn true(): int = 1
+
+fn false(): int = 0
+
+fn print(msg: char[]) = %printf(msg)%

@@ -9,7 +9,7 @@ import quartz.compiler.parser.nodes.expression.StringLiteralNode
  */
 
 // TODO Escape characters
-val stringLiteralVisitor: Visitor<ExpressionNode> = { stringLiteral, string ->
+val stringLiteralVisitor: Visitor<ExpressionNode> = { stringLiteral, string, _ ->
     if (stringLiteral is StringLiteralNode) {
         string.append("\"${stringLiteral.string}\"")
     }

@@ -7,6 +7,6 @@ import quartz.compiler.generator.Visitor
  */
 
 // TODO Validate identifiers
-val nameVisitor: Visitor<String> = { identifier, string ->
+val nameVisitor: Visitor<String> = { identifier, string, _ ->
     string.append(identifier)
 }
