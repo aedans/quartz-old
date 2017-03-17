@@ -6,7 +6,6 @@ import quartz.compiler.tokenizer.TokenType
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.QArray
 import types.Primitives
-import java.util.*
 
 
 /**
@@ -17,12 +16,8 @@ inline fun <reified T> TokenStream.parse(function: TokenStream.() -> T): T {
     return function()
 }
 
-fun invalidToken(token: Token, vararg expected: Token): Nothing {
-    if (expected.isEmpty())
-        throw ParseException("Unexpected token $token")
-    else {
-        throw ParseException("Unexpected token $token, expected ${Arrays.toString(expected)}")
-    }
+fun invalidToken(token: Token): Nothing {
+    throw ParseException("Unexpected token $token")
 }
 
 inline fun Token.verify(test: (Token) -> Boolean): Token {

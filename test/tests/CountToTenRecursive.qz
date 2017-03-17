@@ -1,0 +1,20 @@
+%
+#include <stdio.h>
+%
+
+fn main() {
+    countTo(10)
+}
+
+fn countTo(i: int) {
+    println(i)
+    if (greaterThan(i, 0)) {
+        countTo(dec(i))
+    }
+}
+
+fn greaterThan(i1: int, i2: int): int = %i1 > i2%
+
+fn dec(i: int): int = %i - 1%
+
+fn println(i: int) = %printf("\%d ", i)%

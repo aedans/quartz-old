@@ -11,7 +11,12 @@ import quartz.compiler.util.Type
 inline fun checkType(type: Type?, typeSetter: (Type) -> Unit,
                      expression: ExpressionNode, expressionSetter: (ExpressionNode) -> Unit,
                      message: () -> String) {
-    val toType = expression.type ?: throw Exception(message())
+    val toType = expression.type
+
+    if (toType == null) {
+        expressionSetter(CastNode(type, expression))
+        return
+    }
 
     if (type == null) {
         typeSetter(toType)

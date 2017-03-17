@@ -8,8 +8,8 @@ package quartz.compiler.util.misc
 class CharStream(val src: String) {
     var index = 0
 
-    fun hasNext(): Boolean {
-        return index < src.length
+    fun hasNext(i: Int = 0): Boolean {
+        return index + i < src.length
     }
 
     fun next(): Char {
@@ -20,9 +20,9 @@ class CharStream(val src: String) {
         }
     }
 
-    fun peek(): Char {
+    fun peek(i: Int = 0): Char {
         return try {
-            src[index]
+            src[index + i]
         } catch (e: StringIndexOutOfBoundsException) {
             throw Exception("Unexpected end of program.")
         }

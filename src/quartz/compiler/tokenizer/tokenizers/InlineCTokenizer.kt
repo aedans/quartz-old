@@ -8,14 +8,18 @@ import quartz.compiler.util.misc.CharStream
  * Created by Aedan Smith.
  */
 
-// TODO Escape characters
 val inlineCTokenizer = { src: CharStream ->
     if (src.peek() != '%') null
     else {
         src.next()
         var c = ""
         while (src.hasNext() && src.peek() != '%') {
-            c += src.next()
+            if (src.peek() == '\\') {
+                src.next()
+                c += src.next()
+            } else {
+                c += src.next()
+            }
         }
         src.next()
         Token(TokenType.INLINE_C, c)
