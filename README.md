@@ -77,4 +77,9 @@ fn printTrueOrFalse(i: int) {
         print("false")
     }
 }
+
+fn halt(){
+    // While loops work as normal
+    while (1) { }
+}
 </pre>
