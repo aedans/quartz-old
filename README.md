@@ -11,9 +11,6 @@ existing C/C++/CUDA programs and libraries.
 
 ## Basic Syntax
 
-Before getting acquainted with the more complex features of
-Quartz, it's important to understand the basics of its syntax.
-
 ### Variables
 
 <pre>
