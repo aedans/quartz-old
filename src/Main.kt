@@ -12,14 +12,24 @@ import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     val inFile = File(args[0])
-    val outFile = File(args[1])
-    val input = FileReader(inFile).readText()
-    val output = PrintStream(FileOutputStream(File(outFile, inFile.nameWithoutExtension + ".c")))
+    compile(inFile, args[1])
+}
 
-    var src = ""
-    println("Compiled in " + measureTimeMillis {
-        src = Compiler(input).compile()
-    } + "ms")
+fun compile(inFile: File, outPath: String) {
+    if (inFile.isDirectory) {
+        inFile.listFiles().filter { it.extension == "qz" }.forEach {
+            compile(it, outPath)
+        }
+    } else {
+        val input = FileReader(inFile).readText()
+        val outFile = File(outPath, inFile.nameWithoutExtension + ".c")
+        val output = PrintStream(FileOutputStream(outFile))
 
-    output.print(src)
+        var src = ""
+        println("Compiled in " + measureTimeMillis {
+            src = Compiler(input).compile()
+        } + "ms\n")
+
+        output.print(src)
+    }
 }

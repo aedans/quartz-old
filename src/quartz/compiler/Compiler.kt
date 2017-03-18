@@ -37,7 +37,7 @@ class Compiler(
         val program = programParser(tokens)
         println('\n' + program.toString())
         semanticAnalyzers.analyze(program)
-        println('\n' + program.toString())
+        println(program.toString())
         return generator.generate(program)
     }
 }
