@@ -3,9 +3,9 @@
 %
 
 fn main(argc: int, argv: char[][]) {
-    print(get(argv, 0))
+    printf(get(argv, 0))
 }
 
 fn get(chars: char[][], i: int): char[] = %chars[i]%
 
-fn print(msg: char[]) = %printf(msg)%
+extern_fn printf(char[])

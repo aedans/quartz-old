@@ -11,11 +11,11 @@ fn fizzBuzz(i: int) {
         fizzBuzz(sub(i, 1))
 
     if (and(eq(mod(i, 3), 0), eq(mod(i, 5), 0)))
-        print("FizzBuzz ")
+        printf("FizzBuzz ")
     else if (eq(mod(i, 3), 0))
-        print("Fizz ")
+        printf("Fizz ")
     else if (eq(mod(i, 5), 0))
-        print("Buzz ")
+        printf("Buzz ")
     else
         printInt(i)
 }
@@ -30,8 +30,7 @@ fn mod(i1: int, i2: int): int = %i1 \% i2%
 
 fn sub(i1: int, i2: int): int = %i1 - i2%
 
-fn print(s: char[])
-    %printf(s)%
-
 fn printInt(i: int)
     %printf("\%d ", i)%
+
+extern_fn printf(char[])

@@ -9,12 +9,14 @@ fn main() {
 fn countTo(i: int) {
     if (greaterThan(i, 0))
         countTo(sub(i, 1))
-    print(i)
+    printInt(i)
 }
 
 fn greaterThan(i1: int, i2: int): int = %i1 > i2%
 
 fn sub(i1: int, i2: int): int = %i1 - i2%
 
-fn print(i: int)
-    %printf("\%d ", i)%
+fn printInt(i: int)
+    printf("%d ", i)
+
+extern_fn printf(char[], int)

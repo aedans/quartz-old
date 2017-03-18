@@ -9,11 +9,13 @@ fn main() {
 fn countTo(max: int) {
     val i = 0
     while (lessThan(i, max))
-        print(%i++%)
-    print(max)
+        printInt(%i++%)
+    printInt(max)
 }
 
 fn lessThan(i1: int, i2: int): int = %i1 < i2%
 
-fn print(i: int)
-    %printf("\%d ", i)%
+fn printInt(i: int)
+    printf("%d ", i)
+
+extern_fn printf(char[], int)

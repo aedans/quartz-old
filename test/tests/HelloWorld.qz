@@ -3,9 +3,8 @@
 %
 
 fn main(): int {
-    print("Hello, World!")
+    printf("Hello, World!")
     return 0
 }
 
-fn print(msg: char[])
-    %printf(msg)%
+extern_fn printf(char[])

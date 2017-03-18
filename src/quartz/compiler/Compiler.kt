@@ -5,6 +5,7 @@ import quartz.compiler.parser.parsers.ProgramParser
 import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.semantics.analyze
 import quartz.compiler.semantics.function.FnDeclarationAnalyzer
+import quartz.compiler.semantics.misc.externFnAnalyzer
 import quartz.compiler.tokenizer.Tokenizer
 import quartz.compiler.tokenizer.tokenize
 import quartz.compiler.tokenizer.tokenizers.*
@@ -26,6 +27,7 @@ class Compiler(
         ),
         val programParser: ProgramParser = ProgramParser(),
         val semanticAnalyzers: List<SemanticAnalyzer<ProgramNode>> = listOf(
+                externFnAnalyzer,
                 FnDeclarationAnalyzer()
         ),
         val generator: Generator = Generator()

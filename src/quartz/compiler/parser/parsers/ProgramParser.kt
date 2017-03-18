@@ -5,11 +5,13 @@ import quartz.compiler.parser.Parser
 import quartz.compiler.parser.invalidToken
 import quartz.compiler.parser.parse
 import quartz.compiler.parser.parsers.fndeclaration.FnDeclarationParser
+import quartz.compiler.parser.parsers.fndeclaration.externFnParser
 import quartz.compiler.parser.parsers.fndeclaration.inlineCParser
 import quartz.compiler.tokenizer.TokenStream
 import quartz.compiler.tree.FnDeclarationNode
 import quartz.compiler.tree.InlineCNode
 import quartz.compiler.tree.ProgramNode
+import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
@@ -17,8 +19,9 @@ import quartz.compiler.tree.ProgramNode
 
 class ProgramParser(
         val subParsers: MutableList<Pair<Parser<Any>, (Any, ProgramNode) -> Unit>> = mutableListOf(
+                inlineCParser to { node, program -> program.inlineCNodes.add(node as InlineCNode) },
                 FnDeclarationParser() to { node, program -> program.fnDeclarations.add(node as FnDeclarationNode) },
-                inlineCParser to { node, program -> program.inlineCNodes.add(node as InlineCNode) }
+                externFnParser to { node, program -> program.externFnDeclarations.add(node as Function) }
         )
 ) : Parser<ProgramNode> {
     override fun invoke(tokens: TokenStream): ProgramNode {

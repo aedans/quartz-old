@@ -4,9 +4,9 @@
 
 fn main(): int {
     if (false())
-        print("Failed")
+        printf("Failed")
     else
-        print(helloWorld())
+        printf(helloWorld())
     return 0
 }
 
@@ -16,5 +16,4 @@ fn true(): int = 1
 
 fn false(): int = 0
 
-fn print(msg: char[])
-    %printf(msg)%
+extern_fn printf(char[])
