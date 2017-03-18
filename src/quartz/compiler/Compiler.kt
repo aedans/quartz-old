@@ -16,23 +16,23 @@ import quartz.compiler.util.misc.CharStream
  * Created by Aedan Smith.
  */
 
-class Compiler(
-        val src: String,
-        val tokenizers: List<Tokenizer> = listOf(
-                stringLiteralTokenizer,
-                numberLiteralTokenizer,
-                inlineCTokenizer,
-                symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ',', '='),
-                wordTokenizer("val", "var", "fn", "extern_fn", "return", "if", "else", "while")
-        ),
-        val programParser: ProgramParser = ProgramParser(),
-        val semanticAnalyzers: List<SemanticAnalyzer<ProgramNode>> = listOf(
-                externFnAnalyzer,
-                FnDeclarationAnalyzer()
-        ),
-        val generator: Generator = Generator()
-) {
-    fun compile(): String {
+object Compiler {
+    fun compile(
+            src: String,
+            tokenizers: List<Tokenizer> = listOf(
+                    stringLiteralTokenizer,
+                    numberLiteralTokenizer,
+                    inlineCTokenizer,
+                    symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ',', '='),
+                    wordTokenizer("val", "var", "fn", "extern_fn", "return", "if", "else", "while")
+            ),
+            programParser: ProgramParser = ProgramParser(),
+            semanticAnalyzers: List<SemanticAnalyzer<ProgramNode>> = listOf(
+                    externFnAnalyzer,
+                    FnDeclarationAnalyzer()
+            ),
+            generator: Generator = Generator()
+    ): String {
         val tokens = tokenizers.tokenize(CharStream(src))
         val program = programParser(tokens)
         println('\n' + program.toString())

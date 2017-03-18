@@ -27,7 +27,7 @@ fun compile(inFile: File, outPath: String) {
 
         var src = ""
         println("Compiled in " + measureTimeMillis {
-            src = Compiler(input).compile()
+            src = Compiler.compile(input)
         } + "ms\n")
 
         output.print(src)
