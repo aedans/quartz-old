@@ -22,7 +22,7 @@ class Compiler(
                 numberLiteralTokenizer,
                 inlineCTokenizer,
                 symbolTokenizer('(', ')', '{', '}', '[', ']', ':', ',', '='),
-                wordTokenizer("fn", "val", "var", "return", "if", "else", "while")
+                wordTokenizer("val", "var", "fn", "extern_fn", "return", "if", "else", "while")
         ),
         val programParser: ProgramParser = ProgramParser(),
         val semanticAnalyzers: List<SemanticAnalyzer<ProgramNode>> = listOf(

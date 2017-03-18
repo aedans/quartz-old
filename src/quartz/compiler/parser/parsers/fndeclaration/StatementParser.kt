@@ -2,9 +2,9 @@ package quartz.compiler.parser.parsers.fndeclaration
 
 import quartz.compiler.parser.ParseException
 import quartz.compiler.parser.Parser
-import quartz.compiler.tree.StatementNode
 import quartz.compiler.parser.parse
 import quartz.compiler.tokenizer.TokenStream
+import quartz.compiler.tree.StatementNode
 
 /**
  * Created by Aedan Smith.
@@ -15,17 +15,17 @@ class StatementParser : Parser<StatementNode> {
 
     override fun invoke(tokens: TokenStream): StatementNode {
         return tokens.parse {
-            val fallback = tokens.index
+            val fallback = index
             for (parser in subParsers) {
                 try {
                     val node = parser(this)
                     // TODO flush tokens
                     return@parse node
                 } catch (e: ParseException) {
-                    tokens.index = fallback
+                    index = fallback
                 }
             }
-            throw Exception("Unexpected token ${tokens.peek()}")
+            throw Exception("Unexpected token ${peek()}")
         }
     }
 }
