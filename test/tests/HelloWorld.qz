@@ -2,9 +2,7 @@
 #include <stdio.h>
 %
 
-fn main(): int {
+fn main()
     printf("Hello, World!")
-    return 0
-}
 
 extern_fn printf(char[])

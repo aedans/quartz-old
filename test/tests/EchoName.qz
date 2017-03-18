@@ -2,9 +2,8 @@
 #include <stdio.h>
 %
 
-fn main(argc: int, argv: char[][]) {
+fn main(argc: int, argv: char[][])
     printf(get(argv, 0))
-}
 
 fn get(chars: char[][], i: int): char[] = %chars[i]%
 

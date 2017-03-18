@@ -2,9 +2,8 @@
 #include <stdio.h>
 %
 
-fn main() {
+fn main()
     fizzBuzz(100)
-}
 
 fn fizzBuzz(i: int) {
     if (greaterThan(i, 1))

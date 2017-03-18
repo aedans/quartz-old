@@ -2,9 +2,8 @@
 #include <stdio.h>
 %
 
-fn main() {
+fn main()
     countTo(10)
-}
 
 fn countTo(i: int) {
     if (greaterThan(i, 0))
