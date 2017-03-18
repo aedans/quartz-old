@@ -46,9 +46,8 @@ fn greetTheWorld() {
     printf(`theWorld'sGreeting`())
 }
 
-fn `theWorld'sGreeting`(): char[] { 
-    return "Hello, World!"
-}
+// Single expression functions are allowed
+fn `theWorld'sGreeting`(): char[] = "Hello, World!"
 </pre>
 
 Illegal characters in function names will be replaced with
