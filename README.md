@@ -48,6 +48,9 @@ fn greetTheWorld() {
 
 // Single expression functions are allowed
 fn `theWorld'sGreeting`(): char[] = "Hello, World!"
+
+// External definition for function printf
+extern_fn printf(char[])
 </pre>
 
 Illegal characters in function names will be replaced with
