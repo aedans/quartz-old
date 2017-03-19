@@ -11,8 +11,10 @@ import kotlin.system.measureTimeMillis
  */
 
 fun main(args: Array<String>) {
-    val inFile = File(args[0])
-    compile(inFile, args[1])
+    println("Total time: " + measureTimeMillis {
+        val inFile = File(args[0])
+        compile(inFile, args[1])
+    } + "ms")
 }
 
 fun compile(inFile: File, outPath: String) {
