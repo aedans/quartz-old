@@ -80,11 +80,11 @@ expression
     ;
 
 atomicExpression
-    : identifier
+    : '(' expression ')'
+    | identifier
     | literal
     | inlineC
     | ifExpression
-    | '(' expression ')'
     | prefixFnCall
     | postfixFnCall
     ;
