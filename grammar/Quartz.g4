@@ -97,12 +97,13 @@ prefixFnCall
     : name=sIdentifier '(' expressionList ')'
     ;
 
-postfixFnCall
-    : name=sIdentifier expression
+infixFnCall
+    : expr1=atomicExpression '.' name=sIdentifier '(' expr2=expression ')'
+    | expr1=atomicExpression name=sIdentifier expr2=expression
     ;
 
-infixFnCall
-    : expr1=atomicExpression name=sIdentifier expr2=expression
+postfixFnCall
+    : name=sIdentifier expression
     ;
 
 literal
@@ -178,7 +179,7 @@ WHILE: 'while';
 KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN_FN|IF|ELSE|WHILE;
 
 IDENTIFIER: [_a-zA-Z][_a-zA-Z0-9]*;
-SYMBOL: [+-/*!|&=@^%<>]+;
+SYMBOL: ('+'|'-'|'*'|'/'|'!'|'|'|'&'|'='|'@'|'^'|'%'|'<'|'>')+;
 
 // WHITESPACE
 
