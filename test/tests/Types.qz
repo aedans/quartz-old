@@ -6,6 +6,6 @@ fn main() {
     val result = addFour(one, two, three, four)
 }
 
-fn addFour(one: char, two: short, three: int, four: long): double = add(add(one, four), add(three, two))
+fn addFour(one: char, two: short, three: int, four: long): double = +(one + four, three + two)
 
-fn add(one: short, two: int): long = %%one + two%%
+fn +(one: short, two: int): long = %%one + two%%

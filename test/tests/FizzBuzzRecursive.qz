@@ -6,28 +6,28 @@ fn main()
     fizzBuzz(100)
 
 fn fizzBuzz(i: int) {
-    if (greaterThan(i, 1))
-        fizzBuzz(sub(i, 1))
+    if (i > 1)
+        fizzBuzz(i - 1)
 
-    if (and(eq(mod(i, 3), 0), eq(mod(i, 5), 0)))
+    if (&&(%(i, 5) == 0, %(i, 3) == 0))
         printf("FizzBuzz ")
-    else if (eq(mod(i, 3), 0))
+    else if (%(i, 3) == 0)
         printf("Fizz ")
-    else if (eq(mod(i, 5), 0))
+    else if (%(i, 5) == 0)
         printf("Buzz ")
     else
         printInt(i)
 }
 
-fn greaterThan(i1: int, i2: int): int = %%i1 > i2%%
+fn >(i1: int, i2: int): int = %%i1 > i2%%
 
-fn eq(i1: int, i2: int): int = %%i1 == i2%%
+fn ==(i1: int, i2: int): int = %%i1 == i2%%
 
-fn and(i1: int, i2: int): int = %%i1 && i2%%
+fn &&(i1: int, i2: int): int = %%i1 && i2%%
 
-fn mod(i1: int, i2: int): int = %%i1 % i2%%
+fn %(i1: int, i2: int): int = %%i1 % i2%%
 
-fn sub(i1: int, i2: int): int = %%i1 - i2%%
+fn -(i1: int, i2: int): int = %%i1 - i2%%
 
 fn printInt(i: int)
     %%printf("\%d ", i)%%

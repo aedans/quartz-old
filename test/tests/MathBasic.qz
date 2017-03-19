@@ -1,14 +1,14 @@
 fn main() {
-    val added = add(1, 2)
-    val subtracted = sub(2, 1)
-    val multiplied = mlt(added, subtracted)
-    val divided = div(subtracted, added)
+    val added = 1 + 2
+    val subtracted = 2 - 1
+    val multiplied = added * subtracted
+    val divided = subtracted / added
 }
 
-fn add(d1: double, d2: double): double = %%d1 + d2%%
+fn +(d1: double, d2: double): double = %%d1 + d2%%
 
-fn sub(d1: double, d2: double): double = %%d1 - d2%%
+fn -(d1: double, d2: double): double = %%d1 - d2%%
 
-fn mlt(d1: double, d2: double): double = %%d1 * d2%%
+fn *(d1: double, d2: double): double = %%d1 * d2%%
 
-fn div(d1: double, d2: double): double = %%d1 / d2%%
+fn /(d1: double, d2: double): double = %%d1 / d2%%

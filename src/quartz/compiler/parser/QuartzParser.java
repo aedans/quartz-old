@@ -863,11 +863,11 @@ public class QuartzParser extends Parser {
 	}
 
 	public static class ExpressionContext extends ParserRuleContext {
-		public AtomicExpressionContext atomicExpression() {
-			return getRuleContext(AtomicExpressionContext.class,0);
-		}
 		public InfixFnCallContext infixFnCall() {
 			return getRuleContext(InfixFnCallContext.class,0);
+		}
+		public AtomicExpressionContext atomicExpression() {
+			return getRuleContext(AtomicExpressionContext.class,0);
 		}
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -886,14 +886,14 @@ public class QuartzParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(154);
-				atomicExpression();
+				infixFnCall();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(155);
-				infixFnCall();
+				atomicExpression();
 				}
 				break;
 			}
@@ -1730,7 +1730,7 @@ public class QuartzParser extends Parser {
 		"\u0093\7\27\2\2\u0093\u0095\5\62\32\2\u0094\u0092\3\2\2\2\u0094\u0095"+
 		"\3\2\2\2\u0095\31\3\2\2\2\u0096\u0097\7\30\2\2\u0097\u0098\7\3\2\2\u0098"+
 		"\u0099\5\34\17\2\u0099\u009a\7\4\2\2\u009a\u009b\5\62\32\2\u009b\33\3"+
-		"\2\2\2\u009c\u009f\5\36\20\2\u009d\u009f\5&\24\2\u009e\u009c\3\2\2\2\u009e"+
+		"\2\2\2\u009c\u009f\5&\24\2\u009d\u009f\5\36\20\2\u009e\u009c\3\2\2\2\u009e"+
 		"\u009d\3\2\2\2\u009f\35\3\2\2\2\u00a0\u00a7\5\64\33\2\u00a1\u00a7\5(\25"+
 		"\2\u00a2\u00a7\58\35\2\u00a3\u00a7\5 \21\2\u00a4\u00a7\5\"\22\2\u00a5"+
 		"\u00a7\5$\23\2\u00a6\u00a0\3\2\2\2\u00a6\u00a1\3\2\2\2\u00a6\u00a2\3\2"+
