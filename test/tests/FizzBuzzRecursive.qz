@@ -1,6 +1,6 @@
-%
+%%
 #include <stdio.h>
-%
+%%
 
 fn main()
     fizzBuzz(100)
@@ -19,17 +19,17 @@ fn fizzBuzz(i: int) {
         printInt(i)
 }
 
-fn greaterThan(i1: int, i2: int): int = %i1 > i2%
+fn greaterThan(i1: int, i2: int): int = %%i1 > i2%%
 
-fn eq(i1: int, i2: int): int = %i1 == i2%
+fn eq(i1: int, i2: int): int = %%i1 == i2%%
 
-fn and(i1: int, i2: int): int = %i1 && i2%
+fn and(i1: int, i2: int): int = %%i1 && i2%%
 
-fn mod(i1: int, i2: int): int = %i1 \% i2%
+fn mod(i1: int, i2: int): int = %%i1 % i2%%
 
-fn sub(i1: int, i2: int): int = %i1 - i2%
+fn sub(i1: int, i2: int): int = %%i1 - i2%%
 
 fn printInt(i: int)
-    %printf("\%d ", i)%
+    %%printf("\%d ", i)%%
 
 extern_fn printf(char[])

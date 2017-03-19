@@ -8,7 +8,7 @@ import quartz.compiler.semantics.function.statement.VarDeclarationAnalyzer
 import quartz.compiler.semantics.function.statement.WhileAnalyzer
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.tree.ProgramNode
+import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.util.Variable
 import quartz.compiler.util.function
 

@@ -1,6 +1,6 @@
-%
+%%
 #include <stdio.h>
-%
+%%
 
 fn main()
     printf(helloWorld())

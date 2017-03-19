@@ -3,8 +3,8 @@ package quartz.compiler.generator.visitors.fndeclaration.statement
 import quartz.compiler.generator.Visitor
 import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
 import quartz.compiler.generator.visitors.fndeclaration.StatementVisitor
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.IfNode
+import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.program.function.statement.IfStatementNode
 import quartz.compiler.util.misc.times
 
 /**
@@ -13,7 +13,7 @@ import quartz.compiler.util.misc.times
 
 class IfVisitor(val statementVisitor: StatementVisitor, val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
     override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
-        if (node !is IfNode)
+        if (node !is IfStatementNode)
             return
 
         string.append("if (")

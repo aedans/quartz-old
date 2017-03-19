@@ -1,8 +1,8 @@
 package quartz.compiler.semantics.function.expression
 
 import quartz.compiler.semantics.SemanticAnalyzer
-import quartz.compiler.tree.ExpressionNode
-import quartz.compiler.tree.expression.IdentifierNode
+import quartz.compiler.syntax.tree.program.function.ExpressionNode
+import quartz.compiler.syntax.tree.program.function.expression.IdentifierNode
 
 /**
  * Created by Aedan Smith.

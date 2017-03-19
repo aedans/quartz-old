@@ -1,8 +1,8 @@
 package quartz.compiler.generator.visitors.fndeclaration.expression
 
 import quartz.compiler.generator.Visitor
-import quartz.compiler.tree.ExpressionNode
-import quartz.compiler.tree.expression.NumberLiteralNode
+import quartz.compiler.syntax.tree.program.function.ExpressionNode
+import quartz.compiler.syntax.tree.program.function.expression.NumberLiteralNode
 
 /**
  * Created by Aedan Smith.

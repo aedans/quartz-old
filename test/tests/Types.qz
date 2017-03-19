@@ -8,4 +8,4 @@ fn main() {
 
 fn addFour(one: char, two: short, three: int, four: long): double = add(add(one, four), add(three, two))
 
-fn add(one: short, two: int): long = %one + two%
+fn add(one: short, two: int): long = %%one + two%%

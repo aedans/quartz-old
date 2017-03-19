@@ -4,8 +4,8 @@ import quartz.compiler.generator.Visitor
 import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
 import quartz.compiler.generator.visitors.util.nameVisitor
 import quartz.compiler.generator.visitors.util.typeVisitor
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.VarDeclarationNode
+import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.program.function.statement.VarDeclarationNode
 
 /**
  * Created by Aedan Smith.

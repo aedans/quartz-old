@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.misc
 
 import quartz.compiler.semantics.SemanticAnalyzer
-import quartz.compiler.tree.ProgramNode
+import quartz.compiler.syntax.tree.ProgramNode
 
 /**
  * Created by Aedan Smith.

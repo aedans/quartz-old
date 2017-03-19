@@ -3,8 +3,8 @@ package quartz.compiler.generator.visitors.fndeclaration.expression
 import quartz.compiler.generator.Visitor
 import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
 import quartz.compiler.generator.visitors.util.typeVisitor
-import quartz.compiler.tree.ExpressionNode
-import quartz.compiler.tree.expression.CastNode
+import quartz.compiler.syntax.tree.program.function.ExpressionNode
+import quartz.compiler.syntax.tree.program.function.expression.CastNode
 
 /**
  * Created by Aedan Smith.

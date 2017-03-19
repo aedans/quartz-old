@@ -4,8 +4,8 @@ import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.semantics.checkType
 import quartz.compiler.semantics.function.ExpressionAnalyzer
 import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.FnCallNode
+import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
 import quartz.compiler.util.Function
 
 /**

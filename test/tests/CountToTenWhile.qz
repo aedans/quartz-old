@@ -1,6 +1,6 @@
-%
+%%
 #include <stdio.h>
-%
+%%
 
 fn main()
     countTo(10)
@@ -8,11 +8,11 @@ fn main()
 fn countTo(max: int) {
     val i = 0
     while (lessThan(i, max))
-        printInt(%i++%)
+        printInt(%%++i%%)
     printInt(max)
 }
 
-fn lessThan(i1: int, i2: int): int = %i1 < i2%
+fn lessThan(i1: int, i2: int): int = %%i1 < i2%%
 
 fn printInt(i: int)
     printf("%d ", i)

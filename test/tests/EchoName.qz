@@ -1,10 +1,10 @@
-%
+%%
 #include <stdio.h>
-%
+%%
 
 fn main(argc: int, argv: char[][])
     printf(get(argv, 0))
 
-fn get(chars: char[][], i: int): char[] = %chars[i]%
+fn get(chars: char[][], i: int): char[] = %%chars[i]%%
 
 extern_fn printf(char[])

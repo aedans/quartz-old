@@ -1,6 +1,6 @@
-%
+%%
 #include <stdio.h>
-%
+%%
 
 fn main()
     countTo(10)
@@ -11,9 +11,9 @@ fn countTo(i: int) {
     printInt(i)
 }
 
-fn greaterThan(i1: int, i2: int): int = %i1 > i2%
+fn greaterThan(i1: int, i2: int): int = %%i1 > i2%%
 
-fn sub(i1: int, i2: int): int = %i1 - i2%
+fn sub(i1: int, i2: int): int = %%i1 - i2%%
 
 fn printInt(i: int)
     printf("%d ", i)

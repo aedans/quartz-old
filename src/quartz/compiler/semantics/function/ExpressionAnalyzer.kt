@@ -2,7 +2,7 @@ package quartz.compiler.semantics.function
 
 import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.tree.ExpressionNode
+import quartz.compiler.syntax.tree.program.function.ExpressionNode
 
 /**
  * Created by Aedan Smith.

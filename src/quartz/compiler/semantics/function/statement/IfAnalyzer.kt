@@ -5,8 +5,8 @@ import quartz.compiler.semantics.function.ExpressionAnalyzer
 import quartz.compiler.semantics.function.StatementAnalyzer
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.IfNode
+import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.program.function.statement.IfStatementNode
 import types.Primitives
 
 /**
@@ -15,7 +15,7 @@ import types.Primitives
 
 class IfAnalyzer(val statementAnalyzer: StatementAnalyzer, val expressionAnalyzer: ExpressionAnalyzer) : SemanticAnalyzer<StatementNode> {
     override fun invoke(node: StatementNode, table: SymbolTable) {
-        if (node !is IfNode)
+        if (node !is IfStatementNode)
             return
 
         expressionAnalyzer(node.test, table)

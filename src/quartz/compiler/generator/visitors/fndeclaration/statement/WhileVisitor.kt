@@ -3,8 +3,8 @@ package quartz.compiler.generator.visitors.fndeclaration.statement
 import quartz.compiler.generator.Visitor
 import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
 import quartz.compiler.generator.visitors.fndeclaration.StatementVisitor
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.WhileNode
+import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.program.function.statement.WhileNode
 import quartz.compiler.util.misc.times
 
 /**

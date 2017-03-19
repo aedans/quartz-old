@@ -1,7 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.tree.ExpressionNode
-import quartz.compiler.tree.expression.CastNode
+import quartz.compiler.syntax.tree.program.function.ExpressionNode
+import quartz.compiler.syntax.tree.program.function.expression.CastNode
 import quartz.compiler.util.Type
 
 /**

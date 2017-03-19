@@ -5,8 +5,8 @@ import quartz.compiler.semantics.function.ExpressionAnalyzer
 import quartz.compiler.semantics.function.StatementAnalyzer
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.tree.StatementNode
-import quartz.compiler.tree.statement.WhileNode
+import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.program.function.statement.WhileNode
 import types.Primitives
 
 /**

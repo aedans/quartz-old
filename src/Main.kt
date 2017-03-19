@@ -1,8 +1,8 @@
 
 import quartz.compiler.Compiler
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.FileReader
 import java.io.PrintStream
 import kotlin.system.measureTimeMillis
 
@@ -21,7 +21,7 @@ fun compile(inFile: File, outPath: String) {
             compile(it, outPath)
         }
     } else {
-        val input = FileReader(inFile).readText()
+        val input = FileInputStream(inFile)
         val outFile = File(outPath, inFile.nameWithoutExtension + ".c")
         val output = PrintStream(FileOutputStream(outFile))
 
