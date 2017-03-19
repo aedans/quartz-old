@@ -10,7 +10,7 @@ import quartz.compiler.generator.visitors.util.argumentVisitor
 import quartz.compiler.generator.visitors.util.nameVisitor
 import quartz.compiler.generator.visitors.util.typeVisitor
 import quartz.compiler.syntax.tree.program.FnDeclarationNode
-import quartz.compiler.util.misc.times
+import quartz.compiler.util.times
 
 /**
  * Created by Aedan Smith.

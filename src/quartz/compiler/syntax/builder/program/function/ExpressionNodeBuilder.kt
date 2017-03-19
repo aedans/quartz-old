@@ -33,6 +33,8 @@ fun QuartzParser.AtomicExpressionContext.toNode(): ExpressionNode {
         postfixFnCall().toNode()
     } else if (ifExpression() != null){
         TODO("If expressions")
+    } else if (expression() != null) {
+        expression().toNode()
     } else {
         throw Exception("Error translating $this")
     }

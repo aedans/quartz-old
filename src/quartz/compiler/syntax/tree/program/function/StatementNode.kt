@@ -1,6 +1,6 @@
 package quartz.compiler.syntax.tree.program.function
 
-import quartz.compiler.util.misc.times
+import quartz.compiler.util.times
 
 /**
  * Created by Aedan Smith.

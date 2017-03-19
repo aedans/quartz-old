@@ -1,4 +1,4 @@
-package quartz.compiler.util.misc
+package quartz.compiler.util
 
 /**
  * Created by Aedan Smith.

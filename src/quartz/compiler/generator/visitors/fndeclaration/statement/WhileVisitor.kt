@@ -5,7 +5,7 @@ import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
 import quartz.compiler.generator.visitors.fndeclaration.StatementVisitor
 import quartz.compiler.syntax.tree.program.function.StatementNode
 import quartz.compiler.syntax.tree.program.function.statement.WhileNode
-import quartz.compiler.util.misc.times
+import quartz.compiler.util.times
 
 /**
  * Created by Aedan Smith.

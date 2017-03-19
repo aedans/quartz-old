@@ -84,7 +84,7 @@ atomicExpression
     | literal
     | inlineC
     | ifExpression
-//    | '(' expression ')'
+    | '(' expression ')'
     | prefixFnCall
     | postfixFnCall
     ;

@@ -2,7 +2,7 @@ package quartz.compiler.syntax.tree.program.function.statement
 
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.StatementNode
-import quartz.compiler.util.misc.times
+import quartz.compiler.util.times
 
 /**
  * Created by Aedan Smith.
