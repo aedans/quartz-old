@@ -4,11 +4,3 @@ fn main() {
     val multiplied = added * subtracted
     val divided = subtracted / added
 }
-
-fn +(d1: double, d2: double): double = %%d1 + d2%%
-
-fn -(d1: double, d2: double): double = %%d1 - d2%%
-
-fn *(d1: double, d2: double): double = %%d1 * d2%%
-
-fn /(d1: double, d2: double): double = %%d1 / d2%%

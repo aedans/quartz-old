@@ -24,7 +24,7 @@ class VarDeclarationAnalyzer(val expressionAnalyzer: ExpressionAnalyzer) : Seman
                 { node.type = it },
                 node.expression,
                 { node.expression = it },
-                { "Unknown type for $node" }
+                { "Invalid type for $node" }
         )
 
         symbolTable.add(node.name, Variable(node.name, node.type ?: throw Exception("Unknown type for $node")))

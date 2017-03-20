@@ -22,7 +22,7 @@ inline fun checkType(type: Type?, typeSetter: (Type) -> Unit,
         typeSetter(toType)
     } else {
         if (!type.canCastTo(toType)) {
-            throw Exception(message())
+            throw Exception(message() + " (${expression.type} -> $type)")
         } else if (type != toType) {
             expressionSetter(CastNode(type, expression))
         }

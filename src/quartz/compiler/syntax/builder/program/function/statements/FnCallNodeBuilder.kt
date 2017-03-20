@@ -8,26 +8,9 @@ import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.PrefixFnCallContext.toNode(): FnCallNode {
+fun QuartzParser.PrefixCallExpressionContext.toNode(): FnCallNode {
     return FnCallNode(
-            name.text,
+            identifier().text,
             expressionList().expression().map { it.toNode() }.toMutableList()
-    )
-}
-
-fun QuartzParser.InfixFnCallContext.toNode(): FnCallNode {
-    return FnCallNode(
-            name.text,
-            mutableListOf(
-                    expr1.toNode(),
-                    expr2.toNode()
-            )
-    )
-}
-
-fun QuartzParser.PostfixFnCallContext.toNode(): FnCallNode {
-    return FnCallNode(
-            name.text,
-            mutableListOf(expression().toNode())
     )
 }

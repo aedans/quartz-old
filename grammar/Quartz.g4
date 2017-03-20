@@ -17,7 +17,7 @@ declaration
 // FN DECLARATION
 
 fnDeclaration
-    : fnModifiers FN name=sIdentifier '(' fnArgumentList ')' (':' returnType=varType)? body=fnBlock
+    : fnModifiers FN name=identifier '(' fnArgumentList ')' (':' returnType=varType)? body=fnBlock
     ;
 
 fnArgument
@@ -40,7 +40,7 @@ fnBlock
 // EXTERN FN DECLARATION
 
 externFnDeclaration
-    : fnModifiers EXTERN_FN name=sIdentifier '(' typeList ')' (':' returnType=varType)?
+    : fnModifiers EXTERN_FN name=identifier '(' typeList ')' (':' returnType=varType)?
     ;
 
 // STATEMENTS
@@ -51,9 +51,8 @@ statement
     | varDeclaration
     | ifStatement
     | whileLoop
-    | prefixFnCall
-    | infixFnCall
-    | postfixFnCall
+    | prefixCallExpression
+    | infixCallExpression
     ;
 
 varDeclaration
@@ -75,35 +74,92 @@ whileLoop
 // EXPRESSIONS
 
 expression
-    : infixFnCall
-    | atomicExpression
+    : disjunction
+    ;
+
+disjunction
+    : conjunction ('||' disjunction)?
+    ;
+
+conjunction
+    : equalityComparison ('&&' conjunction)?
+    ;
+
+equalityComparison
+    : comparison (equalityOperation equalityComparison)?
+    ;
+
+comparison
+    : additiveExpression (comparisonOperation comparison)?
+    ;
+
+additiveExpression
+    : multiplicativeExpression (additiveOperation additiveExpression)?
+    ;
+
+multiplicativeExpression
+    : prefixExpression (multiplicativeOperation multiplicativeExpression)?
+    ;
+
+prefixExpression
+    : prefixOperation* postfixExpression
+    ;
+
+postfixExpression
+    : infixCallExpression postfixOperation*
+    ;
+
+infixCallExpression
+    : atomicExpression ('.' identifier '(' expressionList ')')?
     ;
 
 atomicExpression
     : '(' expression ')'
-    | identifier
-    | literal
-    | inlineC
+    | prefixCallExpression
     | ifExpression
-    | prefixFnCall
-    | postfixFnCall
+    | identifier
+    | inlineC
+    | literal
+    ;
+
+equalityOperation
+    : '=='
+    | '!='
+    ;
+
+comparisonOperation
+    : '>'
+    | '<'
+    | '>='
+    | '<='
+    ;
+
+additiveOperation
+    : '+'
+    | '-'
+    ;
+
+multiplicativeOperation
+    : '*'
+    | '/'
+    | '%'
+    ;
+
+prefixOperation
+    : '-'
+    | '!'
+    ;
+
+postfixOperation
+    : '[' expression ']'
+    ;
+
+prefixCallExpression
+    : identifier '(' expressionList ')'
     ;
 
 ifExpression
     : IF '(' expression ')' expression ELSE expression
-    ;
-
-prefixFnCall
-    : name=sIdentifier '(' expressionList ')'
-    ;
-
-infixFnCall
-    : expr1=atomicExpression '.' name=sIdentifier '(' expr2=expression ')'
-    | expr1=atomicExpression name=sIdentifier expr2=expression
-    ;
-
-postfixFnCall
-    : name=sIdentifier expression
     ;
 
 literal
@@ -145,11 +201,6 @@ identifier
     : IDENTIFIER
     ;
 
-sIdentifier
-    : IDENTIFIER
-    | SYMBOL
-    ;
-
 inlineC
     : INLINE_C
     ;
@@ -179,7 +230,6 @@ WHILE: 'while';
 KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN_FN|IF|ELSE|WHILE;
 
 IDENTIFIER: [_a-zA-Z][_a-zA-Z0-9]*;
-SYMBOL: ('+'|'-'|'*'|'/'|'!'|'|'|'&'|'='|'@'|'^'|'%'|'<'|'>')+;
 
 // WHITESPACE
 

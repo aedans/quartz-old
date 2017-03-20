@@ -9,25 +9,15 @@ fn fizzBuzz(i: int) {
     if (i > 1)
         fizzBuzz(i - 1)
 
-    if (&&(%(i, 5) == 0, %(i, 3) == 0))
+    if (i % 5 == 0 && i % 3 == 0)
         printf("FizzBuzz ")
-    else if (%(i, 3) == 0)
+    else if (i % 3 == 0)
         printf("Fizz ")
-    else if (%(i, 5) == 0)
+    else if (i % 5 == 0)
         printf("Buzz ")
     else
         printInt(i)
 }
-
-fn >(i1: int, i2: int): int = %%i1 > i2%%
-
-fn ==(i1: int, i2: int): int = %%i1 == i2%%
-
-fn &&(i1: int, i2: int): int = %%i1 && i2%%
-
-fn %(i1: int, i2: int): int = %%i1 % i2%%
-
-fn -(i1: int, i2: int): int = %%i1 - i2%%
 
 fn printInt(i: int)
     %%printf("%d ", i)%%

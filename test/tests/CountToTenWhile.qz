@@ -12,8 +12,6 @@ fn countTo(max: int) {
     printInt(max)
 }
 
-fn <(i1: int, i2: int): int = %%i1 < i2%%
-
 fn printInt(i: int)
     printf("%d ", i)
 

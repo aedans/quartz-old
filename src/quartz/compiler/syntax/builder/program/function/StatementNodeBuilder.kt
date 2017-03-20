@@ -20,12 +20,10 @@ fun QuartzParser.StatementContext.toNode(): StatementNode {
         ifStatement().toNode()
     } else if (whileLoop() != null) {
         whileLoop().toNode()
-    } else if (prefixFnCall() != null) {
-        prefixFnCall().toNode()
-    } else if (infixFnCall() != null) {
-        infixFnCall().toNode()
-    } else if (postfixFnCall() != null) {
-        postfixFnCall().toNode()
+    } else if (prefixCallExpression() != null) {
+        prefixCallExpression().toNode()
+    } else if (infixCallExpression() != null) {
+        infixCallExpression().toNode()
     } else {
         throw Exception("Error translating $this")
     }

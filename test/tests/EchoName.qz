@@ -3,8 +3,6 @@
 %%
 
 fn main(argc: int, argv: char[][])
-    printf(get(argv, 0))
-
-fn get(chars: char[][], i: int): char[] = %%chars[i]%%
+    printf(argv[0])
 
 extern_fn printf(char[])

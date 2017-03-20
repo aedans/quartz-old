@@ -1,10 +1,7 @@
 package quartz.compiler.generator.visitors.fndeclaration
 
 import quartz.compiler.generator.Visitor
-import quartz.compiler.generator.visitors.fndeclaration.expression.CastVisitor
-import quartz.compiler.generator.visitors.fndeclaration.expression.identifierVisitor
-import quartz.compiler.generator.visitors.fndeclaration.expression.numberLiteralVisitor
-import quartz.compiler.generator.visitors.fndeclaration.expression.stringLiteralVisitor
+import quartz.compiler.generator.visitors.fndeclaration.expression.*
 import quartz.compiler.generator.visitors.fndeclaration.statement.*
 import quartz.compiler.generator.visitors.util.argumentVisitor
 import quartz.compiler.generator.visitors.util.nameVisitor
@@ -17,13 +14,15 @@ import quartz.compiler.util.times
  */
 
 class FnDeclarationVisitor(
-        val expressionVisitor: ExpressionVisitor = ExpressionVisitor().apply expressionIterator@ { this.subVisitors.apply {
+        val expressionVisitor: ExpressionVisitor = ExpressionVisitor().apply expressionVisitor@ { this.subVisitors.apply {
             add(numberLiteralVisitor)
             add(stringLiteralVisitor)
             add(inlineCVisitor)
             add(identifierVisitor)
-            add(FnCallVisitor(this@expressionIterator))
-            add(CastVisitor(this@expressionIterator))
+            add(FnCallVisitor(this@expressionVisitor))
+            add(CastVisitor(this@expressionVisitor))
+            add(OneArgOperatorVisitor(this@expressionVisitor))
+            add(TwoArgOperatorVisitor(this@expressionVisitor))
         } },
         val statementVisitor: StatementVisitor = StatementVisitor().apply statementVisitor@ { this.subVisitors.apply {
             add(inlineCVisitor)
