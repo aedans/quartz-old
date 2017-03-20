@@ -1,0 +1,26 @@
+%%
+#include <stdio.h>
+%%
+
+fn main()
+    10.fibBelow()
+
+fn fibBelow(i: int) {
+    if (i > 0)
+        (i - 1).fibBelow()
+    printInt(i.fib())
+}
+
+fn fib(i: int): int {
+    if (i == 0)
+        return 0
+    else if (i == 1)
+        return 1
+    else
+        return (i - 1).fib() + (i - 2).fib()
+}
+
+fn printInt(i: int)
+    printf("%d ", i)
+
+extern_fn printf(char[], int)
