@@ -7,7 +7,6 @@ import quartz.compiler.syntax.builder.program.toNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.OneArgOperatorNode
 import quartz.compiler.syntax.tree.program.function.expression.TwoArgOperatorNode
-import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
 
 /**
  * Created by Aedan Smith.
@@ -101,7 +100,7 @@ fun QuartzParser.InfixCallExpressionContext.toNode(): ExpressionNode {
     return if (expressionList() == null) {
         atomicExpression().toNode()
     } else {
-        FnCallNode(identifier().text, expressionList().expression().map { it.toNode() }.toMutableList())
+        toNode()
     }
 }
 

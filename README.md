@@ -48,6 +48,11 @@ fn `theWorld'sGreeting`(): char[] = "Hello, World!"
 
 // External definition for function printf
 extern_fn printf(char[])
+
+fn greetTheWorldInfix() {
+    // Dot notation is allowed on all functions
+    "Hello, World!".printf()   
+}
 </pre>
 
 Illegal characters in function names will be replaced with
