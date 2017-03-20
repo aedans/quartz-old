@@ -39,7 +39,7 @@ fn main(): int {
 
 // Functions will assume void if nothing is specified
 fn greetTheWorld() {
-    // Backticks escape identifiers
+    // Backticks escape identifiers (TODO)
     printf(`theWorld'sGreeting`())
 }
 
