@@ -3,6 +3,6 @@
 %%
 
 fn main()
-    printf("Hello, World!")
+    "Hello, World!".printf()
 
 extern_fn printf(char[])

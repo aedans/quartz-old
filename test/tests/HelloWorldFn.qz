@@ -3,7 +3,7 @@
 %%
 
 fn main()
-    printf(helloWorld())
+    helloWorld().printf()
 
 fn helloWorld(): char[] = "Hello, World!"
 

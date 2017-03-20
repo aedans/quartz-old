@@ -3,6 +3,6 @@
 %%
 
 fn main(argc: int, argv: char[][])
-    printf(argv[0])
+    argv[0].printf()
 
 extern_fn printf(char[])

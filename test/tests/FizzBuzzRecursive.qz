@@ -3,7 +3,7 @@
 %%
 
 fn main()
-    fizzBuzz(100)
+    100.fizzBuzz()
 
 fn fizzBuzz(i: int) {
     if (i > 1)

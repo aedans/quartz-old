@@ -3,7 +3,7 @@
 %%
 
 fn main()
-    countTo(10)
+    10.countTo()
 
 fn countTo(max: int) {
     val i = 0

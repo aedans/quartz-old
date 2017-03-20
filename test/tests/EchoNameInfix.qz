@@ -1,8 +1,0 @@
-%%
-#include <stdio.h>
-%%
-
-fn main(argc: int, argv: char[][])
-    argv[0].printf()
-
-extern_fn printf(char[])
