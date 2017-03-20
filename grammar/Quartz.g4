@@ -98,11 +98,7 @@ additiveExpression
     ;
 
 multiplicativeExpression
-    : infixCallExpression (multiplicativeOperation multiplicativeExpression)?
-    ;
-
-infixCallExpression
-    : prefixExpression ('.' identifier '(' expressionList ')')?
+    : prefixExpression (multiplicativeOperation multiplicativeExpression)?
     ;
 
 prefixExpression
@@ -151,7 +147,20 @@ prefixOperation
     ;
 
 postfixOperation
+    : arrayAccess
+    | infixCall
+    ;
+
+arrayAccess
     : '[' expression ']'
+    ;
+
+infixCallExpression
+    : expression infixCall
+    ;
+
+infixCall
+    : '.' identifier '(' expressionList ')'
     ;
 
 prefixCallExpression

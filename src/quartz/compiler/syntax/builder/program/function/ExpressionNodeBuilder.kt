@@ -2,7 +2,6 @@ package quartz.compiler.syntax.builder.program.function
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.builder.program.function.expression.toNode
-import quartz.compiler.syntax.builder.program.function.statements.toFunctionNode
 import quartz.compiler.syntax.builder.program.function.statements.toNode
 import quartz.compiler.syntax.builder.program.toNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
@@ -59,17 +58,9 @@ fun QuartzParser.AdditiveExpressionContext.toNode(): ExpressionNode {
 
 fun QuartzParser.MultiplicativeExpressionContext.toNode(): ExpressionNode {
     return if (multiplicativeExpression() == null) {
-        infixCallExpression().toNode()
-    } else {
-        TwoArgOperatorNode(infixCallExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
-    }
-}
-
-fun QuartzParser.InfixCallExpressionContext.toNode(): ExpressionNode {
-    return if (expressionList() == null) {
         prefixExpression().toNode()
     } else {
-        toFunctionNode()
+        TwoArgOperatorNode(prefixExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
     }
 }
 
@@ -102,7 +93,13 @@ fun QuartzParser.PostfixExpressionContext.toNode(operations: List<QuartzParser.P
 }
 
 fun QuartzParser.PostfixOperationContext.toNode(expression: ExpressionNode): ExpressionNode {
-    return TwoArgOperatorNode(expression, expression().toNode(), TwoArgOperatorNode.ID.ARRAY_ACCESS, null)
+    return if (arrayAccess() != null) {
+        arrayAccess().toNode(expression)
+    } else if (infixCall() != null) {
+        infixCall().toNode(expression)
+    } else {
+        throw Exception("Unrecognized postfix operation $this")
+    }
 }
 
 fun QuartzParser.AtomicExpressionContext.toNode(): ExpressionNode {

@@ -8,7 +8,7 @@ fn main()
 fn fibBelow(i: int) {
     if (i > 0)
         (i - 1).fibBelow()
-    printInt(i.fib())
+    i.fib().printInt()
 }
 
 fn fib(i: int): int {
