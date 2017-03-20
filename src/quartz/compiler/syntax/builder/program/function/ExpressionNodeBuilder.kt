@@ -2,6 +2,7 @@ package quartz.compiler.syntax.builder.program.function
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.builder.program.function.expression.toNode
+import quartz.compiler.syntax.builder.program.function.statements.toFunctionNode
 import quartz.compiler.syntax.builder.program.function.statements.toNode
 import quartz.compiler.syntax.builder.program.toNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
@@ -100,7 +101,7 @@ fun QuartzParser.InfixCallExpressionContext.toNode(): ExpressionNode {
     return if (expressionList() == null) {
         atomicExpression().toNode()
     } else {
-        toNode()
+        toFunctionNode()
     }
 }
 

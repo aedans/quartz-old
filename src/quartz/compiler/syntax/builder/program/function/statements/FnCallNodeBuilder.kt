@@ -15,7 +15,7 @@ fun QuartzParser.PrefixCallExpressionContext.toNode(): FnCallNode {
     )
 }
 
-fun QuartzParser.InfixCallExpressionContext.toNode(): FnCallNode {
+fun QuartzParser.InfixCallExpressionContext.toFunctionNode(): FnCallNode {
     val args = expressionList().expression().map { it.toNode() }.toMutableList()
     args.add(0, atomicExpression().toNode())
     return FnCallNode(
