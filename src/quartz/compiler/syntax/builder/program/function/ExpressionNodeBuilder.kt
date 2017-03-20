@@ -41,36 +41,31 @@ fun QuartzParser.EqualityComparisonContext.toNode(): ExpressionNode {
 }
 
 fun QuartzParser.ComparisonContext.toNode(): ExpressionNode {
-    return if (comparison() == null) {
-        additiveExpression().toNode()
-    } else {
-        TwoArgOperatorNode(additiveExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
+    return when {
+        comparison() == null -> additiveExpression().toNode()
+        else -> TwoArgOperatorNode(additiveExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
     }
 }
 
 fun QuartzParser.AdditiveExpressionContext.toNode(): ExpressionNode {
-    return if (additiveExpression() == null) {
-        multiplicativeExpression().toNode()
-    } else {
-        TwoArgOperatorNode(multiplicativeExpression().toNode(), additiveExpression().toNode(), additiveOperation().ID, null)
+    return when {
+        additiveExpression() == null -> multiplicativeExpression().toNode()
+        else -> TwoArgOperatorNode(multiplicativeExpression().toNode(), additiveExpression().toNode(), additiveOperation().ID, null)
     }
 }
 
 fun QuartzParser.MultiplicativeExpressionContext.toNode(): ExpressionNode {
-    return if (multiplicativeExpression() == null) {
-        prefixExpression().toNode()
-    } else {
-        TwoArgOperatorNode(prefixExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
+    return when {
+        multiplicativeExpression() == null -> prefixExpression().toNode()
+        else -> TwoArgOperatorNode(prefixExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
     }
 }
 
 fun QuartzParser.PrefixExpressionContext.toNode(operations: List<QuartzParser.PrefixOperationContext>? = prefixOperation()): ExpressionNode {
-    return if (operations == null || operations.isEmpty()) {
-        postfixExpression().toNode()
-    } else if (operations.size == 1) {
-        operations[0].toNode(postfixExpression().toNode())
-    } else {
-        operations.last().toNode(toNode(operations.dropLast(1)))
+    return when {
+        operations == null || operations.isEmpty() -> postfixExpression().toNode()
+        operations.size == 1 -> operations[0].toNode(postfixExpression().toNode())
+        else -> operations.last().toNode(toNode(operations.dropLast(1)))
     }
 }
 
@@ -83,22 +78,18 @@ fun QuartzParser.PrefixOperationContext.toNode(expression: ExpressionNode): Expr
 }
 
 fun QuartzParser.PostfixExpressionContext.toNode(operations: List<QuartzParser.PostfixOperationContext>? = postfixOperation()): ExpressionNode {
-    return if (operations == null || operations.isEmpty()) {
-        atomicExpression().toNode()
-    } else if (operations.size == 1) {
-        operations[0].toNode(atomicExpression().toNode())
-    } else {
-        operations.last().toNode(toNode(operations.dropLast(1)))
+    return when {
+        operations == null || operations.isEmpty() -> atomicExpression().toNode()
+        operations.size == 1 -> operations[0].toNode(atomicExpression().toNode())
+        else -> operations.last().toNode(toNode(operations.dropLast(1)))
     }
 }
 
 fun QuartzParser.PostfixOperationContext.toNode(expression: ExpressionNode): ExpressionNode {
-    return if (arrayAccess() != null) {
-        arrayAccess().toNode(expression)
-    } else if (infixCall() != null) {
-        infixCall().toNode(expression)
-    } else {
-        throw Exception("Unrecognized postfix operation $this")
+    return when {
+        arrayAccess() != null -> arrayAccess().toNode(expression)
+        infixCall() != null -> infixCall().toNode(expression)
+        else -> throw Exception("Unrecognized postfix operation $text")
     }
 }
 

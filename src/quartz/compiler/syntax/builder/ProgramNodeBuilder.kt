@@ -18,19 +18,22 @@ fun QuartzParser.ProgramContext.toNode(): ProgramNode {
 }
 
 private fun QuartzParser.DeclarationContext.addTo(programNode: ProgramNode) {
-    if (fnDeclaration() != null) {
-        val fnDeclarationNode = fnDeclaration().toNode()
-        programNode.fnDeclarations.add(fnDeclarationNode)
-        println("Found $fnDeclarationNode")
-    } else if (externFnDeclaration() != null) {
-        val externFn = externFnDeclaration().toNode()
-        programNode.externFnDeclarations.add(externFn)
-        println("Found $externFn")
-    } else if (inlineC() != null) {
-        val inlineCNode = inlineC().toNode()
-        programNode.inlineCNodes.add(inlineCNode)
-        println("Found $inlineCNode")
-    } else {
-        throw Exception("Error translating $this")
+    when {
+        fnDeclaration() != null -> {
+            val fnDeclarationNode = fnDeclaration().toNode()
+            programNode.fnDeclarations.add(fnDeclarationNode)
+            println("Found $fnDeclarationNode")
+        }
+        externFnDeclaration() != null -> {
+            val externFn = externFnDeclaration().toNode()
+            programNode.externFnDeclarations.add(externFn)
+            println("Found $externFn")
+        }
+        inlineC() != null -> {
+            val inlineCNode = inlineC().toNode()
+            programNode.inlineCNodes.add(inlineCNode)
+            println("Found $inlineCNode")
+        }
+        else -> throw Exception("Error translating $this")
     }
 }

@@ -11,15 +11,11 @@ import quartz.compiler.util.types.Primitives
  */
 
 fun QuartzParser.LiteralContext.toNode(): ExpressionNode {
-    return if (CHAR() != null) {
-        TODO("Char literals")
-    } else if (INT() != null) {
-        NumberLiteralNode(text, Primitives.int)
-    } else if (DOUBLE() != null) {
-        NumberLiteralNode(text, Primitives.double)
-    } else if (STRING() != null) {
-        StringLiteralNode(text.substring(1, text.length-1))
-    } else {
-        throw Exception("Error translating $this")
+    return when {
+        CHAR() != null -> TODO("Char literals")
+        INT() != null -> NumberLiteralNode(text, Primitives.int)
+        DOUBLE() != null -> NumberLiteralNode(text, Primitives.double)
+        STRING() != null -> StringLiteralNode(text.substring(1, text.length-1))
+        else -> throw Exception("Error translating $this")
     }
 }
