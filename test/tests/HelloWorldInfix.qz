@@ -1,0 +1,8 @@
+%%
+#include <stdio.h>
+%%
+
+fn main()
+    "Hello, World!".printf()
+
+extern_fn printf(char[])

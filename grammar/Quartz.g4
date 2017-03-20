@@ -98,7 +98,11 @@ additiveExpression
     ;
 
 multiplicativeExpression
-    : prefixExpression (multiplicativeOperation multiplicativeExpression)?
+    : infixCallExpression (multiplicativeOperation multiplicativeExpression)?
+    ;
+
+infixCallExpression
+    : prefixExpression ('.' identifier '(' expressionList ')')?
     ;
 
 prefixExpression
@@ -106,11 +110,7 @@ prefixExpression
     ;
 
 postfixExpression
-    : infixCallExpression postfixOperation*
-    ;
-
-infixCallExpression
-    : atomicExpression ('.' identifier '(' expressionList ')')?
+    : atomicExpression postfixOperation*
     ;
 
 atomicExpression

@@ -3,11 +3,11 @@
 %%
 
 fn main()
-    countTo(10)
+    -10.countTo()
 
 fn countTo(i: int) {
-    if (i > 0)
-        (i - 1).countTo()
+    if (i < 0)
+        (i + 1).countTo()
     printInt(i)
 }
 
