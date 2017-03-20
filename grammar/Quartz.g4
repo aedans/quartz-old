@@ -155,16 +155,16 @@ arrayAccess
     : '[' expression ']'
     ;
 
-infixCallExpression
-    : expression infixCall
-    ;
-
 infixCall
     : '.' identifier '(' expressionList ')'
     ;
 
 prefixCallExpression
     : identifier '(' expressionList ')'
+    ;
+
+infixCallExpression
+    : expression infixCall
     ;
 
 ifExpression

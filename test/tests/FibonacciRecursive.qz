@@ -11,14 +11,13 @@ fn fibBelow(i: int) {
     i.fib().printInt()
 }
 
-fn fib(i: int): int {
+fn fib(i: int): int
     if (i == 0)
         return 0
     else if (i == 1)
         return 1
     else
         return (i - 1).fib() + (i - 2).fib()
-}
 
 fn printInt(i: int)
     printf("%d ", i)

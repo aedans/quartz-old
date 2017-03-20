@@ -1,4 +1,4 @@
-package types
+package quartz.compiler.util.types
 
 import quartz.compiler.util.Type
 

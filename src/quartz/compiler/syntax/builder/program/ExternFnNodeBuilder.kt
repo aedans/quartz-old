@@ -3,7 +3,7 @@ package quartz.compiler.syntax.builder.program
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.builder.toType
 import quartz.compiler.util.Function
-import types.Primitives
+import quartz.compiler.util.types.Primitives
 
 /**
  * Created by Aedan Smith.

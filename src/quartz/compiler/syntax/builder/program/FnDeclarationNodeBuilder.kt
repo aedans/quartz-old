@@ -5,7 +5,7 @@ import quartz.compiler.syntax.builder.program.function.toNode
 import quartz.compiler.syntax.builder.toType
 import quartz.compiler.syntax.tree.program.FnDeclarationNode
 import quartz.compiler.syntax.tree.program.function.statement.ReturnNode
-import types.Primitives
+import quartz.compiler.util.types.Primitives
 
 /**
  * Created by Aedan Smith.

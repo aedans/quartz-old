@@ -36,7 +36,7 @@ public class QuartzParser extends Parser {
 		RULE_postfixExpression = 21, RULE_atomicExpression = 22, RULE_equalityOperation = 23, 
 		RULE_comparisonOperation = 24, RULE_additiveOperation = 25, RULE_multiplicativeOperation = 26, 
 		RULE_prefixOperation = 27, RULE_postfixOperation = 28, RULE_arrayAccess = 29, 
-		RULE_infixCallExpression = 30, RULE_infixCall = 31, RULE_prefixCallExpression = 32, 
+		RULE_infixCall = 30, RULE_prefixCallExpression = 31, RULE_infixCallExpression = 32, 
 		RULE_ifExpression = 33, RULE_literal = 34, RULE_varType = 35, RULE_expressionList = 36, 
 		RULE_nameList = 37, RULE_typeList = 38, RULE_block = 39, RULE_identifier = 40, 
 		RULE_inlineC = 41, RULE_varDeclarationType = 42;
@@ -47,10 +47,9 @@ public class QuartzParser extends Parser {
 		"conjunction", "equalityComparison", "comparison", "additiveExpression", 
 		"multiplicativeExpression", "prefixExpression", "postfixExpression", "atomicExpression", 
 		"equalityOperation", "comparisonOperation", "additiveOperation", "multiplicativeOperation", 
-		"prefixOperation", "postfixOperation", "arrayAccess", "infixCallExpression", 
-		"infixCall", "prefixCallExpression", "ifExpression", "literal", "varType", 
-		"expressionList", "nameList", "typeList", "block", "identifier", "inlineC", 
-		"varDeclarationType"
+		"prefixOperation", "postfixOperation", "arrayAccess", "infixCall", "prefixCallExpression", 
+		"infixCallExpression", "ifExpression", "literal", "varType", "expressionList", 
+		"nameList", "typeList", "block", "identifier", "inlineC", "varDeclarationType"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -1654,42 +1653,6 @@ public class QuartzParser extends Parser {
 		return _localctx;
 	}
 
-	public static class InfixCallExpressionContext extends ParserRuleContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public InfixCallContext infixCall() {
-			return getRuleContext(InfixCallContext.class,0);
-		}
-		public InfixCallExpressionContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_infixCallExpression; }
-	}
-
-	public final InfixCallExpressionContext infixCallExpression() throws RecognitionException {
-		InfixCallExpressionContext _localctx = new InfixCallExpressionContext(_ctx, getState());
-		enterRule(_localctx, 60, RULE_infixCallExpression);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(261);
-			expression();
-			setState(262);
-			infixCall();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static class InfixCallContext extends ParserRuleContext {
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
@@ -1705,19 +1668,19 @@ public class QuartzParser extends Parser {
 
 	public final InfixCallContext infixCall() throws RecognitionException {
 		InfixCallContext _localctx = new InfixCallContext(_ctx, getState());
-		enterRule(_localctx, 62, RULE_infixCall);
+		enterRule(_localctx, 60, RULE_infixCall);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(264);
+			setState(261);
 			match(T__21);
-			setState(265);
+			setState(262);
 			identifier();
-			setState(266);
+			setState(263);
 			match(T__0);
-			setState(267);
+			setState(264);
 			expressionList();
-			setState(268);
+			setState(265);
 			match(T__1);
 			}
 		}
@@ -1747,18 +1710,54 @@ public class QuartzParser extends Parser {
 
 	public final PrefixCallExpressionContext prefixCallExpression() throws RecognitionException {
 		PrefixCallExpressionContext _localctx = new PrefixCallExpressionContext(_ctx, getState());
-		enterRule(_localctx, 64, RULE_prefixCallExpression);
+		enterRule(_localctx, 62, RULE_prefixCallExpression);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(270);
+			setState(267);
 			identifier();
-			setState(271);
+			setState(268);
 			match(T__0);
-			setState(272);
+			setState(269);
 			expressionList();
-			setState(273);
+			setState(270);
 			match(T__1);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class InfixCallExpressionContext extends ParserRuleContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public InfixCallContext infixCall() {
+			return getRuleContext(InfixCallContext.class,0);
+		}
+		public InfixCallExpressionContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_infixCallExpression; }
+	}
+
+	public final InfixCallExpressionContext infixCallExpression() throws RecognitionException {
+		InfixCallExpressionContext _localctx = new InfixCallExpressionContext(_ctx, getState());
+		enterRule(_localctx, 64, RULE_infixCallExpression);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(272);
+			expression();
+			setState(273);
+			infixCall();
 			}
 		}
 		catch (RecognitionException re) {
@@ -2317,9 +2316,9 @@ public class QuartzParser extends Parser {
 		"\26\u00e0\13\26\3\26\3\26\3\27\3\27\7\27\u00e6\n\27\f\27\16\27\u00e9\13"+
 		"\27\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\3\30\5\30\u00f4\n\30\3\31"+
 		"\3\31\3\32\3\32\3\33\3\33\3\34\3\34\3\35\3\35\3\36\3\36\5\36\u0102\n\36"+
-		"\3\37\3\37\3\37\3\37\3 \3 \3 \3!\3!\3!\3!\3!\3!\3\"\3\"\3\"\3\"\3\"\3"+
-		"#\3#\3#\3#\3#\3#\3#\3#\3$\3$\3%\3%\3%\3%\3%\7%\u0125\n%\f%\16%\u0128\13"+
-		"%\3&\3&\3&\7&\u012d\n&\f&\16&\u0130\13&\3&\5&\u0133\n&\3\'\3\'\3\'\7\'"+
+		"\3\37\3\37\3\37\3\37\3 \3 \3 \3 \3 \3 \3!\3!\3!\3!\3!\3\"\3\"\3\"\3#\3"+
+		"#\3#\3#\3#\3#\3#\3#\3$\3$\3%\3%\3%\3%\3%\7%\u0125\n%\f%\16%\u0128\13%"+
+		"\3&\3&\3&\7&\u012d\n&\f&\16&\u0130\13&\3&\5&\u0133\n&\3\'\3\'\3\'\7\'"+
 		"\u0138\n\'\f\'\16\'\u013b\13\'\3\'\5\'\u013e\n\'\3(\3(\3(\7(\u0143\n("+
 		"\f(\16(\u0146\13(\3(\5(\u0149\n(\3)\3)\7)\u014d\n)\f)\16)\u0150\13)\3"+
 		")\3)\5)\u0154\n)\3*\3*\3+\3+\3,\3,\3,\2\3H-\2\4\6\b\n\f\16\20\22\24\26"+
@@ -2331,7 +2330,7 @@ public class QuartzParser extends Parser {
 		"\2\2\"\u00c3\3\2\2\2$\u00c9\3\2\2\2&\u00cf\3\2\2\2(\u00d5\3\2\2\2*\u00de"+
 		"\3\2\2\2,\u00e3\3\2\2\2.\u00f3\3\2\2\2\60\u00f5\3\2\2\2\62\u00f7\3\2\2"+
 		"\2\64\u00f9\3\2\2\2\66\u00fb\3\2\2\28\u00fd\3\2\2\2:\u0101\3\2\2\2<\u0103"+
-		"\3\2\2\2>\u0107\3\2\2\2@\u010a\3\2\2\2B\u0110\3\2\2\2D\u0115\3\2\2\2F"+
+		"\3\2\2\2>\u0107\3\2\2\2@\u010d\3\2\2\2B\u0112\3\2\2\2D\u0115\3\2\2\2F"+
 		"\u011d\3\2\2\2H\u011f\3\2\2\2J\u012e\3\2\2\2L\u0139\3\2\2\2N\u0144\3\2"+
 		"\2\2P\u0153\3\2\2\2R\u0155\3\2\2\2T\u0157\3\2\2\2V\u0159\3\2\2\2XZ\5\4"+
 		"\3\2YX\3\2\2\2Z]\3\2\2\2[Y\3\2\2\2[\\\3\2\2\2\\\3\3\2\2\2][\3\2\2\2^b"+
@@ -2348,7 +2347,7 @@ public class QuartzParser extends Parser {
 		"\u0091\7\4\2\2\u008f\u0090\7\5\2\2\u0090\u0092\5H%\2\u0091\u008f\3\2\2"+
 		"\2\u0091\u0092\3\2\2\2\u0092\21\3\2\2\2\u0093\u009b\5T+\2\u0094\u009b"+
 		"\5\26\f\2\u0095\u009b\5\24\13\2\u0096\u009b\5\30\r\2\u0097\u009b\5\32"+
-		"\16\2\u0098\u009b\5B\"\2\u0099\u009b\5> \2\u009a\u0093\3\2\2\2\u009a\u0094"+
+		"\16\2\u0098\u009b\5@!\2\u0099\u009b\5B\"\2\u009a\u0093\3\2\2\2\u009a\u0094"+
 		"\3\2\2\2\u009a\u0095\3\2\2\2\u009a\u0096\3\2\2\2\u009a\u0097\3\2\2\2\u009a"+
 		"\u0098\3\2\2\2\u009a\u0099\3\2\2\2\u009b\23\3\2\2\2\u009c\u009d\5V,\2"+
 		"\u009d\u00a0\5R*\2\u009e\u009f\7\5\2\2\u009f\u00a1\5H%\2\u00a0\u009e\3"+
@@ -2376,18 +2375,18 @@ public class QuartzParser extends Parser {
 		"\u00e4\u00e6\5:\36\2\u00e5\u00e4\3\2\2\2\u00e6\u00e9\3\2\2\2\u00e7\u00e5"+
 		"\3\2\2\2\u00e7\u00e8\3\2\2\2\u00e8-\3\2\2\2\u00e9\u00e7\3\2\2\2\u00ea"+
 		"\u00eb\7\3\2\2\u00eb\u00ec\5\34\17\2\u00ec\u00ed\7\4\2\2\u00ed\u00f4\3"+
-		"\2\2\2\u00ee\u00f4\5B\"\2\u00ef\u00f4\5D#\2\u00f0\u00f4\5R*\2\u00f1\u00f4"+
+		"\2\2\2\u00ee\u00f4\5@!\2\u00ef\u00f4\5D#\2\u00f0\u00f4\5R*\2\u00f1\u00f4"+
 		"\5T+\2\u00f2\u00f4\5F$\2\u00f3\u00ea\3\2\2\2\u00f3\u00ee\3\2\2\2\u00f3"+
 		"\u00ef\3\2\2\2\u00f3\u00f0\3\2\2\2\u00f3\u00f1\3\2\2\2\u00f3\u00f2\3\2"+
 		"\2\2\u00f4/\3\2\2\2\u00f5\u00f6\t\2\2\2\u00f6\61\3\2\2\2\u00f7\u00f8\t"+
 		"\3\2\2\u00f8\63\3\2\2\2\u00f9\u00fa\t\4\2\2\u00fa\65\3\2\2\2\u00fb\u00fc"+
 		"\t\5\2\2\u00fc\67\3\2\2\2\u00fd\u00fe\t\6\2\2\u00fe9\3\2\2\2\u00ff\u0102"+
-		"\5<\37\2\u0100\u0102\5@!\2\u0101\u00ff\3\2\2\2\u0101\u0100\3\2\2\2\u0102"+
+		"\5<\37\2\u0100\u0102\5> \2\u0101\u00ff\3\2\2\2\u0101\u0100\3\2\2\2\u0102"+
 		";\3\2\2\2\u0103\u0104\7\26\2\2\u0104\u0105\5\34\17\2\u0105\u0106\7\27"+
-		"\2\2\u0106=\3\2\2\2\u0107\u0108\5\34\17\2\u0108\u0109\5@!\2\u0109?\3\2"+
-		"\2\2\u010a\u010b\7\30\2\2\u010b\u010c\5R*\2\u010c\u010d\7\3\2\2\u010d"+
-		"\u010e\5J&\2\u010e\u010f\7\4\2\2\u010fA\3\2\2\2\u0110\u0111\5R*\2\u0111"+
-		"\u0112\7\3\2\2\u0112\u0113\5J&\2\u0113\u0114\7\4\2\2\u0114C\3\2\2\2\u0115"+
+		"\2\2\u0106=\3\2\2\2\u0107\u0108\7\30\2\2\u0108\u0109\5R*\2\u0109\u010a"+
+		"\7\3\2\2\u010a\u010b\5J&\2\u010b\u010c\7\4\2\2\u010c?\3\2\2\2\u010d\u010e"+
+		"\5R*\2\u010e\u010f\7\3\2\2\u010f\u0110\5J&\2\u0110\u0111\7\4\2\2\u0111"+
+		"A\3\2\2\2\u0112\u0113\5\34\17\2\u0113\u0114\5> \2\u0114C\3\2\2\2\u0115"+
 		"\u0116\7\'\2\2\u0116\u0117\7\3\2\2\u0117\u0118\5\34\17\2\u0118\u0119\7"+
 		"\4\2\2\u0119\u011a\5\34\17\2\u011a\u011b\7(\2\2\u011b\u011c\5\34\17\2"+
 		"\u011cE\3\2\2\2\u011d\u011e\t\7\2\2\u011eG\3\2\2\2\u011f\u0120\b%\1\2"+

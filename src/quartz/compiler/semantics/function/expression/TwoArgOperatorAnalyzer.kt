@@ -6,8 +6,8 @@ import quartz.compiler.semantics.function.ExpressionAnalyzer
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.TwoArgOperatorNode
+import quartz.compiler.util.types.Primitives
 import quartz.compiler.util.types.QArray
-import types.Primitives
 
 /**
  * Created by Aedan Smith.

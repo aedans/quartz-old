@@ -19,18 +19,16 @@ import java.io.InputStream
 
 object Compiler {
     fun compile(input: InputStream,
+                parser: (InputStream) -> ProgramNode = {
+                    QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program().toNode()
+                },
                 semanticAnalyzers: List<SemanticAnalyzer<ProgramNode>> = listOf(
                         externFnAnalyzer,
                         FnDeclarationAnalyzer()
                 ),
                 generator: Generator = Generator()
     ): String {
-        val charStream = ANTLRInputStream(input)
-        val lexer = QuartzLexer(charStream)
-        val tokens = CommonTokenStream(lexer)
-        val parser = QuartzParser(tokens)
-
-        val program = parser.program().toNode()
+        val program = parser(input)
         println('\n' + program.toString())
         semanticAnalyzers.analyze(program)
         println(program.toString())

@@ -7,7 +7,7 @@ import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.program.function.StatementNode
 import quartz.compiler.syntax.tree.program.function.statement.IfStatementNode
-import types.Primitives
+import quartz.compiler.util.types.Primitives
 
 /**
  * Created by Aedan Smith.

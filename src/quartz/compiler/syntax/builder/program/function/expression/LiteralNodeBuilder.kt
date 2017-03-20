@@ -4,7 +4,7 @@ import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.NumberLiteralNode
 import quartz.compiler.syntax.tree.program.function.expression.StringLiteralNode
-import types.Primitives
+import quartz.compiler.util.types.Primitives
 
 /**
  * Created by Aedan Smith.

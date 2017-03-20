@@ -2,8 +2,8 @@ package quartz.compiler.syntax.builder
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.util.Type
+import quartz.compiler.util.types.Primitives
 import quartz.compiler.util.types.QArray
-import types.Primitives
 
 /**
  * Created by Aedan Smith.
