@@ -18,3 +18,9 @@ fun StructDeclarationNode.visit(string: StringBuilder) {
     }
     string.appendln("};").appendln()
 }
+
+fun StructDeclarationNode.visitPrototype(string: StringBuilder) {
+    string.append("struct _")
+    name.visitName(string)
+    string.appendln(';')
+}

@@ -3,6 +3,7 @@ package quartz.compiler.generator.visitors
 import quartz.compiler.generator.visitors.fndeclaration.visit
 import quartz.compiler.generator.visitors.fndeclaration.visitPrototype
 import quartz.compiler.generator.visitors.struct.visit
+import quartz.compiler.generator.visitors.struct.visitPrototype
 import quartz.compiler.syntax.tree.ProgramNode
 
 /**
@@ -10,11 +11,14 @@ import quartz.compiler.syntax.tree.ProgramNode
  */
 
 fun ProgramNode.visit(string: StringBuilder) {
-    structDeclarations.forEach { it.visit(string) }
+    structDeclarations.sortedBy { it.name }.forEach { it.visitPrototype(string) }
+    string.appendln()
     fnDeclarations.sortedBy { it.returnType.toString() }.forEach { it.visitPrototype(string) }
     inlineCNodes.forEach { it.visit(string) }
+    string.appendln()
+    structDeclarations.forEach { it.visit(string) }
     fnDeclarations.forEach {
-        string.appendln()
         it.visit(string)
+        string.appendln()
     }
 }
