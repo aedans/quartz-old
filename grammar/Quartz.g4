@@ -168,7 +168,7 @@ infixCallExpression
     ;
 
 ifExpression
-    : IF '(' expression ')' expression ELSE expression
+    : IF '(' test=expression ')' ifTrue=expression ELSE ifFalse=expression
     ;
 
 literal

@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FnCallNode(val name: String, val expressions: MutableList<ExpressionNode>) : ExpressionNode {
+class FnCallNode(val name: String, var expressions: MutableList<ExpressionNode>) : ExpressionNode {
     override var type: Type? = null
 
     override fun toString(): String {

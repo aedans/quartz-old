@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
  */
 
 class FnDeclarationNode(val name: String, val args: List<Pair<String, Type>>, val returnType: Type) {
-    val statements = mutableListOf<StatementNode>()
+    var statements = mutableListOf<StatementNode>()
 
     override fun toString(): String {
         @Suppress("unused")

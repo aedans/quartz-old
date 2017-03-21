@@ -7,8 +7,8 @@ import quartz.compiler.syntax.tree.program.function.StatementNode
  * Created by Aedan Smith.
  */
 
-class ReturnNode(var expressionNode: ExpressionNode) : StatementNode {
+class VarAssignmentNode(val name: String, var expression: ExpressionNode) : StatementNode {
     override fun toString(): String {
-        return "return($expressionNode)"
+        return "$name = $expression"
     }
 }

@@ -2,8 +2,10 @@
 #include <stdio.h>
 %%
 
-fn main()
-    printf(if (false()) "Failed" else helloWorld())
+fn main() {
+    val l = if (false()) "Failed" else helloWorld()
+    printf(if (true()) l else "Failed")
+}
 
 fn helloWorld(): char[] = "Hello, World!"
 

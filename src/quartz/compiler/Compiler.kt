@@ -7,8 +7,8 @@ import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.semantics.analyze
-import quartz.compiler.semantics.function.FnDeclarationAnalyzer
-import quartz.compiler.semantics.misc.externFnAnalyzer
+import quartz.compiler.semantics.translator.translate
+import quartz.compiler.semantics.verifier.verify
 import quartz.compiler.syntax.builder.toNode
 import quartz.compiler.syntax.tree.ProgramNode
 import java.io.InputStream
@@ -22,9 +22,9 @@ object Compiler {
                 parser: (InputStream) -> ProgramNode = {
                     QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program().toNode()
                 },
-                semanticAnalyzers: List<SemanticAnalyzer<ProgramNode>> = listOf(
-                        externFnAnalyzer,
-                        FnDeclarationAnalyzer()
+                semanticAnalyzers: List<SemanticAnalyzer> = listOf(
+                        ProgramNode::verify,
+                        ProgramNode::translate
                 ),
                 generator: Generator = Generator()
     ): String {

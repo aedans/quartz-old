@@ -96,6 +96,7 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: ExpressionNode): Exp
 fun QuartzParser.AtomicExpressionContext.toNode(): ExpressionNode {
     return when {
         expression() != null -> expression().toNode()
+        ifExpression() != null -> ifExpression().toNode()
         prefixCallExpression() != null -> prefixCallExpression().toNode()
         identifier() != null -> identifier().toNode()
         inlineC() != null -> inlineC().toNode()

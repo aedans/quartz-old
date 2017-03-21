@@ -19,7 +19,9 @@ class VarDeclarationVisitor(val expressionVisitor: ExpressionVisitor) : Visitor<
         typeVisitor(node.type ?: throw Exception("Unknown type for $node"), string, depth)
         string.append(' ')
         nameVisitor(node.name, string, depth)
-        string.append(" = ")
-        expressionVisitor(node.expression, string, depth)
+        if (node.expression != null) {
+            string.append(" = ")
+            expressionVisitor(node.expression!!, string, depth)
+        }
     }
 }

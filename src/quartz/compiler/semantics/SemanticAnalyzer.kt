@@ -1,15 +1,13 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.semantics.symboltable.GlobalSymbolTable
-import quartz.compiler.semantics.symboltable.SymbolTable
+import quartz.compiler.syntax.tree.ProgramNode
 
 /**
  * Created by Aedan Smith.
  */
 
-typealias SemanticAnalyzer<T> = (T, SymbolTable) -> Unit
+typealias SemanticAnalyzer = (ProgramNode) -> Unit
 
-fun <T> Iterable<SemanticAnalyzer<T>>.analyze(t: T) {
-    val symbolTable = GlobalSymbolTable()
-    this.forEach { it(t, symbolTable) }
+fun Iterable<SemanticAnalyzer>.analyze(programNode: ProgramNode) {
+    this.forEach { it(programNode) }
 }

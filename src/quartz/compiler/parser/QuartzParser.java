@@ -1772,14 +1772,17 @@ public class QuartzParser extends Parser {
 	}
 
 	public static class IfExpressionContext extends ParserRuleContext {
+		public ExpressionContext test;
+		public ExpressionContext ifTrue;
+		public ExpressionContext ifFalse;
 		public TerminalNode IF() { return getToken(QuartzParser.IF, 0); }
+		public TerminalNode ELSE() { return getToken(QuartzParser.ELSE, 0); }
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
 		}
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
-		public TerminalNode ELSE() { return getToken(QuartzParser.ELSE, 0); }
 		public IfExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1797,15 +1800,15 @@ public class QuartzParser extends Parser {
 			setState(276);
 			match(T__0);
 			setState(277);
-			expression();
+			((IfExpressionContext)_localctx).test = expression();
 			setState(278);
 			match(T__1);
 			setState(279);
-			expression();
+			((IfExpressionContext)_localctx).ifTrue = expression();
 			setState(280);
 			match(ELSE);
 			setState(281);
-			expression();
+			((IfExpressionContext)_localctx).ifFalse = expression();
 			}
 		}
 		catch (RecognitionException re) {

@@ -8,24 +8,17 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-class IfStatementNode(var test: ExpressionNode) : StatementNode {
-    var trueStatements = mutableListOf<StatementNode>()
-    var falseStatements = mutableListOf<StatementNode>()
+class WhileLoopNode(val test: ExpressionNode) : StatementNode {
+    var statements = mutableListOf<StatementNode>()
 
     override fun toString(): String {
-        return "if ($test)"
+        return "while ($test)"
     }
 
     override fun toString(i: Int): String {
         var s = ("|   " * i) + toString()
-        trueStatements.forEach {
+        statements.forEach {
             s += '\n' + it.toString(i + 1)
-        }
-        if (!falseStatements.isEmpty()) {
-            s += '\n' + ("|   " * i) + "else"
-            falseStatements.forEach {
-                s += '\n' + it.toString(i + 1)
-            }
         }
         return s
     }
