@@ -17,8 +17,8 @@ fun ExpressionNode.translate(newStatements: MutableList<StatementNode>): Express
         is StringLiteralNode -> this
         is InlineCNode -> this
         is IdentifierNode -> this
-        is OneArgOperatorNode -> this
-        is TwoArgOperatorNode -> this
+        is UnaryOperatorNode -> this
+        is BinaryOperatorNode -> this
         is CastNode -> this
         is FnCallNode -> this
         is IfExpressionNode -> translate(newStatements)

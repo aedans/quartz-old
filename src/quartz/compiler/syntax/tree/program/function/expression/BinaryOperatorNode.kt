@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class TwoArgOperatorNode(var expr1: ExpressionNode, var expr2: ExpressionNode, val id: ID, override var type: Type?) : ExpressionNode {
+class BinaryOperatorNode(var expr1: ExpressionNode, var expr2: ExpressionNode, val id: ID, override var type: Type?) : ExpressionNode {
     override fun toString(): String {
         return "$id($expr1, $expr2)"
     }

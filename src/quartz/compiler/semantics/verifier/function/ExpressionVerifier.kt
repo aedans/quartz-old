@@ -19,8 +19,8 @@ fun ExpressionNode.verify(symbolTable: SymbolTable) {
         is InlineCNode -> { }
         is IdentifierNode -> verify(symbolTable)
         is IfExpressionNode -> verify(symbolTable)
-        is OneArgOperatorNode -> verify(symbolTable)
-        is TwoArgOperatorNode -> verify(symbolTable)
+        is UnaryOperatorNode -> verify(symbolTable)
+        is BinaryOperatorNode -> verify(symbolTable)
         is FnCallNode -> verify(symbolTable)
         is MemberAccessNode -> verify(symbolTable)
         is CastNode -> { }

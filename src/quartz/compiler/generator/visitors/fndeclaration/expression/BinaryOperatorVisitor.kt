@@ -1,15 +1,15 @@
 package quartz.compiler.generator.visitors.fndeclaration.expression
 
 import quartz.compiler.generator.visitors.fndeclaration.visit
-import quartz.compiler.syntax.tree.program.function.expression.TwoArgOperatorNode
+import quartz.compiler.syntax.tree.program.function.expression.BinaryOperatorNode
 
 /**
  * Created by Aedan Smith.
  */
 
-fun TwoArgOperatorNode.visit(string: StringBuilder) {
+fun BinaryOperatorNode.visit(string: StringBuilder) {
     when (id) {
-        TwoArgOperatorNode.ID.ARRAY_ACCESS -> {
+        BinaryOperatorNode.ID.ARRAY_ACCESS -> {
             string.append('(')
             expr1.visit(string)
             string.append(")[")

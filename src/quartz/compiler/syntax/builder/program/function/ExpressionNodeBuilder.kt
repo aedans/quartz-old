@@ -5,8 +5,8 @@ import quartz.compiler.syntax.builder.program.function.expression.toNode
 import quartz.compiler.syntax.builder.program.function.statements.toNode
 import quartz.compiler.syntax.builder.program.misc.toNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
-import quartz.compiler.syntax.tree.program.function.expression.OneArgOperatorNode
-import quartz.compiler.syntax.tree.program.function.expression.TwoArgOperatorNode
+import quartz.compiler.syntax.tree.program.function.expression.BinaryOperatorNode
+import quartz.compiler.syntax.tree.program.function.expression.UnaryOperatorNode
 
 /**
  * Created by Aedan Smith.
@@ -20,7 +20,7 @@ fun QuartzParser.DisjunctionContext.toNode(): ExpressionNode {
     return if (disjunction() == null) {
         conjunction().toNode()
     } else {
-        TwoArgOperatorNode(conjunction().toNode(), disjunction().toNode(), TwoArgOperatorNode.ID.OR, null)
+        BinaryOperatorNode(conjunction().toNode(), disjunction().toNode(), BinaryOperatorNode.ID.OR, null)
     }
 }
 
@@ -28,7 +28,7 @@ fun QuartzParser.ConjunctionContext.toNode(): ExpressionNode {
     return if (conjunction() == null) {
         equalityComparison().toNode()
     } else {
-        TwoArgOperatorNode(equalityComparison().toNode(), conjunction().toNode(), TwoArgOperatorNode.ID.AND, null)
+        BinaryOperatorNode(equalityComparison().toNode(), conjunction().toNode(), BinaryOperatorNode.ID.AND, null)
     }
 }
 
@@ -36,28 +36,28 @@ fun QuartzParser.EqualityComparisonContext.toNode(): ExpressionNode {
     return if (equalityComparison() == null) {
         comparison().toNode()
     } else {
-        TwoArgOperatorNode(comparison().toNode(), equalityComparison().toNode(), equalityOperation().ID, null)
+        BinaryOperatorNode(comparison().toNode(), equalityComparison().toNode(), equalityOperation().ID, null)
     }
 }
 
 fun QuartzParser.ComparisonContext.toNode(): ExpressionNode {
     return when {
         comparison() == null -> additiveExpression().toNode()
-        else -> TwoArgOperatorNode(additiveExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
+        else -> BinaryOperatorNode(additiveExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
     }
 }
 
 fun QuartzParser.AdditiveExpressionContext.toNode(): ExpressionNode {
     return when {
         additiveExpression() == null -> multiplicativeExpression().toNode()
-        else -> TwoArgOperatorNode(multiplicativeExpression().toNode(), additiveExpression().toNode(), additiveOperation().ID, null)
+        else -> BinaryOperatorNode(multiplicativeExpression().toNode(), additiveExpression().toNode(), additiveOperation().ID, null)
     }
 }
 
 fun QuartzParser.MultiplicativeExpressionContext.toNode(): ExpressionNode {
     return when {
         multiplicativeExpression() == null -> prefixExpression().toNode()
-        else -> TwoArgOperatorNode(prefixExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
+        else -> BinaryOperatorNode(prefixExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
     }
 }
 
@@ -70,9 +70,9 @@ fun QuartzParser.PrefixExpressionContext.toNode(operations: List<QuartzParser.Pr
 }
 
 fun QuartzParser.PrefixOperationContext.toNode(expression: ExpressionNode): ExpressionNode {
-    return OneArgOperatorNode(expression, when (text) {
-        "-" -> OneArgOperatorNode.ID.NEGATE
-        "!" -> OneArgOperatorNode.ID.INVERT
+    return UnaryOperatorNode(expression, when (text) {
+        "-" -> UnaryOperatorNode.ID.NEGATE
+        "!" -> UnaryOperatorNode.ID.INVERT
         else -> throw Exception("Unrecognized prefix operator $text")
     }, null)
 }
@@ -106,33 +106,33 @@ fun QuartzParser.AtomicExpressionContext.toNode(): ExpressionNode {
     }
 }
 
-val QuartzParser.EqualityOperationContext.ID: TwoArgOperatorNode.ID
+val QuartzParser.EqualityOperationContext.ID: BinaryOperatorNode.ID
     get() = when (text) {
-        "==" -> TwoArgOperatorNode.ID.EQUALS
-        "!=" -> TwoArgOperatorNode.ID.NOT_EQUALS
+        "==" -> BinaryOperatorNode.ID.EQUALS
+        "!=" -> BinaryOperatorNode.ID.NOT_EQUALS
         else -> throw Exception("Unrecognized equality operator $text")
     }
 
-val QuartzParser.ComparisonOperationContext.ID: TwoArgOperatorNode.ID
+val QuartzParser.ComparisonOperationContext.ID: BinaryOperatorNode.ID
     get() = when (text) {
-        ">" -> TwoArgOperatorNode.ID.GREATER_THAN
-        "<" -> TwoArgOperatorNode.ID.LESS_THAN
-        ">=" -> TwoArgOperatorNode.ID.GREATER_THAN_OR_EQUALS
-        "<=" -> TwoArgOperatorNode.ID.LESS_THAN_OR_EQUALS
+        ">" -> BinaryOperatorNode.ID.GREATER_THAN
+        "<" -> BinaryOperatorNode.ID.LESS_THAN
+        ">=" -> BinaryOperatorNode.ID.GREATER_THAN_OR_EQUALS
+        "<=" -> BinaryOperatorNode.ID.LESS_THAN_OR_EQUALS
         else -> throw Exception("Unrecognized comparison operator $text")
     }
 
-val QuartzParser.AdditiveOperationContext.ID: TwoArgOperatorNode.ID
+val QuartzParser.AdditiveOperationContext.ID: BinaryOperatorNode.ID
     get() = when (text) {
-        "+" -> TwoArgOperatorNode.ID.ADD
-        "-" -> TwoArgOperatorNode.ID.SUBTRACT
+        "+" -> BinaryOperatorNode.ID.ADD
+        "-" -> BinaryOperatorNode.ID.SUBTRACT
         else -> throw Exception("Unrecognized additive operator $text")
     }
 
-val QuartzParser.MultiplicativeOperationContext.ID: TwoArgOperatorNode.ID
+val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperatorNode.ID
     get() = when (text) {
-        "*" -> TwoArgOperatorNode.ID.MULTIPLY
-        "/" -> TwoArgOperatorNode.ID.DIVIDE
-        "%" -> TwoArgOperatorNode.ID.MOD
+        "*" -> BinaryOperatorNode.ID.MULTIPLY
+        "/" -> BinaryOperatorNode.ID.DIVIDE
+        "%" -> BinaryOperatorNode.ID.MOD
         else -> throw Exception("Unrecognized multiplicative operator $text")
     }

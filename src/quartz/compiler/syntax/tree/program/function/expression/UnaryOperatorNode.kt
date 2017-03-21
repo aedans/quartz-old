@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class OneArgOperatorNode(var expression: ExpressionNode, val id: ID, override var type: Type?) : ExpressionNode {
+class UnaryOperatorNode(var expression: ExpressionNode, val id: ID, override var type: Type?) : ExpressionNode {
     override fun toString(): String {
         return "$id($expression)"
     }
