@@ -4,10 +4,10 @@
 
 fn main() {
     if (true()) {
-        printf(helloWorld())
+        helloWorld().printf()
     }
     if (false()) {
-        printf("Failed")
+        "Failed".printf()
     }
 }
 

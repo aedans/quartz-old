@@ -4,7 +4,7 @@
 
 fn main() {
     val l = if (false()) "Failed" else helloWorld()
-    printf(if (true()) l else "Failed")
+    (if (true()) l else "Failed").printf()
 }
 
 fn helloWorld(): char[] = "Hello, World!"

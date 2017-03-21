@@ -12,7 +12,7 @@ import quartz.compiler.util.types.Primitives
 
 fun QuartzParser.LiteralContext.toNode(): ExpressionNode {
     return when {
-        CHAR() != null -> TODO("Char literals")
+        CHAR() != null -> NumberLiteralNode(text, Primitives.char)
         INT() != null -> NumberLiteralNode(text, Primitives.int)
         DOUBLE() != null -> NumberLiteralNode(text, Primitives.double)
         STRING() != null -> StringLiteralNode(text.substring(1, text.length-1))

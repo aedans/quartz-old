@@ -3,8 +3,8 @@
 %%
 
 fn main()
-    helloWorld().printf()
+    helloWorld().printf('1')
 
 fn helloWorld(): char[] = "Hello, World!"
 
-extern_fn printf(char[])
+extern_fn printf(char[], char)

@@ -7,11 +7,10 @@ struct String {
 }
 
 fn main() {
-    val helloWorld = String("Hello, World!")
-    print(helloWorld)
+    "Hello, World!".String().print()
 }
 
 fn print(string: String)
-    printf(string.value)
+    string.value.printf()
 
 extern_fn printf(char[])

@@ -3,7 +3,7 @@
 %%
 
 fn main()
-    printf(if (false()) "Failed" else helloWorld())
+    (if (false()) "Failed" else helloWorld()).printf()
 
 fn helloWorld(): char[] = "Hello, World!"
 
