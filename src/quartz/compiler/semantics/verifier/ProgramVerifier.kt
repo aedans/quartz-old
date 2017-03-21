@@ -4,7 +4,7 @@ import quartz.compiler.semantics.verifier.function.verify
 import quartz.compiler.semantics.verifier.symboltable.GlobalSymbolTable
 import quartz.compiler.semantics.verifier.symboltable.LocalSymbolTable
 import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.util.function
+import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
@@ -13,13 +13,9 @@ import quartz.compiler.util.function
 fun ProgramNode.verify() {
     val globalSymbolTable = GlobalSymbolTable()
 
-    for (fnDeclarationNode in fnDeclarations) {
-        globalSymbolTable.addFunction(fnDeclarationNode.function())
-    }
+    fnDeclarations.forEach { globalSymbolTable.addFunction(Function(it.name, it.args.map { it.second }, it.returnType)) }
 
-    for (externalFunctionDeclaration in externFnDeclarations) {
-        globalSymbolTable.addFunction(externalFunctionDeclaration)
-    }
+    externFnDeclarations.forEach { globalSymbolTable.addFunction(it) }
 
     for (fnDeclarationNode in fnDeclarations) {
         val localSymbolTable = LocalSymbolTable(globalSymbolTable)
