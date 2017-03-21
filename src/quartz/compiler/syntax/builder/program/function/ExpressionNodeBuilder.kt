@@ -3,7 +3,7 @@ package quartz.compiler.syntax.builder.program.function
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.builder.program.function.expression.toNode
 import quartz.compiler.syntax.builder.program.function.statements.toNode
-import quartz.compiler.syntax.builder.program.toNode
+import quartz.compiler.syntax.builder.program.misc.toNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.OneArgOperatorNode
 import quartz.compiler.syntax.tree.program.function.expression.TwoArgOperatorNode
@@ -89,6 +89,7 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: ExpressionNode): Exp
     return when {
         arrayAccess() != null -> arrayAccess().toNode(expression)
         infixCall() != null -> infixCall().toNode(expression)
+        memberAccess() != null -> memberAccess().toNode(expression)
         else -> throw Exception("Unrecognized postfix operation $text")
     }
 }

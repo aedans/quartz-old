@@ -2,10 +2,10 @@ package quartz.compiler.generator.visitors.fndeclaration
 
 import quartz.compiler.generator.visitors.fndeclaration.expression.visit
 import quartz.compiler.generator.visitors.fndeclaration.statement.visit
-import quartz.compiler.syntax.tree.program.InlineCNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.*
 import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.
@@ -21,6 +21,7 @@ fun ExpressionNode.visit(string: StringBuilder) {
         is TwoArgOperatorNode -> visit(string)
         is InlineCNode -> visit(string)
         is FnCallNode -> visit(string)
+        is MemberAccessNode -> visit(string)
         else -> throw Exception("Unrecognized node $this")
     }
 }

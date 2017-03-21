@@ -2,8 +2,9 @@ package quartz.compiler.syntax.builder
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.util.Type
+import quartz.compiler.util.types.ArrayType
 import quartz.compiler.util.types.Primitives
-import quartz.compiler.util.types.QArray
+import quartz.compiler.util.types.StructType
 
 /**
  * Created by Aedan Smith.
@@ -18,9 +19,9 @@ fun QuartzParser.VarTypeContext.toType(): Type {
             "long" -> Primitives.long
             "float" -> Primitives.float
             "double" -> Primitives.double
-            else -> TODO("Structs")
+            else -> StructType(typeName.IDENTIFIER().text)
         }
     } else {
-        QArray(varType().toType())
+        ArrayType(varType().toType())
     }
 }

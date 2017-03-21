@@ -1,8 +1,8 @@
 package quartz.compiler.semantics.verifier.function.statement
 
-import quartz.compiler.semantics.verifier.checkType
 import quartz.compiler.semantics.verifier.function.verify
 import quartz.compiler.semantics.verifier.symboltable.SymbolTable
+import quartz.compiler.semantics.verifier.verifyType
 import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
 import quartz.compiler.util.Function
 
@@ -20,7 +20,7 @@ fun FnCallNode.verify(symbolTable: SymbolTable) {
 
     for (i in 0 until expressions.size) {
         expressions[i].verify(symbolTable)
-        checkType(
+        verifyType(
                 function.args[i],
                 { invalidArguments(this, function) },
                 expressions[i],

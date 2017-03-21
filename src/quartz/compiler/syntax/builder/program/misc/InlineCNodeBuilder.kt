@@ -1,7 +1,7 @@
-package quartz.compiler.syntax.builder.program
+package quartz.compiler.syntax.builder.program.misc
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.syntax.tree.program.InlineCNode
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

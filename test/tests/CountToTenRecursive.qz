@@ -8,10 +8,10 @@ fn main()
 fn countTo(i: int) {
     if (i > 0)
         (i - 1).countTo()
-    printInt(i)
+    print(i)
 }
 
-fn printInt(i: int)
+fn print(i: int)
     printf("%d ", i)
 
 extern_fn printf(char[], int)

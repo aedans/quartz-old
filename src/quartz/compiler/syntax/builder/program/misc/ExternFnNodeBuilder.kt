@@ -1,4 +1,4 @@
-package quartz.compiler.syntax.builder.program
+package quartz.compiler.syntax.builder.program.misc
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.builder.toType

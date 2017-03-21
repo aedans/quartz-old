@@ -1,4 +1,4 @@
-package quartz.compiler.syntax.tree.program
+package quartz.compiler.syntax.tree.program.misc
 
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.StatementNode

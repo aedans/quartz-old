@@ -11,6 +11,7 @@ program
 declaration
     : fnDeclaration
     | externFnDeclaration
+    | structDeclaration
     | inlineC
     ;
 
@@ -41,6 +42,16 @@ fnBlock
 
 externFnDeclaration
     : fnModifiers EXTERN_FN name=identifier '(' typeList ')' (':' returnType=varType)?
+    ;
+
+// STRUCT DECLARATION
+
+structDeclaration
+    : STRUCT identifier '{' structMember* '}'
+    ;
+
+structMember
+    : VAR_DECLARATION_TYPE identifier ':' varType
     ;
 
 // STATEMENTS
@@ -149,6 +160,7 @@ prefixOperation
 postfixOperation
     : arrayAccess
     | infixCall
+    | memberAccess
     ;
 
 arrayAccess
@@ -157,6 +169,10 @@ arrayAccess
 
 infixCall
     : '.' identifier '(' expressionList ')'
+    ;
+
+memberAccess
+    : '.' identifier
     ;
 
 prefixCallExpression
@@ -235,8 +251,9 @@ EXTERN_FN: 'extern_fn';
 IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
+STRUCT: 'struct';
 
-KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN_FN|IF|ELSE|WHILE;
+KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN_FN|IF|ELSE|WHILE|STRUCT;
 
 IDENTIFIER: ([_a-zA-Z][_a-zA-Z0-9]*);
 

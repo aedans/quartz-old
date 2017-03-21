@@ -1,11 +1,11 @@
 package quartz.compiler.semantics.verifier.function.expression
 
-import quartz.compiler.semantics.verifier.checkType
 import quartz.compiler.semantics.verifier.function.verify
 import quartz.compiler.semantics.verifier.symboltable.SymbolTable
+import quartz.compiler.semantics.verifier.verifyType
 import quartz.compiler.syntax.tree.program.function.expression.TwoArgOperatorNode
+import quartz.compiler.util.types.ArrayType
 import quartz.compiler.util.types.Primitives
-import quartz.compiler.util.types.QArray
 
 /**
  * Created by Aedan Smith.
@@ -16,7 +16,7 @@ fun TwoArgOperatorNode.verify(symbolTable: SymbolTable) {
     expr2.verify(symbolTable)
 
     if (id == TwoArgOperatorNode.ID.ARRAY_ACCESS) {
-        checkType(
+        verifyType(
                 Primitives.int,
                 { throw Exception("Could not access array with type ${expr2.type}") },
                 expr2,
@@ -24,9 +24,9 @@ fun TwoArgOperatorNode.verify(symbolTable: SymbolTable) {
                 { "Invalid type for $expr2" }
         )
 
-        type = (expr1.type as? QArray)?.type ?: throw Exception("Could not access array of type ${expr1.type}")
+        type = (expr1.type as? ArrayType)?.type ?: throw Exception("Could not access array of type ${expr1.type}")
     } else {
-        checkType(
+        verifyType(
                 expr1.type,
                 { expr1.type = it },
                 expr2,
@@ -34,7 +34,7 @@ fun TwoArgOperatorNode.verify(symbolTable: SymbolTable) {
                 { "Invalid type for $expr1" }
         )
 
-        checkType(
+        verifyType(
                 expr2.type,
                 { expr2.type = it },
                 expr1,
@@ -42,7 +42,7 @@ fun TwoArgOperatorNode.verify(symbolTable: SymbolTable) {
                 { "Invalid type for $expr2" }
         )
 
-        checkType(
+        verifyType(
                 type,
                 { type = it },
                 expr1,

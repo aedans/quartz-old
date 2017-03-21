@@ -6,9 +6,9 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class QArray(val type: Type) : Type {
+data class ArrayType(val type: Type) : Type {
     override fun canCastTo(type: Type): Boolean {
-        return type is QArray && type.type == this.type
+        return type is ArrayType && type.type == this.type
     }
 
     override fun toString(): String {
@@ -16,7 +16,7 @@ data class QArray(val type: Type) : Type {
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is QArray && other.type == this.type
+        return other is ArrayType && other.type == this.type
     }
 
     override fun hashCode(): Int{

@@ -3,10 +3,10 @@ package quartz.compiler.semantics.verifier.function
 import quartz.compiler.semantics.verifier.function.expression.verify
 import quartz.compiler.semantics.verifier.function.statement.verify
 import quartz.compiler.semantics.verifier.symboltable.SymbolTable
-import quartz.compiler.syntax.tree.program.InlineCNode
 import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.*
 import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.
@@ -22,6 +22,8 @@ fun ExpressionNode.verify(symbolTable: SymbolTable) {
         is OneArgOperatorNode -> verify(symbolTable)
         is TwoArgOperatorNode -> verify(symbolTable)
         is FnCallNode -> verify(symbolTable)
+        is MemberAccessNode -> verify(symbolTable)
+        is CastNode -> { }
         else -> throw Exception("Unrecognized node $this")
     }
 }

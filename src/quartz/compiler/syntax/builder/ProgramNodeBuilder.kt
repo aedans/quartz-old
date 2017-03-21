@@ -1,7 +1,9 @@
 package quartz.compiler.syntax.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.syntax.builder.program.toNode
+import quartz.compiler.syntax.builder.program.function.toNode
+import quartz.compiler.syntax.builder.program.misc.toNode
+import quartz.compiler.syntax.builder.program.struct.toNode
 import quartz.compiler.syntax.tree.ProgramNode
 
 /**
@@ -33,6 +35,11 @@ private fun QuartzParser.DeclarationContext.addTo(programNode: ProgramNode) {
             val inlineCNode = inlineC().toNode()
             programNode.inlineCNodes.add(inlineCNode)
             println("Found $inlineCNode")
+        }
+        structDeclaration() != null -> {
+            val structNode = structDeclaration().toNode()
+            programNode.structDeclarations.add(structNode)
+            println("Found $structNode")
         }
         else -> throw Exception("Error translating $this")
     }

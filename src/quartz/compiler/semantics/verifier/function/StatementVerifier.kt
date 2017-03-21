@@ -2,9 +2,9 @@ package quartz.compiler.semantics.verifier.function
 
 import quartz.compiler.semantics.verifier.function.statement.verify
 import quartz.compiler.semantics.verifier.symboltable.SymbolTable
-import quartz.compiler.syntax.tree.program.InlineCNode
 import quartz.compiler.syntax.tree.program.function.StatementNode
 import quartz.compiler.syntax.tree.program.function.statement.*
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

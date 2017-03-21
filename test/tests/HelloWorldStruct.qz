@@ -1,0 +1,17 @@
+%%
+#include <stdio.h>
+%%
+
+struct String {
+    val value: char[]
+}
+
+fn main() {
+    val helloWorld = String("Hello, World!")
+    print(helloWorld)
+}
+
+fn print(string: String)
+    printf(string.value)
+
+extern_fn printf(char[])

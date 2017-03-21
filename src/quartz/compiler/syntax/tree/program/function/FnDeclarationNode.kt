@@ -1,6 +1,5 @@
-package quartz.compiler.syntax.tree.program
+package quartz.compiler.syntax.tree.program.function
 
-import quartz.compiler.syntax.tree.program.function.StatementNode
 import quartz.compiler.util.Type
 
 /**

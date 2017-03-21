@@ -1,9 +1,9 @@
 package quartz.compiler.generator.visitors.fndeclaration
 
 import quartz.compiler.generator.visitors.fndeclaration.statement.visit
-import quartz.compiler.syntax.tree.program.InlineCNode
 import quartz.compiler.syntax.tree.program.function.StatementNode
 import quartz.compiler.syntax.tree.program.function.statement.*
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

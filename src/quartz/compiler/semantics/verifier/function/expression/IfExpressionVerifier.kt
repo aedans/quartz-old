@@ -1,8 +1,8 @@
 package quartz.compiler.semantics.verifier.function.expression
 
-import quartz.compiler.semantics.verifier.checkType
 import quartz.compiler.semantics.verifier.function.verify
 import quartz.compiler.semantics.verifier.symboltable.SymbolTable
+import quartz.compiler.semantics.verifier.verifyType
 import quartz.compiler.syntax.tree.program.function.expression.IfExpressionNode
 
 /**
@@ -14,7 +14,7 @@ fun IfExpressionNode.verify(symbolTable: SymbolTable) {
     ifTrue.verify(symbolTable)
     ifFalse.verify(symbolTable)
 
-    checkType(
+    verifyType(
             ifTrue.type,
             { ifTrue.type = it },
             ifFalse,
@@ -22,7 +22,7 @@ fun IfExpressionNode.verify(symbolTable: SymbolTable) {
             { "Invalid type for ${ifTrue}" }
     )
 
-    checkType(
+    verifyType(
             ifFalse.type,
             { ifFalse.type = it },
             ifTrue,
@@ -30,7 +30,7 @@ fun IfExpressionNode.verify(symbolTable: SymbolTable) {
             { "Invalid type for ${ifFalse}" }
     )
 
-    checkType(
+    verifyType(
             type,
             { type = it },
             ifTrue,

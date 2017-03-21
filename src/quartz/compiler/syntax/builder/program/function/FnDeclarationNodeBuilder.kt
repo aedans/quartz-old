@@ -1,9 +1,8 @@
-package quartz.compiler.syntax.builder.program
+package quartz.compiler.syntax.builder.program.function
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.syntax.builder.program.function.toNode
 import quartz.compiler.syntax.builder.toType
-import quartz.compiler.syntax.tree.program.FnDeclarationNode
+import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.program.function.statement.ReturnNode
 import quartz.compiler.util.types.Primitives
 

@@ -1,6 +1,6 @@
 package quartz.compiler.generator.visitors.fndeclaration.statement
 
-import quartz.compiler.syntax.tree.program.InlineCNode
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

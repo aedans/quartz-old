@@ -2,7 +2,7 @@ package quartz.compiler.syntax.builder.program.function
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.builder.program.function.statements.toNode
-import quartz.compiler.syntax.builder.program.toNode
+import quartz.compiler.syntax.builder.program.misc.toNode
 import quartz.compiler.syntax.tree.program.function.StatementNode
 
 /**

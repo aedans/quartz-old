@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.verifier.function
 
 import quartz.compiler.semantics.verifier.symboltable.SymbolTable
-import quartz.compiler.syntax.tree.program.FnDeclarationNode
+import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
 import quartz.compiler.util.Variable
 
 /**

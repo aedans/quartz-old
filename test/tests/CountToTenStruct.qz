@@ -1,0 +1,25 @@
+%%
+#include <stdio.h>
+%%
+
+struct Int {
+    val value: int
+}
+
+fn main()
+    10.Int().countTo()
+
+fn countTo(i: Int) {
+    if (i.value() > 0)
+        i.dec().countTo()
+    print(i)
+}
+
+fn dec(i: Int): Int = Int(i.value() - 1)
+
+fn value(i: Int): int = i.value
+
+fn print(i: Int)
+    printf("%d ", i.value())
+
+extern_fn printf(char[], int)

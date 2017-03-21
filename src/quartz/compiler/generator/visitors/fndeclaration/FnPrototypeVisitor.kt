@@ -2,7 +2,7 @@ package quartz.compiler.generator.visitors.fndeclaration
 
 import quartz.compiler.generator.visitors.util.visit
 import quartz.compiler.generator.visitors.util.visitName
-import quartz.compiler.syntax.tree.program.FnDeclarationNode
+import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
 
 /**
  * Created by Aedan Smith.
