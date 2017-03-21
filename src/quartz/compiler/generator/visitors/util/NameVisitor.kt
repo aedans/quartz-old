@@ -1,7 +1,5 @@
 package quartz.compiler.generator.visitors.util
 
-import quartz.compiler.generator.Visitor
-
 /**
  * Created by Aedan Smith.
  */
@@ -9,9 +7,9 @@ import quartz.compiler.generator.Visitor
 private val VALID_CHAR_START = ('a'..'z') + ('A'..'Z') + '_'
 private val VALID_CHAR = ('a'..'z') + ('A'..'Z') +('0'..'9') + '_'
 
-val nameVisitor: Visitor<String> = { identifier, string, _ ->
+fun String.visitName(string: StringBuilder) {
     var s = ""
-    identifier.forEach {
+    forEach {
         if (it in VALID_CHAR)
             s += it
         else

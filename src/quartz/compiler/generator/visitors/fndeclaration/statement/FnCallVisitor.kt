@@ -1,28 +1,21 @@
 package quartz.compiler.generator.visitors.fndeclaration.statement
 
-import quartz.compiler.generator.Visitor
-import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
-import quartz.compiler.generator.visitors.util.nameVisitor
-import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.generator.visitors.fndeclaration.visit
+import quartz.compiler.generator.visitors.util.visitName
 import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
 
 /**
  * Created by Aedan Smith.
  */
 
-class FnCallVisitor(val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
-    override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
-        if (node !is FnCallNode)
-            return
-
-        nameVisitor(node.name, string, depth)
-        string.append('(')
-        node.expressions.dropLast(1).forEach {
-            expressionVisitor(it, string, depth)
-            string.append(", ")
-        }
-        if (!node.expressions.isEmpty())
-            expressionVisitor(node.expressions.last(), string, depth)
-        string.append(')')
+fun FnCallNode.visit(string: StringBuilder) {
+    name.visitName(string)
+    string.append('(')
+    expressions.dropLast(1).forEach {
+        it.visit(string)
+        string.append(", ")
     }
+    if (!expressions.isEmpty())
+        expressions.last().visit(string)
+    string.append(')')
 }

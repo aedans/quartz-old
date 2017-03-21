@@ -1,7 +1,5 @@
 package quartz.compiler.generator.visitors.fndeclaration.expression
 
-import quartz.compiler.generator.Visitor
-import quartz.compiler.syntax.tree.program.function.ExpressionNode
 import quartz.compiler.syntax.tree.program.function.expression.StringLiteralNode
 
 /**
@@ -9,8 +7,6 @@ import quartz.compiler.syntax.tree.program.function.expression.StringLiteralNode
  */
 
 // TODO Escape characters
-val stringLiteralVisitor: Visitor<ExpressionNode> = { stringLiteral, string, _ ->
-    if (stringLiteral is StringLiteralNode) {
-        string.append("\"${stringLiteral.string}\"")
-    }
+fun StringLiteralNode.visit(string: StringBuilder) {
+    string.append("\"${this.string}\"")
 }

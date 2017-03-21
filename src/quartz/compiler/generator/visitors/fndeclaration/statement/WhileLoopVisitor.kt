@@ -1,9 +1,6 @@
 package quartz.compiler.generator.visitors.fndeclaration.statement
 
-import quartz.compiler.generator.Visitor
-import quartz.compiler.generator.visitors.fndeclaration.ExpressionVisitor
-import quartz.compiler.generator.visitors.fndeclaration.StatementVisitor
-import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.generator.visitors.fndeclaration.visit
 import quartz.compiler.syntax.tree.program.function.statement.WhileLoopNode
 import quartz.compiler.util.times
 
@@ -11,19 +8,14 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-class WhileLoopVisitor(val statementVisitor: StatementVisitor, val expressionVisitor: ExpressionVisitor) : Visitor<StatementNode> {
-    override fun invoke(node: StatementNode, string: StringBuilder, depth: Int) {
-        if (node !is WhileLoopNode)
-            return
-
-        string.append("while (")
-        expressionVisitor(node.test, string, depth)
-        string.appendln("){")
-        for (statement in node.statements) {
-            string.append("    " * (depth + 1))
-            statementVisitor(statement, string, depth + 1)
-            string.appendln(";")
-        }
-        string.append(("    " * depth) + "}")
+fun WhileLoopNode.visit(string: StringBuilder, depth: Int) {
+    string.append("while (")
+    test.visit(string)
+    string.appendln("){")
+    for (statement in statements) {
+        string.append("    " * (depth + 1))
+        statement.visit(string, depth + 1)
+        string.appendln(";")
     }
+    string.append(("    " * depth) + "}")
 }

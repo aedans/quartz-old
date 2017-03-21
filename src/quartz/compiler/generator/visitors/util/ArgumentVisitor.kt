@@ -1,25 +1,25 @@
 package quartz.compiler.generator.visitors.util
 
-import quartz.compiler.generator.Visitor
 import quartz.compiler.util.Type
+import java.lang.StringBuilder
 
 /**
  * Created by Aedan Smith.
  */
 
-val argumentVisitor: Visitor<List<Pair<String, Type>>> = { args, string, depth ->
+fun List<Pair<String, Type>>.visit(string: StringBuilder) {
     string.append('(')
-    args.dropLast(1).forEach {
-        singleArgumentVisitor(it, string, depth)
+    dropLast(1).forEach {
+        it.visit(string)
         string.append(", ")
     }
-    if (!args.isEmpty())
-        singleArgumentVisitor(args.last(), string, depth)
+    if (!isEmpty())
+        last().visit(string)
     string.append(')')
 }
 
-private val singleArgumentVisitor: Visitor<Pair<String, Type>> = { arg, string, depth ->
-    typeVisitor(arg.second, string, depth)
+fun Pair<String, Type>.visit(string: StringBuilder) {
+    second.visit(string)
     string.append(' ')
-    nameVisitor(arg.first, string, depth)
+    first.visitName(string)
 }

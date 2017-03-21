@@ -26,12 +26,12 @@ object Compiler {
                         ProgramNode::verify,
                         ProgramNode::translate
                 ),
-                generator: Generator = Generator()
+                generator: (ProgramNode) -> String = Generator::generate
     ): String {
         val program = parser(input)
         println('\n' + program.toString())
         semanticAnalyzers.analyze(program)
         println(program.toString())
-        return generator.generate(program)
+        return generator(program)
     }
 }
