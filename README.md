@@ -32,7 +32,7 @@ same line.
 <pre>
 // Return type goes after the declaration
 fn main(): int {
-    // Calling functions works as normal
+    // Function calls work as normal
     greetTheWorld()
     return 0
 }
@@ -89,7 +89,7 @@ fn halt() // Braces can be omitted for single-statement functions, too
 ### Structs
 
 <pre>
-// Declaring structs work as normal
+// Struct declarations work as normal
 struct Point {
     val x: int
     val y: int
