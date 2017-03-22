@@ -18,6 +18,6 @@ fun QuartzParser.StatementContext.toNode(): StatementNode {
         whileLoop() != null -> whileLoop().toNode()
         prefixCallExpression() != null -> prefixCallExpression().toNode()
         infixCallExpression() != null -> infixCallExpression().toNode()
-        else -> throw Exception("Error translating $this")
+        else -> throw Exception("Error translating $text")
     }
 }

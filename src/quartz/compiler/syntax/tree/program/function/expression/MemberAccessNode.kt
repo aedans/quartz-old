@@ -9,6 +9,6 @@ import quartz.compiler.util.Type
 
 class MemberAccessNode(val name: String, override var type: Type?, var expression: ExpressionNode): ExpressionNode {
     override fun toString(): String {
-        return "$expression.$name: $type"
+        return "$expression.$name${if (type != null) ": $type" else ""}"
     }
 }

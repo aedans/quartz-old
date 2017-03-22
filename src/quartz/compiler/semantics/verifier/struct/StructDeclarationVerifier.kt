@@ -13,7 +13,7 @@ val StructDeclarationNode.defaultConstructor: FnDeclarationNode
     get() {
         val defaultConstructor = FnDeclarationNode(name, members.map { it.name to it.type }, type)
         var s = "(struct $type) {"
-        defaultConstructor.args.dropLast(1).forEach { s += it.first + "," }
+        defaultConstructor.args.dropLast(1).forEach { s += it.first + ", " }
         s += defaultConstructor.args.last().first + "}"
         defaultConstructor.statements.add(ReturnNode(InlineCNode(s).apply { type = this@defaultConstructor.type }))
         return defaultConstructor

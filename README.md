@@ -85,3 +85,28 @@ fn halt() // Braces can be omitted for single-statement functions, too
     // While loops work as normal
     while (1) { }
 </pre>
+
+### Structs
+
+<pre>
+// Declaring structs work as normal
+struct Point {
+    val x: int
+    val y: int
+}
+
+// Implicit constructor:
+// fn Point(x: int, y: int): Point ...
+
+fn main() {
+    // Calling the implicit constructor
+    val p1 = Point(1, 2)
+    // Dot notation works on structs
+    val p2 = p1.translate(2, 2)
+}
+
+fn translate(point: Point, x: int, y: int) {
+    // Dot notation to access variables
+    return Point(point.x + x, point.y + y)
+}
+</pre>
