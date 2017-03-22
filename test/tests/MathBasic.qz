@@ -1,6 +1,7 @@
-fn main() {
+fn main(): int {
     val added = 1 + 2
     val subtracted = 2 - 1
     val multiplied = added * subtracted
     val divided = subtracted / added
+    return 0
 }

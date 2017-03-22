@@ -2,9 +2,10 @@
 #include <stdio.h>
 %%
 
-fn main() {
+fn main(): int {
     val helloWorld = "Hello, World!"
     helloWorld.printf()
+    return 0
 }
 
 extern_fn printf(char[])

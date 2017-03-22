@@ -2,7 +2,9 @@
 #include <stdio.h>
 %%
 
-fn main(argc: int, argv: char[][])
+fn main(argc: int, argv: char[][]): int {
     argv[0].printf()
+    return 0
+}
 
 extern_fn printf(char[])

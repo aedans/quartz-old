@@ -2,8 +2,9 @@
 #include <stdio.h>
 %%
 
-fn main()
+fn main(): int {
     10.countTo()
+}
 
 fn countTo(max: int) {
     val i = 0

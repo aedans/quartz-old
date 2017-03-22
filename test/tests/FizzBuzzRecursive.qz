@@ -2,8 +2,10 @@
 #include <stdio.h>
 %%
 
-fn main()
+fn main(): int {
     100.fizzBuzz()
+    return 0
+}
 
 fn fizzBuzz(i: int) {
     if (i > 1)

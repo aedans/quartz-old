@@ -2,8 +2,10 @@
 #include <stdio.h>
 %%
 
-fn main()
+fn main(): int {
     10.countTo()
+    return 0
+}
 
 fn countTo(i: int) {
     if (i > 0)

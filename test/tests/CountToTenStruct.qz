@@ -6,8 +6,10 @@ struct Int {
     val value: int
 }
 
-fn main()
+fn main(): int {
     10.Int().countTo()
+    return 0
+}
 
 fn countTo(i: Int) {
     if (i.value() > 0)

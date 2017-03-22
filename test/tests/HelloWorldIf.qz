@@ -2,13 +2,14 @@
 #include <stdio.h>
 %%
 
-fn main() {
+fn main(): int {
     if (true()) {
         helloWorld().printf()
     }
     if (false()) {
         "Failed".printf()
     }
+    return 0
 }
 
 fn helloWorld(): char[] = "Hello, World!"

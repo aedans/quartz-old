@@ -2,9 +2,11 @@
 #include <stdio.h>
 %%
 
-fn main()
-    helloWorld().printf('1')
+fn main(): int {
+    helloWorld().printf()
+    return 0
+}
 
 fn helloWorld(): char[] = "Hello, World!"
 
-extern_fn printf(char[], char)
+extern_fn printf(char[])
