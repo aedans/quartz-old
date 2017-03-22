@@ -1,7 +1,6 @@
 package quartz.compiler.semantics.verifier.struct
 
 import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.function.expression.CastNode
 import quartz.compiler.syntax.tree.program.function.statement.ReturnNode
 import quartz.compiler.syntax.tree.program.misc.InlineCNode
 import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
@@ -16,6 +15,6 @@ val StructDeclarationNode.defaultConstructor: FnDeclarationNode
         var s = "(struct $type) {"
         defaultConstructor.args.dropLast(1).forEach { s += it.first + "," }
         s += defaultConstructor.args.last().first + "}"
-        defaultConstructor.statements.add(ReturnNode(CastNode(type, InlineCNode(s))))
+        defaultConstructor.statements.add(ReturnNode(InlineCNode(s).apply { type = this@defaultConstructor.type }))
         return defaultConstructor
     }
