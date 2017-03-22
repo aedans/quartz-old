@@ -8,7 +8,7 @@ import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
  */
 
 fun StructDeclarationNode.visit(string: StringBuilder) {
-    string.append("struct _")
+    string.append("struct ")
     name.visitName(string)
     string.appendln('{')
     members.forEach {
@@ -20,7 +20,7 @@ fun StructDeclarationNode.visit(string: StringBuilder) {
 }
 
 fun StructDeclarationNode.visitPrototype(string: StringBuilder) {
-    string.append("struct _")
+    string.append("struct ")
     name.visitName(string)
     string.appendln(';')
 }

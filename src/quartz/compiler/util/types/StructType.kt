@@ -12,6 +12,6 @@ data class StructType(val name: String) : Type {
     }
 
     override fun toString(): String {
-        return "_" + name
+        return name
     }
 }
