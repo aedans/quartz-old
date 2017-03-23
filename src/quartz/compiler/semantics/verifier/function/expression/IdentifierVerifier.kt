@@ -8,7 +8,8 @@ import quartz.compiler.syntax.tree.program.function.expression.IdentifierNode
  */
 
 fun IdentifierNode.verify(symbolTable: SymbolTable) {
-    val expectedType = symbolTable[name].type
+    val expectedType = symbolTable[name]?.type
+        ?: throw Exception("Could not find variable $name")
     if (type == null) {
         type = expectedType
     } else if (type != expectedType) {

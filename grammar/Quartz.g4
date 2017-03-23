@@ -199,6 +199,7 @@ literal
 varType
     : typeName=identifier
     | varType array='[]'
+    | '(' args=typeList ')' '->' returnType=varType
     ;
 
 // LISTS

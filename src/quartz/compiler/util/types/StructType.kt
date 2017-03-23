@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
 
 data class StructType(val name: String) : Type {
     override fun canCastTo(type: Type): Boolean {
-        return type is StructType && type.name == name
+        return type == this
     }
 
     override fun toString(): String {

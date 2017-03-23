@@ -3,6 +3,7 @@ package quartz.compiler.semantics.verifier.symboltable
 import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
 import quartz.compiler.util.Function
 import quartz.compiler.util.Variable
+import quartz.compiler.util.types.FunctionType
 
 /**
  * Created by Aedan Smith.
@@ -17,26 +18,21 @@ class GlobalSymbolTable : SymbolTable {
         variables.put(name, variable)
     }
 
-    override fun get(name: String): Variable {
-        return try { variables[name]!! }
-        catch (e: NullPointerException) {
-            throw Exception("Could not find variable $name")
-        }
+    override fun get(name: String): Variable? {
+        return variables[name]
     }
 
     fun addFunction(function: Function) {
         if (!functions.contains(function.name)) {
             functions.put(function.name, function)
+            variables.put(function.name, Variable(function.name, FunctionType(function.args, function.returnType)))
         } else {
             throw Exception("Function \"${function.name}\" already declared")
         }
     }
 
-    fun getFunction(key: String): Function {
-        return try { functions[key]!! }
-        catch (_: NullPointerException) {
-            throw Exception("Could not find function with name $key")
-        }
+    fun getFunction(key: String): Function? {
+        return functions[key]
     }
 
     fun addStruct(struct: StructDeclarationNode) {

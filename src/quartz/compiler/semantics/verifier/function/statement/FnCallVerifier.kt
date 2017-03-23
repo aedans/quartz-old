@@ -12,6 +12,7 @@ import quartz.compiler.util.Function
 
 fun FnCallNode.verify(symbolTable: SymbolTable) {
     val function = symbolTable.getGlobalSymbolTable().getFunction(name)
+            ?: throw Exception("Could not find function $name")
 
     type = function.returnType
 

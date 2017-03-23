@@ -14,5 +14,6 @@ fun MemberAccessNode.verify(symbolTable: SymbolTable) {
 
     val sType = expression.type as StructType
     val struct = symbolTable.getGlobalSymbolTable().getStruct(sType.name)
-    type = struct.members.first { it.name == name }.type
+    type = struct.members.firstOrNull { it.name == name }?.type
+            ?: throw Exception("No member found in ${struct.name} named $name")
 }

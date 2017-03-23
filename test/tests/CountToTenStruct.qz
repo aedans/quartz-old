@@ -17,7 +17,7 @@ fn countTo(i: Int) {
     print(i)
 }
 
-fn dec(i: Int): Int = Int(i.value() - 1)
+fn dec(i: Int): Int = (i.value() - 1).Int()
 
 fn value(i: Int): int = i.value
 

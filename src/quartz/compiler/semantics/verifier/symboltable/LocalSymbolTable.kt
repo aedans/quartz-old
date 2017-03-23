@@ -13,7 +13,7 @@ class LocalSymbolTable(val superTable: SymbolTable) : SymbolTable {
         variables.put(name, variable)
     }
 
-    override fun get(name: String): Variable {
+    override fun get(name: String): Variable? {
         val variable = variables[name]
         if (variable != null) {
             return variable

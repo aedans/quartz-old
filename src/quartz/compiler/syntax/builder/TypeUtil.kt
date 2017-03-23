@@ -3,6 +3,7 @@ package quartz.compiler.syntax.builder
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.ArrayType
+import quartz.compiler.util.types.FunctionType
 import quartz.compiler.util.types.Primitives
 import quartz.compiler.util.types.StructType
 
@@ -22,6 +23,10 @@ fun QuartzParser.VarTypeContext.toType(): Type {
             else -> StructType(typeName.IDENTIFIER().text)
         }
     } else {
-        ArrayType(varType().toType())
+        if (array != null) {
+            ArrayType(varType().toType())
+        } else {
+            FunctionType(args.varType().map { it.toType() }, returnType.toType())
+        }
     }
 }
