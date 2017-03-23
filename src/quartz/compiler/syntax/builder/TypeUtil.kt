@@ -20,6 +20,7 @@ fun QuartzParser.VarTypeContext.toType(): Type {
             "long" -> Primitives.long
             "float" -> Primitives.float
             "double" -> Primitives.double
+            "void" -> Primitives.void
             else -> StructType(typeName.IDENTIFIER().text)
         }
     } else {

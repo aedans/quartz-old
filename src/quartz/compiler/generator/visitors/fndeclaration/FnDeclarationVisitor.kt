@@ -40,3 +40,11 @@ fun FnDeclarationNode.visitTypedef(string: StringBuilder) {
     }
     string.appendln(");")
 }
+
+fun FnDeclarationNode.visitPrototype(string: StringBuilder) {
+    returnType.visit(string)
+    string.append(' ')
+    name.visitName(string)
+    args.visit(string)
+    string.appendln(";")
+}

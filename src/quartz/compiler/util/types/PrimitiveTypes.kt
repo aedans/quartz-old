@@ -61,7 +61,7 @@ private class QDouble : NumType() {
 
 private class QVoid : Type {
     override fun canCastTo(type: Type): Boolean {
-        return true
+        return type == this
     }
 
     override fun toString(): String {

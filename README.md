@@ -110,3 +110,18 @@ fn translate(point: Point, x: int, y: int) {
     return Point(point.x + x, point.y + y)
 }
 </pre>
+
+### Function types
+
+<pre>
+fn helloWorld(): char[] = "Hello, World!"
+
+// First class function that returns helloWorld
+fn greeter(): () -> char[] = helloWorld
+
+// Functions can be passed as arguments
+fn add(i1: () -> int, i2: () -> int): int {
+    // Functions are called with the invoke method
+    return i1.invoke() + i2.invoke()
+}
+</pre>
