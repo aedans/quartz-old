@@ -6,7 +6,7 @@ import quartz.compiler.util.types.StructType
  * Created by Aedan Smith.
  */
 
-class StructDeclarationNode(val name: String, val members: List<StructMemberNode>) {
+class StructDeclarationNode(val name: String, val members: Map<String, StructMemberNode>) {
     val type = StructType(name)
 
     override fun toString(): String {

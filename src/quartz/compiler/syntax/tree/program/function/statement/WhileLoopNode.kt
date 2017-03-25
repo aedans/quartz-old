@@ -8,9 +8,7 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-class WhileLoopNode(val test: ExpressionNode) : StatementNode {
-    var statements = mutableListOf<StatementNode>()
-
+class WhileLoopNode(val test: ExpressionNode, val statements: List<StatementNode>) : StatementNode {
     override fun toString(): String {
         return "while ($test)"
     }

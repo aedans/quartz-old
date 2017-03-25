@@ -10,7 +10,14 @@ import quartz.compiler.util.types.Primitives
  */
 
 class StringLiteralNode(val string: String) : ExpressionNode {
-    override var type: Type? = ArrayType(Primitives.char)
+    override val type = ArrayType(Primitives.char)
+
+    override fun withType(type: Type?): ExpressionNode {
+        if (type is ArrayType && type.type == Primitives.char)
+            return this
+        else
+            throw Exception("Could not cast $this to $type")
+    }
 
     override fun toString(): String {
         return "\"$string\""

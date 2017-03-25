@@ -8,5 +8,5 @@ import quartz.compiler.syntax.tree.program.function.expression.IdentifierNode
  */
 
 fun QuartzParser.IdentifierContext.toNode(): IdentifierNode {
-    return IdentifierNode(text)
+    return IdentifierNode(text, null)
 }

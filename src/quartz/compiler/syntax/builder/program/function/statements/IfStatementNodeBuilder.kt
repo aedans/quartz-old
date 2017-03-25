@@ -9,8 +9,9 @@ import quartz.compiler.syntax.tree.program.function.statement.IfStatementNode
  */
 
 fun QuartzParser.IfStatementContext.toNode(): IfStatementNode {
-    val ifStatement = IfStatementNode(expression().toNode())
-    trueBlock?.statement()?.forEach { ifStatement.trueStatements.add(it.toNode()) }
-    falseBlock?.statement()?.forEach { ifStatement.falseStatements.add(it.toNode()) }
-    return ifStatement
+    return IfStatementNode(
+            expression().toNode(),
+            trueBlock?.statement()?.map { it.toNode() } ?: listOf(),
+            falseBlock?.statement()?.map { it.toNode() } ?: listOf()
+    )
 }

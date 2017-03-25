@@ -7,7 +7,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class CastNode(override var type: Type?, val expression: ExpressionNode) : ExpressionNode {
+class CastNode(override val type: Type?, val expression: ExpressionNode) : ExpressionNode {
+    override fun withType(type: Type?): CastNode {
+        return CastNode(type, expression)
+    }
+
     override fun toString(): String {
         return "${if (type != null) "($type)" else ""} ($expression)"
     }

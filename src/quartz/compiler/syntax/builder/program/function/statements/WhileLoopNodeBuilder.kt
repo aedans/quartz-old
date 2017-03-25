@@ -9,7 +9,5 @@ import quartz.compiler.syntax.tree.program.function.statement.WhileLoopNode
  */
 
 fun QuartzParser.WhileLoopContext.toNode(): WhileLoopNode {
-    val whileNode = WhileLoopNode(expression().toNode())
-    block().statement()?.forEach { whileNode.statements.add(it.toNode()) }
-    return whileNode
+    return WhileLoopNode(expression().toNode(), block().statement()?.map { it.toNode() } ?: listOf())
 }

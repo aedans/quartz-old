@@ -11,17 +11,14 @@ import quartz.compiler.util.types.Primitives
  */
 
 fun QuartzParser.FnDeclarationContext.toNode(): FnDeclarationNode {
-    val node = FnDeclarationNode(
+    return FnDeclarationNode(
             name.text,
             fnArgumentList()?.fnArgument()?.map { it.name.text to it.type.toType() } ?: listOf(),
-            returnType?.toType() ?: Primitives.void
+            returnType?.toType() ?: Primitives.void,
+            if (body.expression() != null) {
+                listOf(ReturnNode(body.expression().toNode()))
+            } else {
+                body.block().statement().map { it.toNode() }
+            }
     )
-    if (body.expression() != null) {
-        node.statements.add(ReturnNode(body.expression().toNode()))
-    } else {
-        body.block().statement().forEach {
-            node.statements.add(it.toNode())
-        }
-    }
-    return node
 }

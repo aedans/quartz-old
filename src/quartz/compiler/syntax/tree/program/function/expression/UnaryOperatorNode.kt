@@ -7,7 +7,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class UnaryOperatorNode(var expression: ExpressionNode, val id: ID, override var type: Type?) : ExpressionNode {
+class UnaryOperatorNode(val expression: ExpressionNode, val id: ID, override val type: Type?) : ExpressionNode {
+    override fun withType(type: Type?): UnaryOperatorNode {
+        return UnaryOperatorNode(expression, id, type)
+    }
+
     override fun toString(): String {
         return "$id($expression)"
     }

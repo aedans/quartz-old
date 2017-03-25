@@ -1,19 +1,19 @@
-package quartz.compiler.semantics.verifier.symboltable
+package quartz.compiler.semantics.symboltable
 
-import quartz.compiler.util.Variable
+import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
 class LocalSymbolTable(val superTable: SymbolTable) : SymbolTable {
-    private val variables = HashMap<String, Variable>()
+    private val variables = HashMap<String, Type>()
 
-    override fun add(name: String, variable: Variable) {
-        variables.put(name, variable)
+    override fun add(name: String, type: Type) {
+        variables.put(name, type)
     }
 
-    override fun get(name: String): Variable? {
+    override fun get(name: String): Type? {
         val variable = variables[name]
         if (variable != null) {
             return variable

@@ -8,10 +8,11 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-class IfStatementNode(var test: ExpressionNode) : StatementNode {
-    var trueStatements = mutableListOf<StatementNode>()
-    var falseStatements = mutableListOf<StatementNode>()
-
+class IfStatementNode(
+        val test: ExpressionNode,
+        val trueStatements: List<StatementNode>,
+        val falseStatements: List<StatementNode>
+) : StatementNode {
     override fun toString(): String {
         return "if ($test)"
     }

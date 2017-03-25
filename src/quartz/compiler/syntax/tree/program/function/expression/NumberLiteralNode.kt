@@ -7,7 +7,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class NumberLiteralNode(val string: String, override var type: Type?) : ExpressionNode {
+class NumberLiteralNode(val string: String, override val type: Type?) : ExpressionNode {
+    override fun withType(type: Type?): NumberLiteralNode {
+        return NumberLiteralNode(string, type)
+    }
+
     override fun toString(): String {
         return "$string: $type"
     }

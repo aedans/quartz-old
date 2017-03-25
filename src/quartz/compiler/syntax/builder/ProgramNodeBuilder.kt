@@ -5,42 +5,48 @@ import quartz.compiler.syntax.builder.program.function.toNode
 import quartz.compiler.syntax.builder.program.misc.toNode
 import quartz.compiler.syntax.builder.program.struct.toNode
 import quartz.compiler.syntax.tree.ProgramNode
+import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.program.misc.InlineCNode
+import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
+import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
  */
 
 fun QuartzParser.ProgramContext.toNode(): ProgramNode {
-    val programNode = ProgramNode()
-    this.declaration().forEach {
-        it.addTo(programNode)
-        println()
-    }
+    val nodes = declaration().map { it.toNode() }
+    val programNode = ProgramNode(
+            nodes.filterIsInstance(FnDeclarationNode::class.java),
+            nodes.filterIsInstance(StructDeclarationNode::class.java),
+            nodes.filterIsInstance(Function::class.java),
+            nodes.filterIsInstance(InlineCNode::class.java)
+    )
     return programNode
 }
 
-private fun QuartzParser.DeclarationContext.addTo(programNode: ProgramNode) {
-    when {
+fun QuartzParser.DeclarationContext.toNode(): Any {
+    return when {
         fnDeclaration() != null -> {
             val fnDeclarationNode = fnDeclaration().toNode()
-            programNode.fnDeclarations.add(fnDeclarationNode)
-            println("Found $fnDeclarationNode")
+            println("Found $fnDeclarationNode\n")
+            fnDeclarationNode
         }
         externFnDeclaration() != null -> {
             val externFn = externFnDeclaration().toNode()
-            programNode.externFnDeclarations.add(externFn)
-            println("Found $externFn")
+            println("Found $externFn\n")
+            externFn
         }
         inlineC() != null -> {
             val inlineCNode = inlineC().toNode()
-            programNode.inlineCNodes.add(inlineCNode)
-            println("Found $inlineCNode")
+            println("Found $inlineCNode\n")
+            inlineCNode
         }
         structDeclaration() != null -> {
             val structNode = structDeclaration().toNode()
-            programNode.structDeclarations.add(structNode)
-            println("Found $structNode")
+            println("Found $structNode\n")
+            structNode
         }
-        else -> throw Exception("Error translating $this")
+        else -> throw Exception("Error translating $text")
     }
 }

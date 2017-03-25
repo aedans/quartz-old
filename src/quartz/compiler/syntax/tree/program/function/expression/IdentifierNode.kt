@@ -7,8 +7,10 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class IdentifierNode(val name: String) : ExpressionNode {
-    override var type: Type? = null
+class IdentifierNode(val name: String, override val type: Type?) : ExpressionNode {
+    override fun withType(type: Type?): ExpressionNode {
+        return IdentifierNode(name, type)
+    }
 
     override fun toString(): String {
         return name

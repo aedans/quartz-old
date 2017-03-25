@@ -1,8 +1,8 @@
-package quartz.compiler.semantics.verifier.symboltable
+package quartz.compiler.semantics.symboltable
 
 import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
 import quartz.compiler.util.Function
-import quartz.compiler.util.Variable
+import quartz.compiler.util.Type
 import quartz.compiler.util.types.FunctionType
 
 /**
@@ -12,20 +12,20 @@ import quartz.compiler.util.types.FunctionType
 class GlobalSymbolTable : SymbolTable {
     private val functions = HashMap<String, Function>()
     private val structs = HashMap<String, StructDeclarationNode>()
-    private val variables = HashMap<String, Variable>()
+    private val variables = HashMap<String, Type>()
 
-    override fun add(name: String, variable: Variable) {
-        variables.put(name, variable)
+    override fun add(name: String, type: Type) {
+        variables.put(name, type)
     }
 
-    override fun get(name: String): Variable? {
+    override fun get(name: String): Type? {
         return variables[name]
     }
 
     fun addFunction(function: Function) {
         if (!functions.contains(function.name)) {
             functions.put(function.name, function)
-            variables.put(function.name, Variable(function.name, FunctionType(function.args, function.returnType)))
+            variables.put(function.name, FunctionType(function.args, function.returnType))
         } else {
             throw Exception("Function \"${function.name}\" already declared")
         }

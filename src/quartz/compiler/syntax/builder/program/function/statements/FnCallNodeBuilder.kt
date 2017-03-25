@@ -12,7 +12,8 @@ import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
 fun QuartzParser.PrefixCallExpressionContext.toNode(): FnCallNode {
     return FnCallNode(
             identifier().text,
-            expressionList().expression().map { it.toNode() }.toMutableList()
+            expressionList().expression().map { it.toNode() }.toMutableList(),
+            null
     )
 }
 
@@ -22,7 +23,8 @@ fun QuartzParser.InfixCallExpressionContext.toNode(): FnCallNode {
     args.add(0, expression().toNode())
     return FnCallNode(
             infixCall().identifier().text,
-            args
+            args,
+            null
     )
 }
 
@@ -31,6 +33,7 @@ fun QuartzParser.InfixCallContext.toNode(expression: ExpressionNode): FnCallNode
     args.add(0, expression)
     return FnCallNode(
             identifier().text,
-            args
+            args,
+            null
     )
 }

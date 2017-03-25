@@ -6,9 +6,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FnDeclarationNode(val name: String, val args: List<Pair<String, Type>>, val returnType: Type) {
-    var statements = mutableListOf<StatementNode>()
-
+class FnDeclarationNode(
+        val name: String,
+        val args: List<Pair<String, Type>>,
+        val returnType: Type,
+        val statements: List<StatementNode> = listOf()
+) {
     override fun toString(): String {
         @Suppress("unused")
         fun Pair<String, Type>.string() = "$second $first"

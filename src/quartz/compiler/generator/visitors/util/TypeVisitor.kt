@@ -53,7 +53,7 @@ fun visitFunctionDescription(args: List<Type>, returnType: Type, string: StringB
             returnType.visitDescription(string)
             string.append("_supplier")
         }
-        !args.isEmpty() && returnType == Primitives.void -> {
+        returnType == Primitives.void -> {
             args.forEach {
                 it.visitDescription(string)
                 string.append('_')

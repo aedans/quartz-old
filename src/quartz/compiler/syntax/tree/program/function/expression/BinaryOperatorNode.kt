@@ -7,7 +7,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class BinaryOperatorNode(var expr1: ExpressionNode, var expr2: ExpressionNode, val id: ID, override var type: Type?) : ExpressionNode {
+class BinaryOperatorNode(val expr1: ExpressionNode, val expr2: ExpressionNode, val id: ID, override val type: Type?) : ExpressionNode {
+    override fun withType(type: Type?): BinaryOperatorNode {
+        return BinaryOperatorNode(expr1, expr2, id, type)
+    }
+
     override fun toString(): String {
         return "$id($expr1, $expr2)"
     }

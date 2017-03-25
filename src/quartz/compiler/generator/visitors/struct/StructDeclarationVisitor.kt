@@ -11,9 +11,9 @@ fun StructDeclarationNode.visit(string: StringBuilder) {
     string.append("struct ")
     name.visitName(string)
     string.appendln('{')
-    members.forEach {
+    for ((name, declaration) in members) {
         string.append("    ")
-        it.visit(string)
+        declaration.visit(string)
         string.appendln(';')
     }
     string.appendln("};").appendln()

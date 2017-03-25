@@ -7,7 +7,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class IfExpressionNode(val test: ExpressionNode, var ifTrue: ExpressionNode, var ifFalse: ExpressionNode, override var type: Type?) : ExpressionNode {
+class IfExpressionNode(val test: ExpressionNode, val ifTrue: ExpressionNode, val ifFalse: ExpressionNode, override val type: Type?) : ExpressionNode {
+    override fun withType(type: Type?): IfExpressionNode {
+        return IfExpressionNode(test, ifTrue, ifFalse, type)
+    }
+
     override fun toString(): String {
         return "if ($test) $ifTrue else $ifFalse"
     }
