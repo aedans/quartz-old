@@ -1,10 +1,8 @@
-package quartz.compiler.generator.visitors
+package quartz.compiler.generator
 
-import quartz.compiler.generator.visitors.fndeclaration.visit
-import quartz.compiler.generator.visitors.fndeclaration.visitPrototype
-import quartz.compiler.generator.visitors.fndeclaration.visitTypedef
-import quartz.compiler.generator.visitors.struct.visit
-import quartz.compiler.generator.visitors.struct.visitPrototype
+import quartz.compiler.generator.program.visit
+import quartz.compiler.generator.program.visitPrototype
+import quartz.compiler.generator.program.visitTypedef
 import quartz.compiler.syntax.tree.ProgramNode
 
 /**

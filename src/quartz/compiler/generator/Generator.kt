@@ -1,6 +1,5 @@
 package quartz.compiler.generator
 
-import quartz.compiler.generator.visitors.visit
 import quartz.compiler.syntax.tree.ProgramNode
 
 /**

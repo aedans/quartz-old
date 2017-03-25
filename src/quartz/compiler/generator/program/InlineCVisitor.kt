@@ -1,4 +1,4 @@
-package quartz.compiler.generator.visitors.fndeclaration.statement
+package quartz.compiler.generator.program
 
 import quartz.compiler.syntax.tree.program.misc.InlineCNode
 

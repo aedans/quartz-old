@@ -1,4 +1,4 @@
-package quartz.compiler.generator.visitors.util
+package quartz.compiler.generator.util
 
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.ArrayType
