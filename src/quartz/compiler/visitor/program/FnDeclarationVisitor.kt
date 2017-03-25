@@ -1,7 +1,7 @@
 package quartz.compiler.visitor.program
 
-import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.function.StatementNode
+import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.visitor.Visitor
 import quartz.compiler.visitor.program.function.visit
 

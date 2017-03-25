@@ -3,11 +3,11 @@ package quartz.compiler.semantics
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.program.function.ExpressionNode
-import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.function.StatementNode
-import quartz.compiler.syntax.tree.program.function.expression.*
-import quartz.compiler.syntax.tree.program.function.statement.*
+import quartz.compiler.syntax.tree.function.ExpressionNode
+import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.function.StatementNode
+import quartz.compiler.syntax.tree.function.expression.*
+import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.Primitives
 import quartz.compiler.util.types.StructType

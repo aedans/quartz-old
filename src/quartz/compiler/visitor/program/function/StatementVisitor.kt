@@ -1,8 +1,8 @@
 package quartz.compiler.visitor.program.function
 
-import quartz.compiler.syntax.tree.program.function.StatementNode
-import quartz.compiler.syntax.tree.program.function.statement.*
-import quartz.compiler.syntax.tree.program.misc.InlineCNode
+import quartz.compiler.syntax.tree.function.StatementNode
+import quartz.compiler.syntax.tree.function.statement.*
+import quartz.compiler.syntax.tree.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

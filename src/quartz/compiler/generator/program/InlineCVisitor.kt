@@ -1,6 +1,6 @@
 package quartz.compiler.generator.program
 
-import quartz.compiler.syntax.tree.program.misc.InlineCNode
+import quartz.compiler.syntax.tree.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

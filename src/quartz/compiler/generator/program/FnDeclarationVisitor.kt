@@ -3,11 +3,11 @@ package quartz.compiler.generator.program
 import quartz.compiler.generator.util.visit
 import quartz.compiler.generator.util.visitFunctionDescription
 import quartz.compiler.generator.util.visitName
-import quartz.compiler.syntax.tree.program.function.ExpressionNode
-import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.function.StatementNode
-import quartz.compiler.syntax.tree.program.function.expression.*
-import quartz.compiler.syntax.tree.program.function.statement.*
+import quartz.compiler.syntax.tree.function.ExpressionNode
+import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.function.StatementNode
+import quartz.compiler.syntax.tree.function.expression.*
+import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.util.times
 import quartz.compiler.visitor.program.function.visit
 

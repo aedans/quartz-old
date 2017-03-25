@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.symboltable
 
-import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.FunctionType

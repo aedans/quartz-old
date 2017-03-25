@@ -1,13 +1,10 @@
 package quartz.compiler.syntax.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.syntax.builder.program.function.toNode
-import quartz.compiler.syntax.builder.program.misc.toNode
-import quartz.compiler.syntax.builder.program.struct.toNode
 import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.misc.InlineCNode
-import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
+import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Function
 
 /**

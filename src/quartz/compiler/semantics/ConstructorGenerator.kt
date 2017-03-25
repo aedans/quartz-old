@@ -2,10 +2,10 @@ package quartz.compiler.semantics
 
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.function.statement.ReturnNode
-import quartz.compiler.syntax.tree.program.misc.InlineCNode
-import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
+import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.function.statement.ReturnNode
+import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Function
 
 /**

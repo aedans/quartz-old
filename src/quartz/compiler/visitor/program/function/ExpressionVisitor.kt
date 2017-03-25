@@ -1,9 +1,9 @@
 package quartz.compiler.visitor.program.function
 
-import quartz.compiler.syntax.tree.program.function.ExpressionNode
-import quartz.compiler.syntax.tree.program.function.expression.*
-import quartz.compiler.syntax.tree.program.function.statement.FnCallNode
-import quartz.compiler.syntax.tree.program.misc.InlineCNode
+import quartz.compiler.syntax.tree.function.ExpressionNode
+import quartz.compiler.syntax.tree.function.expression.*
+import quartz.compiler.syntax.tree.function.statement.FnCallNode
+import quartz.compiler.syntax.tree.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

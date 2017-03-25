@@ -2,8 +2,8 @@ package quartz.compiler.generator.program
 
 import quartz.compiler.generator.util.visit
 import quartz.compiler.generator.util.visitName
-import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
-import quartz.compiler.syntax.tree.program.struct.StructMemberNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.syntax.tree.struct.StructMemberNode
 
 /**
  * Created by Aedan Smith.

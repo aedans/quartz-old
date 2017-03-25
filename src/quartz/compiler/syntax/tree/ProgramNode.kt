@@ -1,9 +1,9 @@
 package quartz.compiler.syntax.tree
 
 import quartz.compiler.semantics.symboltable.GlobalSymbolTable
-import quartz.compiler.syntax.tree.program.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.program.misc.InlineCNode
-import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
+import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Function
 
 /**

@@ -1,7 +1,7 @@
 package quartz.compiler.visitor.program
 
-import quartz.compiler.syntax.tree.program.struct.StructDeclarationNode
-import quartz.compiler.syntax.tree.program.struct.StructMemberNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.syntax.tree.struct.StructMemberNode
 import quartz.compiler.visitor.Visitor
 
 /**
