@@ -70,10 +70,17 @@ private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): Ex
             ifExpressionVisitor = {
                 val tempVarName = "temp${hashCode()}"
                 newStatements.add(VarDeclarationNode(tempVarName, type ?: throw Exception("Unknown type for $this"), true, null))
+
+                val trueStatements = mutableListOf<StatementNode>()
+                trueStatements.add(VarAssignmentNode(tempVarName, ifTrue.unwrap(trueStatements)))
+
+                val falseStatements = mutableListOf<StatementNode>()
+                falseStatements.add(VarAssignmentNode(tempVarName, ifFalse.unwrap(falseStatements)))
+
                 newStatements.add(IfStatementNode(
                         test,
-                        listOf(VarAssignmentNode(tempVarName, ifTrue.unwrap(newStatements))),
-                        listOf(VarAssignmentNode(tempVarName, ifFalse.unwrap(newStatements)))
+                        trueStatements,
+                        falseStatements
                 ))
                 IdentifierNode(tempVarName, type)
             }

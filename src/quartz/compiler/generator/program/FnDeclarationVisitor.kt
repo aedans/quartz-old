@@ -23,7 +23,7 @@ fun FnDeclarationNode.visit(string: StringBuilder) {
     string.appendln('{')
     statements.forEach {
         string.append("    ")
-        it.visit(string, 0)
+        it.visit(string, 1)
         string.appendln(";")
     }
     string.appendln('}')
