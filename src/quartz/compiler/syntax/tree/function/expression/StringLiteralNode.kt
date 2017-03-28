@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.tree.function.expression
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.ArrayType
@@ -16,7 +17,7 @@ class StringLiteralNode(val string: String) : ExpressionNode {
         if (type is ArrayType && type.type == Primitives.char)
             return this
         else
-            throw Exception("Could not cast $this to $type")
+            throw QuartzException("Could not cast $this to $type")
     }
 
     override fun toString(): String {

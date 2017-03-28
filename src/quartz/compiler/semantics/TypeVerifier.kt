@@ -1,5 +1,6 @@
 package quartz.compiler.semantics
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.ProgramNode
@@ -9,8 +10,10 @@ import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.util.Type
+import quartz.compiler.util.plus
+import quartz.compiler.util.types.ArrayType
+import quartz.compiler.util.types.FunctionType
 import quartz.compiler.util.types.Primitives
-import quartz.compiler.util.types.StructType
 import quartz.compiler.visitor.program.function.visit
 import quartz.compiler.visitor.program.visit
 import quartz.compiler.visitor.visit
@@ -27,7 +30,7 @@ fun ProgramNode.verifyTypes(symbolTable: SymbolTable): ProgramNode {
 
 private fun FnDeclarationNode.verify(symbolTable: SymbolTable): FnDeclarationNode {
     val localSymbolTable = LocalSymbolTable(symbolTable)
-    this.args.forEach { localSymbolTable.add(it.first, it.second) }
+    this.args.forEach { localSymbolTable.addVar(it.first, it.second) }
 
     return this.visit({ statement -> statement.verify(localSymbolTable) })
 }
@@ -45,7 +48,7 @@ private fun StatementNode.verify(symbolTable: SymbolTable): StatementNode {
 private fun VarDeclarationNode.verify(symbolTable: SymbolTable): VarDeclarationNode {
     val newExpression = expression?.verify(symbolTable)
     val newType = type.verifyAs(newExpression?.type)
-    symbolTable.add(name, newType ?: throw Exception("Unknown type for $this"))
+    symbolTable.addVar(name, newType ?: throw QuartzException("Unknown type for $this"))
 
     return VarDeclarationNode(name, newType, mutable, newExpression)
 }
@@ -83,11 +86,11 @@ private fun ExpressionNode.verify(symbolTable: SymbolTable): ExpressionNode {
 }
 
 private fun IdentifierNode.verify(symbolTable: SymbolTable): IdentifierNode {
-    val expectedType = symbolTable[name] ?: throw Exception("Could not find variable $name")
+    val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
     return IdentifierNode(name,
             when {
                 type == null -> expectedType
-                type != expectedType -> throw Exception("Expected $expectedType, found $this")
+                type != expectedType -> throw QuartzException("Expected $expectedType, found $this")
                 else -> type
             }
     )
@@ -103,11 +106,14 @@ private fun UnaryOperatorNode.verify(symbolTable: SymbolTable): UnaryOperatorNod
 
 private fun BinaryOperatorNode.verify(symbolTable: SymbolTable): BinaryOperatorNode {
     return if (id == BinaryOperatorNode.ID.ARRAY_ACCESS) {
+        val newExpr1 = expr1.verify(symbolTable)
+        val newExpr2 = expr2.verify(symbolTable).verifyAs(Primitives.int)
+        val newType = (newExpr1.type as ArrayType).type
         BinaryOperatorNode(
-                expr1.verify(symbolTable),
-                expr2.verify(symbolTable).verifyAs(Primitives.int),
+                newExpr1,
+                newExpr2,
                 id,
-                type
+                newType
         )
     } else {
         val newExpr1 = expr1.verify(symbolTable)
@@ -122,39 +128,57 @@ private fun BinaryOperatorNode.verify(symbolTable: SymbolTable): BinaryOperatorN
 }
 
 private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
-    val function = symbolTable.getGlobalSymbolTable().getFunction(name) ?: throw Exception("Could not find function $name")
+    try {
+        val newExpression = expression.verify(symbolTable)
+        val expressionType = newExpression.type as? FunctionType
+                ?: throw QuartzException("Could not call ${newExpression.type}")
 
-    if (function.args.size != expressions.size) throw Exception("Incorrect number of arguments for $this")
+        if (expressionType.args.size != expressions.size) throw QuartzException("Incorrect number of arguments for $this")
 
-    return FnCallNode(
-            name,
-            expressions.zip(function.args).map { it.first.verify(symbolTable).withType(it.first.type.verifyAs(it.second)) },
-            type.verifyAs(function.returnType)
-    )
+        return FnCallNode(
+                newExpression,
+                expressions.zip(expressionType.args).map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
+                type.verifyAs(expressionType.returnType)
+        )
+    } catch (e: QuartzException) {
+        if (expression !is MemberAccessNode)
+            throw e
+
+        val expressionType = symbolTable.getVar(expression.name) as FunctionType
+        return FnCallNode(
+                IdentifierNode(expression.name, expressionType),
+                (expression.expression.verify(symbolTable) + expressions).zip(expressionType.args).map {
+                    it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
+                type.verifyAs(expressionType.returnType)
+        )
+    }
 }
 
 private fun MemberAccessNode.verify(symbolTable: SymbolTable): MemberAccessNode {
     val newExpression = expression.verify(symbolTable)
-    val structType = newExpression.type as StructType
-    val struct = symbolTable.getGlobalSymbolTable().getStruct(structType.name)
+    val owner = symbolTable.getGlobalSymbolTable().structs[newExpression.type.toString()]
+            ?: throw QuartzException("Unknown struct ${newExpression.type}")
+    val memberType = owner.members[name]
+            ?: throw QuartzException("Unknown member $owner.$type")
 
     return MemberAccessNode(
             name,
-            type.verifyAs(struct.type),
-            newExpression.verifyAs(structType)
+            memberType,
+            newExpression
     )
 }
 
 private fun IfExpressionNode.verify(symbolTable: SymbolTable): IfExpressionNode {
-    test.verify(symbolTable)
-    ifTrue.verify(symbolTable)
-    ifFalse.verify(symbolTable)
+    val newTest = test.verify(symbolTable)
+    val newIfTrue = ifTrue.verify(symbolTable)
+    val newIfFalse = ifFalse.verify(symbolTable)
+    val newType = type.verifyAs(newIfTrue.type).verifyAs(newIfFalse.type)
 
     return IfExpressionNode(
-            test.verifyAs(Primitives.bool),
-            ifTrue.verifyAs(type).verifyAs(ifFalse.type),
-            ifFalse.verifyAs(type).verifyAs(ifTrue.type),
-            type.verifyAs(ifTrue.type).verifyAs(ifTrue.type)
+            newTest.verifyAs(Primitives.bool),
+            newIfTrue.verifyAs(newType).verifyAs(ifFalse.type),
+            newIfFalse.verifyAs(newType).verifyAs(ifTrue.type),
+            newType
     )
 }
 
@@ -163,7 +187,7 @@ private fun ExpressionNode.verifyAs(type: Type?): ExpressionNode {
         this.type == null -> return this.withType(type)
         this.type == type || type == null -> return this
         this.type!!.canCastTo(type) -> return CastNode(type, this)
-        else -> throw Exception("Could not cast $this to $type")
+        else -> throw QuartzException("Could not cast $this to $type")
     }
 }
 
@@ -172,6 +196,6 @@ private fun Type?.verifyAs(type: Type?): Type? {
         this == null -> return type
         this == type || type == null -> return this
         this.canCastTo(type) -> return type
-        else -> throw Exception("Could not cast $this to $type")
+        else -> throw QuartzException("Could not cast $this to $type")
     }
 }

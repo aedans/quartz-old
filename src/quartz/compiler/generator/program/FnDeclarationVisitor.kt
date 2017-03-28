@@ -185,7 +185,7 @@ fun MemberAccessNode.visit(string: StringBuilder) {
 }
 
 fun FnCallNode.visit(string: StringBuilder) {
-    name.visitName(string)
+    expression.visit(string)
     string.append('(')
     expressions.dropLast(1).forEach {
         it.visit(string)

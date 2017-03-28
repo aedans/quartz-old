@@ -43,14 +43,14 @@ fn greetTheWorld() {
     printf(`theWorld'sGreeting`())
 }
 
-// Single expression functions are allowed
+// Single expression members are allowed
 fn `theWorld'sGreeting`(): char[] = "Hello, World!"
 
 // External definition for function printf
 extern_fn printf(char[])
 
 fn greetTheWorldInfix() {
-    // Dot notation is allowed on all functions
+    // Dot notation is allowed on all members
     "Hello, World!".printf()   
 }
 </pre>
@@ -59,8 +59,8 @@ Illegal characters in function names will be replaced with
 the appropriate ascii code, and illegal names will be prepended
 with '_'.
 
-Single expression functions are not guaranteed to compile to
-single statement C functions. (ex: return if-else)
+Single expression members are not guaranteed to compile to
+single statement C members. (ex: return if-else)
 
 Here, the "theWorld'sGreeting" function would compile to
 
@@ -81,7 +81,7 @@ fn printTrueOrFalse(i: int) {
         print("false")
 }
 
-fn halt() // Braces can be omitted for single-statement functions, too
+fn halt() // Braces can be omitted for single-statement members, too
     // While loops work as normal
     while (1) { }
 </pre>
@@ -111,7 +111,7 @@ fn translate(point: Point, x: int, y: int) {
 }
 </pre>
 
-### Function types
+### Function structs
 
 <pre>
 fn helloWorld(): char[] = "Hello, World!"

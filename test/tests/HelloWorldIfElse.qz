@@ -3,8 +3,8 @@
 %%
 
 fn main(): int {
-    (if (false()) "Failed" else helloWorld()).printf()
-    return 0
+    (if (false()) "Failed" else helloWorld()).printf();
+    return 0;
 }
 
 fn helloWorld(): char[] = "Hello, World!"

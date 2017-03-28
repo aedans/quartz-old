@@ -1,5 +1,6 @@
 package quartz.compiler.visitor.program.function
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.syntax.tree.misc.InlineCNode
@@ -25,6 +26,6 @@ fun StatementNode.visit(
         is WhileLoopNode -> whileLoopVisitor(this)
         is FnCallNode -> fnCallVisitor(this)
         is VarAssignmentNode -> varAssignmentVisitor(this)
-        else -> throw Exception("Unrecognized node $this")
+        else -> throw QuartzException("Unrecognized node $this")
     }
 }

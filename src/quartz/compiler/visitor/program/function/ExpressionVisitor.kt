@@ -1,5 +1,6 @@
 package quartz.compiler.visitor.program.function
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.FnCallNode
@@ -32,6 +33,6 @@ fun ExpressionNode.visit(
         is FnCallNode -> fnCallVisitor(this)
         is MemberAccessNode -> memberAccessVisitor(this)
         is IfExpressionNode -> ifExpressionVisitor(this)
-        else -> throw Exception("Unrecognized node $this")
+        else -> throw QuartzException("Unrecognized node $this")
     }
 }

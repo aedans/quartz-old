@@ -11,4 +11,3 @@ operator fun String.times(i: Int): String {
     }
     return s
 }
-

@@ -7,21 +7,19 @@ struct Int {
 }
 
 fn main(): int {
-    10.Int().countTo()
-    return 0
+    10.Int().countTo();
+    return 0;
 }
 
 fn countTo(i: Int) {
-    if (i.value() > 0)
-        i.dec().countTo()
-    print(i)
+    if (i.value > 0)
+        i.dec().countTo();
+    print(i);
 }
 
-fn dec(i: Int): Int = (i.value() - 1).Int()
-
-fn value(i: Int): int = i.value
+fn dec(i: Int): Int = (i.value - 1).Int()
 
 fn print(i: Int)
-    printf("%d ", i.value())
+    printf("%d ", i.value);
 
 extern_fn printf(char[], int)

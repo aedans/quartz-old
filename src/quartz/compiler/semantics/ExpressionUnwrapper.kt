@@ -1,5 +1,6 @@
 package quartz.compiler.semantics
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -42,7 +43,7 @@ private fun StatementNode.unwrapExpressions(newStatements: MutableList<Statement
                 WhileLoopNode(test.unwrap(newStatements), statements.map { it.unwrapExpressions(newStatements) })
             },
             fnCallVisitor = {
-                FnCallNode(name, expressions.map { it.unwrap(newStatements) }, type)
+                FnCallNode(expression.unwrap(newStatements), expressions.map { it.unwrap(newStatements) }, type)
             },
             varAssignmentVisitor = {
                 VarAssignmentNode(name, expression.unwrap(newStatements))
@@ -62,14 +63,15 @@ private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): Ex
                 BinaryOperatorNode(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
             },
             fnCallVisitor = {
-                FnCallNode(name, expressions.map { it.unwrap(newStatements) }, type)
+                FnCallNode(expression.unwrap(newStatements), expressions.map { it.unwrap(newStatements) }, type)
             },
             memberAccessVisitor = {
                 MemberAccessNode(name, type, expression.unwrap(newStatements))
             },
             ifExpressionVisitor = {
                 val tempVarName = "temp${hashCode()}"
-                newStatements.add(VarDeclarationNode(tempVarName, type ?: throw Exception("Unknown type for $this"), true, null))
+                newStatements.add(VarDeclarationNode(tempVarName, type
+                        ?: throw QuartzException("Unknown type for $this"), true, null))
 
                 val trueStatements = mutableListOf<StatementNode>()
                 trueStatements.add(VarAssignmentNode(tempVarName, ifTrue.unwrap(trueStatements)))

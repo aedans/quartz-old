@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.builder
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -32,9 +33,8 @@ fun QuartzParser.StatementContext.toNode(): StatementNode {
         varDeclaration() != null -> varDeclaration().toNode()
         ifStatement() != null -> ifStatement().toNode()
         whileLoop() != null -> whileLoop().toNode()
-        prefixCallExpression() != null -> prefixCallExpression().toNode()
-        infixCallExpression() != null -> infixCallExpression().toNode()
-        else -> throw Exception("Error translating $text")
+        expression() != null -> expression().toNode()
+        else -> throw QuartzException("Error translating $text")
     }
 }
 
@@ -62,34 +62,7 @@ fun QuartzParser.IfStatementContext.toNode(): IfStatementNode {
 fun QuartzParser.WhileLoopContext.toNode(): WhileLoopNode {
     return WhileLoopNode(expression().toNode(), block().statement()?.map { it.toNode() } ?: listOf())
 }
-fun QuartzParser.PrefixCallExpressionContext.toNode(): FnCallNode {
-    return FnCallNode(
-            identifier().text,
-            expressionList().expression().map { it.toNode() }.toMutableList(),
-            null
-    )
-}
 
-// TODO: Shorten by getting IntelliJ to understand what packages are
-fun QuartzParser.InfixCallExpressionContext.toNode(): FnCallNode {
-    val args = infixCall().expressionList().expression().map { it.toNode() }.toMutableList()
-    args.add(0, expression().toNode())
-    return FnCallNode(
-            infixCall().identifier().text,
-            args,
-            null
-    )
-}
-
-fun QuartzParser.InfixCallContext.toNode(expression: ExpressionNode): FnCallNode {
-    val args = expressionList().expression().map { it.toNode() }.toMutableList()
-    args.add(0, expression)
-    return FnCallNode(
-            identifier().text,
-            args,
-            null
-    )
-}
 fun QuartzParser.ExpressionContext.toNode(): ExpressionNode {
     return disjunction().toNode()
 }
@@ -148,7 +121,7 @@ fun QuartzParser.PrefixOperationContext.toNode(expression: ExpressionNode): Expr
     return UnaryOperatorNode(expression, when (text) {
         "-" -> UnaryOperatorNode.ID.NEGATE
         "!" -> UnaryOperatorNode.ID.INVERT
-        else -> throw Exception("Unrecognized prefix operator $text")
+        else -> throw QuartzException("Unrecognized prefix operator $text")
     }, null)
 }
 
@@ -163,9 +136,9 @@ fun QuartzParser.PostfixExpressionContext.toNode(operations: List<QuartzParser.P
 fun QuartzParser.PostfixOperationContext.toNode(expression: ExpressionNode): ExpressionNode {
     return when {
         arrayAccess() != null -> arrayAccess().toNode(expression)
-        infixCall() != null -> infixCall().toNode(expression)
         memberAccess() != null -> memberAccess().toNode(expression)
-        else -> throw Exception("Unrecognized postfix operation $text")
+        postfixCall() != null -> postfixCall().toNode(expression)
+        else -> throw QuartzException("Unrecognized postfix operation $text")
     }
 }
 
@@ -173,20 +146,23 @@ fun QuartzParser.AtomicExpressionContext.toNode(): ExpressionNode {
     return when {
         expression() != null -> expression().toNode()
         ifExpression() != null -> ifExpression().toNode()
-        prefixCallExpression() != null -> prefixCallExpression().toNode()
         identifier() != null -> identifier().toNode()
         inlineC() != null -> inlineC().toNode()
         literal() != null -> literal().toNode()
-        else -> throw Exception("Unrecognized atomic expression $text")
+        else -> throw QuartzException("Unrecognized atomic expression $text")
     }
+}
+
+fun QuartzParser.ArrayAccessContext.toNode(expression: ExpressionNode): ExpressionNode {
+    return BinaryOperatorNode(expression, expression().toNode(), BinaryOperatorNode.ID.ARRAY_ACCESS, null)
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: ExpressionNode): MemberAccessNode {
     return MemberAccessNode(identifier().text, null, expression)
 }
 
-fun QuartzParser.ArrayAccessContext.toNode(expression: ExpressionNode): ExpressionNode {
-    return BinaryOperatorNode(expression, expression().toNode(), BinaryOperatorNode.ID.ARRAY_ACCESS, null)
+fun QuartzParser.PostfixCallContext.toNode(expression: ExpressionNode): FnCallNode {
+    return FnCallNode(expression, expressionList().expression().map { it.toNode() }, null)
 }
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpressionNode {
@@ -203,7 +179,7 @@ fun QuartzParser.LiteralContext.toNode(): ExpressionNode {
         INT() != null -> NumberLiteralNode(text, Primitives.int)
         DOUBLE() != null -> NumberLiteralNode(text, Primitives.double)
         STRING() != null -> StringLiteralNode(text.substring(1, text.length-1))
-        else -> throw Exception("Error translating $this")
+        else -> throw QuartzException("Error translating $this")
     }
 }
 
@@ -211,7 +187,7 @@ val QuartzParser.EqualityOperationContext.ID: BinaryOperatorNode.ID
     get() = when (text) {
         "==" -> BinaryOperatorNode.ID.EQUALS
         "!=" -> BinaryOperatorNode.ID.NOT_EQUALS
-        else -> throw Exception("Unrecognized equality operator $text")
+        else -> throw QuartzException("Unrecognized equality operator $text")
     }
 
 val QuartzParser.ComparisonOperationContext.ID: BinaryOperatorNode.ID
@@ -220,14 +196,14 @@ val QuartzParser.ComparisonOperationContext.ID: BinaryOperatorNode.ID
         "<" -> BinaryOperatorNode.ID.LESS_THAN
         ">=" -> BinaryOperatorNode.ID.GREATER_THAN_OR_EQUALS
         "<=" -> BinaryOperatorNode.ID.LESS_THAN_OR_EQUALS
-        else -> throw Exception("Unrecognized comparison operator $text")
+        else -> throw QuartzException("Unrecognized comparison operator $text")
     }
 
 val QuartzParser.AdditiveOperationContext.ID: BinaryOperatorNode.ID
     get() = when (text) {
         "+" -> BinaryOperatorNode.ID.ADD
         "-" -> BinaryOperatorNode.ID.SUBTRACT
-        else -> throw Exception("Unrecognized additive operator $text")
+        else -> throw QuartzException("Unrecognized additive operator $text")
     }
 
 val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperatorNode.ID
@@ -235,5 +211,5 @@ val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperatorNode.ID
         "*" -> BinaryOperatorNode.ID.MULTIPLY
         "/" -> BinaryOperatorNode.ID.DIVIDE
         "%" -> BinaryOperatorNode.ID.MOD
-        else -> throw Exception("Unrecognized multiplicative operator $text")
+        else -> throw QuartzException("Unrecognized multiplicative operator $text")
     }

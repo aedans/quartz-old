@@ -3,13 +3,11 @@
 %%
 
 fn main(): int {
-    val greeter = helloWorld
-    greeter.invoke().printf()
-    return 0
+    val greeter = helloWorld;
+    greeter().printf();
+    return 0;
 }
 
 fn helloWorld(): char[] = "Hello, World!"
-
-fn invoke(function: () -> char[]): char[] %%function()%%
 
 extern_fn printf(char[])

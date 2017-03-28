@@ -3,14 +3,14 @@
 %%
 
 fn main(): int {
-    10.fibBelow()
-    return 0
+    10.fibBelow();
+    return 0;
 }
 
 fn fibBelow(i: int) {
     if (i > 0)
-        (i - 1).fibBelow()
-    i.fib().printInt()
+        (i - 1).fibBelow();
+    i.fib().printInt();
 }
 
 fn fib(i: int): int =
@@ -22,6 +22,6 @@ fn fib(i: int): int =
         (i - 1).fib() + (i - 2).fib()
 
 fn printInt(i: int)
-    printf("%d ", i)
+    printf("%d ", i);
 
 extern_fn printf(char[], int)

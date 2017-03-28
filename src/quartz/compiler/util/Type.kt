@@ -5,5 +5,5 @@ package quartz.compiler.util
  */
 
 interface Type {
-    fun canCastTo(type: Type): Boolean
+    val canCastTo: (Type) -> Boolean
 }

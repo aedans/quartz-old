@@ -6,12 +6,21 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class StructType(val name: String) : Type {
-    override fun canCastTo(type: Type): Boolean {
-        return type == this
+class StructType(val name: String, val members: Map<String, Type>) : Type {
+    override val canCastTo: (Type) -> Boolean = { it is StructType && it.name == this.name }
+
+    override fun equals(other: Any?): Boolean {
+        return other is StructType && other.name == this.name
     }
 
     override fun toString(): String {
         return name
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + members.hashCode()
+        result = 31 * result + canCastTo.hashCode()
+        return result
     }
 }

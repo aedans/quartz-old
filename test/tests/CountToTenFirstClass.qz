@@ -1,0 +1,21 @@
+%%
+#include <stdio.h>
+%%
+
+fn main(): int {
+    val counter = countTo;
+    counter(10, print);
+    return 0;
+}
+
+fn countTo(i: int, printer: (int) -> void) {
+    val counter = countTo;
+    if (i > 0)
+        counter(i - 1, printer);
+    printer(i);
+}
+
+fn print(i: int)
+    printf("%d ", i);
+
+extern_fn printf(char[], int)

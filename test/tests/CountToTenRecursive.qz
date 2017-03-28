@@ -3,17 +3,17 @@
 %%
 
 fn main(): int {
-    10.countTo()
-    return 0
+    10.countTo();
+    return 0;
 }
 
 fn countTo(i: int) {
     if (i > 0)
-        (i - 1).countTo()
-    print(i)
+        (i - 1).countTo();
+    print(i);
 }
 
 fn print(i: int)
-    printf("%d ", i)
+    printf("%d ", i);
 
 extern_fn printf(char[], int)

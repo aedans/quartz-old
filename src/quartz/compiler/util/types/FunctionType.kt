@@ -7,9 +7,7 @@ import quartz.compiler.util.Type
  */
 
 data class FunctionType(val args: List<Type>, val returnType: Type) : Type {
-    override fun canCastTo(type: Type): Boolean {
-        return type == this
-    }
+    override val canCastTo: (Type) -> Boolean = { it == this }
 
     override fun toString(): String {
         return "$args -> $returnType"

@@ -7,9 +7,9 @@ import quartz.compiler.util.Type
  */
 
 interface SymbolTable {
-    fun add(name: String, type: Type)
+    fun getVar(name: String): Type?
 
-    operator fun get(name: String): Type?
+    fun addVar(name: String, type: Type)
 
     fun getGlobalSymbolTable(): GlobalSymbolTable
 }

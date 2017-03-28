@@ -58,12 +58,11 @@ structMember
 
 statement
     : inlineC
-    | returnStatement
-    | varDeclaration
+    | returnStatement SEMI
+    | varDeclaration SEMI
     | ifStatement
     | whileLoop
-    | prefixCallExpression
-    | infixCallExpression
+    | expression SEMI
     ;
 
 varDeclaration
@@ -122,7 +121,6 @@ postfixExpression
 
 atomicExpression
     : '(' expression ')'
-    | prefixCallExpression
     | ifExpression
     | identifier
     | inlineC
@@ -159,7 +157,7 @@ prefixOperation
 
 postfixOperation
     : arrayAccess
-    | infixCall
+    | postfixCall
     | memberAccess
     ;
 
@@ -167,20 +165,12 @@ arrayAccess
     : '[' expression ']'
     ;
 
-infixCall
-    : '.' identifier '(' expressionList ')'
+postfixCall
+    : '(' expressionList ')'
     ;
 
 memberAccess
     : '.' identifier
-    ;
-
-prefixCallExpression
-    : identifier '(' expressionList ')'
-    ;
-
-infixCallExpression
-    : expression infixCall
     ;
 
 ifExpression
@@ -253,6 +243,7 @@ IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 STRUCT: 'struct';
+SEMI: ';';
 
 KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN_FN|IF|ELSE|WHILE|STRUCT;
 

@@ -7,7 +7,7 @@ import quartz.compiler.util.types.StructType
  */
 
 class StructDeclarationNode(val name: String, val members: Map<String, StructMemberNode>) {
-    val type = StructType(name)
+    val type = StructType(name, members.map { it.value.name to it.value.type }.toMap())
 
     override fun toString(): String {
         return "struct $name$members"

@@ -4,12 +4,12 @@
 
 fn main(): int {
     if (true()) {
-        helloWorld().printf()
+        helloWorld().printf();
     }
     if (false()) {
-        "Failed".printf()
+        "Failed".printf();
     }
-    return 0
+    return 0;
 }
 
 fn helloWorld(): char[] = "Hello, World!"

@@ -3,17 +3,17 @@
 %%
 
 fn main(): int {
-    10.countTo()
+    10.countTo();
 }
 
 fn countTo(max: int) {
-    val i = 0
+    val i = 0;
     while (i < max)
-        printInt(%%i++%%)
-    printInt(max)
+        printInt(%%i++%%);
+    printInt(max);
 }
 
 fn printInt(i: int)
-    printf("%d ", i)
+    printf("%d ", i);
 
 extern_fn printf(char[], int)

@@ -21,7 +21,7 @@ fun QuartzParser.VarTypeContext.toType(): Type {
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
-            else -> StructType(typeName.IDENTIFIER().text)
+            else -> StructType(typeName.IDENTIFIER().text, mapOf())
         }
     } else {
         if (array != null) {

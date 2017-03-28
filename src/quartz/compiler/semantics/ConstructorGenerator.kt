@@ -6,7 +6,7 @@ import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.statement.ReturnNode
 import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
-import quartz.compiler.util.Function
+import quartz.compiler.util.types.FunctionType
 
 /**
  * Created by Aedan Smith.
@@ -14,7 +14,7 @@ import quartz.compiler.util.Function
 
 fun ProgramNode.generateConstructors(symbolTable: SymbolTable): ProgramNode {
     val structConstructors =  structDeclarations.map { it.defaultConstructor() }
-    structConstructors.forEach { symbolTable.getGlobalSymbolTable().addFunction(Function(it)) }
+    structConstructors.forEach { symbolTable.addVar(it.name, FunctionType(it.args.map { it.second }, it.returnType)) }
     return ProgramNode(
             fnDeclarations + structDeclarations.map { it.defaultConstructor() },
             structDeclarations,
@@ -27,8 +27,11 @@ private fun StructDeclarationNode.defaultConstructor(): FnDeclarationNode {
     val args = members.map { it.key to it.value.type }
 
     var s = "(struct $type) {"
-    args.dropLast(1).forEach { s += it.first + ", " }
-    s += args.last().first + "}"
+    if (!args.isEmpty()) {
+        args.dropLast(1).forEach { s += it.first + ", " }
+        s += args.last().first
+    }
+    s += "}"
 
     return FnDeclarationNode(
             name,

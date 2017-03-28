@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.builder
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -44,6 +45,6 @@ fun QuartzParser.DeclarationContext.toNode(): Any {
             println("Found $structNode\n")
             structNode
         }
-        else -> throw Exception("Error translating $text")
+        else -> throw QuartzException("Error translating $text")
     }
 }

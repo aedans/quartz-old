@@ -12,7 +12,7 @@ import quartz.compiler.syntax.tree.ProgramNode
 fun ProgramNode.visit(string: StringBuilder) {
     structDeclarations.forEach { it.visitPrototype(string) }
     if (!structDeclarations.isEmpty()) string.appendln()
-    fnDeclarations.forEach { it.visitTypedef(string) }
+    fnDeclarations.sortedBy { it.args.size }.forEach { it.visitTypedef(string) }
     if (!fnDeclarations.isEmpty()) string.appendln()
     fnDeclarations.forEach { it.visitPrototype(string) }
     inlineCNodes.forEach { it.visit(string) }

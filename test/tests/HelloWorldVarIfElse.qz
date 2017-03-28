@@ -3,9 +3,9 @@
 %%
 
 fn main(): int {
-    val l = if (false()) "Failed" else helloWorld()
-    (if (true()) l else "Failed").printf()
-    return 0
+    val l = if (false()) "Failed" else helloWorld();
+    (if (true()) l else "Failed").printf();
+    return 0;
 }
 
 fn helloWorld(): char[] = "Hello, World!"
