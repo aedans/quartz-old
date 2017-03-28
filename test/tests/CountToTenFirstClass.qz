@@ -11,7 +11,7 @@ fn main(): int {
 fn countTo(i: int, printer: (int) -> void) {
     val counter = countTo;
     if (i > 0)
-        counter(i - 1, printer);
+        (i - 1).counter(printer);
     printer(i);
 }
 
