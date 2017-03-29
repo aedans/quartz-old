@@ -13,6 +13,6 @@ class MemberAccessNode(val name: String, override val type: Type?, val expressio
     }
 
     override fun toString(): String {
-        return "$expression.$name${if (type != null) ": $type" else ""}"
+        return "$expression.$name"
     }
 }

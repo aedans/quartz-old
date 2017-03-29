@@ -13,6 +13,6 @@ class NumberLiteralNode(val string: String, override val type: Type?) : Expressi
     }
 
     override fun toString(): String {
-        return "$string: $type"
+        return string
     }
 }

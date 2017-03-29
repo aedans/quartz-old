@@ -1,10 +1,17 @@
+%%
+#include <stdio.h>
+%%
+
 fn main(): int {
     val one: long = 1;
     val two: int = 2;
     val three: short = 3;
     val four: char = 4;
     val result = addFour(one, two, three, four);
+    printf("10 = %d", result);
     return 0;
 }
 
-fn addFour(one: char, two: short, three: int, four: long): double = one + four + three + two
+fn addFour(one: char, two: short, three: int, four: long): int = one + four + three + two
+
+extern fn printf(char[], ...)
