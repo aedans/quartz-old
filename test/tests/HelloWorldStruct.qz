@@ -14,4 +14,4 @@ fn main(): int {
 fn print(string: String)
     string.value.printf();
 
-extern_fn printf(char[])
+extern fn printf(char[], ...)

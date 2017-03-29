@@ -27,7 +27,7 @@ fun QuartzParser.VarTypeContext.toType(): Type {
         if (array != null) {
             ArrayType(varType().toType())
         } else {
-            FunctionType(args.varType().map { it.toType() }, returnType.toType())
+            FunctionType(args.varType().map { it.toType() }, returnType.toType(), args.vararg != null)
         }
     }
 }

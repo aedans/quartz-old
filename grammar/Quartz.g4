@@ -41,7 +41,7 @@ fnBlock
 // EXTERN FN DECLARATION
 
 externFnDeclaration
-    : fnModifiers EXTERN_FN name=identifier '(' typeList ')' (':' returnType=varType)?
+    : fnModifiers EXTERN FN name=identifier '(' typeList ')' (':' returnType=varType)?
     ;
 
 // STRUCT DECLARATION
@@ -198,12 +198,12 @@ expressionList
     : (expression ',')* expression?
     ;
 
-nameList
+identifierList
     : (identifier ',')* identifier?
     ;
 
 typeList
-    : (varType ',')* varType?
+    : (varType ',')* (vararg='...'|varType)?
     ;
 
 // UTIL
@@ -238,14 +238,14 @@ FN_MODIFIER: 'gpu'|'inline';
 VAR_DECLARATION_TYPE: 'val'|'var';
 RETURN: 'return';
 FN: 'fn';
-EXTERN_FN: 'extern_fn';
+EXTERN: 'extern';
 IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 STRUCT: 'struct';
 SEMI: ';';
 
-KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN_FN|IF|ELSE|WHILE|STRUCT;
+KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN|IF|ELSE|WHILE|STRUCT;
 
 IDENTIFIER: ([_a-zA-Z][_a-zA-Z0-9]*);
 

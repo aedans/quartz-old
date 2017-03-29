@@ -133,11 +133,13 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
         val expressionType = newExpression.type as? FunctionType
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
-        if (expressionType.args.size != expressions.size) throw QuartzException("Incorrect number of arguments for $this")
+        if (!expressionType.vararg && expressionType.args.size != expressions.size)
+            throw QuartzException("Incorrect number of arguments for $this")
 
         return FnCallNode(
                 newExpression,
-                expressions.zip(expressionType.args).map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
+                expressions.zip(expressionType.args + arrayOfNulls<Type>(expressions.size - expressionType.args.size))
+                        .map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
                 type.verifyAs(expressionType.returnType)
         )
     } catch (e: QuartzException) {

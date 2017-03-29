@@ -24,4 +24,4 @@ fn fib(i: int): int =
 fn printInt(i: int)
     printf("%d ", i);
 
-extern_fn printf(char[], int)
+extern fn printf(char[], ...)

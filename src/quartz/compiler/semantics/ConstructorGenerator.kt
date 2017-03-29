@@ -13,8 +13,8 @@ import quartz.compiler.util.types.FunctionType
  */
 
 fun ProgramNode.generateConstructors(symbolTable: SymbolTable): ProgramNode {
-    val structConstructors =  structDeclarations.map { it.defaultConstructor() }
-    structConstructors.forEach { symbolTable.addVar(it.name, FunctionType(it.args.map { it.second }, it.returnType)) }
+    val structConstructors = structDeclarations.map { it.defaultConstructor() }
+    structConstructors.forEach { symbolTable.addVar(it.name, FunctionType(it.args.map { it.second }, it.returnType, false)) }
     return ProgramNode(
             fnDeclarations + structDeclarations.map { it.defaultConstructor() },
             structDeclarations,

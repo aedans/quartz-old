@@ -18,4 +18,4 @@ fn true(): int = 1
 
 fn false(): int = 0
 
-extern_fn printf(char[])
+extern fn printf(char[], ...)

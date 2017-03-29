@@ -18,4 +18,4 @@ fn countTo(i: int, printer: (int) -> void) {
 fn print(i: int)
     printf("%d ", i);
 
-extern_fn printf(char[], int)
+extern fn printf(char[], ...)

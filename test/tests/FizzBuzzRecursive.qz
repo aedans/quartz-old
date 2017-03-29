@@ -24,4 +24,4 @@ fn fizzBuzz(i: int) {
 fn printInt(i: int)
     %%printf("%d ", i)%%
 
-extern_fn printf(char[])
+extern fn printf(char[], ...)

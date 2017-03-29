@@ -8,4 +8,4 @@ fn main(): int {
     return 0;
 }
 
-extern_fn printf(char[])
+extern fn printf(char[], ...)

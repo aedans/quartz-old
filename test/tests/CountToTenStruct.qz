@@ -22,4 +22,4 @@ fn dec(i: Int): Int = (i.value - 1).Int()
 fn print(i: Int)
     printf("%d ", i.value);
 
-extern_fn printf(char[], int)
+extern fn printf(char[], ...)

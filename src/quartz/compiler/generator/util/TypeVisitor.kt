@@ -38,13 +38,13 @@ fun Type.visitDescription(string: StringBuilder) {
             this.toString().visitName(string)
         }
         is FunctionType -> {
-            visitFunctionDescription(args, returnType, string)
+            visitFunctionDescription(args, returnType, vararg, string)
         }
         else -> toString().visitName(string)
     }
 }
 
-fun visitFunctionDescription(args: List<Type>, returnType: Type, string: StringBuilder){
+fun visitFunctionDescription(args: List<Type>, returnType: Type, vararg: Boolean, string: StringBuilder){
     when {
         args.isEmpty() && returnType == Primitives.void -> {
             string.append("process")
@@ -69,4 +69,6 @@ fun visitFunctionDescription(args: List<Type>, returnType: Type, string: StringB
             returnType.visitDescription(string)
         }
     }
+    if (vararg)
+        string.append("_vararg")
 }

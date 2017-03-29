@@ -10,4 +10,4 @@ fn main(): int {
 
 fn helloWorld(): char[] = "Hello, World!"
 
-extern_fn printf(char[])
+extern fn printf(char[], ...)

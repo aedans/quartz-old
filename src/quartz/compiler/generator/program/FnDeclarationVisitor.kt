@@ -1,13 +1,13 @@
 package quartz.compiler.generator.program
 
 import quartz.compiler.generator.util.visit
-import quartz.compiler.generator.util.visitFunctionDescription
 import quartz.compiler.generator.util.visitName
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
+import quartz.compiler.util.Function
 import quartz.compiler.util.times
 import quartz.compiler.visitor.program.function.visit
 
@@ -30,21 +30,7 @@ fun FnDeclarationNode.visit(string: StringBuilder) {
 }
 
 fun FnDeclarationNode.visitTypedef(string: StringBuilder) {
-    string.append("typedef ")
-    returnType.visit(string)
-    string.append(" (*")
-    visitFunctionDescription(args.map { it.second }, returnType, string)
-    string.append("_t")
-    string.append(')')
-    string.append('(')
-    if (!args.isEmpty()) {
-        args.dropLast(1).forEach {
-            it.visit(string)
-            string.append(", ")
-        }
-        args.last().visit(string)
-    }
-    string.appendln(");")
+    Function(name, args.map { it.second }, returnType, false).visitTypedef(string)
 }
 
 fun FnDeclarationNode.visitPrototype(string: StringBuilder) {

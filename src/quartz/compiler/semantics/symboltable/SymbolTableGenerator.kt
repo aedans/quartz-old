@@ -10,7 +10,7 @@ import quartz.compiler.util.types.FunctionType
 fun ProgramNode.generateSymbolTable(): SymbolTable {
     val globalSymbolTable = GlobalSymbolTable()
     structDeclarations.forEach { globalSymbolTable.structs.put(it.name, it.type) }
-    fnDeclarations.forEach { globalSymbolTable.addVar(it.name, FunctionType(it.args.map { it.second }, it.returnType)) }
-    externFnDeclarations.forEach { globalSymbolTable.addVar(it.name, FunctionType(it.args, it.returnType)) }
+    fnDeclarations.forEach { globalSymbolTable.addVar(it.name, FunctionType(it.args.map { it.second }, it.returnType, false)) }
+    externFnDeclarations.forEach { globalSymbolTable.addVar(it.name, FunctionType(it.args, it.returnType, it.vararg)) }
     return globalSymbolTable
 }

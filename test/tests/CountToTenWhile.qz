@@ -16,4 +16,4 @@ fn countTo(max: int) {
 fn printInt(i: int)
     printf("%d ", i);
 
-extern_fn printf(char[], int)
+extern fn printf(char[], ...)

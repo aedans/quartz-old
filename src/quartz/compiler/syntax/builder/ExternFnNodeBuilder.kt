@@ -12,6 +12,7 @@ fun QuartzParser.ExternFnDeclarationContext.toNode(): Function {
     return Function(
             name.text,
             typeList().varType().map { it.toType() },
-            returnType?.toType() ?: Primitives.void
+            returnType?.toType() ?: Primitives.void,
+            typeList().vararg != null
     )
 }
