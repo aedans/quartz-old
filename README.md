@@ -15,17 +15,14 @@ existing C/C++/CUDA programs and libraries.
 
 <pre>
 // Immutable variable declaration
-val x = 10
+val x = 10;
 
 // Types can be inferred at compile time or stated explicitly 
-val y: int = 10
+val y: int = 10;
 
 // Mutable variable declaration
-var size = 256
+var size = 256;
 </pre>
-
-Semicolons are not needed, but statements can still be on the
-same line.
 
 ### Functions
 
@@ -33,25 +30,25 @@ same line.
 // Return type goes after the declaration
 fn main(): int {
     // Function calls work as normal
-    greetTheWorld()
-    return 0
+    greetTheWorld();
+    return 0;
 }
 
 // Functions will assume void if nothing is specified
 fn greetTheWorld() {
     // Backticks escape identifiers (TODO)
-    printf(`theWorld'sGreeting`())
+    printf(`theWorld'sGreeting`());
 }
 
-// Single expression members are allowed
-fn `theWorld'sGreeting`(): char[] = "Hello, World!"
+// Single expression functions are allowed
+fn `theWorld'sGreeting`(): char[] = "Hello, World!";
 
 // External definition for function printf
-extern_fn printf(char[])
+extern fn printf(char[], ...) // ... for vararg parameters
 
 fn greetTheWorldInfix() {
-    // Dot notation is allowed on all members
-    "Hello, World!".printf()   
+    // Dot notation is allowed on all functions
+    "Hello, World!".printf();
 }
 </pre>
 
@@ -59,14 +56,14 @@ Illegal characters in function names will be replaced with
 the appropriate ascii code, and illegal names will be prepended
 with '_'.
 
-Single expression members are not guaranteed to compile to
-single statement C members. (ex: return if-else)
+Single expression functions are not guaranteed to compile to
+single statement C functions. (ex: return if-else)
 
 Here, the "theWorld'sGreeting" function would compile to
 
 <pre>
 char* theWorld39sGreeting() { 
-    return "Hello, World!" 
+    return "Hello, World!";
 }
 </pre>
 
@@ -76,12 +73,16 @@ char* theWorld39sGreeting() {
 fn printTrueOrFalse(i: int) {
     // If statements work as normal
     if (i) {
-        print("true")
+        print("true");
     } else // Braces can be omitted for single-statement blocks
-        print("false")
+        print("false");
 }
 
-fn halt() // Braces can be omitted for single-statement members, too
+// If expressions are supported
+fn boolToString(i: int) =
+    if (i) "true" else "false"
+
+fn halt() // Braces can be omitted for single-statement functions, too
     // While loops work as normal
     while (1) { }
 </pre>
@@ -100,28 +101,37 @@ struct Point {
 
 fn main() {
     // Calling the implicit constructor
-    val p1 = Point(1, 2)
+    val p1 = Point(1, 2);
     // Dot notation works on structs
-    val p2 = p1.translate(2, 2)
+    val p2 = p1.translate(2, 2);
 }
 
 fn translate(point: Point, x: int, y: int) {
     // Dot notation to access variables
-    return Point(point.x + x, point.y + y)
+    return Point(point.x + x, point.y + y);
 }
 </pre>
 
-### Function structs
+### Function types
 
 <pre>
-fn helloWorld(): char[] = "Hello, World!"
+fn helloWorld(): char[] = "Hello, World!";
 
 // First class function that returns helloWorld
-fn greeter(): () -> char[] = helloWorld
+fn greeter(): () -> char[] = helloWorld;
 
 // Functions can be passed as arguments
 fn add(i1: () -> int, i2: () -> int): int {
-    // Functions are called with the invoke method
-    return i1.invoke() + i2.invoke()
+    // Functions calls work as normal
+    return i1() + i2();
 }
+
+fn main(): int {
+    /* Invokes greeter, then invokes the returned type, 
+     * then prints the value.
+     */
+    greeter()().printf();
+}
+
+extern fn printf(char[], ...)
 </pre>
