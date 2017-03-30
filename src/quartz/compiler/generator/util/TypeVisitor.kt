@@ -1,5 +1,6 @@
 package quartz.compiler.generator.util
 
+import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.ArrayType
 import quartz.compiler.util.types.FunctionType
@@ -38,13 +39,13 @@ fun Type.visitDescription(string: StringBuilder) {
             this.toString().visitName(string)
         }
         is FunctionType -> {
-            visitFunctionDescription(args, returnType, vararg, string)
+            function.visitFunctionDescription(string)
         }
         else -> toString().visitName(string)
     }
 }
 
-fun visitFunctionDescription(args: List<Type>, returnType: Type, vararg: Boolean, string: StringBuilder){
+fun Function.visitFunctionDescription(string: StringBuilder){
     when {
         args.isEmpty() && returnType == Primitives.void -> {
             string.append("process")

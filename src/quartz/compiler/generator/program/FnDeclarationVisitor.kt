@@ -30,7 +30,7 @@ fun FnDeclarationNode.visit(string: StringBuilder) {
 }
 
 fun FnDeclarationNode.visitTypedef(string: StringBuilder) {
-    Function(name, args.map { it.second }, returnType, false).visitTypedef(string)
+    Function(args.map { it.second }, returnType, false).visitTypedef(string)
 }
 
 fun FnDeclarationNode.visitPrototype(string: StringBuilder) {

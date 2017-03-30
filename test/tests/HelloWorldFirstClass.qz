@@ -3,10 +3,12 @@
 %%
 
 fn main(): int {
-    val greeter = helloWorld;
-    greeter().printf();
+    val _greeter = greeter;
+    _greeter()().printf();
     return 0;
 }
+
+fn greeter(): () -> char[] = helloWorld
 
 fn helloWorld(): char[] = "Hello, World!"
 

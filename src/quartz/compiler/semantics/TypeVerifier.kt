@@ -130,17 +130,17 @@ private fun BinaryOperatorNode.verify(symbolTable: SymbolTable): BinaryOperatorN
 private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
     try {
         val newExpression = expression.verify(symbolTable)
-        val expressionType = newExpression.type as? FunctionType
+        val expressionFunction = (newExpression.type as? FunctionType)?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
-        if (!expressionType.vararg && expressionType.args.size != expressions.size)
+        if (!expressionFunction.vararg && expressionFunction.args.size != expressions.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
         return FnCallNode(
                 newExpression,
-                expressions.zip(expressionType.args + arrayOfNulls<Type>(expressions.size - expressionType.args.size))
+                expressions.zip(expressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
                         .map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
-                type.verifyAs(expressionType.returnType)
+                type.verifyAs(expressionFunction.returnType)
         )
     } catch (e: QuartzException) {
         if (expression !is MemberAccessNode)
@@ -149,9 +149,9 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
         val expressionType = symbolTable.getVar(expression.name) as FunctionType
         return FnCallNode(
                 IdentifierNode(expression.name, expressionType),
-                (expression.expression.verify(symbolTable) + expressions).zip(expressionType.args).map {
+                (expression.expression.verify(symbolTable) + expressions).zip(expressionType.function.args).map {
                     it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
-                type.verifyAs(expressionType.returnType)
+                type.verifyAs(expressionType.function.returnType)
         )
     }
 }

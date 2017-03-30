@@ -1,6 +1,7 @@
 package quartz.compiler.syntax.builder
 
 import quartz.compiler.parser.QuartzParser
+import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 import quartz.compiler.util.types.ArrayType
 import quartz.compiler.util.types.FunctionType
@@ -27,7 +28,7 @@ fun QuartzParser.VarTypeContext.toType(): Type {
         if (array != null) {
             ArrayType(varType().toType())
         } else {
-            FunctionType(args.varType().map { it.toType() }, returnType.toType(), args.vararg != null)
+            FunctionType(Function(args.varType().map { it.toType() }, returnType.toType(), args.vararg != null))
         }
     }
 }

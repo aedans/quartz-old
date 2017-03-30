@@ -4,9 +4,9 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.misc.ExternFnDeclarationNode
 import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
-import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
@@ -17,7 +17,7 @@ fun QuartzParser.ProgramContext.toNode(): ProgramNode {
     val programNode = ProgramNode(
             nodes.filterIsInstance(FnDeclarationNode::class.java),
             nodes.filterIsInstance(StructDeclarationNode::class.java),
-            nodes.filterIsInstance(Function::class.java),
+            nodes.filterIsInstance(ExternFnDeclarationNode::class.java),
             nodes.filterIsInstance(InlineCNode::class.java)
     )
     return programNode

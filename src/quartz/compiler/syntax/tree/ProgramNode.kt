@@ -2,9 +2,9 @@ package quartz.compiler.syntax.tree
 
 import quartz.compiler.semantics.symboltable.GlobalSymbolTable
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
+import quartz.compiler.syntax.tree.misc.ExternFnDeclarationNode
 import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
-import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
@@ -13,7 +13,7 @@ import quartz.compiler.util.Function
 data class ProgramNode(
         val fnDeclarations: List<FnDeclarationNode>,
         val structDeclarations: List<StructDeclarationNode>,
-        val externFnDeclarations: List<Function>,
+        val externFnDeclarations: List<ExternFnDeclarationNode>,
         val inlineCNodes: List<InlineCNode>
 ) {
     val symbolTable = GlobalSymbolTable()
