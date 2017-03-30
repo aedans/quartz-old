@@ -35,34 +35,34 @@ fnModifiers
 
 fnBlock
     : block
-    | '=' expression
+    | '=' expression semi?
     ;
 
 // EXTERN FN DECLARATION
 
 externFnDeclaration
-    : fnModifiers EXTERN FN name=identifier '(' typeList ')' (':' returnType=varType)?
+    : fnModifiers EXTERN FN name=identifier '(' typeList ')' (':' returnType=varType)? semi?
     ;
 
 // STRUCT DECLARATION
 
 structDeclaration
-    : STRUCT identifier '{' structMember* '}'
+    : STRUCT identifier '{' structMember* '}' semi?
     ;
 
 structMember
-    : VAR_DECLARATION_TYPE identifier ':' varType
+    : VAR_DECLARATION_TYPE identifier ':' varType semi?
     ;
 
 // STATEMENTS
 
 statement
-    : inlineC
-    | returnStatement SEMI
-    | varDeclaration SEMI
-    | ifStatement
-    | whileLoop
-    | expression SEMI
+    : inlineC semi?
+    | returnStatement semi
+    | varDeclaration semi
+    | ifStatement semi?
+    | whileLoop semi?
+    | expression semi
     ;
 
 varDeclaration
@@ -209,7 +209,7 @@ typeList
 // UTIL
 
 block
-    : '{' statement* '}'
+    : '{' statement* '}' semi?
     | statement
     ;
 
@@ -223,6 +223,10 @@ inlineC
 
 varDeclarationType
     : VAR_DECLARATION_TYPE
+    ;
+
+semi
+    : SEMICOLON+
     ;
 
 // LEXER
@@ -243,7 +247,7 @@ IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 STRUCT: 'struct';
-SEMI: ';';
+SEMICOLON: ';';
 
 KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN|IF|ELSE|WHILE|STRUCT;
 

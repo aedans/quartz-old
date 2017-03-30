@@ -4,6 +4,8 @@ main.c
 *.exe
 *.obj
 *.cu
+*.exp
+*.lib
 Quartz.iml
 lib
 src/META-INF

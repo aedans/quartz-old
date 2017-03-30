@@ -21,8 +21,8 @@ public class QuartzLexer extends Lexer {
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, DMOD=28, STRING=29, CHAR=30, INT=31, DOUBLE=32, 
 		INLINE_C=33, FN_MODIFIER=34, VAR_DECLARATION_TYPE=35, RETURN=36, FN=37, 
-		EXTERN=38, IF=39, ELSE=40, WHILE=41, STRUCT=42, SEMI=43, KEYWORD=44, IDENTIFIER=45, 
-		BLOCK_COMMENT=46, LINE_COMMENT=47, WHITESPACE=48;
+		EXTERN=38, IF=39, ELSE=40, WHILE=41, STRUCT=42, SEMICOLON=43, KEYWORD=44, 
+		IDENTIFIER=45, BLOCK_COMMENT=46, LINE_COMMENT=47, WHITESPACE=48;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
@@ -33,7 +33,7 @@ public class QuartzLexer extends Lexer {
 		"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
 		"T__25", "T__26", "DMOD", "STRING", "CHAR", "INT", "DOUBLE", "INLINE_C", 
 		"FN_MODIFIER", "VAR_DECLARATION_TYPE", "RETURN", "FN", "EXTERN", "IF", 
-		"ELSE", "WHILE", "STRUCT", "SEMI", "KEYWORD", "IDENTIFIER", "BLOCK_COMMENT", 
+		"ELSE", "WHILE", "STRUCT", "SEMICOLON", "KEYWORD", "IDENTIFIER", "BLOCK_COMMENT", 
 		"LINE_COMMENT", "WHITESPACE"
 	};
 
@@ -49,7 +49,7 @@ public class QuartzLexer extends Lexer {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, "DMOD", "STRING", "CHAR", "INT", "DOUBLE", "INLINE_C", 
 		"FN_MODIFIER", "VAR_DECLARATION_TYPE", "RETURN", "FN", "EXTERN", "IF", 
-		"ELSE", "WHILE", "STRUCT", "SEMI", "KEYWORD", "IDENTIFIER", "BLOCK_COMMENT", 
+		"ELSE", "WHILE", "STRUCT", "SEMICOLON", "KEYWORD", "IDENTIFIER", "BLOCK_COMMENT", 
 		"LINE_COMMENT", "WHITESPACE"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
