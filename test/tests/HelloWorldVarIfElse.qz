@@ -3,15 +3,15 @@
 %%
 
 fn main(): int {
-    val l = if (false()) "Failed" else helloWorld();
-    (if (true()) l else "Failed").printf();
+    val l = if (_false()) "Failed" else helloWorld();
+    (if (_true()) l else "Failed").printf();
     return 0;
 }
 
 fn helloWorld(): char[] = "Hello, World!"
 
-fn true(): int = 1
+fn _true(): int = 1
 
-fn false(): int = 0
+fn _false(): int = 0
 
 extern fn printf(char[], ...)

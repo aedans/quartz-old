@@ -1,7 +1,9 @@
 .idea
 main.qz
 main.c
-a.exe
+*.exe
+*.obj
+*.cu
 Quartz.iml
 lib
 src/META-INF

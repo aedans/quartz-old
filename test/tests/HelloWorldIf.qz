@@ -3,10 +3,10 @@
 %%
 
 fn main(): int {
-    if (true()) {
+    if (_true()) {
         helloWorld().printf();
     }
-    if (false()) {
+    if (_false()) {
         "Failed".printf();
     }
     return 0;
@@ -14,8 +14,8 @@ fn main(): int {
 
 fn helloWorld(): char[] = "Hello, World!"
 
-fn true(): int = 1
+fn _true(): int = 1
 
-fn false(): int = 0
+fn _false(): int = 0
 
 extern fn printf(char[], ...)
