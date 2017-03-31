@@ -1,4 +1,4 @@
-import std.cio
+import std.cstdio
 
 fn main(): int {
     10.countTo();

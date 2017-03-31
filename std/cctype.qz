@@ -1,3 +1,5 @@
+// Bindings for ctype.h
+
 %%
 #include <ctype.h>
 %%
@@ -13,6 +15,5 @@ extern fn ispunct(int): int
 extern fn isspace(int): int
 extern fn isupper(int): int
 extern fn isxdigit(int): int
-
 extern fn tolower(int): int
 extern fn toupper(int): int

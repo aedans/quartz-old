@@ -1,3 +1,5 @@
+// Bindings for math.h
+
 %%
 #include <math.h>
 %%

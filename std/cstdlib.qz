@@ -1,3 +1,5 @@
+// Bindings for stdlib.h
+
 %%
 #include <stdlib.h>
 %%
