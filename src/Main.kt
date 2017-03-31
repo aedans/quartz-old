@@ -14,7 +14,8 @@ import kotlin.system.measureTimeMillis
 fun main(args: Array<String>) {
     println("Total time: " + measureTimeMillis {
         val inFile = File(args[0])
-        val library = Library.create(inFile.parentFile) + Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
+        val library = (inFile.parentFile?.let { Library.create(it) } ?: Library.LibraryPackage("empty", emptyMap())) +
+                Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
         val input = FileInputStream(inFile)
         val output = PrintStream(FileOutputStream(File(args[1].replace(".qz", ".c"))))
         var src = ""

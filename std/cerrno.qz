@@ -1,0 +1,21 @@
+// Bindings for errno.h
+
+%%
+#include <errno.h>
+%%
+
+fn set_errno(value: int) {
+    %%errno = value%%;
+}
+
+fn get_errno(): int {
+    return %%errno%%;
+}
+
+fn get_EDOM(): int {
+    return %%EDOM%%;
+}
+
+fn get_ERANGE(): int {
+    return %%ERANGE%%;
+}
