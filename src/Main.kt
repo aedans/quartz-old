@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
         val library = (inFile.parentFile?.let { Library.create(it) } ?: Library.LibraryPackage("empty", emptyMap())) +
                 Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
         val input = FileInputStream(inFile)
-        val output = PrintStream(FileOutputStream(File(args[1].replace(".qz", ".c"))))
+        val output = PrintStream(FileOutputStream(File(args[1])))
         var src = ""
 
         println(library.toString(0))

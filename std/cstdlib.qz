@@ -4,10 +4,23 @@
 #include <stdlib.h>
 %%
 
+fn get_EXIT_FAILURE(): int {
+    return %%EXIT_FAILURE%%;
+}
+
+fn get_EXIT_SUCCESS(): int {
+    return %%EXIT_SUCCESS%%;
+}
+
+fn get_RAND_MAX(): int {
+    return %%RAND_MAX%%;
+}
+
 extern fn atof(char[]): double
 extern fn atoi(char[]): int
 extern fn atol(char[]): long
 extern fn abort()
+extern fn atexit(() -> void): int
 extern fn exit(int)
 extern fn getenv(char[]): char[]
 extern fn system(char[]): int

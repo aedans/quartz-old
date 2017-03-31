@@ -1,0 +1,10 @@
+import std.cstdlib
+import std.cstdio
+
+fn main() {
+    atexit(hello);
+}
+
+fn hello() {
+    printf("Hello, World!");
+}
