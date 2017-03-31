@@ -11,6 +11,7 @@ import quartz.compiler.semantics.unwrapExpressions
 import quartz.compiler.semantics.verifyTypes
 import quartz.compiler.syntax.builder.toNode
 import quartz.compiler.syntax.tree.ProgramNode
+import quartz.compiler.syntax.tree.import.Library
 import quartz.compiler.visitor.plus
 import java.io.InputStream
 
@@ -20,8 +21,12 @@ import java.io.InputStream
 
 object Compiler {
     fun compile(input: InputStream,
-                parser: (InputStream) -> ProgramNode = {
-                    QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program().toNode()
+                library: Library.LibraryPackage,
+                parser: (InputStream) -> QuartzParser.ProgramContext = {
+                    QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program()
+                },
+                builder: (QuartzParser.ProgramContext) -> ProgramNode = {
+                    it.toNode(library, parser)
                 },
                 analyzer: ProgramNode.() -> ProgramNode = {
                     val symbolTable = this.generateSymbolTable()
@@ -33,7 +38,7 @@ object Compiler {
                 },
                 generator: (ProgramNode) -> String = Generator::generate
     ): String {
-        var program = parser(input)
+        var program = builder(parser(input))
         println('\n' + program.toString())
         program = program.analyzer()
         println(program.toString())

@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 struct String {
     val value: char[]
@@ -13,5 +11,3 @@ fn main(): int {
 
 fn print(string: String)
     string.value.printf();
-
-extern fn printf(char[], ...)

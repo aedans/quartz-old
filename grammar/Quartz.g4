@@ -3,7 +3,7 @@ grammar Quartz;
 // PARSER
 
 program
-    : declaration*
+    : importDeclaration* declaration*
     ;
 
 // DECLARATIONS
@@ -52,6 +52,16 @@ structDeclaration
 
 structMember
     : VAR_DECLARATION_TYPE identifier ':' varType semi?
+    ;
+
+// IMPORT DECLARATION
+
+importDeclaration
+    : IMPORT packageList semi?
+    ;
+
+packageList
+    : (identifier '.')* identifier
     ;
 
 // STATEMENTS
@@ -248,8 +258,9 @@ ELSE: 'else';
 WHILE: 'while';
 STRUCT: 'struct';
 SEMICOLON: ';';
+IMPORT: 'import';
 
-KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN|IF|ELSE|WHILE|STRUCT;
+KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN|IF|ELSE|WHILE|STRUCT|IMPORT;
 
 IDENTIFIER: ([_a-zA-Z][_a-zA-Z0-9]*);
 

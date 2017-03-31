@@ -1,0 +1,15 @@
+%%
+#include <stdlib.h>
+%%
+
+extern fn atof(char[]): double
+extern fn atoi(char[]): int
+extern fn atol(char[]): long
+extern fn abort()
+extern fn exit(int)
+extern fn getenv(char[]): char[]
+extern fn system(char[]): int
+extern fn abs(int): int
+extern fn labs(long): long
+extern fn rand(): int
+extern fn srand(int): void

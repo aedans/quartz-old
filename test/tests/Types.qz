@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     val one: long = 1;
@@ -13,5 +11,3 @@ fn main(): int {
 }
 
 fn addFour(one: char, two: short, three: int, four: long): int = one + four + three + two
-
-extern fn printf(char[], ...)

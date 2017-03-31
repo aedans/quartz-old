@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     (if (_false()) "Failed" else helloWorld()).printf();
@@ -10,5 +8,3 @@ fn main(): int {
 fn helloWorld(): char[] = "Hello, World!"
 
 fn _false(): int = 0
-
-extern fn printf(char[], ...)

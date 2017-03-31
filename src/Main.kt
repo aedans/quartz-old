@@ -1,4 +1,6 @@
+
 import quartz.compiler.Compiler
+import quartz.compiler.syntax.tree.import.Library
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -12,25 +14,17 @@ import kotlin.system.measureTimeMillis
 fun main(args: Array<String>) {
     println("Total time: " + measureTimeMillis {
         val inFile = File(args[0])
-        compile(inFile, args[1])
-    } + "ms")
-}
-
-fun compile(inFile: File, outPath: String) {
-    if (inFile.isDirectory) {
-        inFile.listFiles().filter { it.extension == "qz" }.forEach {
-            compile(it, outPath)
-        }
-    } else {
+        val library = Library.create(inFile.parentFile) + Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
         val input = FileInputStream(inFile)
-        val outFile = File(outPath, inFile.nameWithoutExtension + ".c")
-        val output = PrintStream(FileOutputStream(outFile))
-
+        val output = PrintStream(FileOutputStream(File(args[1].replace(".qz", ".c"))))
         var src = ""
+
+        println(library.toString(0))
+
         println("Compiled in " + measureTimeMillis {
-            src = Compiler.compile(input)
+            src = Compiler.compile(input, library)
         } + "ms\n")
 
         output.print(src)
-    }
+    } + "ms")
 }

@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     val counter = countTo;
@@ -17,5 +15,3 @@ fn countTo(i: int, printer: (int) -> void) {
 
 fn print(i: int)
     printf("%d ", i);
-
-extern fn printf(char[], ...)

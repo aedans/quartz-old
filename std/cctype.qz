@@ -1,0 +1,18 @@
+%%
+#include <ctype.h>
+%%
+
+extern fn isalnum(int): int
+extern fn isalpha(int): int
+extern fn iscnrtl(int): int
+extern fn isdigit(int): int
+extern fn isgraph(int): int
+extern fn islower(int): int
+extern fn isprint(int): int
+extern fn ispunct(int): int
+extern fn isspace(int): int
+extern fn isupper(int): int
+extern fn isxdigit(int): int
+
+extern fn tolower(int): int
+extern fn toupper(int): int

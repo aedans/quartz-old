@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     val l = if (_false()) "Failed" else helloWorld();
@@ -13,5 +11,3 @@ fn helloWorld(): char[] = "Hello, World!"
 fn _true(): int = 1
 
 fn _false(): int = 0
-
-extern fn printf(char[], ...)

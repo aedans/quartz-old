@@ -1,0 +1,10 @@
+%%
+#include <stdio.h>
+%%
+
+extern fn remove(char[]): int
+extern fn printf(char[], ...)
+extern fn getchar(): int
+extern fn putchar(int): int
+extern fn puts(char[])
+extern fn perror(char[])

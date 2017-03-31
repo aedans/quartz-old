@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 struct Int {
     val value: int
@@ -21,5 +19,3 @@ fn dec(i: Int): Int = (i.value - 1).Int()
 
 fn print(i: Int)
     printf("%d ", i.value);
-
-extern fn printf(char[], ...)

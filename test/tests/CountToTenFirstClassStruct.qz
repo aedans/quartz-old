@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 struct CountInfo {
     val tester: (int) -> int
@@ -29,5 +27,3 @@ fn decrement(i: int): int {
 
 fn printInt(i: int)
     printf("%d ", i);
-
-extern fn printf(char[], ...)

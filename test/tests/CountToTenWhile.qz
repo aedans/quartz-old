@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     10.countTo();
@@ -15,5 +13,3 @@ fn countTo(max: int) {
 
 fn printInt(i: int)
     printf("%d ", i);
-
-extern fn printf(char[], ...)

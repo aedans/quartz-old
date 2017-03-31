@@ -1,6 +1,4 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     val added = 1 + 2;
@@ -10,5 +8,3 @@ fn main(): int {
     printf("7 = %d", added + subtracted + multiplied + divided);
     return 0;
 }
-
-extern fn printf(char[], ...)

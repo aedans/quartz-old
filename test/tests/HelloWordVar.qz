@@ -1,11 +1,7 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     val helloWorld = "Hello, World!";
     helloWorld.printf();
     return 0;
 }
-
-extern fn printf(char[], ...)

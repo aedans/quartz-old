@@ -1,10 +1,6 @@
-%%
-#include <stdio.h>
-%%
+import std.cio
 
 fn main(): int {
     "Hello, World!".printf();
     return 0;
 }
-
-extern fn printf(char[], ...)

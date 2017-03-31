@@ -1,0 +1,23 @@
+%%
+#include <math.h>
+%%
+
+extern fn acos(double): double
+extern fn asin(double): double
+extern fn atan(double): double
+extern fn atan2(double, double): double
+extern fn cos(double): double
+extern fn cosh(double): double
+extern fn sin(double): double
+extern fn sinh(double): double
+extern fn tanh(double): double
+extern fn exp(double): double
+extern fn ldexp(double, int): double
+extern fn log(double): double
+extern fn log10(double): double
+extern fn pow(double, double): double
+extern fn sqrt(double): double
+extern fn ciel(double): double
+extern fn fabs(double): double
+extern fn floor(double): double
+extern fn fmod(double, double): double
