@@ -51,7 +51,7 @@ private fun VarDeclarationNode.verify(symbolTable: SymbolTable): VarDeclarationN
 }
 
 private fun ReturnNode.verify(symbolTable: SymbolTable): ReturnNode {
-    return ReturnNode(expressionNode.verify(symbolTable))
+    return ReturnNode(expression.verify(symbolTable))
 }
 
 private fun IfStatementNode.verify(symbolTable: SymbolTable): IfStatementNode {

@@ -7,7 +7,6 @@ import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.generateConstructors
 import quartz.compiler.semantics.generateSymbolTable
-import quartz.compiler.semantics.unwrapExpressions
 import quartz.compiler.semantics.verifyTypes
 import quartz.compiler.syntax.builder.toNode
 import quartz.compiler.syntax.tree.ProgramNode
@@ -32,8 +31,7 @@ object Compiler {
                     val symbolTable = this.generateSymbolTable()
                     (
                             { it: ProgramNode -> it.generateConstructors(symbolTable) } +
-                            { it.verifyTypes(symbolTable) } +
-                            { it.unwrapExpressions() }
+                            { it.verifyTypes(symbolTable) }
                     )(this)
                 },
                 generator: (ProgramNode) -> String = Generator::generate

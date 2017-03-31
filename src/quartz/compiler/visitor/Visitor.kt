@@ -8,7 +8,6 @@ typealias Visitor<T> = (T) -> T
 
 operator fun <T> Visitor<T>.plus(visitor: Visitor<T>): Visitor<T> {
     return { t ->
-        val newT = this.invoke(t)
-        visitor(newT)
+        visitor(this(t))
     }
 }

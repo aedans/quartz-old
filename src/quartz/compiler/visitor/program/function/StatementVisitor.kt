@@ -1,9 +1,11 @@
 package quartz.compiler.visitor.program.function
 
 import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.visitor.Visitor
 
 /**
  * Created by Aedan Smith.
@@ -28,4 +30,19 @@ fun StatementNode.visit(
         is VarAssignmentNode -> varAssignmentVisitor(this)
         else -> throw QuartzException("Unrecognized node $this")
     }
+}
+
+fun StatementNode.visitExpressions(visitor: Visitor<ExpressionNode>): StatementNode {
+    return this.visit(
+            { visitor(this) },
+            { VarDeclarationNode(name, expression?.let(visitor), type, mutable) },
+            { ReturnNode(visitor(expression)) },
+            { IfStatementNode(
+                    visitor(test),
+                    trueStatements.map { it.visitExpressions(visitor) },
+                    falseStatements.map { it.visitExpressions(visitor) }
+            ) },
+            { WhileLoopNode(visitor(test), statements.map { it.visitExpressions(visitor) }) },
+            { FnCallNode(visitor(expression), expressions.map(visitor), type) }
+    )
 }

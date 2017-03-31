@@ -1,9 +1,11 @@
 package quartz.compiler.visitor
 
 import quartz.compiler.syntax.tree.ProgramNode
+import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 import quartz.compiler.visitor.program.visit
+import quartz.compiler.visitor.program.visitExpressions
 
 /**
  * Created by Aedan Smith.
@@ -18,5 +20,11 @@ fun ProgramNode.visit(
             structDeclarations.map { structDeclarationVisitor(it) },
             externFnDeclarations,
             inlineCNodes
+    )
+}
+
+fun ProgramNode.visitExpressions(visitor: Visitor<ExpressionNode>): ProgramNode {
+    return this.visit(
+        { fnDeclaration -> fnDeclaration.visitExpressions(visitor) }
     )
 }

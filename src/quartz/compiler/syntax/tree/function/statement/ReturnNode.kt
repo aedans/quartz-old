@@ -7,8 +7,8 @@ import quartz.compiler.syntax.tree.function.StatementNode
  * Created by Aedan Smith.
  */
 
-class ReturnNode(val expressionNode: ExpressionNode) : StatementNode {
+class ReturnNode(val expression: ExpressionNode) : StatementNode {
     override fun toString(): String {
-        return "return($expressionNode)"
+        return "return($expression)"
     }
 }

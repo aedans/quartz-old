@@ -1,5 +1,6 @@
 package quartz.compiler.generator.program
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.generator.util.visit
 import quartz.compiler.generator.util.visitName
 import quartz.compiler.syntax.tree.function.ExpressionNode
@@ -59,18 +60,18 @@ fun VarDeclarationNode.visit(string: StringBuilder) {
     name.visitName(string)
     if (expression != null) {
         string.append(" = ")
-        expression.visit(string)
+        expression.visitExpression(string)
     }
 }
 
 fun ReturnNode.visit(string: StringBuilder) {
     string.append("return ")
-    expressionNode.visit(string)
+    expression.visitExpression(string)
 }
 
 fun IfStatementNode.visit(string: StringBuilder, depth: Int) {
     string.append("if (")
-    test.visit(string)
+    test.visitExpression(string)
     string.appendln("){")
     for (statement in trueStatements) {
         string.append("    " * (depth + 1))
@@ -91,7 +92,7 @@ fun IfStatementNode.visit(string: StringBuilder, depth: Int) {
 
 fun WhileLoopNode.visit(string: StringBuilder, depth: Int) {
     string.append("while (")
-    test.visit(string)
+    test.visitExpression(string)
     string.appendln("){")
     for (statement in statements) {
         string.append("    " * (depth + 1))
@@ -101,7 +102,7 @@ fun WhileLoopNode.visit(string: StringBuilder, depth: Int) {
     string.append(("    " * depth) + "}")
 }
 
-fun ExpressionNode.visit(string: StringBuilder) {
+fun ExpressionNode.visitExpression(string: StringBuilder) {
     this.visit(
             { visit(string); this },
             { visit(string); this },
@@ -112,7 +113,7 @@ fun ExpressionNode.visit(string: StringBuilder) {
             { visit(string); this },
             { visit(string); this },
             { visit(string); this },
-            { visit(string); this }
+            { throw QuartzException("Unrecognized node $this") }
     )
 }
 
@@ -132,14 +133,14 @@ fun CastNode.visit(string: StringBuilder) {
     string.append('(')
     (type ?: throw Exception("Unknown type for $this")).visit(string)
     string.append(") (")
-    expression.visit(string)
+    expression.visitExpression(string)
     string.append(')')
 }
 
 fun UnaryOperatorNode.visit(string: StringBuilder) {
     string.append(id)
     string.append('(')
-    expression.visit(string)
+    expression.visitExpression(string)
     string.append(')')
 }
 
@@ -147,43 +148,43 @@ fun BinaryOperatorNode.visit(string: StringBuilder) {
     when (id) {
         BinaryOperatorNode.ID.ARRAY_ACCESS -> {
             string.append('(')
-            expr1.visit(string)
+            expr1.visitExpression(string)
             string.append(")[")
-            expr2.visit(string)
+            expr2.visitExpression(string)
             string.append(']')
         }
         else -> {
             string.append('(')
-            expr1.visit(string)
+            expr1.visitExpression(string)
             string.append(')')
             string.append(id)
             string.append('(')
-            expr2.visit(string)
+            expr2.visitExpression(string)
             string.append(')')
         }
     }
 }
 
 fun MemberAccessNode.visit(string: StringBuilder) {
-    expression.visit(string)
+    expression.visitExpression(string)
     string.append('.')
     name.visitName(string)
 }
 
 fun FnCallNode.visit(string: StringBuilder) {
-    expression.visit(string)
+    expression.visitExpression(string)
     string.append('(')
     expressions.dropLast(1).forEach {
-        it.visit(string)
+        it.visitExpression(string)
         string.append(", ")
     }
     if (!expressions.isEmpty())
-        expressions.last().visit(string)
+        expressions.last().visitExpression(string)
     string.append(')')
 }
 
 fun VarAssignmentNode.visit(string: StringBuilder) {
     name.visitName(string)
     string.append(" = ")
-    expression.visit(string)
+    expression.visitExpression(string)
 }

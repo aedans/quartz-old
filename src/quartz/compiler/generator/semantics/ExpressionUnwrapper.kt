@@ -1,4 +1,4 @@
-package quartz.compiler.semantics
+package quartz.compiler.generator.semantics
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.syntax.tree.ProgramNode
@@ -30,7 +30,7 @@ private fun StatementNode.unwrapExpressions(newStatements: MutableList<Statement
                 VarDeclarationNode(name, expression?.unwrap(newStatements), type, mutable)
             },
             returnVisitor = {
-                ReturnNode(expressionNode.unwrap(newStatements))
+                ReturnNode(expression.unwrap(newStatements))
             },
             ifStatementVisitor = {
                 IfStatementNode(
