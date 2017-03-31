@@ -45,9 +45,9 @@ fun QuartzParser.ReturnStatementContext.toNode(): ReturnNode {
 fun QuartzParser.VarDeclarationContext.toNode(): VarDeclarationNode {
     return VarDeclarationNode(
             name.text,
+            value.toNode(),
             if (type != null) type.toType() else null,
-            declarationType.text == "var",
-            value.toNode()
+            declarationType.text == "var"
     )
 }
 
@@ -158,7 +158,7 @@ fun QuartzParser.ArrayAccessContext.toNode(expression: ExpressionNode): Expressi
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: ExpressionNode): MemberAccessNode {
-    return MemberAccessNode(identifier().text, null, expression)
+    return MemberAccessNode(identifier().text, expression, null)
 }
 
 fun QuartzParser.PostfixCallContext.toNode(expression: ExpressionNode): FnCallNode {

@@ -29,8 +29,7 @@ fun ProgramNode.verifyTypes(symbolTable: SymbolTable): ProgramNode {
 }
 
 private fun FnDeclarationNode.verify(symbolTable: SymbolTable): FnDeclarationNode {
-    val localSymbolTable = LocalSymbolTable(symbolTable)
-    this.args.forEach { localSymbolTable.addVar(it.first, it.second) }
+    val localSymbolTable = localSymbolTable(symbolTable)
 
     return this.visit({ statement -> statement.verify(localSymbolTable) })
 }
@@ -47,10 +46,8 @@ private fun StatementNode.verify(symbolTable: SymbolTable): StatementNode {
 
 private fun VarDeclarationNode.verify(symbolTable: SymbolTable): VarDeclarationNode {
     val newExpression = expression?.verify(symbolTable)
-    val newType = type.verifyAs(newExpression?.type)
-    symbolTable.addVar(name, newType ?: throw QuartzException("Unknown type for $this"))
 
-    return VarDeclarationNode(name, newType, mutable, newExpression)
+    return VarDeclarationNode(name, newExpression, type.verifyAs(newExpression?.type), mutable).apply { addTo(symbolTable) }
 }
 
 private fun ReturnNode.verify(symbolTable: SymbolTable): ReturnNode {
@@ -165,8 +162,8 @@ private fun MemberAccessNode.verify(symbolTable: SymbolTable): MemberAccessNode 
 
     return MemberAccessNode(
             name,
-            memberType,
-            newExpression
+            newExpression,
+            memberType
     )
 }
 
@@ -188,7 +185,7 @@ private fun ExpressionNode.verifyAs(type: Type?): ExpressionNode {
     when {
         this.type == null -> return this.withType(type)
         this.type == type || type == null -> return this
-        this.type!!.canCastTo(type) -> return CastNode(type, this)
+        this.type!!.canCastTo(type) -> return CastNode(this, type)
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }

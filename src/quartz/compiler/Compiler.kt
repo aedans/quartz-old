@@ -6,7 +6,7 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.generateConstructors
-import quartz.compiler.semantics.symboltable.generateSymbolTable
+import quartz.compiler.semantics.generateSymbolTable
 import quartz.compiler.semantics.unwrapExpressions
 import quartz.compiler.semantics.verifyTypes
 import quartz.compiler.syntax.builder.toNode

@@ -7,9 +7,9 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class MemberAccessNode(val name: String, override val type: Type?, val expression: ExpressionNode): ExpressionNode {
+class MemberAccessNode(val name: String, val expression: ExpressionNode, override val type: Type?): ExpressionNode {
     override fun withType(type: Type?): MemberAccessNode {
-        return MemberAccessNode(name, type, expression)
+        return MemberAccessNode(name, expression, type)
     }
 
     override fun toString(): String {

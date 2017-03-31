@@ -27,7 +27,7 @@ private fun FnDeclarationNode.unwrapExpressions(): FnDeclarationNode {
 private fun StatementNode.unwrapExpressions(newStatements: MutableList<StatementNode>): StatementNode {
     return this.visit(
             varDeclarationVisitor = {
-                VarDeclarationNode(name, type, mutable, expression?.unwrap(newStatements))
+                VarDeclarationNode(name, expression?.unwrap(newStatements), type, mutable)
             },
             returnVisitor = {
                 ReturnNode(expressionNode.unwrap(newStatements))
@@ -54,7 +54,7 @@ private fun StatementNode.unwrapExpressions(newStatements: MutableList<Statement
 private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): ExpressionNode {
     return this.visit(
             castVisitor = {
-                CastNode(type, expression.unwrap(newStatements))
+                CastNode(expression.unwrap(newStatements), type)
             },
             unaryOperatorVisitor = {
                 UnaryOperatorNode(expression.unwrap(newStatements), id, type)
@@ -66,12 +66,12 @@ private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): Ex
                 FnCallNode(expression.unwrap(newStatements), expressions.map { it.unwrap(newStatements) }, type)
             },
             memberAccessVisitor = {
-                MemberAccessNode(name, type, expression.unwrap(newStatements))
+                MemberAccessNode(name, expression.unwrap(newStatements), type)
             },
             ifExpressionVisitor = {
                 val tempVarName = "temp${hashCode()}"
-                newStatements.add(VarDeclarationNode(tempVarName, type
-                        ?: throw QuartzException("Unknown type for $this"), true, null))
+                newStatements.add(VarDeclarationNode(tempVarName, null, type
+                        ?: throw QuartzException("Unknown type for $this"), true))
 
                 val trueStatements = mutableListOf<StatementNode>()
                 trueStatements.add(VarAssignmentNode(tempVarName, ifTrue.unwrap(trueStatements)))
