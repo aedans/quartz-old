@@ -4,6 +4,7 @@ import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.util.Type
 import quartz.compiler.visitor.program.visit
 import quartz.compiler.visitor.program.visitExpressions
 
@@ -27,4 +28,8 @@ fun ProgramNode.visitExpressions(visitor: Visitor<ExpressionNode>): ProgramNode 
     return this.visit(
         { fnDeclaration -> fnDeclaration.visitExpressions(visitor) }
     )
+}
+
+fun ProgramNode.visitTypes(visitor: Visitor<Type?>): ProgramNode {
+    return this.visitExpressions { it.withType(visitor(it.type)) }
 }

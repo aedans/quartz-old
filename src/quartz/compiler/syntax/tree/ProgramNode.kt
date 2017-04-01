@@ -1,6 +1,5 @@
 package quartz.compiler.syntax.tree
 
-import quartz.compiler.semantics.symboltable.GlobalSymbolTable
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.misc.ExternFnDeclarationNode
 import quartz.compiler.syntax.tree.misc.InlineCNode
@@ -16,8 +15,6 @@ data class ProgramNode(
         val externFnDeclarations: List<ExternFnDeclarationNode>,
         val inlineCNodes: List<InlineCNode>
 ) {
-    val symbolTable = GlobalSymbolTable()
-
     override fun toString(): String {
         var s = ""
         fnDeclarations.forEach { s += it.toString() + "\n\n" }

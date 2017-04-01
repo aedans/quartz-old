@@ -1,7 +1,6 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.exceptions.QuartzException
-import quartz.compiler.semantics.symboltable.LocalSymbolTable
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
@@ -14,6 +13,7 @@ import quartz.compiler.util.plus
 import quartz.compiler.util.types.ArrayType
 import quartz.compiler.util.types.FunctionType
 import quartz.compiler.util.types.Primitives
+import quartz.compiler.util.types.StructType
 import quartz.compiler.visitor.program.function.visit
 import quartz.compiler.visitor.program.visit
 import quartz.compiler.visitor.visit
@@ -31,7 +31,7 @@ fun ProgramNode.verifyTypes(symbolTable: SymbolTable): ProgramNode {
 private fun FnDeclarationNode.verify(symbolTable: SymbolTable): FnDeclarationNode {
     val localSymbolTable = localSymbolTable(symbolTable)
 
-    return this.visit({ statement -> statement.verify(localSymbolTable) })
+    return visit({ it.verify(localSymbolTable) })
 }
 
 private fun StatementNode.verify(symbolTable: SymbolTable): StatementNode {
@@ -55,7 +55,7 @@ private fun ReturnNode.verify(symbolTable: SymbolTable): ReturnNode {
 }
 
 private fun IfStatementNode.verify(symbolTable: SymbolTable): IfStatementNode {
-    val localSymbolTable = LocalSymbolTable(symbolTable)
+    val localSymbolTable = symbolTable.localSymbolTable()
     return IfStatementNode(
             test.verify(symbolTable).verifyAs(Primitives.bool),
             trueStatements.map { it.verify(localSymbolTable) },
@@ -64,7 +64,7 @@ private fun IfStatementNode.verify(symbolTable: SymbolTable): IfStatementNode {
 }
 
 private fun WhileLoopNode.verify(symbolTable: SymbolTable): WhileLoopNode {
-    val localSymbolTable = LocalSymbolTable(symbolTable)
+    val localSymbolTable = symbolTable.localSymbolTable()
     return WhileLoopNode(
             test.verify(symbolTable),
             statements.map { it.verify(localSymbolTable) }
@@ -87,7 +87,7 @@ private fun IdentifierNode.verify(symbolTable: SymbolTable): IdentifierNode {
     return IdentifierNode(name,
             when {
                 type == null -> expectedType
-                type != expectedType -> throw QuartzException("Expected $expectedType, found $this")
+                type != expectedType -> throw QuartzException("Expected $expectedType, found $type ($this)")
                 else -> type
             }
     )
@@ -155,7 +155,7 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
 
 private fun MemberAccessNode.verify(symbolTable: SymbolTable): MemberAccessNode {
     val newExpression = expression.verify(symbolTable)
-    val owner = symbolTable.getGlobalSymbolTable().structs[newExpression.type.toString()]
+    val owner = symbolTable.typeTable.get(newExpression.type.toString()) as? StructType
             ?: throw QuartzException("Unknown struct ${newExpression.type}")
     val memberType = owner.members[name]
             ?: throw QuartzException("Unknown member $owner.$type")
@@ -182,19 +182,19 @@ private fun IfExpressionNode.verify(symbolTable: SymbolTable): IfExpressionNode 
 }
 
 private fun ExpressionNode.verifyAs(type: Type?): ExpressionNode {
-    when {
-        this.type == null -> return this.withType(type)
-        this.type == type || type == null -> return this
-        this.type!!.canCastTo(type) -> return CastNode(this, type)
+    return when {
+        this.type == null -> this.withType(type)
+        this.type == type || type == null -> this
+        this.type!!.canCastTo(type) -> CastNode(this, type)
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }
 
 private fun Type?.verifyAs(type: Type?): Type? {
-    when {
-        this == null -> return type
-        this == type || type == null -> return this
-        this.canCastTo(type) -> return type
+    return when {
+        this == null -> type
+        this == type || type == null -> this
+        this.canCastTo(type) -> type
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }

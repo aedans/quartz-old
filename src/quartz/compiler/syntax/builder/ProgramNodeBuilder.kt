@@ -26,28 +26,13 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
     return programNode
 }
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 fun QuartzParser.DeclarationContext.toNode(): Any {
     return when {
-        fnDeclaration() != null -> {
-            val fnDeclarationNode = fnDeclaration().toNode()
-            println("Found $fnDeclarationNode\n")
-            fnDeclarationNode
-        }
-        externFnDeclaration() != null -> {
-            val externFn = externFnDeclaration().toNode()
-            println("Found $externFn\n")
-            externFn
-        }
-        inlineC() != null -> {
-            val inlineCNode = inlineC().toNode()
-            println("Found $inlineCNode\n")
-            inlineCNode
-        }
-        structDeclaration() != null -> {
-            val structNode = structDeclaration().toNode()
-            println("Found $structNode\n")
-            structNode
-        }
+        fnDeclaration() != null -> fnDeclaration().toNode()
+        externFnDeclaration() != null -> externFnDeclaration().toNode()
+        inlineC() != null -> inlineC().toNode().also { println("Found $it\n") }
+        structDeclaration() != null -> structDeclaration().toNode()
         else -> throw QuartzException("Error translating $text")
-    }
+    }.also { println("Found $it") }
 }

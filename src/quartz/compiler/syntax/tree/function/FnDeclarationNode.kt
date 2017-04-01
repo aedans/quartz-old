@@ -1,5 +1,6 @@
 package quartz.compiler.syntax.tree.function
 
+import quartz.compiler.syntax.tree.GlobalDeclarationNode
 import quartz.compiler.util.Type
 
 /**
@@ -11,14 +12,9 @@ class FnDeclarationNode(
         val args: List<Pair<String, Type>>,
         val returnType: Type,
         val statements: List<StatementNode> = listOf()
-) {
+) : GlobalDeclarationNode {
     override fun toString(): String {
-        @Suppress("unused")
-        fun Pair<String, Type>.string() = "$second $first"
-        var s = "$name("
-        args.dropLast(1).forEach { s += it.string() + ", " }
-        if (!args.isEmpty()) s += args.last().string()
-        s += "): $returnType"
+        var s = "$name$args: $returnType"
         statements.forEach { s += '\n' + it.toString(1) }
         return s
     }

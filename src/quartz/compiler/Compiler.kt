@@ -13,6 +13,7 @@ import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.import.Library
 import quartz.compiler.visitor.plus
 import java.io.InputStream
+import java.io.OutputStream
 
 /**
  * Created by Aedan Smith.
@@ -20,6 +21,7 @@ import java.io.InputStream
 
 object Compiler {
     fun compile(input: InputStream,
+                output: OutputStream,
                 library: Library.LibraryPackage,
                 parser: (InputStream) -> QuartzParser.ProgramContext = {
                     QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program()
@@ -34,12 +36,13 @@ object Compiler {
                             { it.verifyTypes(symbolTable) }
                     )(this)
                 },
-                generator: (ProgramNode) -> String = Generator::generate
-    ): String {
+                generator: (ProgramNode, OutputStream) -> Unit = Generator::write
+    ) {
+        println(library.toString(0))
         var program = builder(parser(input))
         println('\n' + program.toString())
         program = program.analyzer()
         println(program.toString())
-        return generator(program)
+        generator(program, output)
     }
 }

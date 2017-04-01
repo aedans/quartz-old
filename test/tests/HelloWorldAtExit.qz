@@ -1,7 +1,7 @@
 import std.cstdlib
 import std.cstdio
 
-fn main() {
+fn main(): int {
     atexit(hello);
 }
 
