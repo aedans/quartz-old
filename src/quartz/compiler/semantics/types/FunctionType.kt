@@ -8,6 +8,10 @@ import quartz.compiler.util.Type
  */
 
 data class FunctionType(val function: Function) : Type {
+    override fun mapTypes(function: (Type?) -> Type?): Type {
+        return FunctionType(this.function.mapTypes(function))
+    }
+
     override fun canCastTo(type: Type): Boolean {
         return type == this
     }

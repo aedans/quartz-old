@@ -17,6 +17,10 @@ object Primitives {
 }
 
 private data class NumType(val string: String) : Type {
+    override fun mapTypes(function: (Type?) -> Type?): Type {
+        return this
+    }
+
     override fun canCastTo(type: Type): Boolean {
         return type is NumType
     }
@@ -27,6 +31,10 @@ private data class NumType(val string: String) : Type {
 }
 
 private class QVoid : Type {
+    override fun mapTypes(function: (Type?) -> Type?): Type {
+        return this
+    }
+
     override fun canCastTo(type: Type): Boolean {
         return type is QVoid
     }

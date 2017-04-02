@@ -13,6 +13,6 @@ class TypealiasNode(val name: String, val type: Type) : GlobalDeclarationNode {
     }
 
     fun mapTypes(function: (Type?) -> Type?): TypealiasNode {
-        return TypealiasNode(name, function(type)!!)
+        return TypealiasNode(name, function(type.mapTypes(function))!!)
     }
 }

@@ -14,7 +14,7 @@ class VarDeclarationNode(val name: String, val expression: ExpressionNode?, val 
     }
 
     override fun mapTypes(function: (Type?) -> Type?): StatementNode {
-        return VarDeclarationNode(name, expression?.mapTypes(function), function(type), mutable)
+        return VarDeclarationNode(name, expression?.mapTypes(function), function(type?.mapTypes(function)), mutable)
     }
 
     override fun toString(): String {

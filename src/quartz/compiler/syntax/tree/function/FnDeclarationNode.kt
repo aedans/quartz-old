@@ -30,8 +30,8 @@ class FnDeclarationNode(
     fun mapTypes(function: (Type?) -> Type?): FnDeclarationNode {
         return FnDeclarationNode(
                 name,
-                args.map { it.first to function(it.second)!! },
-                function(returnType)!!,
+                args.map { it.first to function(it.second.mapTypes(function))!! },
+                function(returnType.mapTypes(function))!!,
                 statements.map { it.mapTypes(function) }
         )
     }

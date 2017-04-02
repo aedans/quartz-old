@@ -13,7 +13,7 @@ class MemberAccessNode(val name: String, val expression: ExpressionNode, overrid
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return MemberAccessNode(name, expression.mapTypes(function), function(type))
+        return MemberAccessNode(name, expression.mapTypes(function), function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): MemberAccessNode {

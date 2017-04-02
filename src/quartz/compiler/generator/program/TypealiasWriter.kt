@@ -12,6 +12,7 @@ import quartz.compiler.semantics.types.FunctionType
  */
 
 fun ProgramOutputStream.typedef(type: AliasedType) {
+    declare(type.type)
     declare("typedef_${type.name}") {
         name("typedef")
         type(type.type)

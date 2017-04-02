@@ -13,7 +13,7 @@ class UnaryOperatorNode(val expression: ExpressionNode, val id: ID, override val
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return UnaryOperatorNode(expression.mapTypes(function), id, function(type))
+        return UnaryOperatorNode(expression.mapTypes(function), id, function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): UnaryOperatorNode {

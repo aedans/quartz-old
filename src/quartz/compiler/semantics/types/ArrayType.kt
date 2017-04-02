@@ -7,6 +7,10 @@ import quartz.compiler.util.Type
  */
 
 data class ArrayType(val type: Type) : Type {
+    override fun mapTypes(function: (Type?) -> Type?): Type {
+        return ArrayType(function(type.mapTypes(function))!!)
+    }
+
     override fun canCastTo(type: Type): Boolean {
         return type == this
     }

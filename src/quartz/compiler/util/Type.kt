@@ -7,6 +7,8 @@ package quartz.compiler.util
 interface Type {
     fun canCastTo(type: Type): Boolean
 
+    fun mapTypes(function: (Type?) -> Type?): Type
+
     companion object {
         fun canCast(t1: Type, t2: Type): Boolean {
             return t1.canCastTo(t2) || t2.canCastTo(t1)

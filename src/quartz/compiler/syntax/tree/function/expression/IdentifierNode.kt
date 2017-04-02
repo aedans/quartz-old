@@ -13,7 +13,7 @@ class IdentifierNode(val name: String, override val type: Type?) : ExpressionNod
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return IdentifierNode(name, function(type))
+        return IdentifierNode(name, function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): ExpressionNode {

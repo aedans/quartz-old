@@ -1,0 +1,8 @@
+import std.cstdio
+
+typealias string = char[]
+
+fn main(argc: int, argv: string[]): int {
+    argv[0].printf();
+    return 0;
+}

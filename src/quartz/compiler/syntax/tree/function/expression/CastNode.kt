@@ -13,7 +13,7 @@ class CastNode(val expression: ExpressionNode, override val type: Type?) : Expre
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return CastNode(expression.mapTypes(function), function(type))
+        return CastNode(expression.mapTypes(function), function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): CastNode {

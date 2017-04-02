@@ -18,7 +18,12 @@ class IfExpressionNode(val test: ExpressionNode, val ifTrue: ExpressionNode, val
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return IfExpressionNode(test.mapTypes(function), ifTrue.mapTypes(function), ifFalse.mapTypes(function), function(type))
+        return IfExpressionNode(
+                test.mapTypes(function),
+                ifTrue.mapTypes(function),
+                ifFalse.mapTypes(function),
+                function(type?.mapTypes(function))
+        )
     }
 
     override fun withType(type: Type?): IfExpressionNode {

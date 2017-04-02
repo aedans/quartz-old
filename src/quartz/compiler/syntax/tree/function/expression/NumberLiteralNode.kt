@@ -13,7 +13,7 @@ class NumberLiteralNode(val string: String, override val type: Type?) : Expressi
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return NumberLiteralNode(string, function(type))
+        return NumberLiteralNode(string, function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): NumberLiteralNode {

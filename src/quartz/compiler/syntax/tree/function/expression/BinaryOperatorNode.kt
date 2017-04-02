@@ -13,7 +13,7 @@ class BinaryOperatorNode(val expr1: ExpressionNode, val expr2: ExpressionNode, v
     }
 
     override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return BinaryOperatorNode(expr1.mapTypes(function), expr2.mapTypes(function), id, function(type))
+        return BinaryOperatorNode(expr1.mapTypes(function), expr2.mapTypes(function), id, function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): BinaryOperatorNode {

@@ -21,7 +21,7 @@ class FnCallNode(val expression: ExpressionNode, val expressions: List<Expressio
         return FnCallNode(
                 expression.mapTypes(function),
                 expressions.map { it.mapTypes(function) },
-                function(type)
+                function(type?.mapTypes(function))
         )
     }
 
