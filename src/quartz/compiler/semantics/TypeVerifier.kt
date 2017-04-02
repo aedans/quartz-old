@@ -10,11 +10,9 @@ import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
+import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.util.Type
 import quartz.compiler.util.plus
-import quartz.compiler.visitor.program.function.visit
-import quartz.compiler.visitor.program.visit
-import quartz.compiler.visitor.visit
 
 /**
  * Created by Aedan Smith.
@@ -22,23 +20,25 @@ import quartz.compiler.visitor.visit
 
 fun ProgramNode.verifyTypes(): ProgramNode {
     val newNode = mapTypes { (it as? NamedType)?.verify(symbolTable.typeTable) ?: it }
-    return newNode.visit({ fnDeclaration -> fnDeclaration.verify(newNode.symbolTable) })
+    return newNode.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(newNode.symbolTable) }
 }
 
 private fun FnDeclarationNode.verify(symbolTable: SymbolTable): FnDeclarationNode {
     val localSymbolTable = localSymbolTable(symbolTable)
 
-    return visit({ it.verify(localSymbolTable) })
+    return mapStatements { it.verify(localSymbolTable) }
 }
 
 private fun StatementNode.verify(symbolTable: SymbolTable): StatementNode {
-    return this.visit(
-            varDeclarationVisitor = { verify(symbolTable) },
-            returnVisitor = { verify(symbolTable) },
-            ifStatementVisitor = { verify(symbolTable) },
-            whileLoopVisitor = { verify(symbolTable) },
-            fnCallVisitor = { verify(symbolTable) }
-    )
+    return when (this) {
+        is InlineCNode -> this
+        is VarDeclarationNode -> verify(symbolTable)
+        is ReturnNode -> verify(symbolTable)
+        is IfStatementNode -> verify(symbolTable)
+        is WhileLoopNode -> verify(symbolTable)
+        is FnCallNode -> verify(symbolTable)
+        else -> throw QuartzException("Unrecognized node $this")
+    }
 }
 
 private fun VarDeclarationNode.verify(symbolTable: SymbolTable): VarDeclarationNode {
@@ -69,14 +69,18 @@ private fun WhileLoopNode.verify(symbolTable: SymbolTable): WhileLoopNode {
 }
 
 private fun ExpressionNode.verify(symbolTable: SymbolTable): ExpressionNode {
-    return this.visit(
-            identifierVisitor = { verify(symbolTable) },
-            unaryOperatorVisitor = { verify(symbolTable) },
-            binaryOperatorVisitor = { verify(symbolTable) },
-            fnCallVisitor = { verify(symbolTable) },
-            memberAccessVisitor = { verify(symbolTable) },
-            ifExpressionVisitor = { verify(symbolTable) }
-    )
+    return when (this) {
+        is InlineCNode -> this
+        is NumberLiteralNode -> this
+        is StringLiteralNode -> this
+        is IdentifierNode -> verify(symbolTable)
+        is UnaryOperatorNode -> verify(symbolTable)
+        is BinaryOperatorNode -> verify(symbolTable)
+        is FnCallNode -> verify(symbolTable)
+        is MemberAccessNode -> verify(symbolTable)
+        is IfExpressionNode -> verify(symbolTable)
+        else -> throw QuartzException("Unrecognized node $this")
+    }
 }
 
 private fun IdentifierNode.verify(symbolTable: SymbolTable): IdentifierNode {

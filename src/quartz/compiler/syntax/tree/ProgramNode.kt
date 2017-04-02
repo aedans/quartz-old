@@ -22,6 +22,16 @@ data class ProgramNode(
 ) {
     val symbolTable = generateSymbolTable()
 
+    fun mapFnDeclarations(function: (FnDeclarationNode) -> FnDeclarationNode): ProgramNode {
+        return ProgramNode(
+                fnDeclarations.map(function),
+                structDeclarations,
+                externFnDeclarations,
+                typealiasDeclarations,
+                inlineCNodes
+        )
+    }
+
     fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ProgramNode {
         return ProgramNode(
                 fnDeclarations.map { it.mapExpressions(function) },
