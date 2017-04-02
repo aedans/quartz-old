@@ -2,6 +2,7 @@ package quartz.compiler.syntax.tree.function.statement
 
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.StatementNode
+import quartz.compiler.util.Type
 import quartz.compiler.util.times
 
 /**
@@ -13,6 +14,22 @@ class IfStatementNode(
         val trueStatements: List<StatementNode>,
         val falseStatements: List<StatementNode>
 ) : StatementNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): StatementNode {
+        return IfStatementNode(
+                function(test.mapExpressions(function)),
+                trueStatements.map { it.mapExpressions(function) },
+                falseStatements.map { it.mapExpressions(function) }
+        )
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): StatementNode {
+        return IfStatementNode(
+                test.mapTypes(function),
+                trueStatements.map { it.mapTypes(function) },
+                falseStatements.map { it.mapTypes(function) }
+        )
+    }
+
     override fun toString(): String {
         return "if ($test)"
     }

@@ -2,6 +2,8 @@ package quartz.compiler.semantics
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
+import quartz.compiler.semantics.symboltable.TypeTable
+import quartz.compiler.semantics.types.*
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -10,10 +12,6 @@ import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.util.Type
 import quartz.compiler.util.plus
-import quartz.compiler.util.types.ArrayType
-import quartz.compiler.util.types.FunctionType
-import quartz.compiler.util.types.Primitives
-import quartz.compiler.util.types.StructType
 import quartz.compiler.visitor.program.function.visit
 import quartz.compiler.visitor.program.visit
 import quartz.compiler.visitor.visit
@@ -22,10 +20,9 @@ import quartz.compiler.visitor.visit
  * Created by Aedan Smith.
  */
 
-fun ProgramNode.verifyTypes(symbolTable: SymbolTable): ProgramNode {
-    return this.visit(
-            { fnDeclaration -> fnDeclaration.verify(symbolTable) }
-    )
+fun ProgramNode.verifyTypes(): ProgramNode {
+    val newNode = mapTypes { (it as? NamedType)?.verify(symbolTable.typeTable) ?: it }
+    return newNode.visit({ fnDeclaration -> fnDeclaration.verify(newNode.symbolTable) })
 }
 
 private fun FnDeclarationNode.verify(symbolTable: SymbolTable): FnDeclarationNode {
@@ -57,7 +54,7 @@ private fun ReturnNode.verify(symbolTable: SymbolTable): ReturnNode {
 private fun IfStatementNode.verify(symbolTable: SymbolTable): IfStatementNode {
     val localSymbolTable = symbolTable.localSymbolTable()
     return IfStatementNode(
-            test.verify(symbolTable).verifyAs(Primitives.bool),
+            test.verify(symbolTable).verifyAs(Primitives.int),
             trueStatements.map { it.verify(localSymbolTable) },
             falseStatements.map { it.verify(localSymbolTable) }
     )
@@ -174,7 +171,7 @@ private fun IfExpressionNode.verify(symbolTable: SymbolTable): IfExpressionNode 
     val newType = type.verifyAs(newIfTrue.type).verifyAs(newIfFalse.type)
 
     return IfExpressionNode(
-            newTest.verifyAs(Primitives.bool),
+            newTest.verifyAs(Primitives.int),
             newIfTrue.verifyAs(newType).verifyAs(ifFalse.type),
             newIfFalse.verifyAs(newType).verifyAs(ifTrue.type),
             newType
@@ -185,7 +182,7 @@ private fun ExpressionNode.verifyAs(type: Type?): ExpressionNode {
     return when {
         this.type == null -> this.withType(type)
         this.type == type || type == null -> this
-        this.type!!.canCastTo(type) -> CastNode(this, type)
+        Type.canCast(this.type!!, type) -> CastNode(this, type)
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }
@@ -194,7 +191,12 @@ private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
         this == type || type == null -> this
-        this.canCastTo(type) -> type
+        Type.canCast(this, type) -> this
         else -> throw QuartzException("Could not cast $this to $type")
     }
+}
+
+private fun NamedType.verify(typeTable: TypeTable): Type {
+    return typeTable.get(name)
+            ?: throw QuartzException("Unknown type $this")
 }

@@ -1,16 +1,24 @@
 package quartz.compiler.syntax.tree.function.expression
 
 import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.semantics.types.ArrayType
+import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.util.Type
-import quartz.compiler.util.types.ArrayType
-import quartz.compiler.util.types.Primitives
 
 /**
  * Created by Aedan Smith.
  */
 
 class StringLiteralNode(val string: String) : ExpressionNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
+        return this
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
+        return this
+    }
+
     override val type = ArrayType(Primitives.char)
 
     override fun withType(type: Type?): ExpressionNode {

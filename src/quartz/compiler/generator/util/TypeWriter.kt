@@ -1,12 +1,12 @@
 package quartz.compiler.generator.util
 
 import quartz.compiler.generator.ProgramOutputStream
+import quartz.compiler.semantics.types.ArrayType
+import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
-import quartz.compiler.util.types.ArrayType
-import quartz.compiler.util.types.FunctionType
-import quartz.compiler.util.types.Primitives
-import quartz.compiler.util.types.StructType
 
 /**
  * Created by Aedan Smith.

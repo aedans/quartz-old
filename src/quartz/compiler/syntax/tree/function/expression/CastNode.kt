@@ -8,6 +8,14 @@ import quartz.compiler.util.Type
  */
 
 class CastNode(val expression: ExpressionNode, override val type: Type?) : ExpressionNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
+        return CastNode(function(expression.mapExpressions(function)), type)
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
+        return CastNode(expression.mapTypes(function), function(type))
+    }
+
     override fun withType(type: Type?): CastNode {
         return CastNode(expression, type)
     }

@@ -8,6 +8,14 @@ import quartz.compiler.util.Type
  */
 
 class UnaryOperatorNode(val expression: ExpressionNode, val id: ID, override val type: Type?) : ExpressionNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
+        return UnaryOperatorNode(function(expression.mapExpressions(function)), id, type)
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
+        return UnaryOperatorNode(expression.mapTypes(function), id, function(type))
+    }
+
     override fun withType(type: Type?): UnaryOperatorNode {
         return UnaryOperatorNode(expression, id, type)
     }

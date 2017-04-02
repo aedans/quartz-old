@@ -8,6 +8,14 @@ import quartz.compiler.util.Type
  */
 
 class IdentifierNode(val name: String, override val type: Type?) : ExpressionNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
+        return this
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
+        return IdentifierNode(name, function(type))
+    }
+
     override fun withType(type: Type?): ExpressionNode {
         return IdentifierNode(name, type)
     }

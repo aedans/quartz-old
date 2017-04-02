@@ -12,6 +12,7 @@ declaration
     : fnDeclaration
     | externFnDeclaration
     | structDeclaration
+    | typealiasDeclaration
     | inlineC
     ;
 
@@ -52,6 +53,12 @@ structDeclaration
 
 structMember
     : varDeclarationType identifier ':' type semi?
+    ;
+
+// TYPEALIAS DECLARATION
+
+typealiasDeclaration
+    : 'typealias' identifier '=' type semi?
     ;
 
 // IMPORT DECLARATION

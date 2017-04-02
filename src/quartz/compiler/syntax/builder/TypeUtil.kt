@@ -1,12 +1,12 @@
 package quartz.compiler.syntax.builder
 
 import quartz.compiler.parser.QuartzParser
+import quartz.compiler.semantics.types.ArrayType
+import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.NamedType
+import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
-import quartz.compiler.util.types.ArrayType
-import quartz.compiler.util.types.FunctionType
-import quartz.compiler.util.types.Primitives
-import quartz.compiler.util.types.StructType
 
 /**
  * Created by Aedan Smith.
@@ -22,7 +22,7 @@ fun QuartzParser.TypeContext.toType(): Type {
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
-            else -> StructType(identifier().text, mapOf())
+            else -> NamedType(identifier().text)
         }
     } else {
         if (array != null) {

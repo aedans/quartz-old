@@ -1,4 +1,4 @@
-package quartz.compiler.util.types
+package quartz.compiler.semantics.types
 
 import quartz.compiler.util.Type
 
@@ -13,12 +13,13 @@ object Primitives {
     val long: Type = NumType("long")
     val float: Type = NumType("float")
     val double: Type = NumType("double")
-    val bool: Type = int
     val void: Type = QVoid()
 }
 
-private class NumType(val string: String) : Type {
-    override val canCastTo: (Type) -> Boolean = { it is NumType }
+private data class NumType(val string: String) : Type {
+    override fun canCastTo(type: Type): Boolean {
+        return type is NumType
+    }
 
     override fun toString(): String {
         return string
@@ -26,7 +27,9 @@ private class NumType(val string: String) : Type {
 }
 
 private class QVoid : Type {
-    override val canCastTo: (Type) -> Boolean = { it is QVoid }
+    override fun canCastTo(type: Type): Boolean {
+        return type is QVoid
+    }
 
     override fun toString(): String {
         return "void"

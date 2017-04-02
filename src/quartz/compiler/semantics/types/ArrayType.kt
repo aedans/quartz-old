@@ -1,4 +1,4 @@
-package quartz.compiler.util.types
+package quartz.compiler.semantics.types
 
 import quartz.compiler.util.Type
 
@@ -7,7 +7,9 @@ import quartz.compiler.util.Type
  */
 
 data class ArrayType(val type: Type) : Type {
-    override val canCastTo: (Type) -> Boolean = { it == this }
+    override fun canCastTo(type: Type): Boolean {
+        return type == this
+    }
 
     override fun toString(): String {
         return "$type[]"

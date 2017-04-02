@@ -18,4 +18,21 @@ class FnDeclarationNode(
         statements.forEach { s += '\n' + it.toString(1) }
         return s
     }
+
+    fun mapStatements(function: (StatementNode) -> StatementNode): FnDeclarationNode {
+        return FnDeclarationNode(name, args, returnType, statements.map(function))
+    }
+
+    fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): FnDeclarationNode {
+        return mapStatements { it.mapExpressions(function) }
+    }
+
+    fun mapTypes(function: (Type?) -> Type?): FnDeclarationNode {
+        return FnDeclarationNode(
+                name,
+                args.map { it.first to function(it.second)!! },
+                function(returnType)!!,
+                statements.map { it.mapTypes(function) }
+        )
+    }
 }

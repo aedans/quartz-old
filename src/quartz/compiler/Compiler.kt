@@ -6,12 +6,10 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.generateConstructors
-import quartz.compiler.semantics.generateSymbolTable
 import quartz.compiler.semantics.verifyTypes
 import quartz.compiler.syntax.builder.toNode
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.import.Library
-import quartz.compiler.visitor.plus
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -30,11 +28,9 @@ object Compiler {
                     it.toNode(library, parser)
                 },
                 analyzer: ProgramNode.() -> ProgramNode = {
-                    val symbolTable = this.generateSymbolTable()
-                    (
-                            { it: ProgramNode -> it.generateConstructors(symbolTable) } +
-                            { it.verifyTypes(symbolTable) }
-                    )(this)
+                    this
+                            .generateConstructors()
+                            .verifyTypes()
                 },
                 generator: (ProgramNode, OutputStream) -> Unit = Generator::write
     ) {

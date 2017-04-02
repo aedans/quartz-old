@@ -8,6 +8,19 @@ import quartz.compiler.util.Type
  */
 
 class IfExpressionNode(val test: ExpressionNode, val ifTrue: ExpressionNode, val ifFalse: ExpressionNode, override val type: Type?) : ExpressionNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
+        return IfExpressionNode(
+                function(test.mapExpressions(function)),
+                function(ifTrue.mapExpressions(function)),
+                function(ifFalse.mapExpressions(function)),
+                type
+        )
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
+        return IfExpressionNode(test.mapTypes(function), ifTrue.mapTypes(function), ifFalse.mapTypes(function), function(type))
+    }
+
     override fun withType(type: Type?): IfExpressionNode {
         return IfExpressionNode(test, ifTrue, ifFalse, type)
     }

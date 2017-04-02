@@ -4,11 +4,22 @@ import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.declare
 import quartz.compiler.generator.util.description
 import quartz.compiler.generator.util.type
-import quartz.compiler.util.types.FunctionType
+import quartz.compiler.semantics.types.AliasedType
+import quartz.compiler.semantics.types.FunctionType
 
 /**
  * Created by Aedan Smith.
  */
+
+fun ProgramOutputStream.typedef(type: AliasedType) {
+    declare("typedef_${type.name}") {
+        name("typedef")
+        type(type.type)
+        name(type.name)
+        string(";")
+        newline()
+    }
+}
 
 fun ProgramOutputStream.functionTypedef(type: FunctionType) {
     type.function.args.forEach { declare(it) }

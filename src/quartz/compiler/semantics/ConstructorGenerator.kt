@@ -1,25 +1,21 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
-import quartz.compiler.util.Function
-import quartz.compiler.util.types.FunctionType
 
 /**
  * Created by Aedan Smith.
  */
 
-fun ProgramNode.generateConstructors(symbolTable: SymbolTable): ProgramNode {
-    val structConstructors = structDeclarations.map { it.defaultConstructor() }
-    structConstructors.forEach { symbolTable.addVar(it.name, FunctionType(Function(it.args.map { it.second }, it.returnType, false))) }
+fun ProgramNode.generateConstructors(): ProgramNode {
     return ProgramNode(
             fnDeclarations + structDeclarations.map { it.defaultConstructor() },
             structDeclarations,
             externFnDeclarations,
+            typealiasDeclarations,
             inlineCNodes
     )
 }
@@ -36,10 +32,5 @@ private fun StructDeclarationNode.defaultConstructor(): FnDeclarationNode {
     statements.addAll(assignmentNodes)
     statements.add(returnNode)
 
-    return FnDeclarationNode(
-            name,
-            args,
-            type,
-            statements
-    )
+    return FnDeclarationNode(name, args, type, statements)
 }

@@ -8,6 +8,14 @@ import quartz.compiler.util.Type
  */
 
 class BinaryOperatorNode(val expr1: ExpressionNode, val expr2: ExpressionNode, val id: ID, override val type: Type?) : ExpressionNode {
+    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
+        return BinaryOperatorNode(function(expr1.mapExpressions(function)), function(expr2.mapExpressions(function)), id, type)
+    }
+
+    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
+        return BinaryOperatorNode(expr1.mapTypes(function), expr2.mapTypes(function), id, function(type))
+    }
+
     override fun withType(type: Type?): BinaryOperatorNode {
         return BinaryOperatorNode(expr1, expr2, id, type)
     }

@@ -2,12 +2,12 @@ package quartz.compiler.syntax.builder
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
+import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
-import quartz.compiler.util.types.Primitives
 
 /**
  * Created by Aedan Smith.
