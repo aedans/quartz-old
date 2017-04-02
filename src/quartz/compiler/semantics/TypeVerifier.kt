@@ -146,13 +146,13 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
         if (expression !is MemberAccessNode)
             throw e
 
-        val expressionType = symbolTable.getVar(expression.name) as FunctionType
+        val expressionType = symbolTable.getVar(expression.name) as? FunctionType
+                ?: throw QuartzException("Could not find function ${expression.name}")
         return FnCallNode(
                 IdentifierNode(expression.name, expressionType),
-                (expression.expression.verify(symbolTable) + expressions).zip(expressionType.function.args).map {
-                    it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
-                type.verifyAs(expressionType.function.returnType)
-        )
+                expression.expression + expressions,
+                type
+        ).verify(symbolTable)
     }
 }
 
