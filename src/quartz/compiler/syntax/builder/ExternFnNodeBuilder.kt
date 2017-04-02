@@ -11,9 +11,9 @@ import quartz.compiler.util.types.Primitives
 
 fun QuartzParser.ExternFnDeclarationContext.toNode(): ExternFnDeclarationNode {
     return ExternFnDeclarationNode(
-            name.text,
+            identifier().text,
             Function(
-                    typeList().varType().map { it.toType() },
+                    typeList().type().map { it.toType() },
                     returnType?.toType() ?: Primitives.void,
                     typeList().vararg != null
             )

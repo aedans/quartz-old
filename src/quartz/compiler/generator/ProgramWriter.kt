@@ -25,12 +25,8 @@ fun ProgramOutputStream.writeAll() {
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
-        is StructType -> {
-            struct(programNode.structDeclarations.firstOrNull { it.name == type.name }
-                    ?: throw QuartzException("Unknown struct ${type.name}"))
-        }
-        is FunctionType -> {
-            functionTypedef(type)
-        }
+        is StructType -> struct(programNode.structDeclarations.firstOrNull { it.name == type.name }
+                ?: throw QuartzException("Unknown struct ${type.name}"))
+        is FunctionType -> functionTypedef(type)
     }
 }

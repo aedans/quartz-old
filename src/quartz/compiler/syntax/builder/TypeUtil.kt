@@ -12,9 +12,9 @@ import quartz.compiler.util.types.StructType
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.VarTypeContext.toType(): Type {
-    return if (typeName != null) {
-        when (typeName.IDENTIFIER().text) {
+fun QuartzParser.TypeContext.toType(): Type {
+    return if (identifier() != null) {
+        when (identifier().text) {
             "char" -> Primitives.char
             "short" -> Primitives.short
             "int" -> Primitives.int
@@ -22,13 +22,13 @@ fun QuartzParser.VarTypeContext.toType(): Type {
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
-            else -> StructType(typeName.IDENTIFIER().text, mapOf())
+            else -> StructType(identifier().text, mapOf())
         }
     } else {
         if (array != null) {
-            ArrayType(varType().toType())
+            ArrayType(type().toType())
         } else {
-            FunctionType(Function(args.varType().map { it.toType() }, returnType.toType(), args.vararg != null))
+            FunctionType(Function(args.type().map { it.toType() }, returnType.toType(), args.vararg != null))
         }
     }
 }

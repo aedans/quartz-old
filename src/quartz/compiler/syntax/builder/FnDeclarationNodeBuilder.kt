@@ -15,8 +15,8 @@ import quartz.compiler.util.types.Primitives
 
 fun QuartzParser.FnDeclarationContext.toNode(): FnDeclarationNode {
     return FnDeclarationNode(
-            name.text,
-            fnArgumentList()?.fnArgument()?.map { it.name.text to it.type.toType() } ?: listOf(),
+            identifier().text,
+            fnArgumentList()?.fnArgument()?.map { it.identifier().text to it.type().toType() } ?: listOf(),
             returnType?.toType() ?: Primitives.void,
             if (body.expression() != null) {
                 listOf(ReturnNode(body.expression().toNode()))
@@ -44,10 +44,10 @@ fun QuartzParser.ReturnStatementContext.toNode(): ReturnNode {
 
 fun QuartzParser.VarDeclarationContext.toNode(): VarDeclarationNode {
     return VarDeclarationNode(
-            name.text,
-            value.toNode(),
-            if (type != null) type.toType() else null,
-            declarationType.text == "var"
+            identifier().text,
+            expression().toNode(),
+            if (type() != null) type().toType() else null,
+            varDeclarationType().text == "var"
     )
 }
 

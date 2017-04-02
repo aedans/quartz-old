@@ -18,11 +18,11 @@ declaration
 // FN DECLARATION
 
 fnDeclaration
-    : fnModifiers FN name=identifier '(' fnArgumentList ')' (':' returnType=varType)? body=fnBlock
+    : fnModifiers 'fn' identifier '(' fnArgumentList ')' (':' returnType=type)? body=fnBlock
     ;
 
 fnArgument
-    : (name=identifier ':' type=varType)
+    : (identifier ':' type)
     ;
 
 fnArgumentList
@@ -30,7 +30,7 @@ fnArgumentList
     ;
 
 fnModifiers
-    : FN_MODIFIER*
+    :
     ;
 
 fnBlock
@@ -41,23 +41,23 @@ fnBlock
 // EXTERN FN DECLARATION
 
 externFnDeclaration
-    : fnModifiers EXTERN FN name=identifier '(' typeList ')' (':' returnType=varType)? semi?
+    : fnModifiers 'extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;
 
 // STRUCT DECLARATION
 
 structDeclaration
-    : STRUCT identifier '{' structMember* '}' semi?
+    : 'struct' identifier '{' structMember* '}' semi?
     ;
 
 structMember
-    : VAR_DECLARATION_TYPE identifier ':' varType semi?
+    : varDeclarationType identifier ':' type semi?
     ;
 
 // IMPORT DECLARATION
 
 importDeclaration
-    : IMPORT packageList semi?
+    : 'import' packageList semi?
     ;
 
 packageList
@@ -76,19 +76,19 @@ statement
     ;
 
 varDeclaration
-    : declarationType=varDeclarationType name=identifier (':' type=varType)? '=' value=expression
+    : varDeclarationType identifier (':' type)? '=' expression
     ;
 
 returnStatement
-    : RETURN expression
+    : 'return' expression
     ;
 
 ifStatement
-    : IF '(' expression ')' trueBlock=block (ELSE falseBlock=block)?
+    : 'if' '(' expression ')' trueBlock=block ('else' falseBlock=block)?
     ;
 
 whileLoop
-    : WHILE '(' expression ')' block
+    : 'while' '(' expression ')' block
     ;
 
 // EXPRESSIONS
@@ -184,7 +184,7 @@ memberAccess
     ;
 
 ifExpression
-    : IF '(' test=expression ')' ifTrue=expression ELSE ifFalse=expression
+    : 'if' '(' test=expression ')' ifTrue=expression 'else' ifFalse=expression
     ;
 
 literal
@@ -196,10 +196,10 @@ literal
 
 // TYPES
 
-varType
-    : typeName=identifier
-    | varType array='[]'
-    | '(' args=typeList ')' '->' returnType=varType
+type
+    : identifier
+    | type array='[]'
+    | '(' args=typeList ')' '->' returnType=type
     ;
 
 // LISTS
@@ -213,7 +213,7 @@ identifierList
     ;
 
 typeList
-    : (varType ',')* (vararg='...'|varType)?
+    : (type ',')* (vararg='...'|type)?
     ;
 
 // UTIL
@@ -232,11 +232,11 @@ inlineC
     ;
 
 varDeclarationType
-    : VAR_DECLARATION_TYPE
+    : 'var'|'val'
     ;
 
 semi
-    : SEMICOLON+
+    : ';'+
     ;
 
 // LEXER
@@ -247,20 +247,6 @@ CHAR: '\''.'\'';
 INT: [0-9]+;
 DOUBLE: [0-9]*'.'[0-9]+;
 INLINE_C: DMOD .*? DMOD;
-
-FN_MODIFIER: 'gpu'|'inline';
-VAR_DECLARATION_TYPE: 'val'|'var';
-RETURN: 'return';
-FN: 'fn';
-EXTERN: 'extern';
-IF: 'if';
-ELSE: 'else';
-WHILE: 'while';
-STRUCT: 'struct';
-SEMICOLON: ';';
-IMPORT: 'import';
-
-KEYWORD: FN_MODIFIER|VAR_DECLARATION_TYPE|RETURN|FN|EXTERN|IF|ELSE|WHILE|STRUCT|IMPORT;
 
 IDENTIFIER: ([_a-zA-Z][_a-zA-Z0-9]*);
 

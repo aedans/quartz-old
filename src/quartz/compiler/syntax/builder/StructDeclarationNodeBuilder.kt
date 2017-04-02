@@ -16,5 +16,5 @@ fun QuartzParser.StructDeclarationContext.toNode(): StructDeclarationNode {
 }
 
 fun QuartzParser.StructMemberContext.toNode(): StructMemberNode {
-    return StructMemberNode(identifier().text, varType().toType(), varType().text == "var")
+    return StructMemberNode(identifier().text, type().toType(), type().text == "var")
 }
