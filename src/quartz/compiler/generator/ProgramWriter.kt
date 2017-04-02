@@ -12,9 +12,9 @@ import quartz.compiler.util.Type
  */
 
 fun ProgramOutputStream.writeAll() {
-    programNode.mapTypes { it?.apply { declare(this) } }
-
     programNode.inlineCNodes.forEach { inlineC(it) }
+
+    programNode.mapTypes { it?.apply { declare(this) } }
 
     programNode.structDeclarations.forEach { structPrototype(it) }
     programNode.structDeclarations.forEach { struct(it) }

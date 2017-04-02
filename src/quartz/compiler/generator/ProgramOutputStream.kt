@@ -53,7 +53,7 @@ class ProgramOutputStream(val programNode: ProgramNode, outputStream: OutputStre
     }
 
     fun name(string: Any) {
-        if (lastChar != ' ' && lastChar != '\n' && lastChar != '\n')
+        if (lastChar != ' ' && lastChar != '\n' && lastChar != '\t')
             string(" ")
         string(string)
         string(" ")
