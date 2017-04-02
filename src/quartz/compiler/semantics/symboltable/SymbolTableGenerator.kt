@@ -1,8 +1,6 @@
-package quartz.compiler.semantics
+package quartz.compiler.semantics.symboltable
 
 import quartz.compiler.exceptions.QuartzException
-import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.semantics.symboltable.TypeTable
 import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.syntax.tree.ProgramNode
@@ -17,7 +15,7 @@ import quartz.compiler.util.Function
 fun ProgramNode.generateSymbolTable(): SymbolTable {
     val typeTable = TypeTable()
     structDeclarations.forEach { typeTable.add(it.name, it.type) }
-    typealiasDeclarations.forEach { typeTable.add(it.name, AliasedType(it.name, it.type)) }
+    typealiasDeclarations.forEach { typeTable.add(it.name, AliasedType(it.name, it.type, it.external)) }
     val symbolTable = SymbolTable(typeTable)
     fnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(Function(it.args.map { it.second }, it.returnType, false))) }
     externFnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }

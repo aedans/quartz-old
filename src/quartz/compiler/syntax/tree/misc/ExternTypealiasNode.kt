@@ -7,12 +7,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class TypealiasNode(val name: String, val type: Type, val external: Boolean) : GlobalDeclarationNode {
+class ExternTypealiasNode(val name: String, val type: Type) : GlobalDeclarationNode {
     override fun toString(): String {
         return "typealias $name = $type"
     }
 
-    fun mapTypes(function: (Type?) -> Type?): TypealiasNode {
-        return TypealiasNode(name, function(type.mapTypes(function))!!, false)
+    fun mapTypes(function: (Type?) -> Type?): ExternTypealiasNode {
+        return ExternTypealiasNode(name, function(type.mapTypes(function))!!)
     }
 }

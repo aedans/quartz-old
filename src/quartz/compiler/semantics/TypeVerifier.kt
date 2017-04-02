@@ -3,6 +3,8 @@ package quartz.compiler.semantics
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.TypeTable
+import quartz.compiler.semantics.symboltable.addTo
+import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode

@@ -1,0 +1,7 @@
+// Bindings for assert.h
+
+%%
+#include <ctype.h>
+%%
+
+extern fn assert(int)

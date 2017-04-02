@@ -13,8 +13,8 @@ import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 fun ProgramNode.generateConstructors(): ProgramNode {
     return ProgramNode(
             fnDeclarations + structDeclarations.map { it.defaultConstructor() },
-            structDeclarations,
             externFnDeclarations,
+            structDeclarations,
             typealiasDeclarations,
             inlineCNodes
     )

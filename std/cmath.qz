@@ -4,6 +4,8 @@
 #include <math.h>
 %%
 
+fn get_HUGE_VAL(): double = %%HUGE_VAL%%
+
 extern fn acos(double): double
 extern fn asin(double): double
 extern fn atan(double): double
@@ -14,9 +16,11 @@ extern fn sin(double): double
 extern fn sinh(double): double
 extern fn tanh(double): double
 extern fn exp(double): double
+// TODO frexp
 extern fn ldexp(double, int): double
 extern fn log(double): double
 extern fn log10(double): double
+// TODO modf
 extern fn pow(double, double): double
 extern fn sqrt(double): double
 extern fn ciel(double): double

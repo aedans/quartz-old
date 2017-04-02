@@ -2,11 +2,67 @@
 
 %%
 #include <stdio.h>
+
+typedef FILE* FILE_ptr;
 %%
 
+extern typealias size_t = long
+extern typealias fpos_t = long
+extern typealias FILE_ptr = void
+
+// TODO get_NULL
+// TODO get__IOFBF
+// TODO get__IOLBF
+// TODO get__IONBF
+// TODO get_BUFSIZ
+fn get_EOF(): int = %%EOF%%
+fn get_FOPEN_MAX(): int = %%FOPEN_MAX%%
+fn get_FILENAME_MAX(): int = %%FILENAME_MAX%%
+fn get_L_tmpnam(): int = %%L_tmpnam%%
+fn get_SEEK_CUR(): int = %%SEEK_CUR%%
+fn get_SEEK_END(): int = %%SEEK_END%%
+fn get_SEEK_SET(): int = %%SEEK_SET%%
+fn get_TMP_MAX(): int = %%TMP_MAX%%
+fn get_stderr(): FILE_ptr = %%stderr%%
+fn get_stdin(): FILE_ptr = %%stdin%%
+fn get_stdout(): FILE_ptr = %%stdout%%
+
+extern fn fclose(FILE_ptr): int
+extern fn clearerr(FILE_ptr)
+extern fn feof(FILE_ptr): int
+extern fn ferror(FILE_ptr): int
+extern fn fflush(FILE_ptr): int
+// TODO fgetpos
+extern fn fopen(char[], char[]): FILE_ptr
+// TODO fread
+extern fn fseek(FILE_ptr, long, int): int
+// TODO fsetpos
+extern fn ftell(FILE_ptr): long
+// TODO fwrite
 extern fn remove(char[]): int
-extern fn printf(char[], ...)
+extern fn rename(char[], char[]): int
+extern fn rewind(FILE_ptr)
+extern fn setbuf(FILE_ptr, char[])
+extern fn setvbuf(FILE_ptr, char[], int, size_t): int
+extern fn tmpfile(): FILE_ptr
+// TODO tmpname
+extern fn fprintf(FILE_ptr, char[], ...): int
+extern fn printf(char[], ...): int
+// TODO sprintf
+// TODO vfprintf
+// TODO vprintf
+// TODO fscanf
+// TODO scanf
+// TODO sscanf
+extern fn fgetc(FILE_ptr): int
+// TODO fgets
+extern fn fputc(int, FILE_ptr): int
+extern fn fputs(char[], FILE_ptr): int
+extern fn getc(FILE_ptr): int
 extern fn getchar(): int
+// TODO gets
+extern fn putc(int, FILE_ptr): int
 extern fn putchar(int): int
-extern fn puts(char[])
+extern fn puts(char[]): int
+extern fn ungetc(int, FILE_ptr): int
 extern fn perror(char[])

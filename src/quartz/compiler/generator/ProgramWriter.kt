@@ -27,7 +27,7 @@ fun ProgramOutputStream.declare(type: Type) {
     when (type) {
         is StructType -> struct(programNode.structDeclarations.firstOrNull { it.name == type.name }
                 ?: throw QuartzException("Unknown struct ${type.name}"))
-        is AliasedType -> typedef(type)
+        is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)
     }
 }

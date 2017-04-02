@@ -20,8 +20,8 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
     val nodes = declaration().map { it.toNode() } + importDeclaration().map { it.import(library, parser) }.flatten().map { it.toNode() }
     val programNode = ProgramNode(
             nodes.filterIsInstance(FnDeclarationNode::class.java),
-            nodes.filterIsInstance(StructDeclarationNode::class.java),
             nodes.filterIsInstance(ExternFnDeclarationNode::class.java),
+            nodes.filterIsInstance(StructDeclarationNode::class.java),
             nodes.filterIsInstance(TypealiasNode::class.java),
             nodes.filterIsInstance(InlineCNode::class.java)
     )
@@ -33,9 +33,10 @@ fun QuartzParser.DeclarationContext.toNode(): Any {
     return when {
         fnDeclaration() != null -> fnDeclaration().toNode()
         externFnDeclaration() != null -> externFnDeclaration().toNode()
-        inlineC() != null -> inlineC().toNode().also { println("Found $it\n") }
         structDeclaration() != null -> structDeclaration().toNode()
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
+        externTypealiasDeclaration() != null -> externTypealiasDeclaration().toNode()
+        inlineC() != null -> inlineC().toNode().also { println("Found $it\n") }
         else -> throw QuartzException("Error translating $text")
     }.also { println("Found $it") }
 }

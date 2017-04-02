@@ -13,6 +13,7 @@ declaration
     | externFnDeclaration
     | structDeclaration
     | typealiasDeclaration
+    | externTypealiasDeclaration
     | inlineC
     ;
 
@@ -59,6 +60,12 @@ structMember
 
 typealiasDeclaration
     : 'typealias' identifier '=' type semi?
+    ;
+
+// EXTERN TYPEALIAS DECLARATION
+
+externTypealiasDeclaration
+    : 'extern' 'typealias' identifier '=' type semi?
     ;
 
 // IMPORT DECLARATION

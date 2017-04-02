@@ -1,6 +1,6 @@
 package quartz.compiler.syntax.tree
 
-import quartz.compiler.semantics.generateSymbolTable
+import quartz.compiler.semantics.symboltable.generateSymbolTable
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.misc.ExternFnDeclarationNode
@@ -15,8 +15,8 @@ import quartz.compiler.util.Type
 
 data class ProgramNode(
         val fnDeclarations: List<FnDeclarationNode>,
-        val structDeclarations: List<StructDeclarationNode>,
         val externFnDeclarations: List<ExternFnDeclarationNode>,
+        val structDeclarations: List<StructDeclarationNode>,
         val typealiasDeclarations: List<TypealiasNode>,
         val inlineCNodes: List<InlineCNode>
 ) {
@@ -25,8 +25,8 @@ data class ProgramNode(
     fun mapFnDeclarations(function: (FnDeclarationNode) -> FnDeclarationNode): ProgramNode {
         return ProgramNode(
                 fnDeclarations.map(function),
-                structDeclarations,
                 externFnDeclarations,
+                structDeclarations,
                 typealiasDeclarations,
                 inlineCNodes
         )
@@ -35,8 +35,8 @@ data class ProgramNode(
     fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ProgramNode {
         return ProgramNode(
                 fnDeclarations.map { it.mapExpressions(function) },
-                structDeclarations,
                 externFnDeclarations,
+                structDeclarations,
                 typealiasDeclarations,
                 inlineCNodes
         )
@@ -45,8 +45,8 @@ data class ProgramNode(
     fun mapTypes(function: (Type?) -> Type?): ProgramNode {
         return ProgramNode(
                 fnDeclarations.map { it.mapTypes(function) },
-                structDeclarations.map { it.mapTypes(function) },
                 externFnDeclarations.map { it.mapTypes(function) },
+                structDeclarations.map { it.mapTypes(function) },
                 typealiasDeclarations.map { it.mapTypes(function) },
                 inlineCNodes
         )

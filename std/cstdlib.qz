@@ -4,27 +4,38 @@
 #include <stdlib.h>
 %%
 
-fn get_EXIT_FAILURE(): int {
-    return %%EXIT_FAILURE%%;
-}
+extern typealias size_t = long
+extern typealias wchar_t = long
+// TODO div_t
+// TODO ldiv_t
 
-fn get_EXIT_SUCCESS(): int {
-    return %%EXIT_SUCCESS%%;
-}
-
-fn get_RAND_MAX(): int {
-    return %%RAND_MAX%%;
-}
+// TODO get_NULL
+fn get_EXIT_FAILURE(): int = %%EXIT_FAILURE%%
+fn get_EXIT_SUCCESS(): int = %%EXIT_SUCCESS%%
+fn get_RAND_MAX(): int = %%RAND_MAX%%
+fn get_MB_CUR_MAX(): int = %%MB_CUR_MAX%%
 
 extern fn atof(char[]): double
 extern fn atoi(char[]): int
 extern fn atol(char[]): long
+// TODO strtod
+// TODO strtol
+// TODO strtoul
 extern fn abort()
 extern fn atexit(() -> void): int
 extern fn exit(int)
 extern fn getenv(char[]): char[]
 extern fn system(char[]): int
+// TODO bsearch
+// TODO qsort
 extern fn abs(int): int
+// TODO div
 extern fn labs(long): long
+// TODO ldiv
 extern fn rand(): int
 extern fn srand(int): void
+// TODO mblen
+// TODO mbstowcs
+// TODO mbtowc
+// TODO wcstombs
+// TODO wctomb
