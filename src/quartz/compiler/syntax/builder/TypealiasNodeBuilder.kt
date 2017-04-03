@@ -8,9 +8,5 @@ import quartz.compiler.syntax.tree.misc.TypealiasNode
  */
 
 fun QuartzParser.TypealiasDeclarationContext.toNode(): TypealiasNode {
-    return TypealiasNode(identifier().text, type().toType(), false)
-}
-
-fun QuartzParser.ExternTypealiasDeclarationContext.toNode(): TypealiasNode {
-    return TypealiasNode(identifier().text, type().toType(), true)
+    return TypealiasNode(identifier().text, type().toType(), extern != null)
 }

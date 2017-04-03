@@ -10,10 +10,8 @@ program
 
 declaration
     : fnDeclaration
-    | externFnDeclaration
     | structDeclaration
     | typealiasDeclaration
-    | externTypealiasDeclaration
     | inlineC
     ;
 
@@ -21,6 +19,7 @@ declaration
 
 fnDeclaration
     : fnModifiers 'fn' identifier '(' fnArgumentList ')' (':' returnType=type)? body=fnBlock
+    | fnModifiers extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;
 
 fnArgument
@@ -40,12 +39,6 @@ fnBlock
     | '=' expression semi?
     ;
 
-// EXTERN FN DECLARATION
-
-externFnDeclaration
-    : fnModifiers 'extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
-    ;
-
 // STRUCT DECLARATION
 
 structDeclaration
@@ -59,13 +52,7 @@ structMember
 // TYPEALIAS DECLARATION
 
 typealiasDeclaration
-    : 'typealias' identifier '=' type semi?
-    ;
-
-// EXTERN TYPEALIAS DECLARATION
-
-externTypealiasDeclaration
-    : 'extern' 'typealias' identifier '=' type semi?
+    : extern='extern'? 'typealias' identifier '=' type semi?
     ;
 
 // IMPORT DECLARATION

@@ -3,27 +3,41 @@ package quartz.compiler.syntax.builder
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.syntax.tree.GlobalDeclarationNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
+import quartz.compiler.syntax.tree.misc.ExternFnDeclarationNode
+import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.FnDeclarationContext.toNode(): FnDeclarationNode {
-    return FnDeclarationNode(
-            identifier().text,
-            fnArgumentList()?.fnArgument()?.map { it.identifier().text to it.type().toType() } ?: listOf(),
-            returnType?.toType() ?: Primitives.void,
-            if (body.expression() != null) {
-                listOf(ReturnNode(body.expression().toNode()))
-            } else {
-                body.block().statement().map { it.toNode() }
-            }
-    )
+fun QuartzParser.FnDeclarationContext.toNode(): GlobalDeclarationNode {
+    return if (extern != null) {
+        ExternFnDeclarationNode(
+                identifier().text,
+                Function(
+                        typeList().type().map { it.toType() },
+                        returnType?.toType() ?: Primitives.void,
+                        typeList().vararg != null
+                )
+        )
+    } else {
+        FnDeclarationNode(
+                identifier().text,
+                fnArgumentList()?.fnArgument()?.map { it.identifier().text to it.type().toType() } ?: listOf(),
+                returnType?.toType() ?: Primitives.void,
+                if (body.expression() != null) {
+                    listOf(ReturnNode(body.expression().toNode()))
+                } else {
+                    body.block().statement().map { it.toNode() }
+                }
+        )
+    }
 }
 
 fun QuartzParser.StatementContext.toNode(): StatementNode {

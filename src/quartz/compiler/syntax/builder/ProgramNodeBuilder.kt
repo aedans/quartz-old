@@ -32,10 +32,8 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
 fun QuartzParser.DeclarationContext.toNode(): Any {
     return when {
         fnDeclaration() != null -> fnDeclaration().toNode()
-        externFnDeclaration() != null -> externFnDeclaration().toNode()
         structDeclaration() != null -> structDeclaration().toNode()
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
-        externTypealiasDeclaration() != null -> externTypealiasDeclaration().toNode()
         inlineC() != null -> inlineC().toNode().also { println("Found $it\n") }
         else -> throw QuartzException("Error translating $text")
     }.also { println("Found $it") }
