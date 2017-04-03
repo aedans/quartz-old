@@ -6,7 +6,6 @@ import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.statement.VarDeclarationNode
-import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
@@ -17,14 +16,14 @@ fun ProgramNode.generateSymbolTable(): SymbolTable {
     structDeclarations.forEach { typeTable.add(it.name, it.type) }
     typealiasDeclarations.forEach { typeTable.add(it.name, AliasedType(it.name, it.type, it.external)) }
     val symbolTable = SymbolTable(typeTable)
-    fnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(Function(it.args.map { it.second }, it.returnType, false))) }
+    fnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
     externFnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
     return symbolTable
 }
 
 fun FnDeclarationNode.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
-    this.args.forEach { localSymbolTable.addVar(it.first, it.second) }
+    this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
     return localSymbolTable
 }
 

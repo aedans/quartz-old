@@ -20,7 +20,7 @@ fun ProgramNode.unwrapExpressions(): ProgramNode {
 private fun FnDeclarationNode.unwrapExpressions(): FnDeclarationNode {
     val newStatements = mutableListOf<StatementNode>()
     statements.forEach { newStatements.add(it.unwrapExpressions(newStatements)) }
-    return FnDeclarationNode(name, args, returnType, newStatements)
+    return FnDeclarationNode(name, argNames, function, newStatements)
 }
 
 private fun StatementNode.unwrapExpressions(newStatements: MutableList<StatementNode>): StatementNode {

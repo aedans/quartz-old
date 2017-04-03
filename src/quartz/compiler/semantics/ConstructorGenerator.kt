@@ -5,6 +5,7 @@ import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.StatementNode
 import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.util.Function
 
 /**
  * Created by Aedan Smith.
@@ -21,7 +22,8 @@ fun ProgramNode.generateConstructors(): ProgramNode {
 }
 
 private fun StructDeclarationNode.defaultConstructor(): FnDeclarationNode {
-    val args = members.map { it.key to it.value.type }
+    val argsNames = members.map { it.key }
+    val argTypes = members.map { it.value.type }
 
     val declarationNode = InlineCNode("struct $name instance")
     val assignmentNodes = members.map { InlineCNode("instance.${it.key} = ${it.value.name}") }
@@ -32,5 +34,5 @@ private fun StructDeclarationNode.defaultConstructor(): FnDeclarationNode {
     statements.addAll(assignmentNodes)
     statements.add(returnNode)
 
-    return FnDeclarationNode(name, args, type, statements)
+    return FnDeclarationNode(name, argsNames, Function(argTypes, type, false), statements)
 }

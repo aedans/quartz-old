@@ -16,9 +16,9 @@ import quartz.compiler.syntax.tree.misc.InlineCNode
 
 fun ProgramOutputStream.functionPrototype(fnDeclarationNode: FnDeclarationNode) {
     declare("fnPrototype_${fnDeclarationNode.name}") {
-        type(fnDeclarationNode.returnType)
+        type(fnDeclarationNode.function.returnType)
         name(fnDeclarationNode.name)
-        args(fnDeclarationNode.args)
+        args(fnDeclarationNode.argsWithNames)
         string(";")
         newline()
     }
@@ -27,9 +27,9 @@ fun ProgramOutputStream.functionPrototype(fnDeclarationNode: FnDeclarationNode) 
 fun ProgramOutputStream.function(fnDeclarationNode: FnDeclarationNode) {
     margin {
         declare("fn_${fnDeclarationNode.name}") {
-            type(fnDeclarationNode.returnType)
+            type(fnDeclarationNode.function.returnType)
             name(fnDeclarationNode.name)
-            args(fnDeclarationNode.args)
+            args(fnDeclarationNode.argsWithNames)
             block(fnDeclarationNode.statements)
         }
     }

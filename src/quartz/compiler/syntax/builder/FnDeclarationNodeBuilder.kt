@@ -29,8 +29,12 @@ fun QuartzParser.FnDeclarationContext.toNode(): GlobalDeclarationNode {
     } else {
         FnDeclarationNode(
                 identifier().text,
-                fnArgumentList()?.fnArgument()?.map { it.identifier().text to it.type().toType() } ?: listOf(),
-                returnType?.toType() ?: Primitives.void,
+                fnArgumentList().fnArgument().map { it.identifier().text },
+                Function(
+                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        returnType?.toType() ?: Primitives.void,
+                        false
+                ),
                 if (body.expression() != null) {
                     listOf(ReturnNode(body.expression().toNode()))
                 } else {
