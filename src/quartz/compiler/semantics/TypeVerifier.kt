@@ -2,7 +2,6 @@ package quartz.compiler.semantics
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.semantics.symboltable.TypeTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
@@ -21,7 +20,7 @@ import quartz.compiler.util.plus
  */
 
 fun ProgramNode.verifyTypes(): ProgramNode {
-    val newNode = mapTypes { (it as? NamedType)?.verify(symbolTable.typeTable) ?: it }
+    val newNode = mapTypes { (it as? NamedType)?.verify(symbolTable) ?: it }
     return newNode.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(newNode.symbolTable) }
 }
 
@@ -158,7 +157,7 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
 
 private fun MemberAccessNode.verify(symbolTable: SymbolTable): MemberAccessNode {
     val newExpression = expression.verify(symbolTable)
-    val owner = symbolTable.typeTable.get(newExpression.type.toString()) as? StructType
+    val owner = symbolTable.getType(newExpression.type.toString()) as? StructType
             ?: throw QuartzException("Unknown struct ${newExpression.type}")
     val memberType = owner.members[name]
             ?: throw QuartzException("Unknown member $owner.$type")
@@ -202,7 +201,7 @@ private fun Type?.verifyAs(type: Type?): Type? {
     }
 }
 
-private fun NamedType.verify(typeTable: TypeTable): Type {
-    return typeTable.getTrue(name)
+private fun NamedType.verify(symbolTable: SymbolTable): Type {
+    return symbolTable.getTrueType(name)
             ?: throw QuartzException("Unknown type $this")
 }

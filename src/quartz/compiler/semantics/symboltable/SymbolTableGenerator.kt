@@ -11,10 +11,9 @@ import quartz.compiler.syntax.tree.function.statement.VarDeclarationNode
  */
 
 fun ProgramNode.generateSymbolTable(): SymbolTable {
-    val typeTable = TypeTable()
-    structDeclarations.forEach { typeTable.add(it.name, it.type) }
-    typealiasDeclarations.forEach { typeTable.add(it.name, it.type) }
-    val symbolTable = SymbolTable(typeTable)
+    val symbolTable = SymbolTable()
+    structDeclarations.forEach { symbolTable.addType(it.name, it.type) }
+    typealiasDeclarations.forEach { symbolTable.addType(it.name, it.type) }
     fnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
     externFnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
     return symbolTable
