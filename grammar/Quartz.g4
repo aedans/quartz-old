@@ -42,7 +42,7 @@ fnBlock
 // STRUCT DECLARATION
 
 structDeclaration
-    : 'struct' identifier '{' structMember* '}' semi?
+    : extern='extern'? 'struct' identifier '{' structMember* '}' semi?
     ;
 
 structMember

@@ -4,10 +4,20 @@
 #include <stdlib.h>
 %%
 
+struct __Q_div_t {
+    val quot: int
+    val rem: int
+}
+
+struct __Q_ldiv_t {
+    val quot: long
+    val rem: long
+}
+
 extern typealias size_t = long
 extern typealias wchar_t = long
-// TODO div_t
-// TODO ldiv_t
+extern typealias div_t = __Q_div_t;
+extern typealias ldiv_t = __Q_ldiv_t
 
 // TODO get_NULL
 fn get_EXIT_FAILURE(): int = %%EXIT_FAILURE%%
@@ -29,9 +39,9 @@ extern fn system(char[]): int
 // TODO bsearch
 // TODO qsort
 extern fn abs(int): int
-// TODO div
+extern fn div(int, int): div_t
 extern fn labs(long): long
-// TODO ldiv
+extern fn ldiv(int, int): ldiv_t
 extern fn rand(): int
 extern fn srand(int): void
 // TODO mblen

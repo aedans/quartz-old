@@ -2,22 +2,38 @@
 
 %%
 #include <time.h>
+
+typedef tm* = tm_ptr;
+typedef time_t* = time_t_ptr
 %%
+
+extern struct tm {
+    val tm_sec: int
+    val tm_min: int
+    val tm_hour: int
+    val tm_mday: int
+    val tm_mon: int
+    val tm_year: int
+    val tm_wday: int
+    val tm_yday: int
+    val tm_isds: int
+};
 
 extern typealias size_t = long
 extern typealias clock_t = long
-// TODO time_t
-// TODO tm
+extern typealias time_t = long
+extern typealias time_t_ptr = void
+extern typealias tm_ptr = void
 
 // TODO get_NULL
 fn get_CLOCKS_PER_SEC(): long = %%CLOCKS_PER_SEC%%
 
-// TODO asctime
+extern fn asctime(tm_ptr): char[]
 extern fn clock(): clock_t
-// TODO ctime
-// TODO difftime
-// TODO gmtime
-// TODO localtime
-// TODO mktime
+extern fn ctime(time_t_ptr): char[]
+extern fn difftime(time_t, time_t): double
+extern fn gmtime(time_t_ptr): tm_ptr
+extern fn localtime(time_t_ptr): tm_ptr
+extern fn mktime(tm_ptr): time_t_ptr
 // TODO strftime
-// TODO time
+extern fn time(time_t_ptr): time_t

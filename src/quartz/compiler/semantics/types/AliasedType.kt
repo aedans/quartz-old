@@ -15,6 +15,10 @@ class AliasedType(name: String, val type: Type, val external: Boolean) : NamedTy
         return type == this.type || super.canCastTo(type) || type.canCastTo(type)
     }
 
+    fun getTrueType(): Type? {
+        return if (type is AliasedType) type.getTrueType() else type
+    }
+
     override fun toString(): String {
         return name
     }

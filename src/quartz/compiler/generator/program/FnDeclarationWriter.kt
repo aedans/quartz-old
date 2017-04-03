@@ -59,7 +59,7 @@ fun ProgramOutputStream.statement(statement: StatementNode) {
 }
 
 fun ProgramOutputStream.varDeclaration(varDeclarationNode: VarDeclarationNode) {
-    type(varDeclarationNode.type ?: throw Exception("Unknown type for $this"))
+    type(varDeclarationNode.type ?: throw Exception("Unknown aliasedType for $this"))
     name(varDeclarationNode.name)
     varDeclarationNode.expression?.apply {
         string("=")
@@ -116,7 +116,7 @@ fun ProgramOutputStream.identifier(identifierNode: IdentifierNode) {
 }
 
 fun ProgramOutputStream.cast(castNode: CastNode) {
-    parentheses { type(castNode.type ?: throw Exception("Unknown type for $this")) }
+    parentheses { type(castNode.type ?: throw Exception("Unknown aliasedType for $this")) }
     parentheses { expression(castNode.expression) }
 }
 

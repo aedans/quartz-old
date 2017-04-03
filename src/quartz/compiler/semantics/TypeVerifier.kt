@@ -203,6 +203,6 @@ private fun Type?.verifyAs(type: Type?): Type? {
 }
 
 private fun NamedType.verify(typeTable: TypeTable): Type {
-    return typeTable.get(name)
+    return typeTable.getTrue(name)
             ?: throw QuartzException("Unknown type $this")
 }

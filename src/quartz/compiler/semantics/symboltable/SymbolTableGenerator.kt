@@ -1,7 +1,6 @@
 package quartz.compiler.semantics.symboltable
 
 import quartz.compiler.exceptions.QuartzException
-import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -14,7 +13,7 @@ import quartz.compiler.syntax.tree.function.statement.VarDeclarationNode
 fun ProgramNode.generateSymbolTable(): SymbolTable {
     val typeTable = TypeTable()
     structDeclarations.forEach { typeTable.add(it.name, it.type) }
-    typealiasDeclarations.forEach { typeTable.add(it.name, AliasedType(it.name, it.type, it.external)) }
+    typealiasDeclarations.forEach { typeTable.add(it.name, it.type) }
     val symbolTable = SymbolTable(typeTable)
     fnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
     externFnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
@@ -28,5 +27,5 @@ fun FnDeclarationNode.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
 }
 
 fun VarDeclarationNode.addTo(symbolTable: SymbolTable) {
-    symbolTable.addVar(name, type ?: throw QuartzException("Unknown type for $this"))
+    symbolTable.addVar(name, type ?: throw QuartzException("Unknown aliasedType for $this"))
 }

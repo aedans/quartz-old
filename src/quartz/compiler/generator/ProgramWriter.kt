@@ -16,8 +16,8 @@ fun ProgramOutputStream.writeAll() {
 
     programNode.mapTypes { it?.apply { declare(this) } }
 
-    programNode.structDeclarations.forEach { structPrototype(it) }
-    programNode.structDeclarations.forEach { struct(it) }
+    programNode.structDeclarations.filter { !it.external }.forEach { structPrototype(it) }
+    programNode.structDeclarations.filter { !it.external }.forEach { struct(it) }
 
     programNode.fnDeclarations.forEach { functionPrototype(it) }
     programNode.fnDeclarations.forEach { function(it) }
@@ -25,7 +25,7 @@ fun ProgramOutputStream.writeAll() {
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
-        is StructType -> struct(programNode.structDeclarations.firstOrNull { it.name == type.name }
+        is StructType -> if (!type.external) struct(programNode.structDeclarations.firstOrNull { it.name == type.name }
                 ?: throw QuartzException("Unknown struct ${type.name}"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)

@@ -6,9 +6,9 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class StructType(name: String, val members: Map<String, Type>) : NamedType(name) {
+class StructType(name: String, val members: Map<String, Type>, val external: Boolean) : NamedType(name) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
-        return StructType(name, members.map { it.key to function(it.value.mapTypes(function))!! }.toMap())
+        return StructType(name, members.map { it.key to function(it.value.mapTypes(function))!! }.toMap(), external)
     }
 
     override fun toString(): String {

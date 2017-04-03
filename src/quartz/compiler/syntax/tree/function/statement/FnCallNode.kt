@@ -30,9 +30,6 @@ class FnCallNode(val expression: ExpressionNode, val expressions: List<Expressio
     }
 
     override fun toString(): String {
-        var s = "$expression("
-        expressions.dropLast(1).forEach { s += it.toString() + ", " }
-        if (!expressions.isEmpty()) s += expressions.last().toString()
-        return "$s)"
+        return "$expression$expressions"
     }
 }

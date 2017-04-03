@@ -10,7 +10,7 @@ import quartz.compiler.util.Type
 
 class ExternFnDeclarationNode(val name: String, val function: Function) : GlobalDeclarationNode {
     override fun toString(): String {
-        return "$name $function"
+        return "$name$function"
     }
 
     fun mapTypes(function: (Type?) -> Type?): ExternFnDeclarationNode {

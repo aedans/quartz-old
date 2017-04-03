@@ -18,6 +18,6 @@ class ReturnNode(val expression: ExpressionNode) : StatementNode {
     }
 
     override fun toString(): String {
-        return "return($expression)"
+        return "return $expression"
     }
 }

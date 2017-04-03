@@ -11,8 +11,12 @@ import quartz.compiler.util.Type
 class StructDeclarationNode(
         val name: String,
         val members: Map<String, StructMemberNode>,
-        val type: StructType = StructType(name, members.map { it.value.name to it.value.type }.toMap())
+        val external: Boolean
 ) : GlobalDeclarationNode {
+    val type by lazy {
+        StructType(name, members.map { it.value.name to it.value.type }.toMap(), external)
+    }
+
     override fun toString(): String {
         return "struct $name$members"
     }
@@ -20,7 +24,8 @@ class StructDeclarationNode(
     fun mapTypes(function: (Type?) -> Type?): StructDeclarationNode {
         return StructDeclarationNode(
                 name,
-                members.map { it.key to it.value.mapTypes(function) }.toMap()
+                members.map { it.key to it.value.mapTypes(function) }.toMap(),
+                external
         )
     }
 }

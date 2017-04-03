@@ -61,7 +61,7 @@ private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): Ex
         is IfExpressionNode -> {
             val tempVarName = "temp${hashCode()}"
             newStatements.add(VarDeclarationNode(tempVarName, null, type
-                    ?: throw QuartzException("Unknown type for $this"), true))
+                    ?: throw QuartzException("Unknown aliasedType for $this"), true))
 
             val trueStatements = mutableListOf<StatementNode>()
             trueStatements.add(VarAssignmentNode(tempVarName, ifTrue.unwrap(trueStatements)))

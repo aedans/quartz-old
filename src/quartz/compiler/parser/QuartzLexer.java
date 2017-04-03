@@ -38,7 +38,7 @@ public class QuartzLexer extends Lexer {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'fn'", "'('", "')'", "':'", "'extern'", "','", "'='", "'struct'", 
+		null, "'fn'", "'('", "')'", "':'", "'external'", "','", "'='", "'struct'",
 		"'{'", "'}'", "'typealias'", "'import'", "'.'", "'return'", "'if'", "'else'", 
 		"'while'", "'||'", "'&&'", "'=='", "'!='", "'>'", "'<'", "'>='", "'<='", 
 		"'+'", "'-'", "'*'", "'/'", "'%'", "'!'", "'['", "']'", "'[]'", "'->'", 

@@ -12,7 +12,7 @@ fun QuartzParser.StructDeclarationContext.toNode(): StructDeclarationNode {
     return StructDeclarationNode(identifier().text, structMember().map {
         val node = it.toNode()
         node.name to node
-    }.toMap() )
+    }.toMap(), extern != null )
 }
 
 fun QuartzParser.StructMemberContext.toNode(): StructMemberNode {
