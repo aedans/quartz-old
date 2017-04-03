@@ -1,3 +1,5 @@
+import std.qvoid
+
 // Bindings for time.h
 
 %%
@@ -25,7 +27,6 @@ extern typealias time_t = long
 extern typealias time_t_ptr = void
 extern typealias tm_ptr = void
 
-// TODO get_NULL
 fn get_CLOCKS_PER_SEC(): long = %%CLOCKS_PER_SEC%%
 
 extern fn asctime(tm_ptr): char[]

@@ -4,9 +4,8 @@
 #include <errno.h>
 %%
 
-fn set_errno(value: int){
+fn set_errno(value: int)
     %%errno = value%%;
-}
 
 fn get_errno(): int = %%errno%%
 fn get_EDOM(): int = %%EDOM%%

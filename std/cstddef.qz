@@ -1,3 +1,5 @@
+import std.qvoid
+
 // Bindings for stddef.h
 
 %%
@@ -6,7 +8,5 @@
 
 extern typealias size_t = long
 extern typealias wchar_t = long
-
-// TODO get_NULL
 
 // TODO offsetof

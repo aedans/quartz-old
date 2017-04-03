@@ -1,3 +1,5 @@
+import std.qvoid
+
 // Bindings for stdlib.h
 
 %%
@@ -19,7 +21,6 @@ extern typealias wchar_t = long
 extern typealias div_t = __Q_div_t;
 extern typealias ldiv_t = __Q_ldiv_t
 
-// TODO get_NULL
 fn get_EXIT_FAILURE(): int = %%EXIT_FAILURE%%
 fn get_EXIT_SUCCESS(): int = %%EXIT_SUCCESS%%
 fn get_RAND_MAX(): int = %%RAND_MAX%%

@@ -1,3 +1,5 @@
+import std.qvoid
+
 // Bindings for stdio.h
 
 %%
@@ -10,7 +12,6 @@ extern typealias size_t = long
 extern typealias fpos_t = long
 extern typealias FILE_ptr = void
 
-// TODO get_NULL
 // TODO get__IOFBF
 // TODO get__IOLBF
 // TODO get__IONBF
