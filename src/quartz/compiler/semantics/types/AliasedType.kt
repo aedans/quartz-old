@@ -6,13 +6,13 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class AliasedType(name: String, val type: Type, val external: Boolean) : NamedType(name) {
+data class AliasedType(val name: String, val type: Type, val external: Boolean) : Type {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return AliasedType(name, function(type.mapTypes(function))!!, external)
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type == this.type || super.canCastTo(type) || type.canCastTo(type)
+        return type == this.type || type is AliasedType && type.name == this.name || type.canCastTo(type)
     }
 
     fun getTrueType(): Type? {

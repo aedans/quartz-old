@@ -20,7 +20,7 @@ import quartz.compiler.util.plus
  */
 
 fun ProgramNode.verifyTypes(): ProgramNode {
-    val newNode = mapTypes { (it as? NamedType)?.verify(symbolTable) ?: it }
+    val newNode = mapTypes { (it as? UnresolvedType)?.verify(symbolTable) ?: it }
     return newNode.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(newNode.symbolTable) }
 }
 
@@ -201,7 +201,7 @@ private fun Type?.verifyAs(type: Type?): Type? {
     }
 }
 
-private fun NamedType.verify(symbolTable: SymbolTable): Type {
+private fun UnresolvedType.verify(symbolTable: SymbolTable): Type {
     return symbolTable.getTrueType(name)
             ?: throw QuartzException("Unknown type $this")
 }
