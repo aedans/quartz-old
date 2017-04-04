@@ -1,6 +1,7 @@
 import std.cstdio
 
-fn main(){
+fn main(): int {
     val file = fopen("../out/HelloWorldFile.qz.c.exe.txt", "w");
     file.fprintf("Hello, World!\n");
+    return 0;
 }

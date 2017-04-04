@@ -3,6 +3,7 @@ import std.cstdio
 
 fn main(): int {
     atexit(hello);
+    return 0;
 }
 
 fn hello() {

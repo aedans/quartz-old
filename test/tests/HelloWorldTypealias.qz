@@ -2,7 +2,8 @@ import std.cstdio
 
 typealias string = char[]
 
-fn main() {
+fn main(): int {
     val helloWorld: string = "Hello, World!";
     printf(helloWorld);
+    return 0;
 }

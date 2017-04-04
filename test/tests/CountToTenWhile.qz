@@ -2,6 +2,7 @@ import std.cstdio
 
 fn main(): int {
     10.countTo();
+    return 0;
 }
 
 fn countTo(max: int) {
