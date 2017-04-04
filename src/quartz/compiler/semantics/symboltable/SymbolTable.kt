@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.symboltable
 
-import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.util.Type
 
 /**
@@ -29,12 +28,7 @@ class SymbolTable(val superTable: SymbolTable? = null) {
     }
 
     fun getType(name: String): Type? {
-        val type = getTrueType(name)
-        return if (type is AliasedType) type.getTrueType() else type
-    }
-
-    fun getTrueType(name: String): Type? {
-        return types[name] ?: superTable?.getTrueType(name)
+        return types[name] ?: superTable?.getType(name)
     }
 
     fun localSymbolTable(): SymbolTable {

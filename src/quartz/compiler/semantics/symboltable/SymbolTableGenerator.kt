@@ -21,6 +21,7 @@ fun ProgramNode.generateSymbolTable(): SymbolTable {
 
 fun FnDeclarationNode.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
+    this.function.templates.forEach { localSymbolTable.addType(it.string, it) }
     this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
     return localSymbolTable
 }

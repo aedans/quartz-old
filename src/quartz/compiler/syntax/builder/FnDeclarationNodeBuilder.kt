@@ -3,6 +3,7 @@ package quartz.compiler.syntax.builder
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.syntax.tree.GlobalDeclarationNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -22,6 +23,7 @@ fun QuartzParser.FnDeclarationContext.toNode(): GlobalDeclarationNode {
                 identifier().text,
                 Function(
                         typeList().type().map { it.toType() },
+                        emptyList(),
                         returnType?.toType() ?: Primitives.void,
                         typeList().vararg != null
                 )
@@ -32,6 +34,7 @@ fun QuartzParser.FnDeclarationContext.toNode(): GlobalDeclarationNode {
                 fnArgumentList().fnArgument().map { it.identifier().text },
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
+                        identifierList()?.identifier()?.map { TemplateType(it.text) } ?: emptyList(),
                         returnType?.toType() ?: Primitives.void,
                         false
                 ),
@@ -180,7 +183,12 @@ fun QuartzParser.MemberAccessContext.toNode(expression: ExpressionNode): MemberA
 }
 
 fun QuartzParser.PostfixCallContext.toNode(expression: ExpressionNode): FnCallNode {
-    return FnCallNode(expression, expressionList().expression().map { it.toNode() }, null)
+    return FnCallNode(
+            expression,
+            typeList()?.type()?.map { it.toType() } ?: emptyList(),
+            expressionList().expression().map { it.toNode() },
+            null
+    )
 }
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpressionNode {

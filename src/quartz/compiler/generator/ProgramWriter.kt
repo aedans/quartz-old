@@ -29,5 +29,6 @@ fun ProgramOutputStream.declare(type: Type) {
                 ?: throw QuartzException("Unknown struct $type"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)
+//        is TemplateType -> throw QuartzException("Unexpected template $type")
     }
 }

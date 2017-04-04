@@ -4,7 +4,7 @@ package quartz.compiler.util
  * Created by Aedan Smith.
  */
 
-abstract class Type(val string: String) {
+abstract class Type(val string: String, val descriptiveString: String) {
     abstract fun canCastTo(type: Type): Boolean
 
     abstract fun mapTypes(function: (Type?) -> Type?): Type

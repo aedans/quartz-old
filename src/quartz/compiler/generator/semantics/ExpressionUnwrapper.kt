@@ -40,6 +40,7 @@ private fun StatementNode.unwrapExpressions(newStatements: MutableList<Statement
         )
         is FnCallNode -> FnCallNode(
                 expression.unwrap(newStatements),
+                templates,
                 expressions.map { it.unwrap(newStatements) },
                 type
         )
@@ -56,7 +57,7 @@ private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): Ex
         is CastNode -> CastNode(expression.unwrap(newStatements), type)
         is UnaryOperatorNode -> UnaryOperatorNode(expression.unwrap(newStatements), id, type)
         is BinaryOperatorNode -> BinaryOperatorNode(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
-        is FnCallNode -> FnCallNode(expression.unwrap(newStatements), expressions.map { it.unwrap(newStatements) }, type)
+        is FnCallNode -> FnCallNode(expression.unwrap(newStatements), templates, expressions.map { it.unwrap(newStatements) }, type)
         is MemberAccessNode -> MemberAccessNode(name, expression.unwrap(newStatements), type)
         is IfExpressionNode -> {
             val tempVarName = "temp${hashCode()}"

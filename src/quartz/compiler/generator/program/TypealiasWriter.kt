@@ -2,7 +2,6 @@ package quartz.compiler.generator.program
 
 import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.declare
-import quartz.compiler.generator.util.description
 import quartz.compiler.generator.util.type
 import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
@@ -30,7 +29,7 @@ fun ProgramOutputStream.functionTypedef(type: FunctionType) {
         type(type.function.returnType)
         parentheses {
             string("*")
-            description(type)
+            string(type.descriptiveString)
             string("_t")
         }
         parentheses {

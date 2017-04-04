@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class StructType(string: String, val structDeclarationNode: StructDeclarationNode, val external: Boolean) : Type(string) {
+class StructType(string: String, val structDeclarationNode: StructDeclarationNode, val external: Boolean) : Type(string, string) {
     override fun canCastTo(type: Type): Boolean {
         return type is StructType && type.string == this.string
     }

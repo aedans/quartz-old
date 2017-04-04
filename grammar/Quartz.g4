@@ -18,7 +18,7 @@ declaration
 // FN DECLARATION
 
 fnDeclaration
-    : fnModifiers 'fn' identifier '(' fnArgumentList ')' (':' returnType=type)? body=fnBlock
+    : fnModifiers 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? body=fnBlock
     | fnModifiers extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;
 
@@ -177,7 +177,7 @@ arrayAccess
     ;
 
 postfixCall
-    : '(' expressionList ')'
+    : ('<' typeList '>')? '(' expressionList ')'
     ;
 
 memberAccess

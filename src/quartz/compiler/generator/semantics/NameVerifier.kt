@@ -7,6 +7,8 @@ import quartz.compiler.syntax.tree.function.expression.IdentifierNode
  * Created by Aedan Smith.
  */
 
+// TODO fix
+
 private val VALID_CHAR_START = ('a'..'z') + ('A'..'Z') + '_'
 private val VALID_CHAR = ('a'..'z') + ('A'..'Z') +('0'..'9') + '_'
 

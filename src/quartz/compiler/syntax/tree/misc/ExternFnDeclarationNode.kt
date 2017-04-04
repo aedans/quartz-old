@@ -16,6 +16,7 @@ class ExternFnDeclarationNode(val name: String, val function: Function) : Global
     fun mapTypes(function: (Type?) -> Type?): ExternFnDeclarationNode {
         return ExternFnDeclarationNode(name, Function(
                 this.function.args.map { function(it.mapTypes(function))!! },
+                this.function.templates.map { function(it.mapTypes(function))!! },
                 function(this.function.returnType.mapTypes(function))!!,
                 this.function.vararg
         ))

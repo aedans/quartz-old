@@ -16,7 +16,7 @@ object Primitives {
     val void: Type = QVoid()
 }
 
-private class NumType(string: String) : Type(string) {
+private class NumType(string: String) : Type(string, string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
@@ -26,7 +26,7 @@ private class NumType(string: String) : Type(string) {
     }
 }
 
-private class QVoid : Type("void") {
+private class QVoid : Type("void", "void") {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }

@@ -4,7 +4,10 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
-import quartz.compiler.semantics.types.*
+import quartz.compiler.semantics.types.ArrayType
+import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -13,15 +16,13 @@ import quartz.compiler.syntax.tree.function.expression.*
 import quartz.compiler.syntax.tree.function.statement.*
 import quartz.compiler.syntax.tree.misc.InlineCNode
 import quartz.compiler.util.Type
-import quartz.compiler.util.plus
 
 /**
  * Created by Aedan Smith.
  */
 
 fun ProgramNode.verifyTypes(): ProgramNode {
-    val newNode = mapTypes { (it as? UnresolvedType)?.verify(symbolTable) ?: it }
-    return newNode.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(newNode.symbolTable) }
+    return this.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
 }
 
 private fun FnDeclarationNode.verify(symbolTable: SymbolTable): FnDeclarationNode {
@@ -127,7 +128,7 @@ private fun BinaryOperatorNode.verify(symbolTable: SymbolTable): BinaryOperatorN
 }
 
 private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
-    try {
+    return try {
         val newExpression = expression.verify(symbolTable)
         val expressionFunction = (newExpression.type as? FunctionType)?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
@@ -135,23 +136,22 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
         if (!expressionFunction.vararg && expressionFunction.args.size != expressions.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
-        return FnCallNode(
+        val templateMap = expressionFunction.templates.zip(templates).toMap()
+        val templatedExpressionFunction = expressionFunction.mapTypes { templateMap[it] ?: it }
+
+        FnCallNode(
                 newExpression,
-                expressions.zip(expressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
+                templates,
+                expressions
+                        .zip(templatedExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
                         .map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
-                type.verifyAs(expressionFunction.returnType)
+                type.verifyAs(templatedExpressionFunction.returnType)
         )
     } catch (e: QuartzException) {
         if (expression !is MemberAccessNode)
             throw e
 
-        val expressionType = symbolTable.getVar(expression.name) as? FunctionType
-                ?: throw QuartzException("Could not find function ${expression.name}")
-        return FnCallNode(
-                IdentifierNode(expression.name, expressionType),
-                expression.expression + expressions,
-                type
-        ).verify(symbolTable)
+        resolveDotNotation(symbolTable).verify(symbolTable)
     }
 }
 
@@ -199,9 +199,4 @@ private fun Type?.verifyAs(type: Type?): Type? {
         Type.canCast(this, type) -> this
         else -> throw QuartzException("Could not cast $this to $type")
     }
-}
-
-private fun UnresolvedType.verify(symbolTable: SymbolTable): Type {
-    return symbolTable.getTrueType(string)
-            ?: throw QuartzException("Unknown type $this")
 }

@@ -6,12 +6,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class UnresolvedType(string: String) : Type(string) {
+class TemplateType(string: String) : Type(string, string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type is UnresolvedType && type.string == this.string
+        return type is TemplateType && type.string == this.string
     }
 }

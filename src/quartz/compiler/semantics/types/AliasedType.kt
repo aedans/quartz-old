@@ -6,7 +6,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class AliasedType(string: String, val type: Type, val external: Boolean) : Type(string) {
+class AliasedType(string: String, val type: Type, val external: Boolean) : Type(string, string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return AliasedType(string, function(type.mapTypes(function))!!, external)
     }

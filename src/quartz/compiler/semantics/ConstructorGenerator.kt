@@ -34,5 +34,5 @@ private fun StructDeclarationNode.defaultConstructor(): FnDeclarationNode {
     statements.addAll(assignmentNodes)
     statements.add(returnNode)
 
-    return FnDeclarationNode(name, argsNames, Function(argTypes, type, false), statements)
+    return FnDeclarationNode(name, argsNames, Function(argTypes, emptyList(), type, false), statements)
 }

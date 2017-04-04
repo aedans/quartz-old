@@ -3,8 +3,8 @@ package quartz.compiler.syntax.builder
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.ArrayType
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -22,13 +22,13 @@ fun QuartzParser.TypeContext.toType(): Type {
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
-            else -> UnresolvedType(identifier().text)
+            else -> NamedType(identifier().text)
         }
     } else {
         if (array != null) {
             ArrayType(type().toType())
         } else {
-            FunctionType(Function(args.type().map { it.toType() }, returnType.toType(), args.vararg != null))
+            FunctionType(Function(args.type().map { it.toType() }, emptyList(), returnType.toType(), args.vararg != null))
         }
     }
 }

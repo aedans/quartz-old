@@ -6,6 +6,8 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.generateConstructors
+import quartz.compiler.semantics.resolveTemplates
+import quartz.compiler.semantics.resolveTypes
 import quartz.compiler.semantics.verifyTypes
 import quartz.compiler.syntax.builder.toNode
 import quartz.compiler.syntax.tree.ProgramNode
@@ -30,7 +32,9 @@ object Compiler {
                 analyzer: ProgramNode.() -> ProgramNode = {
                     this
                             .generateConstructors()
+                            .resolveTypes()
                             .verifyTypes()
+                            .resolveTemplates()
                 },
                 generator: (ProgramNode, OutputStream) -> Unit = Generator::write
     ) {
