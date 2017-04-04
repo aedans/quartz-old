@@ -1,0 +1,9 @@
+import std.cstdio
+
+struct Container<T> {
+    val value: T
+}
+
+fn main(){
+    "Hello, World!".Container<char[]>().value.printf();
+}

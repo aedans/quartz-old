@@ -42,7 +42,7 @@ fnBlock
 // STRUCT DECLARATION
 
 structDeclaration
-    : extern='extern'? 'struct' identifier '{' structMember* '}' semi?
+    : extern='extern'? 'struct' identifier ('<' identifierList '>')? '{' structMember* '}' semi?
     ;
 
 structMember
@@ -198,7 +198,7 @@ literal
 // TYPES
 
 type
-    : identifier
+    : identifier ('<' typeList '>')?
     | type array='[]'
     | '(' args=typeList ')' '->' returnType=type
     ;

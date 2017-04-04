@@ -5,7 +5,6 @@ import quartz.compiler.generator.program.*
 import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.StructType
-import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.util.Type
 
 /**
@@ -26,10 +25,11 @@ fun ProgramOutputStream.writeAll() {
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
-        is StructType -> if (!type.external) struct(programNode.structDeclarations.firstOrNull { it.name == type.string }
-                ?: throw QuartzException("Unknown struct $type"))
+        is StructType -> if (!type.structDeclarationNode.external)
+            struct(programNode.structDeclarations.firstOrNull { it.name == type.string }
+                    ?: throw QuartzException("Unknown struct $type"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)
-        is TemplateType -> throw QuartzException("Unexpected template $type")
+//        is TemplateType -> throw QuartzException("Unexpected template $type")
     }
 }

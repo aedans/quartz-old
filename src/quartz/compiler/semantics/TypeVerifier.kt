@@ -4,10 +4,7 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
-import quartz.compiler.semantics.types.ArrayType
-import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.*
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.ExpressionNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
@@ -137,15 +134,15 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
             throw QuartzException("Incorrect number of arguments for $this")
 
         val templateMap = expressionFunction.templates.zip(templates).toMap()
-        val templatedExpressionFunction = expressionFunction.mapTypes { templateMap[it] ?: it }
+        val templateExpressionFunction = expressionFunction.mapTypes { templateMap[it] ?: it }
 
         FnCallNode(
                 newExpression,
                 templates,
                 expressions
-                        .zip(templatedExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
+                        .zip(templateExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
                         .map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
-                type.verifyAs(templatedExpressionFunction.returnType)
+                type.verifyAs(templateExpressionFunction.returnType)
         )
     } catch (e: QuartzException) {
         if (expression !is MemberAccessNode)
@@ -157,9 +154,9 @@ private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
 
 private fun MemberAccessNode.verify(symbolTable: SymbolTable): MemberAccessNode {
     val newExpression = expression.verify(symbolTable)
-    val owner = symbolTable.getType(newExpression.type.toString()) as? StructType
-            ?: throw QuartzException("Unknown struct ${newExpression.type}")
-    val memberType = owner.structDeclarationNode.members[name]?.type
+    val owner = newExpression.type.asStruct()
+            ?: throw QuartzException("${newExpression.type} is not a struct")
+    val memberType = owner.members[name]?.type
             ?: throw QuartzException("Unknown member $owner.$type")
 
     return MemberAccessNode(
@@ -188,7 +185,7 @@ private fun ExpressionNode.verifyAs(type: Type?): ExpressionNode {
         this.type == null -> this.withType(type)
         this.type == type || type == null -> this
         Type.canCast(this.type!!, type) -> CastNode(this, type)
-        else -> throw QuartzException("Could not cast $this to $type")
+        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
     }
 }
 
@@ -198,5 +195,13 @@ private fun Type?.verifyAs(type: Type?): Type? {
         this == type || type == null -> this
         Type.canCast(this, type) -> this
         else -> throw QuartzException("Could not cast $this to $type")
+    }
+}
+
+fun Type?.asStruct(): StructType? {
+    return when (this) {
+        is StructType -> this
+        is AliasedType -> type.asStruct()
+        else -> null
     }
 }

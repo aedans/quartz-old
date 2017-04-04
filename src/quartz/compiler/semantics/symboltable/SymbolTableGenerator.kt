@@ -5,6 +5,7 @@ import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.function.FnDeclarationNode
 import quartz.compiler.syntax.tree.function.statement.VarDeclarationNode
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 
 /**
  * Created by Aedan Smith.
@@ -23,6 +24,12 @@ fun FnDeclarationNode.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
     this.function.templates.forEach { localSymbolTable.addType(it.string, it) }
     this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
+    return localSymbolTable
+}
+
+fun StructDeclarationNode.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
+    val localSymbolTable = symbolTable.localSymbolTable()
+    this.templates.forEach { localSymbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 

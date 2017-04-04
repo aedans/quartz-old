@@ -26,7 +26,7 @@ fun ProgramNode.resolveTypes(): ProgramNode {
 }
 
 private fun FnDeclarationNode.resolveTypes(symbolTable: SymbolTable): FnDeclarationNode {
-    val localSymbolTable = this.localSymbolTable(symbolTable)
+    val localSymbolTable = localSymbolTable(symbolTable)
     return this.mapTypes { it?.resolve(localSymbolTable) }
 }
 
@@ -35,7 +35,8 @@ private fun ExternFnDeclarationNode.resolveTypes(symbolTable: SymbolTable): Exte
 }
 
 private fun StructDeclarationNode.resolveTypes(symbolTable: SymbolTable): StructDeclarationNode {
-    return this.mapTypes { it?.resolve(symbolTable) }
+    val localSymbolTable = localSymbolTable(symbolTable)
+    return this.mapTypes { it?.resolve(localSymbolTable) }
 }
 
 private fun TypealiasNode.resolveTypes(symbolTable: SymbolTable): TypealiasNode {
@@ -44,6 +45,7 @@ private fun TypealiasNode.resolveTypes(symbolTable: SymbolTable): TypealiasNode 
 
 private fun Type.resolve(symbolTable: SymbolTable): Type {
     return if (this is NamedType)
-        symbolTable.getType(this.string) ?: throw QuartzException("Unknown type $this")
+        symbolTable.getType(this.string)?.withTemplates(templates)?.mapTypes { it?.resolve(symbolTable) }
+                ?: throw QuartzException("Unknown type $this")
     else this
 }

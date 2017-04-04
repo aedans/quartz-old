@@ -13,6 +13,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
+// TODO Maps
 data class ProgramNode(
         val fnDeclarations: List<FnDeclarationNode>,
         val externFnDeclarations: List<ExternFnDeclarationNode>,
@@ -56,6 +57,7 @@ data class ProgramNode(
         var s = ""
         fnDeclarations.forEach { s += it.toString() + "\n\n" }
         structDeclarations.forEach { s += it.toString() + "\n\n" }
+        typealiasDeclarations.forEach { s += it.toString() + "\n\n" }
         return s
     }
 }

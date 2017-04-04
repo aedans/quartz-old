@@ -5,10 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.generateConstructors
-import quartz.compiler.semantics.resolveTemplates
-import quartz.compiler.semantics.resolveTypes
-import quartz.compiler.semantics.verifyTypes
+import quartz.compiler.semantics.*
 import quartz.compiler.syntax.builder.toNode
 import quartz.compiler.syntax.tree.ProgramNode
 import quartz.compiler.syntax.tree.import.Library
@@ -34,14 +31,15 @@ object Compiler {
                             .generateConstructors()
                             .resolveTypes()
                             .verifyTypes()
-                            .resolveTemplates()
+                            .resolveFunctionTemplates()
+                            .resolveTypeTemplates()
                 },
                 generator: (ProgramNode, OutputStream) -> Unit = Generator::write
     ) {
         println(library.toString(0))
         var program = builder(parser(input))
         println('\n' + program.toString())
-        program = program.analyzer()
+        program = analyzer(program)
         println(program.toString())
         generator(program, output)
     }

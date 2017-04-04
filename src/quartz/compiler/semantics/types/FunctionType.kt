@@ -1,5 +1,6 @@
 package quartz.compiler.semantics.types
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -7,13 +8,21 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class FunctionType(val function: Function) : Type("$function", function.description()) {
+data class FunctionType(val function: Function) : Type("$function", function.description(), emptyList()) {
+    override fun withTemplates(templates: List<Type>): Type {
+        if (templates.isEmpty()) return this
+        throw QuartzException("Templates are not allowed on $this")
+    }
+
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return FunctionType(this.function.mapTypes(function))
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type == this
+        return type is FunctionType
+                && type.function.args.zip(function.args).all { canCast(it.first, it.second) }
+                && type.function.returnType.canCastTo(function.returnType)
+                && type.function.vararg == function.vararg
     }
 
     override fun toString(): String {

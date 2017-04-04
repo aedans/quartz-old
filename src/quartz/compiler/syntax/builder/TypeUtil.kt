@@ -22,7 +22,7 @@ fun QuartzParser.TypeContext.toType(): Type {
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
-            else -> NamedType(identifier().text)
+            else -> NamedType(identifier().text, typeList()?.type()?.map { it.toType() } ?: emptyList())
         }
     } else {
         if (array != null) {
