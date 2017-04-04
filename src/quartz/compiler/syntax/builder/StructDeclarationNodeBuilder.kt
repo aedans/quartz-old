@@ -17,7 +17,8 @@ fun QuartzParser.StructDeclarationContext.toNode(): StructDeclarationNode {
                 val node = it.toNode()
                 node.name to node
             }.toMap(),
-            extern != null )
+            extern != null
+    )
 }
 
 fun QuartzParser.StructMemberContext.toNode(): StructMemberNode {

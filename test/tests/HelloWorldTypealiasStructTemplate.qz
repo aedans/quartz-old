@@ -7,6 +7,7 @@ struct Container<T> {
     val value: T
 }
 
-fn main(){
+fn main(): int {
     "Hello, World!".Container<string>().Container<string_container>().value.value.printf();
+    return 0;
 }
