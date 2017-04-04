@@ -20,7 +20,7 @@ fun ProgramOutputStream.type(type: Type) {
         }
         is StructType -> {
             name("struct")
-            name(type.name)
+            name(type.string)
         }
         is FunctionType -> {
             description(type)

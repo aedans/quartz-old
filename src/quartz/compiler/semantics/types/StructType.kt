@@ -1,29 +1,18 @@
 package quartz.compiler.semantics.types
 
+import quartz.compiler.syntax.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class StructType(val name: String, val members: Map<String, Type>, val external: Boolean) : Type {
+class StructType(string: String, val structDeclarationNode: StructDeclarationNode, val external: Boolean) : Type(string) {
     override fun canCastTo(type: Type): Boolean {
-        return type is StructType && type.name == this.name
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return other is StructType && other.name == this.name
-    }
-
-    override fun hashCode(): Int {
-        return name.hashCode()
+        return type is StructType && type.string == this.string
     }
 
     override fun mapTypes(function: (Type?) -> Type?): Type {
-        return StructType(name, members.map { it.key to function(it.value.mapTypes(function))!! }.toMap(), external)
-    }
-
-    override fun toString(): String {
-        return name
+        return StructType(string, structDeclarationNode, external)
     }
 }

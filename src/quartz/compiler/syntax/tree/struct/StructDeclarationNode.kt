@@ -13,9 +13,7 @@ class StructDeclarationNode(
         val members: Map<String, StructMemberNode>,
         val external: Boolean
 ) : GlobalDeclarationNode {
-    val type by lazy {
-        StructType(name, members.map { it.value.name to it.value.type }.toMap(), external)
-    }
+    val type = StructType(name, this, external)
 
     override fun toString(): String {
         return "struct $name$members"

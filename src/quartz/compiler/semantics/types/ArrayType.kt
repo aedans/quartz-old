@@ -6,16 +6,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class ArrayType(val type: Type) : Type {
+data class ArrayType(val type: Type) : Type("$type[]") {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return ArrayType(function(type.mapTypes(function))!!)
     }
 
     override fun canCastTo(type: Type): Boolean {
         return type == this
-    }
-
-    override fun toString(): String {
-        return "$type[]"
     }
 }

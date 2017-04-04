@@ -13,10 +13,10 @@ import quartz.compiler.semantics.types.FunctionType
 
 fun ProgramOutputStream.typedef(type: AliasedType) {
     declare(type.type)
-    declare("typedef_${type.name}") {
+    declare("typedef_$type") {
         name("typedef")
         type(type.type)
-        name(type.name)
+        name(type.string)
         string(";")
         newline()
     }

@@ -159,7 +159,7 @@ private fun MemberAccessNode.verify(symbolTable: SymbolTable): MemberAccessNode 
     val newExpression = expression.verify(symbolTable)
     val owner = symbolTable.getType(newExpression.type.toString()) as? StructType
             ?: throw QuartzException("Unknown struct ${newExpression.type}")
-    val memberType = owner.members[name]
+    val memberType = owner.structDeclarationNode.members[name]?.type
             ?: throw QuartzException("Unknown member $owner.$type")
 
     return MemberAccessNode(
@@ -202,6 +202,6 @@ private fun Type?.verifyAs(type: Type?): Type? {
 }
 
 private fun UnresolvedType.verify(symbolTable: SymbolTable): Type {
-    return symbolTable.getTrueType(name)
+    return symbolTable.getTrueType(string)
             ?: throw QuartzException("Unknown type $this")
 }

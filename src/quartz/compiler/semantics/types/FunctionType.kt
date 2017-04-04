@@ -7,16 +7,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class FunctionType(val function: Function) : Type {
+data class FunctionType(val function: Function) : Type("$function") {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return FunctionType(this.function.mapTypes(function))
     }
 
     override fun canCastTo(type: Type): Boolean {
         return type == this
-    }
-
-    override fun toString(): String {
-        return function.toString()
     }
 }
