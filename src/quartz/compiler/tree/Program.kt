@@ -54,9 +54,9 @@ data class Program(
 
     override fun toString(): String {
         var s = ""
-        fnDeclarations.forEach { s += it.toString() + "\n\n" }
-        structDeclarations.forEach { s += it.toString() + "\n\n" }
-        typealiasDeclarations.forEach { s += it.toString() + "\n\n" }
+        fnDeclarations.forEach { s += it.value.toString() + "\n\n" }
+        structDeclarations.forEach { s += it.value.toString() + "\n\n" }
+        typealiasDeclarations.forEach { s += it.value.toString() + "\n\n" }
         return s
     }
 }
