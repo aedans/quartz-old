@@ -1,4 +1,4 @@
-import std.cstdio
+import std.c.stdio
 
 fn main(argc: int, argv: char[][]): int {
     argv[0].printf();

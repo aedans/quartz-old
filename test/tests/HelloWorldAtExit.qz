@@ -1,5 +1,5 @@
-import std.cstdlib
-import std.cstdio
+import std.c.stdlib
+import std.c.stdio
 
 fn main(): int {
     atexit(hello);

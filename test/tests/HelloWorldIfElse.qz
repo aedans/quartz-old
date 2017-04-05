@@ -1,4 +1,4 @@
-import std.cstdio
+import std.c.stdio
 
 fn main(): int {
     (if (_false()) "Failed" else helloWorld()).printf();

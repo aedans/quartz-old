@@ -1,4 +1,4 @@
-import std.cstdio
+import std.c.stdio
 
 struct Pair<_1, _2> {
     val first: _1

@@ -1,4 +1,4 @@
-import std.cstdio
+import std.c.stdio
 
 struct CountInfo {
     val tester: (int) -> int

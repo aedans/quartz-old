@@ -1,4 +1,4 @@
-import std.cstdio
+import std.c.stdio
 
 fn main(): int {
     val added = 1 + 2;

@@ -1,4 +1,4 @@
-import std.cstdio
+import std.c.stdio
 
 typealias string = char[]
 typealias string_container = Container<string>
