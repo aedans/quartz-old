@@ -105,7 +105,8 @@ private fun BinaryOperatorNode.verify(symbolTable: SymbolTable): BinaryOperatorN
     return if (id == BinaryOperatorNode.ID.ARRAY_ACCESS) {
         val newExpr1 = expr1.verify(symbolTable)
         val newExpr2 = expr2.verify(symbolTable).verifyAs(Primitives.int)
-        val newType = (newExpr1.type as ArrayType).type
+        val newType = newExpr1.type.asArray()?.type
+                ?: throw QuartzException("$type is not an array")
         BinaryOperatorNode(
                 newExpr1,
                 newExpr2,
@@ -127,7 +128,7 @@ private fun BinaryOperatorNode.verify(symbolTable: SymbolTable): BinaryOperatorN
 private fun FnCallNode.verify(symbolTable: SymbolTable): FnCallNode {
     return try {
         val newExpression = expression.verify(symbolTable)
-        val expressionFunction = (newExpression.type as? FunctionType)?.function
+        val expressionFunction = newExpression.type.asFunction()?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
         if (!expressionFunction.vararg && expressionFunction.args.size != expressions.size)
@@ -202,6 +203,22 @@ fun Type?.asStruct(): StructType? {
     return when (this) {
         is StructType -> this
         is AliasedType -> type.asStruct()
+        else -> null
+    }
+}
+
+fun Type?.asFunction(): FunctionType? {
+    return when (this) {
+        is FunctionType -> this
+        is AliasedType -> type.asFunction()
+        else -> null
+    }
+}
+
+fun Type?.asArray(): ArrayType? {
+    return when (this) {
+        is ArrayType -> this
+        is AliasedType -> type.asArray()
         else -> null
     }
 }
