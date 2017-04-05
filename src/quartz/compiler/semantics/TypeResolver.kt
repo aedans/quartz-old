@@ -4,43 +4,43 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.NamedType
-import quartz.compiler.tree.ProgramNode
-import quartz.compiler.tree.function.FnDeclarationNode
-import quartz.compiler.tree.misc.ExternFnDeclarationNode
-import quartz.compiler.tree.misc.TypealiasNode
-import quartz.compiler.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.misc.ExternFunctionDeclaration
+import quartz.compiler.tree.misc.Typealias
+import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-fun ProgramNode.resolveTypes(): ProgramNode {
-    return ProgramNode(
+fun Program.resolveTypes(): Program {
+    return Program(
             fnDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
-            externFnDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
+            externFunctionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             structDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             typealiasDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             inlineCNodes
     )
 }
 
-private fun FnDeclarationNode.resolveTypes(symbolTable: SymbolTable): FnDeclarationNode {
+private fun FnDeclaration.resolveTypes(symbolTable: SymbolTable): FnDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
     return this.mapTypes { it?.resolve(localSymbolTable) }
 }
 
-private fun ExternFnDeclarationNode.resolveTypes(symbolTable: SymbolTable): ExternFnDeclarationNode {
+private fun ExternFunctionDeclaration.resolveTypes(symbolTable: SymbolTable): ExternFunctionDeclaration {
     return this.mapTypes { it?.resolve(symbolTable) }
 }
 
-private fun StructDeclarationNode.resolveTypes(symbolTable: SymbolTable): StructDeclarationNode {
+private fun StructDeclaration.resolveTypes(symbolTable: SymbolTable): StructDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
     return this.mapTypes { it?.resolve(localSymbolTable) }
 }
 
-private fun TypealiasNode.resolveTypes(symbolTable: SymbolTable): TypealiasNode {
-    return TypealiasNode(name, aliasedType.resolve(symbolTable), external)
+private fun Typealias.resolveTypes(symbolTable: SymbolTable): Typealias {
+    return Typealias(name, aliasedType.resolve(symbolTable), external)
 }
 
 private fun Type.resolve(symbolTable: SymbolTable): Type {

@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.util.Type
 
 /**
@@ -10,7 +10,7 @@ import quartz.compiler.util.Type
 class StructType(
         string: String,
         templates: List<Type>,
-        val structDeclarationNode: StructDeclarationNode
+        val structDeclarationNode: StructDeclaration
 ) : Type(string, string, templates) {
     val templateMap = structDeclarationNode.templates.zip(templates).toMap()
     val members = structDeclarationNode.members.mapValues { it.value.mapTypes { templateMap[it] ?: it } }

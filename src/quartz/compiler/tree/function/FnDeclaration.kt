@@ -1,7 +1,7 @@
 package quartz.compiler.tree.function
 
 import quartz.compiler.exceptions.QuartzException
-import quartz.compiler.tree.GlobalDeclarationNode
+import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -9,12 +9,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FnDeclarationNode(
+class FnDeclaration(
         val name: String,
         val argNames: List<String>,
         val function: Function,
-        val statements: List<StatementNode> = listOf()
-) : GlobalDeclarationNode {
+        val statements: List<Statement> = listOf()
+) : GlobalDeclaration {
     val argsWithNames by lazy {
         if (argNames.size != function.args.size)
             throw QuartzException("$argNames.size != ${function.args}.size")
@@ -27,16 +27,16 @@ class FnDeclarationNode(
         return s
     }
 
-    fun mapStatements(function: (StatementNode) -> StatementNode): FnDeclarationNode {
-        return FnDeclarationNode(name, argNames, this.function, statements.map(function))
+    fun mapStatements(function: (Statement) -> Statement): FnDeclaration {
+        return FnDeclaration(name, argNames, this.function, statements.map(function))
     }
 
-    fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): FnDeclarationNode {
+    fun mapExpressions(function: (Expression) -> Expression): FnDeclaration {
         return mapStatements { it.mapExpressions(function) }
     }
 
-    fun mapTypes(function: (Type?) -> Type?): FnDeclarationNode {
-        return FnDeclarationNode(
+    fun mapTypes(function: (Type?) -> Type?): FnDeclaration {
+        return FnDeclaration(
                 name,
                 argNames,
                 this.function.mapTypes(function),

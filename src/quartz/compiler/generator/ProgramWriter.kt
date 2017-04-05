@@ -12,21 +12,21 @@ import quartz.compiler.util.Type
  */
 
 fun ProgramOutputStream.writeAll() {
-    programNode.inlineCNodes.forEach { inlineC(it) }
+    program.inlineCNodes.forEach { inlineC(it) }
 
-    programNode.mapTypes { it?.apply { declare(this) } }
+    program.mapTypes { it?.apply { declare(this) } }
 
-    programNode.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
-    programNode.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
+    program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
+    program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
 
-    programNode.fnDeclarations.forEach { functionPrototype(it.value) }
-    programNode.fnDeclarations.forEach { function(it.value) }
+    program.fnDeclarations.forEach { functionPrototype(it.value) }
+    program.fnDeclarations.forEach { function(it.value) }
 }
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
         is StructType -> if (!type.structDeclarationNode.external)
-            struct(programNode.structDeclarations[type.string]
+            struct(program.structDeclarations[type.string]
                     ?: throw QuartzException("Unknown struct $type"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)

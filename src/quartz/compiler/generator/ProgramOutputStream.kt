@@ -1,6 +1,6 @@
 package quartz.compiler.generator
 
-import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.Program
 import java.io.OutputStream
 import java.io.PrintStream
 
@@ -8,7 +8,7 @@ import java.io.PrintStream
  * Created by Aedan Smith.
  */
 
-class ProgramOutputStream(val programNode: ProgramNode, outputStream: OutputStream) {
+class ProgramOutputStream(val program: Program, outputStream: OutputStream) {
     private val declared = HashSet<String>()
     private var lastChar = ' '
     private var indent = 0

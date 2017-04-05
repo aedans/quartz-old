@@ -7,12 +7,12 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-interface StatementNode {
+interface Statement {
     fun toString(i: Int): String {
         return ("|   " * i) + toString()
     }
 
-    fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): StatementNode
+    fun mapExpressions(function: (Expression) -> Expression): Statement
 
-    fun mapTypes(function: (Type?) -> Type?): StatementNode
+    fun mapTypes(function: (Type?) -> Type?): Statement
 }

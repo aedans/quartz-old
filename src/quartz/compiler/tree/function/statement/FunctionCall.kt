@@ -1,21 +1,21 @@
 package quartz.compiler.tree.function.statement
 
-import quartz.compiler.tree.function.ExpressionNode
-import quartz.compiler.tree.function.StatementNode
+import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class FnCallNode(
-        val expression: ExpressionNode,
+class FunctionCall(
+        val expression: Expression,
         val templates: List<Type>,
-        val expressions: List<ExpressionNode>,
+        val expressions: List<Expression>,
         override val type: Type?
-) : ExpressionNode, StatementNode {
-    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
-        return function(FnCallNode(
+) : Expression, Statement {
+    override fun mapExpressions(function: (Expression) -> Expression): Expression {
+        return function(FunctionCall(
                 function(expression.mapExpressions(function)),
                 templates,
                 expressions.map { it.mapExpressions(function) }.map(function),
@@ -23,8 +23,8 @@ class FnCallNode(
         ))
     }
 
-    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return FnCallNode(
+    override fun mapTypes(function: (Type?) -> Type?): Expression {
+        return FunctionCall(
                 expression.mapTypes(function),
                 templates.map { function(it.mapTypes(function))!! },
                 expressions.map { it.mapTypes(function) },
@@ -32,8 +32,8 @@ class FnCallNode(
         )
     }
 
-    override fun withType(type: Type?): ExpressionNode {
-        return FnCallNode(expression, templates, expressions, type)
+    override fun withType(type: Type?): Expression {
+        return FunctionCall(expression, templates, expressions, type)
     }
 
     override fun toString(): String {

@@ -3,14 +3,14 @@ package quartz.compiler.generator.program
 import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.declare
 import quartz.compiler.generator.util.type
-import quartz.compiler.tree.struct.StructDeclarationNode
-import quartz.compiler.tree.struct.StructMemberNode
+import quartz.compiler.tree.struct.StructDeclaration
+import quartz.compiler.tree.struct.StructMember
 
 /**
  * Created by Aedan Smith.
  */
 
-fun ProgramOutputStream.struct(structDeclarationNode: StructDeclarationNode) {
+fun ProgramOutputStream.struct(structDeclarationNode: StructDeclaration) {
     structDeclarationNode.members.forEach { declare(it.value.type) }
     declare("struct_${structDeclarationNode.name}") {
         margin {
@@ -28,7 +28,7 @@ fun ProgramOutputStream.struct(structDeclarationNode: StructDeclarationNode) {
     }
 }
 
-fun ProgramOutputStream.structPrototype(structDeclarationNode: StructDeclarationNode) {
+fun ProgramOutputStream.structPrototype(structDeclarationNode: StructDeclaration) {
     declare("structPrototype_${structDeclarationNode.name}") {
         name("struct")
         name(structDeclarationNode.name)
@@ -37,7 +37,7 @@ fun ProgramOutputStream.structPrototype(structDeclarationNode: StructDeclaration
     }
 }
 
-fun ProgramOutputStream.structMember(structMemberNode: StructMemberNode) {
-    type(structMemberNode.type)
-    name(structMemberNode.name)
+fun ProgramOutputStream.structMember(structMember: StructMember) {
+    type(structMember.type)
+    name(structMember.name)
 }

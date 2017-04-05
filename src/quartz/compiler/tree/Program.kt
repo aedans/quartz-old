@@ -1,51 +1,51 @@
 package quartz.compiler.tree
 
 import quartz.compiler.semantics.symboltable.generateSymbolTable
-import quartz.compiler.tree.function.ExpressionNode
-import quartz.compiler.tree.function.FnDeclarationNode
-import quartz.compiler.tree.misc.ExternFnDeclarationNode
-import quartz.compiler.tree.misc.InlineCNode
-import quartz.compiler.tree.misc.TypealiasNode
-import quartz.compiler.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.misc.ExternFunctionDeclaration
+import quartz.compiler.tree.misc.InlineC
+import quartz.compiler.tree.misc.Typealias
+import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-data class ProgramNode(
-        val fnDeclarations: Map<String, FnDeclarationNode>,
-        val externFnDeclarations: Map<String, ExternFnDeclarationNode>,
-        val structDeclarations: Map<String, StructDeclarationNode>,
-        val typealiasDeclarations: Map<String, TypealiasNode>,
-        val inlineCNodes: List<InlineCNode>
+data class Program(
+        val fnDeclarations: Map<String, FnDeclaration>,
+        val externFunctionDeclarations: Map<String, ExternFunctionDeclaration>,
+        val structDeclarations: Map<String, StructDeclaration>,
+        val typealiasDeclarations: Map<String, Typealias>,
+        val inlineCNodes: List<InlineC>
 ) {
     val symbolTable = generateSymbolTable()
 
-    fun mapFnDeclarations(function: (FnDeclarationNode) -> FnDeclarationNode): ProgramNode {
-        return ProgramNode(
+    fun mapFnDeclarations(function: (FnDeclaration) -> FnDeclaration): Program {
+        return Program(
                 fnDeclarations.mapValues { function(it.value) },
-                externFnDeclarations,
+                externFunctionDeclarations,
                 structDeclarations,
                 typealiasDeclarations,
                 inlineCNodes
         )
     }
 
-    fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ProgramNode {
-        return ProgramNode(
+    fun mapExpressions(function: (Expression) -> Expression): Program {
+        return Program(
                 fnDeclarations.mapValues { it.value.mapExpressions(function) },
-                externFnDeclarations,
+                externFunctionDeclarations,
                 structDeclarations,
                 typealiasDeclarations,
                 inlineCNodes
         )
     }
 
-    fun mapTypes(function: (Type?) -> Type?): ProgramNode {
-        return ProgramNode(
+    fun mapTypes(function: (Type?) -> Type?): Program {
+        return Program(
                 fnDeclarations.mapValues { it.value.mapTypes(function) },
-                externFnDeclarations.mapValues { it.value.mapTypes(function) },
+                externFunctionDeclarations.mapValues { it.value.mapTypes(function) },
                 structDeclarations.mapValues { it.value.mapTypes(function) },
                 typealiasDeclarations.mapValues { it.value.mapTypes(function) },
                 inlineCNodes

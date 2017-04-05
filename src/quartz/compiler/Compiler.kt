@@ -7,7 +7,7 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.*
-import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.Program
 import quartz.compiler.tree.import.Library
 import java.io.InputStream
 import java.io.OutputStream
@@ -23,10 +23,10 @@ object Compiler {
                 parser: (InputStream) -> QuartzParser.ProgramContext = {
                     QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program()
                 },
-                builder: (QuartzParser.ProgramContext) -> ProgramNode = {
+                builder: (QuartzParser.ProgramContext) -> Program = {
                     it.toNode(library, parser)
                 },
-                analyzer: ProgramNode.() -> ProgramNode = {
+                analyzer: Program.() -> Program = {
                     this
                             .generateConstructors()
                             .resolveTypes()
@@ -34,7 +34,7 @@ object Compiler {
                             .resolveFunctionTemplates()
                             .resolveTypeTemplates()
                 },
-                generator: (ProgramNode, OutputStream) -> Unit = Generator::write
+                generator: (Program, OutputStream) -> Unit = Generator::write
     ) {
         println(library.toString(0))
         var program = builder(parser(input))

@@ -1,7 +1,7 @@
 package quartz.compiler.generator.semantics
 
-import quartz.compiler.tree.ProgramNode
-import quartz.compiler.tree.function.expression.IdentifierNode
+import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.expression.Identifier
 
 /**
  * Created by Aedan Smith.
@@ -12,8 +12,8 @@ import quartz.compiler.tree.function.expression.IdentifierNode
 private val VALID_CHAR_START = ('a'..'z') + ('A'..'Z') + '_'
 private val VALID_CHAR = ('a'..'z') + ('A'..'Z') +('0'..'9') + '_'
 
-fun ProgramNode.verifyNames(): ProgramNode {
-    return this.mapExpressions { if (it is IdentifierNode) IdentifierNode(it.name.verifyName(), it.type) else it }
+fun Program.verifyNames(): Program {
+    return this.mapExpressions { if (it is Identifier) Identifier(it.name.verifyName(), it.type) else it }
 }
 
 fun String.verifyName(): String {

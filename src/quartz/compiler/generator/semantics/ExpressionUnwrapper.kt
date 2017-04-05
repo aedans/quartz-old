@@ -1,44 +1,44 @@
 package quartz.compiler.generator.semantics
 
 import quartz.compiler.exceptions.QuartzException
-import quartz.compiler.tree.ProgramNode
-import quartz.compiler.tree.function.ExpressionNode
-import quartz.compiler.tree.function.FnDeclarationNode
-import quartz.compiler.tree.function.StatementNode
+import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
-import quartz.compiler.tree.misc.InlineCNode
+import quartz.compiler.tree.misc.InlineC
 
 /**
  * Created by Aedan Smith.
  */
 
-fun ProgramNode.unwrapExpressions(): ProgramNode {
-    return this.mapFnDeclarations(FnDeclarationNode::unwrapExpressions)
+fun Program.unwrapExpressions(): Program {
+    return this.mapFnDeclarations(FnDeclaration::unwrapExpressions)
 }
 
-private fun FnDeclarationNode.unwrapExpressions(): FnDeclarationNode {
-    val newStatements = mutableListOf<StatementNode>()
+private fun FnDeclaration.unwrapExpressions(): FnDeclaration {
+    val newStatements = mutableListOf<Statement>()
     statements.forEach { newStatements.add(it.unwrapExpressions(newStatements)) }
-    return FnDeclarationNode(name, argNames, function, newStatements)
+    return FnDeclaration(name, argNames, function, newStatements)
 }
 
-private fun StatementNode.unwrapExpressions(newStatements: MutableList<StatementNode>): StatementNode {
+private fun Statement.unwrapExpressions(newStatements: MutableList<Statement>): Statement {
     return when (this) {
-        is InlineCNode -> this
-        is VarDeclarationNode -> VarDeclarationNode(name, expression?.unwrap(newStatements), type, mutable)
-        is ReturnNode -> ReturnNode(expression.unwrap(newStatements))
-        is VarAssignmentNode -> VarAssignmentNode(name, expression.unwrap(newStatements))
-        is IfStatementNode -> IfStatementNode(
+        is InlineC -> this
+        is VariableDeclaration -> VariableDeclaration(name, expression?.unwrap(newStatements), type, mutable)
+        is ReturnStatement -> ReturnStatement(expression.unwrap(newStatements))
+        is VariableAssignment -> VariableAssignment(name, expression.unwrap(newStatements))
+        is IfStatement -> IfStatement(
                 test.unwrap(newStatements),
                 trueStatements.map { it.unwrapExpressions(newStatements) },
                 falseStatements.map { it.unwrapExpressions(newStatements) }
         )
-        is WhileLoopNode -> WhileLoopNode(
+        is WhileLoop -> WhileLoop(
                 test.unwrap(newStatements),
                 statements.map { it.unwrapExpressions(newStatements) }
         )
-        is FnCallNode -> FnCallNode(
+        is FunctionCall -> FunctionCall(
                 expression.unwrap(newStatements),
                 templates,
                 expressions.map { it.unwrap(newStatements) },
@@ -48,34 +48,34 @@ private fun StatementNode.unwrapExpressions(newStatements: MutableList<Statement
     }
 }
 
-private fun ExpressionNode.unwrap(newStatements: MutableList<StatementNode>): ExpressionNode {
+private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression {
     return when (this) {
-        is InlineCNode -> this
-        is NumberLiteralNode -> this
-        is StringLiteralNode -> this
-        is IdentifierNode -> this
-        is CastNode -> CastNode(expression.unwrap(newStatements), type)
-        is UnaryOperatorNode -> UnaryOperatorNode(expression.unwrap(newStatements), id, type)
-        is BinaryOperatorNode -> BinaryOperatorNode(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
-        is FnCallNode -> FnCallNode(expression.unwrap(newStatements), templates, expressions.map { it.unwrap(newStatements) }, type)
-        is MemberAccessNode -> MemberAccessNode(name, expression.unwrap(newStatements), type)
-        is IfExpressionNode -> {
+        is InlineC -> this
+        is NumberLiteral -> this
+        is StringLiteral -> this
+        is Identifier -> this
+        is Cast -> Cast(expression.unwrap(newStatements), type)
+        is UnaryOperator -> UnaryOperator(expression.unwrap(newStatements), id, type)
+        is BinaryOperator -> BinaryOperator(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
+        is FunctionCall -> FunctionCall(expression.unwrap(newStatements), templates, expressions.map { it.unwrap(newStatements) }, type)
+        is MemberAccess -> MemberAccess(name, expression.unwrap(newStatements), type)
+        is IfExpression -> {
             val tempVarName = "temp${hashCode()}"
-            newStatements.add(VarDeclarationNode(tempVarName, null, type
+            newStatements.add(VariableDeclaration(tempVarName, null, type
                     ?: throw QuartzException("Unknown aliasedType for $this"), true))
 
-            val trueStatements = mutableListOf<StatementNode>()
-            trueStatements.add(VarAssignmentNode(tempVarName, ifTrue.unwrap(trueStatements)))
+            val trueStatements = mutableListOf<Statement>()
+            trueStatements.add(VariableAssignment(tempVarName, ifTrue.unwrap(trueStatements)))
 
-            val falseStatements = mutableListOf<StatementNode>()
-            falseStatements.add(VarAssignmentNode(tempVarName, ifFalse.unwrap(falseStatements)))
+            val falseStatements = mutableListOf<Statement>()
+            falseStatements.add(VariableAssignment(tempVarName, ifFalse.unwrap(falseStatements)))
 
-            newStatements.add(IfStatementNode(
+            newStatements.add(IfStatement(
                     test,
                     trueStatements,
                     falseStatements
             ))
-            IdentifierNode(tempVarName, type)
+            Identifier(tempVarName, type)
         }
         else -> throw QuartzException("Unrecognized node $this")
     }

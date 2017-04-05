@@ -2,11 +2,11 @@ package quartz.compiler.semantics
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.tree.ProgramNode
-import quartz.compiler.tree.function.FnDeclarationNode
-import quartz.compiler.tree.function.expression.IdentifierNode
-import quartz.compiler.tree.function.expression.MemberAccessNode
-import quartz.compiler.tree.function.statement.FnCallNode
+import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.expression.Identifier
+import quartz.compiler.tree.function.expression.MemberAccess
+import quartz.compiler.tree.function.statement.FunctionCall
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -14,62 +14,62 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-fun ProgramNode.resolveFunctionTemplates(): ProgramNode {
-    val newFnDeclarations = mutableListOf<FnDeclarationNode>()
+fun Program.resolveFunctionTemplates(): Program {
+    val newFnDeclarations = mutableListOf<FnDeclaration>()
     newFnDeclarations.addAll(
         fnDeclarations.filterValues { it.function.templates.isEmpty() }.map {
             it.value.resolveFunctionTemplates(this, newFnDeclarations)
         }
     )
-    return ProgramNode(
+    return Program(
             newFnDeclarations.map { it.name to it }.toMap(),
-            externFnDeclarations,
+            externFunctionDeclarations,
             structDeclarations,
             typealiasDeclarations,
             inlineCNodes
     )
 }
 
-private fun FnDeclarationNode.resolveFunctionTemplates(
-        programNode: ProgramNode,
-        newFnDeclarations: MutableList<FnDeclarationNode>
-): FnDeclarationNode {
+private fun FnDeclaration.resolveFunctionTemplates(
+        program: Program,
+        newFnDeclarations: MutableList<FnDeclaration>
+): FnDeclaration {
     return this.mapExpressions {
         when (it) {
-            is FnCallNode -> it.resolveFunctionTemplates(programNode, newFnDeclarations)
+            is FunctionCall -> it.resolveFunctionTemplates(program, newFnDeclarations)
             else -> it
         }
     }
 }
 
-private fun FnCallNode.resolveFunctionTemplates(
-        programNode: ProgramNode,
-        newFnDeclarations: MutableList<FnDeclarationNode>
-): FnCallNode {
+private fun FunctionCall.resolveFunctionTemplates(
+        program: Program,
+        newFnDeclarations: MutableList<FnDeclaration>
+): FunctionCall {
     if (templates.isEmpty())
         return this
-    if (expression is MemberAccessNode)
-        return resolveDotNotation(programNode.symbolTable).resolveFunctionTemplates(programNode, newFnDeclarations)
-    if (expression !is IdentifierNode)
+    if (expression is MemberAccess)
+        return resolveDotNotation(program.symbolTable).resolveFunctionTemplates(program, newFnDeclarations)
+    if (expression !is Identifier)
         throw QuartzException("Templates are not allowed on variables")
 
-    val newFunction = resolveFunctionTemplates(expression.name, templates, programNode, newFnDeclarations)
+    val newFunction = resolveFunctionTemplates(expression.name, templates, program, newFnDeclarations)
 
-    return FnCallNode(
-            IdentifierNode(newFunction.name, FunctionType(newFunction.function)), emptyList(), expressions, type
+    return FunctionCall(
+            Identifier(newFunction.name, FunctionType(newFunction.function)), emptyList(), expressions, type
     )
 }
 
 private fun resolveFunctionTemplates(
         name: String,
         types: List<Type>,
-        programNode: ProgramNode,
-        newFnDeclarations: MutableList<FnDeclarationNode>
-): FnDeclarationNode {
+        program: Program,
+        newFnDeclarations: MutableList<FnDeclaration>
+): FnDeclaration {
     val newFunction = resolveFunctionTemplates(
-            programNode.fnDeclarations[name] ?: throw QuartzException("Unknown function $name"),
+            program.fnDeclarations[name] ?: throw QuartzException("Unknown function $name"),
             types,
-            programNode,
+            program,
             newFnDeclarations
     )
     newFnDeclarations.add(newFunction)
@@ -77,15 +77,15 @@ private fun resolveFunctionTemplates(
 }
 
 private fun resolveFunctionTemplates(
-        fnDeclaration: FnDeclarationNode,
+        fnDeclaration: FnDeclaration,
         types: List<Type>,
-        programNode: ProgramNode,
-        newFnDeclarations: MutableList<FnDeclarationNode>
-): FnDeclarationNode {
+        program: Program,
+        newFnDeclarations: MutableList<FnDeclaration>
+): FnDeclaration {
     val typeMap = fnDeclaration.function.templates.zip(types).toMap()
     var newName = fnDeclaration.name
     typeMap.forEach { newName += "_${it.value.descriptiveString}" }
-    return FnDeclarationNode(
+    return FnDeclaration(
             newName,
             fnDeclaration.argNames,
             Function(
@@ -95,5 +95,5 @@ private fun resolveFunctionTemplates(
                     fnDeclaration.function.vararg
             ),
             fnDeclaration.statements
-    ).mapTypes { typeMap[it] ?: it }.resolveFunctionTemplates(programNode, newFnDeclarations)
+    ).mapTypes { typeMap[it] ?: it }.resolveFunctionTemplates(program, newFnDeclarations)
 }

@@ -1,15 +1,15 @@
 package quartz.compiler.tree.function.expression
 
-import quartz.compiler.tree.function.ExpressionNode
+import quartz.compiler.tree.function.Expression
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class IfExpressionNode(val test: ExpressionNode, val ifTrue: ExpressionNode, val ifFalse: ExpressionNode, override val type: Type?) : ExpressionNode {
-    override fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ExpressionNode {
-        return IfExpressionNode(
+class IfExpression(val test: Expression, val ifTrue: Expression, val ifFalse: Expression, override val type: Type?) : Expression {
+    override fun mapExpressions(function: (Expression) -> Expression): Expression {
+        return IfExpression(
                 function(test.mapExpressions(function)),
                 function(ifTrue.mapExpressions(function)),
                 function(ifFalse.mapExpressions(function)),
@@ -17,8 +17,8 @@ class IfExpressionNode(val test: ExpressionNode, val ifTrue: ExpressionNode, val
         )
     }
 
-    override fun mapTypes(function: (Type?) -> Type?): ExpressionNode {
-        return IfExpressionNode(
+    override fun mapTypes(function: (Type?) -> Type?): Expression {
+        return IfExpression(
                 test.mapTypes(function),
                 ifTrue.mapTypes(function),
                 ifFalse.mapTypes(function),
@@ -26,8 +26,8 @@ class IfExpressionNode(val test: ExpressionNode, val ifTrue: ExpressionNode, val
         )
     }
 
-    override fun withType(type: Type?): IfExpressionNode {
-        return IfExpressionNode(test, ifTrue, ifFalse, type)
+    override fun withType(type: Type?): IfExpression {
+        return IfExpression(test, ifTrue, ifFalse, type)
     }
 
     override fun toString(): String {

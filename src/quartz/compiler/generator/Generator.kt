@@ -2,7 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.generator.semantics.unwrapExpressions
 import quartz.compiler.generator.semantics.verifyNames
-import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.Program
 import java.io.OutputStream
 
 /**
@@ -10,8 +10,8 @@ import java.io.OutputStream
  */
 
 object Generator {
-    fun write(programNode: ProgramNode, outputStream: OutputStream) {
-        val newProgramNode = programNode
+    fun write(program: Program, outputStream: OutputStream) {
+        val newProgramNode = program
                 .unwrapExpressions()
                 .verifyNames()
         val cStream = ProgramOutputStream(newProgramNode, outputStream)

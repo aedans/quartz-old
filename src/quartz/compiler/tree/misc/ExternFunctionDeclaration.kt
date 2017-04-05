@@ -1,6 +1,6 @@
 package quartz.compiler.tree.misc
 
-import quartz.compiler.tree.GlobalDeclarationNode
+import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -8,13 +8,13 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class ExternFnDeclarationNode(val name: String, val function: Function) : GlobalDeclarationNode {
+class ExternFunctionDeclaration(val name: String, val function: Function) : GlobalDeclaration {
     override fun toString(): String {
         return "$name$function"
     }
 
-    fun mapTypes(function: (Type?) -> Type?): ExternFnDeclarationNode {
-        return ExternFnDeclarationNode(name, Function(
+    fun mapTypes(function: (Type?) -> Type?): ExternFunctionDeclaration {
+        return ExternFunctionDeclaration(name, Function(
                 this.function.args.map { function(it.mapTypes(function))!! },
                 this.function.templates.map { function(it.mapTypes(function))!! },
                 function(this.function.returnType.mapTypes(function))!!,
