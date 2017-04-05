@@ -16,17 +16,17 @@ fun ProgramOutputStream.writeAll() {
 
     programNode.mapTypes { it?.apply { declare(this) } }
 
-    programNode.structDeclarations.filter { !it.external }.forEach { structPrototype(it) }
-    programNode.structDeclarations.filter { !it.external }.forEach { struct(it) }
+    programNode.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
+    programNode.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
 
-    programNode.fnDeclarations.forEach { functionPrototype(it) }
-    programNode.fnDeclarations.forEach { function(it) }
+    programNode.fnDeclarations.forEach { functionPrototype(it.value) }
+    programNode.fnDeclarations.forEach { function(it.value) }
 }
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
         is StructType -> if (!type.structDeclarationNode.external)
-            struct(programNode.structDeclarations.firstOrNull { it.name == type.string }
+            struct(programNode.structDeclarations[type.string]
                     ?: throw QuartzException("Unknown struct $type"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)

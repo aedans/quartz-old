@@ -16,7 +16,7 @@ import quartz.compiler.util.Function
 
 fun ProgramNode.generateConstructors(): ProgramNode {
     return ProgramNode(
-            fnDeclarations + structDeclarations.filter { !it.external }.map { it.defaultConstructor() },
+            fnDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
             externFnDeclarations,
             structDeclarations,
             typealiasDeclarations,

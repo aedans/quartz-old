@@ -17,10 +17,10 @@ import quartz.compiler.util.Type
 
 fun ProgramNode.resolveTypes(): ProgramNode {
     return ProgramNode(
-            fnDeclarations.map { it.resolveTypes(symbolTable) },
-            externFnDeclarations.map { it.resolveTypes(symbolTable) },
-            structDeclarations.map { it.resolveTypes(symbolTable) },
-            typealiasDeclarations.map { it.resolveTypes(symbolTable) },
+            fnDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
+            externFnDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
+            structDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
+            typealiasDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             inlineCNodes
     )
 }

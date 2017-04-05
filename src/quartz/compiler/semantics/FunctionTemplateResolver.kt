@@ -17,12 +17,12 @@ import quartz.compiler.util.Type
 fun ProgramNode.resolveFunctionTemplates(): ProgramNode {
     val newFnDeclarations = mutableListOf<FnDeclarationNode>()
     newFnDeclarations.addAll(
-        fnDeclarations.filter { it.function.templates.isEmpty() }.map {
-            it.resolveFunctionTemplates(this, newFnDeclarations)
+        fnDeclarations.filterValues { it.function.templates.isEmpty() }.map {
+            it.value.resolveFunctionTemplates(this, newFnDeclarations)
         }
     )
     return ProgramNode(
-            newFnDeclarations,
+            newFnDeclarations.map { it.name to it }.toMap(),
             externFnDeclarations,
             structDeclarations,
             typealiasDeclarations,
@@ -67,7 +67,7 @@ private fun resolveFunctionTemplates(
         newFnDeclarations: MutableList<FnDeclarationNode>
 ): FnDeclarationNode {
     val newFunction = resolveFunctionTemplates(
-            programNode.fnDeclarations.firstOrNull { it.name == name } ?: throw QuartzException("Unknown function $name"),
+            programNode.fnDeclarations[name] ?: throw QuartzException("Unknown function $name"),
             types,
             programNode,
             newFnDeclarations

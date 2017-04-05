@@ -13,19 +13,18 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-// TODO Maps
 data class ProgramNode(
-        val fnDeclarations: List<FnDeclarationNode>,
-        val externFnDeclarations: List<ExternFnDeclarationNode>,
-        val structDeclarations: List<StructDeclarationNode>,
-        val typealiasDeclarations: List<TypealiasNode>,
+        val fnDeclarations: Map<String, FnDeclarationNode>,
+        val externFnDeclarations: Map<String, ExternFnDeclarationNode>,
+        val structDeclarations: Map<String, StructDeclarationNode>,
+        val typealiasDeclarations: Map<String, TypealiasNode>,
         val inlineCNodes: List<InlineCNode>
 ) {
     val symbolTable = generateSymbolTable()
 
     fun mapFnDeclarations(function: (FnDeclarationNode) -> FnDeclarationNode): ProgramNode {
         return ProgramNode(
-                fnDeclarations.map(function),
+                fnDeclarations.mapValues { function(it.value) },
                 externFnDeclarations,
                 structDeclarations,
                 typealiasDeclarations,
@@ -35,7 +34,7 @@ data class ProgramNode(
 
     fun mapExpressions(function: (ExpressionNode) -> ExpressionNode): ProgramNode {
         return ProgramNode(
-                fnDeclarations.map { it.mapExpressions(function) },
+                fnDeclarations.mapValues { it.value.mapExpressions(function) },
                 externFnDeclarations,
                 structDeclarations,
                 typealiasDeclarations,
@@ -45,10 +44,10 @@ data class ProgramNode(
 
     fun mapTypes(function: (Type?) -> Type?): ProgramNode {
         return ProgramNode(
-                fnDeclarations.map { it.mapTypes(function) },
-                externFnDeclarations.map { it.mapTypes(function) },
-                structDeclarations.map { it.mapTypes(function) },
-                typealiasDeclarations.map { it.mapTypes(function) },
+                fnDeclarations.mapValues { it.value.mapTypes(function) },
+                externFnDeclarations.mapValues { it.value.mapTypes(function) },
+                structDeclarations.mapValues { it.value.mapTypes(function) },
+                typealiasDeclarations.mapValues { it.value.mapTypes(function) },
                 inlineCNodes
         )
     }

@@ -13,10 +13,10 @@ import quartz.compiler.tree.struct.StructDeclarationNode
 
 fun ProgramNode.generateSymbolTable(): SymbolTable {
     val symbolTable = SymbolTable()
-    structDeclarations.forEach { symbolTable.addType(it.name, it.type) }
-    typealiasDeclarations.forEach { symbolTable.addType(it.name, it.type) }
-    fnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
-    externFnDeclarations.forEach { symbolTable.addVar(it.name, FunctionType(it.function)) }
+    structDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+    typealiasDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+    fnDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
+    externFnDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
     return symbolTable
 }
 

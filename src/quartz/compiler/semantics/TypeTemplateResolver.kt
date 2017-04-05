@@ -15,7 +15,7 @@ fun ProgramNode.resolveTypeTemplates(): ProgramNode {
             is StructType -> it.resolveTypeTemplates(newStructDeclarations)
             else -> it
         }
-    }.copy(structDeclarations = newStructDeclarations)
+    }.copy(structDeclarations = newStructDeclarations.map { it.name to it }.toMap())
 }
 
 private fun StructType.resolveTypeTemplates(newStructDeclarations: MutableList<StructDeclarationNode>): StructType {
