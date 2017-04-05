@@ -2,7 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.generator.semantics.unwrapExpressions
 import quartz.compiler.generator.semantics.verifyNames
-import quartz.compiler.syntax.tree.ProgramNode
+import quartz.compiler.tree.ProgramNode
 import java.io.OutputStream
 
 /**

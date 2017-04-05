@@ -2,10 +2,10 @@ package quartz.compiler.semantics.symboltable
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.function.statement.VarDeclarationNode
-import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.function.FnDeclarationNode
+import quartz.compiler.tree.function.statement.VarDeclarationNode
+import quartz.compiler.tree.struct.StructDeclarationNode
 
 /**
  * Created by Aedan Smith.

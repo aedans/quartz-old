@@ -1,7 +1,7 @@
 package quartz.compiler.generator.semantics
 
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.function.expression.IdentifierNode
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.function.expression.IdentifierNode
 
 /**
  * Created by Aedan Smith.

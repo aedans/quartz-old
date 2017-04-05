@@ -3,9 +3,9 @@ package quartz.compiler.semantics
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.syntax.tree.function.expression.IdentifierNode
-import quartz.compiler.syntax.tree.function.expression.MemberAccessNode
-import quartz.compiler.syntax.tree.function.statement.FnCallNode
+import quartz.compiler.tree.function.expression.IdentifierNode
+import quartz.compiler.tree.function.expression.MemberAccessNode
+import quartz.compiler.tree.function.statement.FnCallNode
 import quartz.compiler.util.plus
 
 /**

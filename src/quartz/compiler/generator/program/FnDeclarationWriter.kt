@@ -3,12 +3,12 @@ package quartz.compiler.generator.program
 import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.util.args
 import quartz.compiler.generator.util.type
-import quartz.compiler.syntax.tree.function.ExpressionNode
-import quartz.compiler.syntax.tree.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.function.StatementNode
-import quartz.compiler.syntax.tree.function.expression.*
-import quartz.compiler.syntax.tree.function.statement.*
-import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.tree.function.ExpressionNode
+import quartz.compiler.tree.function.FnDeclarationNode
+import quartz.compiler.tree.function.StatementNode
+import quartz.compiler.tree.function.expression.*
+import quartz.compiler.tree.function.statement.*
+import quartz.compiler.tree.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

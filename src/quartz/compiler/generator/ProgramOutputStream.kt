@@ -1,6 +1,6 @@
 package quartz.compiler.generator
 
-import quartz.compiler.syntax.tree.ProgramNode
+import quartz.compiler.tree.ProgramNode
 import java.io.OutputStream
 import java.io.PrintStream
 

@@ -1,6 +1,6 @@
 
 import quartz.compiler.Compiler
-import quartz.compiler.syntax.tree.import.Library
+import quartz.compiler.tree.import.Library
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

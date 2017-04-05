@@ -1,13 +1,13 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.function.StatementNode
-import quartz.compiler.syntax.tree.function.expression.IdentifierNode
-import quartz.compiler.syntax.tree.function.statement.ReturnNode
-import quartz.compiler.syntax.tree.function.statement.VarDeclarationNode
-import quartz.compiler.syntax.tree.misc.InlineCNode
-import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.function.FnDeclarationNode
+import quartz.compiler.tree.function.StatementNode
+import quartz.compiler.tree.function.expression.IdentifierNode
+import quartz.compiler.tree.function.statement.ReturnNode
+import quartz.compiler.tree.function.statement.VarDeclarationNode
+import quartz.compiler.tree.misc.InlineCNode
+import quartz.compiler.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Function
 
 /**

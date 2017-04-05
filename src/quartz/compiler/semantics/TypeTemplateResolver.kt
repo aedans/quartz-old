@@ -1,8 +1,8 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.semantics.types.StructType
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.struct.StructDeclarationNode
 
 /**
  * Created by Aedan Smith.

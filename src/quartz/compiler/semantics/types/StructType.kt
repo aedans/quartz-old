@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Type
 
 /**

@@ -1,13 +1,13 @@
 package quartz.compiler.generator.semantics
 
 import quartz.compiler.exceptions.QuartzException
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.function.ExpressionNode
-import quartz.compiler.syntax.tree.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.function.StatementNode
-import quartz.compiler.syntax.tree.function.expression.*
-import quartz.compiler.syntax.tree.function.statement.*
-import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.function.ExpressionNode
+import quartz.compiler.tree.function.FnDeclarationNode
+import quartz.compiler.tree.function.StatementNode
+import quartz.compiler.tree.function.expression.*
+import quartz.compiler.tree.function.statement.*
+import quartz.compiler.tree.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

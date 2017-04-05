@@ -4,11 +4,11 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.NamedType
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.function.FnDeclarationNode
-import quartz.compiler.syntax.tree.misc.ExternFnDeclarationNode
-import quartz.compiler.syntax.tree.misc.TypealiasNode
-import quartz.compiler.syntax.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.function.FnDeclarationNode
+import quartz.compiler.tree.misc.ExternFnDeclarationNode
+import quartz.compiler.tree.misc.TypealiasNode
+import quartz.compiler.tree.struct.StructDeclarationNode
 import quartz.compiler.util.Type
 
 /**

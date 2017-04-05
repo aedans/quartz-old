@@ -3,8 +3,8 @@ package quartz.compiler.generator.program
 import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.declare
 import quartz.compiler.generator.util.type
-import quartz.compiler.syntax.tree.struct.StructDeclarationNode
-import quartz.compiler.syntax.tree.struct.StructMemberNode
+import quartz.compiler.tree.struct.StructDeclarationNode
+import quartz.compiler.tree.struct.StructMemberNode
 
 /**
  * Created by Aedan Smith.

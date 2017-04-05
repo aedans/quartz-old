@@ -1,7 +1,7 @@
 package quartz.compiler.generator.program
 
 import quartz.compiler.generator.ProgramOutputStream
-import quartz.compiler.syntax.tree.misc.InlineCNode
+import quartz.compiler.tree.misc.InlineCNode
 
 /**
  * Created by Aedan Smith.

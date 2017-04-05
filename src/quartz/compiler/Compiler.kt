@@ -2,13 +2,13 @@ package quartz.compiler
 
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
+import quartz.compiler.builder.toNode
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.*
-import quartz.compiler.syntax.builder.toNode
-import quartz.compiler.syntax.tree.ProgramNode
-import quartz.compiler.syntax.tree.import.Library
+import quartz.compiler.tree.ProgramNode
+import quartz.compiler.tree.import.Library
 import java.io.InputStream
 import java.io.OutputStream
 
