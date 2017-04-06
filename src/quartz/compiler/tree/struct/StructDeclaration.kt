@@ -1,6 +1,7 @@
 package quartz.compiler.tree.struct
 
 import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.util.Type
 
@@ -10,7 +11,7 @@ import quartz.compiler.util.Type
 
 data class StructDeclaration(
         val name: String,
-        val templates: List<Type>,
+        val templates: List<TemplateType>,
         val members: Map<String, StructMember>,
         val external: Boolean
 ) : GlobalDeclaration {
@@ -23,7 +24,7 @@ data class StructDeclaration(
     fun mapTypes(function: (Type?) -> Type?): StructDeclaration {
         return StructDeclaration(
                 name,
-                templates.map { function(it.mapTypes(function))!! },
+                templates,
                 members.map { it.key to it.value.mapTypes(function) }.toMap(),
                 external
         )

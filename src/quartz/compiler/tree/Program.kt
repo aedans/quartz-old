@@ -2,7 +2,7 @@ package quartz.compiler.tree
 
 import quartz.compiler.semantics.symboltable.generateSymbolTable
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.tree.misc.Typealias
@@ -14,7 +14,7 @@ import quartz.compiler.util.Type
  */
 
 data class Program(
-        val fnDeclarations: Map<String, FnDeclaration>,
+        val functionDeclarations: Map<String, FunctionDeclaration>,
         val externFunctionDeclarations: Map<String, ExternFunctionDeclaration>,
         val structDeclarations: Map<String, StructDeclaration>,
         val typealiasDeclarations: Map<String, Typealias>,
@@ -22,9 +22,9 @@ data class Program(
 ) {
     val symbolTable = generateSymbolTable()
 
-    fun mapFnDeclarations(function: (FnDeclaration) -> FnDeclaration): Program {
+    fun mapFnDeclarations(function: (FunctionDeclaration) -> FunctionDeclaration): Program {
         return Program(
-                fnDeclarations.mapValues { function(it.value) },
+                functionDeclarations.mapValues { function(it.value) },
                 externFunctionDeclarations,
                 structDeclarations,
                 typealiasDeclarations,
@@ -34,7 +34,7 @@ data class Program(
 
     fun mapExpressions(function: (Expression) -> Expression): Program {
         return Program(
-                fnDeclarations.mapValues { it.value.mapExpressions(function) },
+                functionDeclarations.mapValues { it.value.mapExpressions(function) },
                 externFunctionDeclarations,
                 structDeclarations,
                 typealiasDeclarations,
@@ -44,7 +44,7 @@ data class Program(
 
     fun mapTypes(function: (Type?) -> Type?): Program {
         return Program(
-                fnDeclarations.mapValues { it.value.mapTypes(function) },
+                functionDeclarations.mapValues { it.value.mapTypes(function) },
                 externFunctionDeclarations.mapValues { it.value.mapTypes(function) },
                 structDeclarations.mapValues { it.value.mapTypes(function) },
                 typealiasDeclarations.mapValues { it.value.mapTypes(function) },
@@ -54,7 +54,7 @@ data class Program(
 
     override fun toString(): String {
         var s = ""
-        fnDeclarations.forEach { s += it.value.toString() + "\n\n" }
+        functionDeclarations.forEach { s += it.value.toString() + "\n\n" }
         structDeclarations.forEach { s += it.value.toString() + "\n\n" }
         typealiasDeclarations.forEach { s += it.value.toString() + "\n\n" }
         return s

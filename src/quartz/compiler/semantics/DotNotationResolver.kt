@@ -6,7 +6,6 @@ import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.expression.MemberAccess
 import quartz.compiler.tree.function.statement.FunctionCall
-import quartz.compiler.util.plus
 
 /**
  * Created by Aedan Smith.
@@ -24,4 +23,10 @@ fun FunctionCall.resolveDotNotation(symbolTable: SymbolTable): FunctionCall {
             expression.expression + expressions,
             type
     )
+}
+
+private operator fun <T> T.plus(list: List<T>): List<T> {
+    val newList = mutableListOf(this)
+    newList.addAll(list)
+    return newList
 }

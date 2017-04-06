@@ -4,7 +4,7 @@ import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.util.args
 import quartz.compiler.generator.util.type
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
@@ -14,23 +14,23 @@ import quartz.compiler.tree.misc.InlineC
  * Created by Aedan Smith.
  */
 
-fun ProgramOutputStream.functionPrototype(fnDeclaration: FnDeclaration) {
-    declare("fnPrototype_${fnDeclaration.name}") {
-        type(fnDeclaration.function.returnType)
-        name(fnDeclaration.name)
-        args(fnDeclaration.argsWithNames)
+fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclaration) {
+    declare("fnPrototype_${functionDeclaration.name}") {
+        type(functionDeclaration.function.returnType)
+        name(functionDeclaration.name)
+        args(functionDeclaration.argsWithNames)
         string(";")
         newline()
     }
 }
 
-fun ProgramOutputStream.function(fnDeclaration: FnDeclaration) {
+fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
     margin {
-        declare("fn_${fnDeclaration.name}") {
-            type(fnDeclaration.function.returnType)
-            name(fnDeclaration.name)
-            args(fnDeclaration.argsWithNames)
-            block(fnDeclaration.statements)
+        declare("fn_${functionDeclaration.name}") {
+            type(functionDeclaration.function.returnType)
+            name(functionDeclaration.name)
+            args(functionDeclaration.argsWithNames)
+            block(functionDeclaration.statements)
         }
     }
 }

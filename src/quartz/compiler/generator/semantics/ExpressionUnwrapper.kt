@@ -3,7 +3,7 @@ package quartz.compiler.generator.semantics
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
@@ -14,13 +14,13 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun Program.unwrapExpressions(): Program {
-    return this.mapFnDeclarations(FnDeclaration::unwrapExpressions)
+    return this.mapFnDeclarations(FunctionDeclaration::unwrapExpressions)
 }
 
-private fun FnDeclaration.unwrapExpressions(): FnDeclaration {
+private fun FunctionDeclaration.unwrapExpressions(): FunctionDeclaration {
     val newStatements = mutableListOf<Statement>()
     statements.forEach { newStatements.add(it.unwrapExpressions(newStatements)) }
-    return FnDeclaration(name, argNames, function, newStatements)
+    return FunctionDeclaration(name, argNames, function, newStatements)
 }
 
 private fun Statement.unwrapExpressions(newStatements: MutableList<Statement>): Statement {

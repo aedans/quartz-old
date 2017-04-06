@@ -9,7 +9,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FnDeclaration(
+class FunctionDeclaration(
         val name: String,
         val argNames: List<String>,
         val function: Function,
@@ -27,16 +27,16 @@ class FnDeclaration(
         return s
     }
 
-    fun mapStatements(function: (Statement) -> Statement): FnDeclaration {
-        return FnDeclaration(name, argNames, this.function, statements.map(function))
+    fun mapStatements(function: (Statement) -> Statement): FunctionDeclaration {
+        return FunctionDeclaration(name, argNames, this.function, statements.map(function))
     }
 
-    fun mapExpressions(function: (Expression) -> Expression): FnDeclaration {
+    fun mapExpressions(function: (Expression) -> Expression): FunctionDeclaration {
         return mapStatements { it.mapExpressions(function) }
     }
 
-    fun mapTypes(function: (Type?) -> Type?): FnDeclaration {
-        return FnDeclaration(
+    fun mapTypes(function: (Type?) -> Type?): FunctionDeclaration {
+        return FunctionDeclaration(
                 name,
                 argNames,
                 this.function.mapTypes(function),

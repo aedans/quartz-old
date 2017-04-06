@@ -19,8 +19,8 @@ fun ProgramOutputStream.writeAll() {
     program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
     program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
 
-    program.fnDeclarations.forEach { functionPrototype(it.value) }
-    program.fnDeclarations.forEach { function(it.value) }
+    program.functionDeclarations.forEach { functionPrototype(it.value) }
+    program.functionDeclarations.forEach { function(it.value) }
 }
 
 fun ProgramOutputStream.declare(type: Type) {

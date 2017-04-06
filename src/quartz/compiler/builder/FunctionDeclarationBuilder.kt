@@ -6,7 +6,7 @@ import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
@@ -29,7 +29,7 @@ fun QuartzParser.FnDeclarationContext.toNode(): GlobalDeclaration {
                 )
         )
     } else {
-        FnDeclaration(
+        FunctionDeclaration(
                 identifier().text,
                 fnArgumentList().fnArgument().map { it.identifier().text },
                 Function(

@@ -1,7 +1,7 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.statement.ReturnStatement
@@ -16,7 +16,7 @@ import quartz.compiler.util.Function
 
 fun Program.generateConstructors(): Program {
     return Program(
-            fnDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
+            functionDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
             externFunctionDeclarations,
             structDeclarations,
             typealiasDeclarations,
@@ -24,7 +24,7 @@ fun Program.generateConstructors(): Program {
     )
 }
 
-private fun StructDeclaration.defaultConstructor(): FnDeclaration {
+private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
     val argsNames = members.map { it.key }
     val argTypes = members.map { it.value.type }
     val newType = type.withTemplates(templates)
@@ -38,5 +38,5 @@ private fun StructDeclaration.defaultConstructor(): FnDeclaration {
     statements.addAll(assignmentNodes)
     statements.add(returnNode)
 
-    return FnDeclaration(name, argsNames, Function(argTypes, templates, newType, false), statements)
+    return FunctionDeclaration(name, argsNames, Function(argTypes, templates, newType, false), statements)
 }

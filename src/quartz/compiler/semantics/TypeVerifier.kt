@@ -7,7 +7,7 @@ import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
@@ -22,7 +22,7 @@ fun Program.verifyTypes(): Program {
     return this.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
 }
 
-private fun FnDeclaration.verify(symbolTable: SymbolTable): FnDeclaration {
+private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
 
     return mapStatements { it.verify(localSymbolTable) }
@@ -134,6 +134,15 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
         if (!expressionFunction.vararg && expressionFunction.args.size != expressions.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
+        val expressions = expressions.map { it.verify(symbolTable) }
+        val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
+            templates
+        else
+            templates
+
+        if (templates.size != expressionFunction.templates.size)
+            throw QuartzException("Could not infer types for $this")
+
         val templateMap = expressionFunction.templates.zip(templates).toMap()
         val templateExpressionFunction = expressionFunction.mapTypes { templateMap[it] ?: it }
 
@@ -142,7 +151,7 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
                 templates,
                 expressions
                         .zip(templateExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
-                        .map { it.first.verify(symbolTable).verifyAs(it.first.type.verifyAs(it.second)) },
+                        .map { it.first.verifyAs(it.first.type.verifyAs(it.second)) },
                 type.verifyAs(templateExpressionFunction.returnType)
         )
     } catch (e: QuartzException) {

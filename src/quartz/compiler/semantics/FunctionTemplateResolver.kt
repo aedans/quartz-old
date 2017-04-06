@@ -3,7 +3,7 @@ package quartz.compiler.semantics
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.expression.MemberAccess
 import quartz.compiler.tree.function.statement.FunctionCall
@@ -15,9 +15,9 @@ import quartz.compiler.util.Type
  */
 
 fun Program.resolveFunctionTemplates(): Program {
-    val newFnDeclarations = mutableListOf<FnDeclaration>()
+    val newFnDeclarations = mutableListOf<FunctionDeclaration>()
     newFnDeclarations.addAll(
-        fnDeclarations.filterValues { it.function.templates.isEmpty() }.map {
+        functionDeclarations.filterValues { it.function.templates.isEmpty() }.map {
             it.value.resolveFunctionTemplates(this, newFnDeclarations)
         }
     )
@@ -30,13 +30,13 @@ fun Program.resolveFunctionTemplates(): Program {
     )
 }
 
-private fun FnDeclaration.resolveFunctionTemplates(
+private fun FunctionDeclaration.resolveFunctionTemplates(
         program: Program,
-        newFnDeclarations: MutableList<FnDeclaration>
-): FnDeclaration {
+        newFunctionDeclarations: MutableList<FunctionDeclaration>
+): FunctionDeclaration {
     return this.mapExpressions {
         when (it) {
-            is FunctionCall -> it.resolveFunctionTemplates(program, newFnDeclarations)
+            is FunctionCall -> it.resolveFunctionTemplates(program, newFunctionDeclarations)
             else -> it
         }
     }
@@ -44,16 +44,16 @@ private fun FnDeclaration.resolveFunctionTemplates(
 
 private fun FunctionCall.resolveFunctionTemplates(
         program: Program,
-        newFnDeclarations: MutableList<FnDeclaration>
+        newFunctionDeclarations: MutableList<FunctionDeclaration>
 ): FunctionCall {
     if (templates.isEmpty())
         return this
     if (expression is MemberAccess)
-        return resolveDotNotation(program.symbolTable).resolveFunctionTemplates(program, newFnDeclarations)
+        return resolveDotNotation(program.symbolTable).resolveFunctionTemplates(program, newFunctionDeclarations)
     if (expression !is Identifier)
         throw QuartzException("Templates are not allowed on variables")
 
-    val newFunction = resolveFunctionTemplates(expression.name, templates, program, newFnDeclarations)
+    val newFunction = resolveFunctionTemplates(expression.name, templates, program, newFunctionDeclarations)
 
     return FunctionCall(
             Identifier(newFunction.name, FunctionType(newFunction.function)), emptyList(), expressions, type
@@ -64,36 +64,36 @@ private fun resolveFunctionTemplates(
         name: String,
         types: List<Type>,
         program: Program,
-        newFnDeclarations: MutableList<FnDeclaration>
-): FnDeclaration {
+        newFunctionDeclarations: MutableList<FunctionDeclaration>
+): FunctionDeclaration {
     val newFunction = resolveFunctionTemplates(
-            program.fnDeclarations[name] ?: throw QuartzException("Unknown function $name"),
+            program.functionDeclarations[name] ?: throw QuartzException("Unknown function $name"),
             types,
             program,
-            newFnDeclarations
+            newFunctionDeclarations
     )
-    newFnDeclarations.add(newFunction)
+    newFunctionDeclarations.add(newFunction)
     return newFunction
 }
 
 private fun resolveFunctionTemplates(
-        fnDeclaration: FnDeclaration,
+        functionDeclaration: FunctionDeclaration,
         types: List<Type>,
         program: Program,
-        newFnDeclarations: MutableList<FnDeclaration>
-): FnDeclaration {
-    val typeMap = fnDeclaration.function.templates.zip(types).toMap()
-    var newName = fnDeclaration.name
+        newFunctionDeclarations: MutableList<FunctionDeclaration>
+): FunctionDeclaration {
+    val typeMap = functionDeclaration.function.templates.zip(types).toMap()
+    var newName = functionDeclaration.name
     typeMap.forEach { newName += "_${it.value.descriptiveString}" }
-    return FnDeclaration(
+    return FunctionDeclaration(
             newName,
-            fnDeclaration.argNames,
+            functionDeclaration.argNames,
             Function(
-                    fnDeclaration.function.args,
+                    functionDeclaration.function.args,
                     emptyList(),
-                    fnDeclaration.function.returnType,
-                    fnDeclaration.function.vararg
+                    functionDeclaration.function.returnType,
+                    functionDeclaration.function.vararg
             ),
-            fnDeclaration.statements
-    ).mapTypes { typeMap[it] ?: it }.resolveFunctionTemplates(program, newFnDeclarations)
+            functionDeclaration.statements
+    ).mapTypes { typeMap[it] ?: it }.resolveFunctionTemplates(program, newFunctionDeclarations)
 }

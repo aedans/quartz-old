@@ -3,7 +3,7 @@ package quartz.compiler.builder
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.import.Library
 import quartz.compiler.tree.import.import
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
@@ -19,7 +19,7 @@ import java.io.InputStream
 fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: (InputStream) -> QuartzParser.ProgramContext): Program {
     val nodes = declaration().map { it.toNode() } + importDeclaration().map { it.import(library, parser) }.flatten().map { it.toNode() }
     val programNode = Program(
-            nodes.filterIsInstance(FnDeclaration::class.java).map { it.name to it }.toMap(),
+            nodes.filterIsInstance(FunctionDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(ExternFunctionDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(StructDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(Typealias::class.java).map { it.name to it }.toMap(),

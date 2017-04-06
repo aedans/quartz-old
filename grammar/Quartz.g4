@@ -9,7 +9,7 @@ program
 // DECLARATIONS
 
 declaration
-    : fnDeclaration
+    : functionDeclaration
     | structDeclaration
     | typealiasDeclaration
     | inlineC
@@ -17,7 +17,7 @@ declaration
 
 // FN DECLARATION
 
-fnDeclaration
+functionDeclaration
     : fnModifiers 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? body=fnBlock
     | fnModifiers extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;

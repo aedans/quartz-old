@@ -5,7 +5,7 @@ import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.FnDeclaration
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.Typealias
 import quartz.compiler.tree.struct.StructDeclaration
@@ -17,7 +17,7 @@ import quartz.compiler.util.Type
 
 fun Program.resolveTypes(): Program {
     return Program(
-            fnDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
+            functionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             externFunctionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             structDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             typealiasDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
@@ -25,7 +25,7 @@ fun Program.resolveTypes(): Program {
     )
 }
 
-private fun FnDeclaration.resolveTypes(symbolTable: SymbolTable): FnDeclaration {
+private fun FunctionDeclaration.resolveTypes(symbolTable: SymbolTable): FunctionDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
     return this.mapTypes { it?.resolve(localSymbolTable) }
 }
