@@ -210,16 +210,16 @@ private fun Type?.verifyAs(type: Type?): Type? {
 
 fun Type?.asStruct(): StructType? {
     return when (this) {
-        is StructType -> this
         is AliasedType -> type.asStruct()
+        is StructType -> this
         else -> null
     }
 }
 
 fun Type?.asFunction(): FunctionType? {
     return when (this) {
-        is FunctionType -> this
         is AliasedType -> type.asFunction()
+        is FunctionType -> this
         else -> null
     }
 }

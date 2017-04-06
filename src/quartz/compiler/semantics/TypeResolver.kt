@@ -4,6 +4,7 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.NamedType
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
@@ -45,7 +46,11 @@ private fun Typealias.resolveTypes(symbolTable: SymbolTable): Typealias {
 
 private fun Type.resolve(symbolTable: SymbolTable): Type {
     return if (this is NamedType)
-        symbolTable.getType(this.string)?.withTemplates(templates)?.mapTypes { it?.resolve(symbolTable) }
+        if (templates.isEmpty()) {
+            symbolTable.getType(string)
+        } else {
+            (symbolTable.getType(this.string) as StructType).withTemplates(templates)
+        }?.mapTypes { it?.resolve(symbolTable) }
                 ?: throw QuartzException("Unknown type $this")
     else this
 }

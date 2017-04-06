@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.util.Type
 
 /**
@@ -17,12 +16,7 @@ object Primitives {
     val void: Type = QVoid()
 }
 
-private class NumType(string: String) : Type(string, string, emptyList()) {
-    override fun withTemplates(templates: List<Type>): Type {
-        if (templates.isEmpty()) return this
-        throw QuartzException("Templates are not allowed on $this")
-    }
-
+private class NumType(string: String) : Type(string, string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
@@ -32,12 +26,7 @@ private class NumType(string: String) : Type(string, string, emptyList()) {
     }
 }
 
-private class QVoid : Type("void", "void", emptyList()) {
-    override fun withTemplates(templates: List<Type>): Type {
-        if (templates.isEmpty()) return this
-        throw QuartzException("Templates are not allowed on $this")
-    }
-
+private class QVoid : Type("void", "void") {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
