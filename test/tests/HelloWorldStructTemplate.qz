@@ -5,6 +5,6 @@ struct Container<T> {
 }
 
 fn main(): int {
-    "Hello, World!".Container<char[]>().value.printf();
+    "Hello, World!".Container().value.printf();
     return 0;
 }

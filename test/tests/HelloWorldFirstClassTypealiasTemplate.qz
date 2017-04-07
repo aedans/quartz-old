@@ -4,7 +4,7 @@ typealias string = char[]
 
 fn main(): int {
     val _greeter = greeter;
-    _greeter().invoke<string>().printf();
+    _greeter().invoke().printf();
     return 0;
 }
 

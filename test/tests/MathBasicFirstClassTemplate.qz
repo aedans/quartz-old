@@ -2,12 +2,12 @@ import std.c.stdio
 
 fn main(): int {
     "100 = ".printf();
-    mult.call<int, int, int>(10, 10).print();
+    mult.call(10, 10).print();
     return 0;
 }
 
 fn <I1, I2, O> call(function: (I1, I2) -> O, i1: I1, i2: I2): O {
-    return function.identity<I1, I2, O>()(i1, i2);
+    return function.identity()(i1, i2);
 }
 
 fn <I1, I2, O> identity(function: (I1, I2) -> O): (I1, I2) -> O {

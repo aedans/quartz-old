@@ -11,6 +11,10 @@ class AliasedType(string: String, val type: Type, val external: Boolean) : Type(
         return AliasedType(string, function(type.mapTypes(function))!!, external)
     }
 
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other) || other == type
+    }
+
     override fun canCastTo(type: Type): Boolean {
         return type == this.type || type is AliasedType && type.string == this.string || type.canCastTo(type)
     }

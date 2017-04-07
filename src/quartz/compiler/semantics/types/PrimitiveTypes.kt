@@ -7,31 +7,31 @@ import quartz.compiler.util.Type
  */
 
 object Primitives {
-    val char: Type = NumType("char")
-    val short: Type = NumType("short")
-    val int: Type = NumType("int")
-    val long: Type = NumType("long")
-    val float: Type = NumType("float")
-    val double: Type = NumType("double")
-    val void: Type = QVoid()
+    val char: Type = NumberType("char")
+    val short: Type = NumberType("short")
+    val int: Type = NumberType("int")
+    val long: Type = NumberType("long")
+    val float: Type = NumberType("float")
+    val double: Type = NumberType("double")
+    val void: Type = VoidType()
 }
 
-private class NumType(string: String) : Type(string, string) {
+class NumberType(string: String) : Type(string, string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type is NumType
+        return type is NumberType
     }
 }
 
-private class QVoid : Type("void", "void") {
+class VoidType : Type("void", "void") {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type is QVoid
+        return type is VoidType
     }
 }

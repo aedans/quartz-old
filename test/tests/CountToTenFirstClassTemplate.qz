@@ -9,7 +9,7 @@ fn main(): int {
 fn countTo(i: int, printer: (int) -> void) {
     val counter = countTo;
     if (i > 0)
-        counter.invoke<int, (int) -> void>(i - 1, printer);
+        counter.invoke(i - 1, printer);
     printer(i);
 }
 

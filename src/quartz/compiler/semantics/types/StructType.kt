@@ -23,7 +23,7 @@ class StructType(
         return type is StructType
                 && type.string == this.string
                 && templates.size == type.templates.size
-                && templates.zip(type.templates).all { Type.canCast(it.first, it.second) }
+                && templates.zip(type.templates).all { it.first == it.second }
     }
 
     override fun mapTypes(function: (Type?) -> Type?): StructType {

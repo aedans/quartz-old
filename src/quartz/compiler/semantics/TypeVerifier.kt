@@ -36,7 +36,7 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
         is IfStatement -> verify(symbolTable)
         is WhileLoop -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
-        else -> throw QuartzException("Unrecognized node $this")
+        else -> throw QuartzException("Unrecognized node $this (${this::class.java})")
     }
 }
 
@@ -138,7 +138,8 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
         val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
             templates
         else
-            templates
+            expressionFunction.args.zip(expressions.map { it.type ?: throw QuartzException("Could not infer type for $this") })
+                    .inferTemplates(expressionFunction.templates)
 
         if (templates.size != expressionFunction.templates.size)
             throw QuartzException("Could not infer types for $this")

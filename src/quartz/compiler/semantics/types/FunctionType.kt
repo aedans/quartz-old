@@ -14,8 +14,8 @@ data class FunctionType(val function: Function) : Type("$function", function.des
 
     override fun canCastTo(type: Type): Boolean {
         return type is FunctionType
-                && type.function.args.zip(function.args).all { canCast(it.first, it.second) }
-                && type.function.returnType.canCastTo(function.returnType)
+                && type.function.args.zip(function.args).all { it.first == it.second }
+                && type.function.returnType == function.returnType
                 && type.function.vararg == function.vararg
     }
 
