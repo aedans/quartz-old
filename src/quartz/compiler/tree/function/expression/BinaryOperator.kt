@@ -21,7 +21,7 @@ class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, o
     }
 
     override fun toString(): String {
-        return "$id($expr1, $expr2)"
+        return "$expr1 $id $expr2"
     }
 
     enum class ID(val string: String) {
@@ -37,8 +37,7 @@ class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, o
         SUBTRACT("-"),
         MULTIPLY("*"),
         DIVIDE("/"),
-        MOD("%"),
-        ARRAY_ACCESS("[]");
+        MOD("%");
 
         override fun toString(): String {
             return string

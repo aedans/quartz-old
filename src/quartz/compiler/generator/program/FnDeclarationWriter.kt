@@ -53,7 +53,7 @@ fun ProgramOutputStream.statement(statement: Statement) {
         is IfStatement -> ifStatement(statement)
         is WhileLoop -> whileLoop(statement)
         is FunctionCall -> fnCall(statement)
-        is VariableAssignment -> varAssignment(statement)
+        is Assignment -> varAssignment(statement)
         else -> throw Exception("Unrecognized statement $statement")
     }
 }
@@ -97,6 +97,8 @@ fun ProgramOutputStream.expression(expression: Expression) {
         is Cast -> cast(expression)
         is UnaryOperator -> unaryOperator(expression)
         is BinaryOperator -> binaryOperator(expression)
+        is Assignment -> assignment(expression)
+        is ArrayAccess -> arrayAccess(expression)
         is MemberAccess -> memberAccess(expression)
         is FunctionCall -> fnCall(expression)
         else -> throw Exception("Unrecognized expression $expression")
@@ -126,17 +128,20 @@ fun ProgramOutputStream.unaryOperator(unaryOperator: UnaryOperator) {
 }
 
 fun ProgramOutputStream.binaryOperator(binaryOperator: BinaryOperator) {
-    when (binaryOperator.id) {
-        BinaryOperator.ID.ARRAY_ACCESS -> {
-            parentheses { expression(binaryOperator.expr1) }
-            brackets { expression(binaryOperator.expr2) }
-        }
-        else -> {
-            parentheses { expression(binaryOperator.expr1) }
-            string(binaryOperator.id)
-            parentheses { expression(binaryOperator.expr2) }
-        }
-    }
+    parentheses { expression(binaryOperator.expr1) }
+    string(binaryOperator.id)
+    parentheses { expression(binaryOperator.expr2) }
+}
+
+fun ProgramOutputStream.assignment(assignment: Assignment) {
+    expression(assignment.lvalue)
+    string(assignment.id)
+    expression(assignment.expression)
+}
+
+fun ProgramOutputStream.arrayAccess(arrayAccess: ArrayAccess) {
+    parentheses { expression(arrayAccess.lvalue) }
+    brackets { expression(arrayAccess.expr2) }
 }
 
 fun ProgramOutputStream.memberAccess(memberAccess: MemberAccess) {
@@ -157,8 +162,8 @@ fun ProgramOutputStream.fnCall(functionCall: FunctionCall) {
     }
 }
 
-fun ProgramOutputStream.varAssignment(variableAssignment: VariableAssignment) {
-    name(variableAssignment.name)
+fun ProgramOutputStream.varAssignment(assignment: Assignment) {
+    expression(assignment.lvalue)
     string("=")
-    expression(variableAssignment.expression)
+    expression(assignment.expression)
 }

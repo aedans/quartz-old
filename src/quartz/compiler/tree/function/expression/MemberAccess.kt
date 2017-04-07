@@ -1,13 +1,14 @@
 package quartz.compiler.tree.function.expression
 
 import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.LValueExpression
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class MemberAccess(val name: String, val expression: Expression, override val type: Type?): Expression {
+class MemberAccess(val name: String, val expression: Expression, override val type: Type?): LValueExpression {
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return MemberAccess(name, function(expression.mapExpressions(function)), type)
     }

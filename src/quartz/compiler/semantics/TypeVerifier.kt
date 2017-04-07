@@ -11,6 +11,7 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
+import quartz.compiler.tree.function.toLValue
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.util.Type
 
@@ -32,11 +33,12 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
     return when (this) {
         is InlineC -> this
         is VariableDeclaration -> verify(symbolTable)
+        is Assignment -> verify(symbolTable)
         is ReturnStatement -> verify(symbolTable)
         is IfStatement -> verify(symbolTable)
         is WhileLoop -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
-        else -> throw QuartzException("Unrecognized node $this (${this::class.java})")
+        else -> throw QuartzException("Unrecognized node $this")
     }
 }
 
@@ -75,7 +77,9 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is Identifier -> verify(symbolTable)
         is UnaryOperator -> verify(symbolTable)
         is BinaryOperator -> verify(symbolTable)
+        is Assignment -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
+        is ArrayAccess -> verify(symbolTable)
         is MemberAccess -> verify(symbolTable)
         is IfExpression -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
@@ -102,27 +106,37 @@ private fun UnaryOperator.verify(symbolTable: SymbolTable): UnaryOperator {
 }
 
 private fun BinaryOperator.verify(symbolTable: SymbolTable): BinaryOperator {
-    return if (id == BinaryOperator.ID.ARRAY_ACCESS) {
-        val newExpr1 = expr1.verify(symbolTable)
-        val newExpr2 = expr2.verify(symbolTable).verifyAs(Primitives.int)
-        val newType = newExpr1.type.asArray()?.type
-                ?: throw QuartzException("$type is not an array")
-        BinaryOperator(
-                newExpr1,
-                newExpr2,
-                id,
-                newType
-        )
-    } else {
-        val newExpr1 = expr1.verify(symbolTable)
-        val newExpr2 = expr2.verify(symbolTable)
-        BinaryOperator(
-                newExpr1.verifyAs(expr2.type).verifyAs(type),
-                newExpr2.verifyAs(expr1.type).verifyAs(type),
-                id,
-                type.verifyAs(newExpr1.type).verifyAs(newExpr2.type)
-        )
-    }
+    val newExpr1 = expr1.verify(symbolTable)
+    val newExpr2 = expr2.verify(symbolTable)
+    return BinaryOperator(
+            newExpr1.verifyAs(newExpr1.type).verifyAs(type),
+            newExpr2.verifyAs(newExpr2.type).verifyAs(type),
+            id,
+            type.verifyAs(newExpr1.type).verifyAs(newExpr2.type)
+    )
+}
+
+private fun Assignment.verify(symbolTable: SymbolTable): Assignment {
+    val newLValue = lvalue.verify(symbolTable)
+    val newExpression = expression.verify(symbolTable)
+    return Assignment(
+            newLValue.verifyAs(newExpression.type).verifyAs(type).toLValue(),
+            newExpression.verifyAs(newLValue.type).verifyAs(type),
+            id,
+            type.verifyAs(lvalue.type).verifyAs(newExpression.type)
+    )
+}
+
+private fun ArrayAccess.verify(symbolTable: SymbolTable): ArrayAccess {
+    val newExpr1 = lvalue.verify(symbolTable)
+    val newExpr2 = expr2.verify(symbolTable).verifyAs(Primitives.int)
+    val newType = newExpr1.type.asArray()?.type
+            ?: throw QuartzException("$type is not an array")
+    return ArrayAccess(
+            newExpr1,
+            newExpr2,
+            newType
+    )
 }
 
 private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {

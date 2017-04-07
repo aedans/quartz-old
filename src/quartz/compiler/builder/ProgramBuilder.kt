@@ -31,7 +31,7 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 fun QuartzParser.DeclarationContext.toNode(): Any {
     return when {
-        fnDeclaration() != null -> fnDeclaration().toNode()
+        functionDeclaration() != null -> functionDeclaration().toNode()
         structDeclaration() != null -> structDeclaration().toNode()
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
         inlineC() != null -> inlineC().toNode()

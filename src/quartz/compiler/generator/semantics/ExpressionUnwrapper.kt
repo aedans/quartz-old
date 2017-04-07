@@ -7,6 +7,7 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
+import quartz.compiler.tree.function.toLValue
 import quartz.compiler.tree.misc.InlineC
 
 /**
@@ -28,7 +29,7 @@ private fun Statement.unwrapExpressions(newStatements: MutableList<Statement>): 
         is InlineC -> this
         is VariableDeclaration -> VariableDeclaration(name, expression?.unwrap(newStatements), type, mutable)
         is ReturnStatement -> ReturnStatement(expression.unwrap(newStatements))
-        is VariableAssignment -> VariableAssignment(name, expression.unwrap(newStatements))
+        is Assignment -> Assignment(lvalue, expression.unwrap(newStatements), id, type)
         is IfStatement -> IfStatement(
                 test.unwrap(newStatements),
                 trueStatements.map { it.unwrapExpressions(newStatements) },
@@ -57,7 +58,9 @@ private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression
         is Cast -> Cast(expression.unwrap(newStatements), type)
         is UnaryOperator -> UnaryOperator(expression.unwrap(newStatements), id, type)
         is BinaryOperator -> BinaryOperator(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
+        is Assignment -> Assignment(lvalue.unwrap(newStatements).toLValue(), expression.unwrap(newStatements), id, type)
         is FunctionCall -> FunctionCall(expression.unwrap(newStatements), templates, expressions.map { it.unwrap(newStatements) }, type)
+        is ArrayAccess -> ArrayAccess(lvalue.unwrap(newStatements), expr2.unwrap(newStatements), type)
         is MemberAccess -> MemberAccess(name, expression.unwrap(newStatements), type)
         is IfExpression -> {
             val tempVarName = "temp${hashCode()}"
@@ -65,10 +68,10 @@ private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression
                     ?: throw QuartzException("Unknown aliasedType for $this"), true))
 
             val trueStatements = mutableListOf<Statement>()
-            trueStatements.add(VariableAssignment(tempVarName, ifTrue.unwrap(trueStatements)))
+            trueStatements.add(Assignment(Identifier(tempVarName, type), ifTrue.unwrap(trueStatements), Assignment.ID.EQ, type))
 
             val falseStatements = mutableListOf<Statement>()
-            falseStatements.add(VariableAssignment(tempVarName, ifFalse.unwrap(falseStatements)))
+            falseStatements.add(Assignment(Identifier(tempVarName, type), ifFalse.unwrap(falseStatements), Assignment.ID.EQ, type))
 
             newStatements.add(IfStatement(
                     test,

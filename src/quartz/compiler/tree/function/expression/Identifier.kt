@@ -1,13 +1,14 @@
 package quartz.compiler.tree.function.expression
 
 import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.LValueExpression
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-class Identifier(val name: String, override val type: Type?) : Expression {
+class Identifier(val name: String, override val type: Type?) : LValueExpression {
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return this
     }

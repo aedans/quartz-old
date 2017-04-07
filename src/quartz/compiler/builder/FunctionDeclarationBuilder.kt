@@ -10,6 +10,7 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
+import quartz.compiler.tree.function.toLValue
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.util.Function
 
@@ -17,7 +18,7 @@ import quartz.compiler.util.Function
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.FnDeclarationContext.toNode(): GlobalDeclaration {
+fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
     return if (extern != null) {
         ExternFunctionDeclaration(
                 identifier().text,
@@ -85,7 +86,10 @@ fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {
-    return disjunction().toNode()
+    return when {
+        expression() == null -> disjunction().toNode()
+        else -> Assignment(disjunction().toNode().toLValue(), expression().toNode(), assignmentOperator().ID, null)
+    }
 }
 
 fun QuartzParser.DisjunctionContext.toNode(): Expression {
@@ -175,7 +179,7 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
 }
 
 fun QuartzParser.ArrayAccessContext.toNode(expression: Expression): Expression {
-    return BinaryOperator(expression, expression().toNode(), BinaryOperator.ID.ARRAY_ACCESS, null)
+    return ArrayAccess(expression, expression().toNode(), null)
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAccess {
@@ -208,6 +212,17 @@ fun QuartzParser.LiteralContext.toNode(): Expression {
         else -> throw QuartzException("Error translating $this")
     }
 }
+
+val QuartzParser.AssignmentOperatorContext.ID: Assignment.ID
+    get() = when (text) {
+        "=" -> Assignment.ID.EQ
+        "+=" -> Assignment.ID.PLUS_EQ
+        "-=" -> Assignment.ID.MINUS_EQ
+        "*=" -> Assignment.ID.TIMES_EQ
+        "/=" -> Assignment.ID.DIV_EQ
+        "%=" -> Assignment.ID.MOD_EQ
+        else -> throw QuartzException("Unrecognized assignment operator $text")
+    }
 
 val QuartzParser.EqualityOperationContext.ID: BinaryOperator.ID
     get() = when (text) {

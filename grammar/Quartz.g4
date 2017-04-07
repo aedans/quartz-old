@@ -95,7 +95,7 @@ whileLoop
 // EXPRESSIONS
 
 expression
-    : disjunction
+    : disjunction (assignmentOperator expression)?
     ;
 
 disjunction
@@ -136,6 +136,15 @@ atomicExpression
     | identifier
     | inlineC
     | literal
+    ;
+
+assignmentOperator
+    : '='
+    | '+='
+    | '-='
+    | '*='
+    | '/='
+    | '%='
     ;
 
 equalityOperation
