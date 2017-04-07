@@ -55,6 +55,7 @@ private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression
         is NumberLiteral -> this
         is StringLiteral -> this
         is Identifier -> this
+        is Sizeof -> this
         is Cast -> Cast(expression.unwrap(newStatements), type)
         is PrefixUnaryOperator -> PrefixUnaryOperator(expression.unwrap(newStatements), id, type)
         is PostfixUnaryOperator -> PostfixUnaryOperator(expression.unwrap(newStatements), id, type)

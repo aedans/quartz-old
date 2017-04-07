@@ -101,6 +101,7 @@ fun ProgramOutputStream.expression(expression: Expression) {
         is Assignment -> assignment(expression)
         is ArrayAccess -> arrayAccess(expression)
         is MemberAccess -> memberAccess(expression)
+        is Sizeof -> sizeof(expression)
         is FunctionCall -> fnCall(expression)
         else -> throw Exception("Unrecognized expression $expression")
     }
@@ -154,6 +155,11 @@ fun ProgramOutputStream.memberAccess(memberAccess: MemberAccess) {
     expression(memberAccess.expression)
     string(".")
     name(memberAccess.name)
+}
+
+fun ProgramOutputStream.sizeof(sizeof: Sizeof) {
+    name("sizeof")
+    parentheses { type(sizeof.type) }
 }
 
 fun ProgramOutputStream.fnCall(functionCall: FunctionCall) {

@@ -26,17 +26,17 @@ fn get_EXIT_SUCCESS(): int = %%EXIT_SUCCESS%%
 fn get_RAND_MAX(): int = %%RAND_MAX%%
 fn get_MB_CUR_MAX(): int = %%MB_CUR_MAX%%
 
-extern fn atof(char[]): double
-extern fn atoi(char[]): int
-extern fn atol(char[]): long
+extern fn atof(char*): double
+extern fn atoi(char*): int
+extern fn atol(char*): long
 // TODO strtod
 // TODO strtol
 // TODO strtoul
 extern fn abort()
 extern fn atexit(() -> void): int
 extern fn exit(int)
-extern fn getenv(char[]): char[]
-extern fn system(char[]): int
+extern fn getenv(char*): char*
+extern fn system(char*): int
 // TODO bsearch
 // TODO qsort
 extern fn abs(int): int

@@ -27,16 +27,16 @@ class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, o
     enum class ID(val string: String) {
         OR("||"),
         AND("&&"),
-        EQUALS("=="),
-        NOT_EQUALS("!="),
-        LESS_THAN("<"),
-        GREATER_THAN(">"),
-        LESS_THAN_OR_EQUALS("<="),
-        GREATER_THAN_OR_EQUALS(">="),
+        EQ("=="),
+        NEQ("!="),
+        LT("<"),
+        GT(">"),
+        LEQ("<="),
+        GEQ(">="),
         ADD("+"),
-        SUBTRACT("-"),
-        MULTIPLY("*"),
-        DIVIDE("/"),
+        SUBT("-"),
+        MULT("*"),
+        DIV("/"),
         MOD("%");
 
         override fun toString(): String {

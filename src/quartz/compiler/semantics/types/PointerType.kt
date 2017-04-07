@@ -6,13 +6,13 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class ArrayType(val type: Type) : Type("$type[]", "${type.descriptiveString}_array") {
+data class PointerType(val type: Type) : Type("$type*", "${type.descriptiveString}_ptr") {
     override fun mapTypes(function: (Type?) -> Type?): Type {
-        return ArrayType(function(type.mapTypes(function))!!)
+        return PointerType(function(type.mapTypes(function))!!)
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type is ArrayType && type.type == type
+        return type is PointerType && (type.type == type || type.type == Primitives.void)
     }
 
     override fun toString(): String {

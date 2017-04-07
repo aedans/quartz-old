@@ -156,7 +156,6 @@ fun QuartzParser.PostfixExpressionContext.toNode(operations: List<QuartzParser.P
 
 fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Expression {
     return when {
-        arrayAccess() != null -> arrayAccess().toNode(expression)
         memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
         else -> PostfixUnaryOperator(expression.toLValue(), ID, null)
@@ -167,15 +166,12 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
     return when {
         expression() != null -> expression().toNode()
         ifExpression() != null -> ifExpression().toNode()
+        sizeof() != null -> sizeof().toNode()
         identifier() != null -> identifier().toNode()
         inlineC() != null -> inlineC().toNode()
         literal() != null -> literal().toNode()
         else -> throw QuartzException("Unrecognized atomic expression $text")
     }
-}
-
-fun QuartzParser.ArrayAccessContext.toNode(expression: Expression): Expression {
-    return ArrayAccess(expression, expression().toNode(), null)
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAccess {
@@ -193,6 +189,10 @@ fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
     return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse.toNode(), null)
+}
+
+fun QuartzParser.SizeofContext.toNode(): Sizeof {
+    return Sizeof(type().toType())
 }
 
 fun QuartzParser.IdentifierContext.toNode(): Identifier {
@@ -222,31 +222,31 @@ val QuartzParser.AssignmentOperatorContext.ID: Assignment.ID
 
 val QuartzParser.EqualityOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
-        "==" -> BinaryOperator.ID.EQUALS
-        "!=" -> BinaryOperator.ID.NOT_EQUALS
+        "==" -> BinaryOperator.ID.EQ
+        "!=" -> BinaryOperator.ID.NEQ
         else -> throw QuartzException("Unrecognized equality operator $text")
     }
 
 val QuartzParser.ComparisonOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
-        ">" -> BinaryOperator.ID.GREATER_THAN
-        "<" -> BinaryOperator.ID.LESS_THAN
-        ">=" -> BinaryOperator.ID.GREATER_THAN_OR_EQUALS
-        "<=" -> BinaryOperator.ID.LESS_THAN_OR_EQUALS
+        ">" -> BinaryOperator.ID.GT
+        "<" -> BinaryOperator.ID.LT
+        ">=" -> BinaryOperator.ID.GEQ
+        "<=" -> BinaryOperator.ID.LEQ
         else -> throw QuartzException("Unrecognized comparison operator $text")
     }
 
 val QuartzParser.AdditiveOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         "+" -> BinaryOperator.ID.ADD
-        "-" -> BinaryOperator.ID.SUBTRACT
+        "-" -> BinaryOperator.ID.SUBT
         else -> throw QuartzException("Unrecognized additive operator $text")
     }
 
 val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
-        "*" -> BinaryOperator.ID.MULTIPLY
-        "/" -> BinaryOperator.ID.DIVIDE
+        "*" -> BinaryOperator.ID.MULT
+        "/" -> BinaryOperator.ID.DIV
         "%" -> BinaryOperator.ID.MOD
         else -> throw QuartzException("Unrecognized multiplicative operator $text")
     }

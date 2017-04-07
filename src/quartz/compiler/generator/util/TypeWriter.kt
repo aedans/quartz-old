@@ -1,8 +1,8 @@
 package quartz.compiler.generator.util
 
 import quartz.compiler.generator.ProgramOutputStream
-import quartz.compiler.semantics.types.ArrayType
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.StructType
 import quartz.compiler.util.Type
 
@@ -12,7 +12,7 @@ import quartz.compiler.util.Type
 
 fun ProgramOutputStream.type(type: Type) {
     when (type) {
-        is ArrayType -> {
+        is PointerType -> {
             type(type.type)
             string("*")
         }

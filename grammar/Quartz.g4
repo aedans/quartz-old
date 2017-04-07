@@ -133,6 +133,7 @@ postfixExpression
 atomicExpression
     : '(' expression ')'
     | ifExpression
+    | sizeof
     | identifier
     | inlineC
     | literal
@@ -180,13 +181,8 @@ prefixOperation
 postfixOperation
     : '++'
     | '--'
-    | arrayAccess
     | postfixCall
     | memberAccess
-    ;
-
-arrayAccess
-    : '[' expression ']'
     ;
 
 postfixCall
@@ -201,6 +197,10 @@ ifExpression
     : 'if' '(' test=expression ')' ifTrue=expression 'else' ifFalse=expression
     ;
 
+sizeof
+    : 'sizeof' '(' type ')'
+    ;
+
 literal
     : STRING
     | CHAR
@@ -212,7 +212,7 @@ literal
 
 type
     : identifier ('<' typeList '>')?
-    | type array='[]'
+    | type ptr='*'
     | '(' args=typeList ')' '->' returnType=type
     ;
 

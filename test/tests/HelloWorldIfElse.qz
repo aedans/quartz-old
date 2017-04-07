@@ -5,6 +5,6 @@ fn main(): int {
     return 0;
 }
 
-fn helloWorld(): char[] = "Hello, World!"
+fn helloWorld(): char* = "Hello, World!"
 
 fn _false(): int = 0

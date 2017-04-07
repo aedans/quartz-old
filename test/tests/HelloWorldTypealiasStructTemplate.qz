@@ -1,6 +1,6 @@
 import std.c.stdio
 
-typealias string_container = Container<char[]>
+typealias string_container = Container<char*>
 
 struct Container<T> {
     val value: T

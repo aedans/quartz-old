@@ -28,7 +28,7 @@ private fun inferTemplates(first: Type, second: Type, templateMap: MutableMap<Te
             is VoidType -> { }
             is TemplateType -> { }
             is AliasedType -> inferTemplates(first, second.type, templateMap)
-            is ArrayType -> inferTemplates((first as ArrayType).type, second.type, templateMap)
+            is PointerType -> inferTemplates((first as PointerType).type, second.type, templateMap)
             is StructType -> {
                 (first as StructType).members.values.map { it.type }.zip(second.members.values.map { it.type })
                         .forEach { inferTemplates(it.first, it.second, templateMap) }

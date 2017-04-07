@@ -4,13 +4,11 @@ import std.qvoid
 
 %%
 #include <stdio.h>
-
-typedef FILE* FILE_ptr;
 %%
 
 extern typealias size_t = long
 extern typealias fpos_t = long
-extern typealias FILE_ptr = void
+extern typealias FILE = void
 
 // TODO get__IOFBF
 // TODO get__IOLBF
@@ -24,46 +22,46 @@ fn get_SEEK_CUR(): int = %%SEEK_CUR%%
 fn get_SEEK_END(): int = %%SEEK_END%%
 fn get_SEEK_SET(): int = %%SEEK_SET%%
 fn get_TMP_MAX(): int = %%TMP_MAX%%
-fn get_stderr(): FILE_ptr = %%stderr%%
-fn get_stdin(): FILE_ptr = %%stdin%%
-fn get_stdout(): FILE_ptr = %%stdout%%
+fn get_stderr(): FILE* = %%stderr%%
+fn get_stdin(): FILE* = %%stdin%%
+fn get_stdout(): FILE* = %%stdout%%
 
-extern fn fclose(FILE_ptr): int
-extern fn clearerr(FILE_ptr)
-extern fn feof(FILE_ptr): int
-extern fn ferror(FILE_ptr): int
-extern fn fflush(FILE_ptr): int
+extern fn fclose(FILE*): int
+extern fn clearerr(FILE*)
+extern fn feof(FILE*): int
+extern fn ferror(FILE*): int
+extern fn fflush(FILE*): int
 // TODO fgetpos
-extern fn fopen(char[], char[]): FILE_ptr
+extern fn fopen(char*, char*): FILE*
 // TODO fread
-extern fn fseek(FILE_ptr, long, int): int
+extern fn fseek(FILE*, long, int): int
 // TODO fsetpos
-extern fn ftell(FILE_ptr): long
+extern fn ftell(FILE*): long
 // TODO fwrite
-extern fn remove(char[]): int
-extern fn rename(char[], char[]): int
-extern fn rewind(FILE_ptr)
-extern fn setbuf(FILE_ptr, char[])
-extern fn setvbuf(FILE_ptr, char[], int, size_t): int
-extern fn tmpfile(): FILE_ptr
+extern fn remove(char*): int
+extern fn rename(char*, char*): int
+extern fn rewind(FILE*)
+extern fn setbuf(FILE*, char*)
+extern fn setvbuf(FILE*, char*, int, size_t): int
+extern fn tmpfile(): FILE*
 // TODO tmpname
-extern fn fprintf(FILE_ptr, char[], ...): int
-extern fn printf(char[], ...): int
+extern fn fprintf(FILE*, char*, ...): int
+extern fn printf(char*, ...): int
 // TODO sprintf
 // TODO vfprintf
 // TODO vprintf
 // TODO fscanf
 // TODO scanf
 // TODO sscanf
-extern fn fgetc(FILE_ptr): int
+extern fn fgetc(FILE*): int
 // TODO fgets
-extern fn fputc(int, FILE_ptr): int
-extern fn fputs(char[], FILE_ptr): int
-extern fn getc(FILE_ptr): int
+extern fn fputc(int, FILE*): int
+extern fn fputs(char*, FILE*): int
+extern fn getc(FILE*): int
 extern fn getchar(): int
 // TODO gets
-extern fn putc(int, FILE_ptr): int
+extern fn putc(int, FILE*): int
 extern fn putchar(int): int
-extern fn puts(char[]): int
-extern fn ungetc(int, FILE_ptr): int
-extern fn perror(char[])
+extern fn puts(char*): int
+extern fn ungetc(int, FILE*): int
+extern fn perror(char*)

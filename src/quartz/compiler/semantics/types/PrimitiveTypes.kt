@@ -32,6 +32,6 @@ class VoidType : Type("void", "void") {
     }
 
     override fun canCastTo(type: Type): Boolean {
-        return type is VoidType
+        return type == this
     }
 }

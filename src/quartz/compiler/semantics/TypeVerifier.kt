@@ -83,6 +83,7 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is ArrayAccess -> verify(symbolTable)
         is MemberAccess -> verify(symbolTable)
         is IfExpression -> verify(symbolTable)
+        is Sizeof -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
@@ -214,6 +215,10 @@ private fun IfExpression.verify(symbolTable: SymbolTable): IfExpression {
     )
 }
 
+private fun Sizeof.verify(symbolTable: SymbolTable): Sizeof {
+    return this
+}
+
 private fun Expression.verifyAs(type: Type?): Expression {
     return when {
         this.type == null -> this.withType(type)
@@ -248,9 +253,9 @@ fun Type?.asFunction(): FunctionType? {
     }
 }
 
-fun Type?.asArray(): ArrayType? {
+fun Type?.asArray(): PointerType? {
     return when (this) {
-        is ArrayType -> this
+        is PointerType -> this
         is AliasedType -> type.asArray()
         else -> null
     }

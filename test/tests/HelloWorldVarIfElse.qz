@@ -6,7 +6,7 @@ fn main(): int {
     return 0;
 }
 
-fn helloWorld(): char[] = "Hello, World!"
+fn helloWorld(): char* = "Hello, World!"
 
 fn _true(): int = 1
 

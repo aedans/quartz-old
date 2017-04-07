@@ -1,9 +1,0 @@
-// Bindings for c pointer types
-
-%%
-typedef void* = void_ptr;
-%%
-
-extern typealias void_ptr = void
-
-fn get_NULL(): void_ptr = %%NULL%%
