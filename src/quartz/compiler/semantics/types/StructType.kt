@@ -27,7 +27,7 @@ class StructType(
     }
 
     override fun hashCode(): Int {
-        return string.hashCode() + templates.hashCode()
+        return string.hashCode() * templates.hashCode()
     }
 
     override fun canCastTo(type: Type): Boolean {

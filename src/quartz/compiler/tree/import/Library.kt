@@ -37,7 +37,7 @@ sealed class Library(val name: String) {
     class LibraryFile(name: String, val file: File) : Library(name) {
         override fun get(path: List<String>): File {
             if (!path.isEmpty())
-                throw Exception("Could not find $path")
+                throw QuartzException("Could not find $path")
             return file
         }
 

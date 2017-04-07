@@ -36,7 +36,6 @@ object Compiler {
                 },
                 generator: (Program, OutputStream) -> Unit = Generator::write
     ) {
-        println(library.toString(0))
         var program = builder(parser(input))
         println('\n' + program.toString())
         program = analyzer(program)
