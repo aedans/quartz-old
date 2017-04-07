@@ -15,6 +15,6 @@ class NamedType(string: String, val templates: List<Type>) : Type(string, string
         return type is NamedType
                 && type.string == this.string
                 && templates.size == type.templates.size
-                && templates.zip(type.templates).all { Type.canCast(it.first, it.second) }
+                && templates.zip(type.templates).all { it.first == it.second }
     }
 }

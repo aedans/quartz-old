@@ -19,11 +19,19 @@ class StructType(
         return StructType(string, templates, structDeclarationNode)
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other is StructType
+                && other.string == this.string
+                && templates.size == other.templates.size
+                && templates.zip(other.templates).all { it.first == it.second }
+    }
+
+    override fun hashCode(): Int {
+        return string.hashCode() + templates.hashCode()
+    }
+
     override fun canCastTo(type: Type): Boolean {
-        return type is StructType
-                && type.string == this.string
-                && templates.size == type.templates.size
-                && templates.zip(type.templates).all { it.first == it.second }
+        return type == this
     }
 
     override fun mapTypes(function: (Type?) -> Type?): StructType {

@@ -13,6 +13,10 @@ abstract class Type(val string: String, val descriptiveString: String) {
         return other is Type && other.string == this.string
     }
 
+    open fun isEqualTo(type: Type): Boolean {
+        return type.string == this.string
+    }
+
     override fun hashCode(): Int {
         return string.hashCode()
     }

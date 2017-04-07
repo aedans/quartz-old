@@ -19,7 +19,7 @@ private fun inferTemplates(first: Type, second: Type, templateMap: MutableMap<Te
         val old = templateMap[first]
         if (old == null)
             templateMap.put(first, second)
-        else if (old != second)
+        else if (!old.isEqualTo(second))
             throw QuartzException("Conflicting types for $first: ($old, $second)")
     } else
         when (second) {
