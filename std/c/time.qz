@@ -21,8 +21,6 @@ extern struct tm {
 extern typealias size_t = long
 extern typealias clock_t = long
 extern typealias time_t = long
-extern typealias time_t* = void
-extern typealias tm* = void
 
 fn get_CLOCKS_PER_SEC(): long = %%CLOCKS_PER_SEC%%
 
@@ -33,5 +31,5 @@ extern fn difftime(time_t, time_t): double
 extern fn gmtime(time_t*): tm*
 extern fn localtime(time_t*): tm*
 extern fn mktime(tm*): time_t*
-// TODO strftime
+extern fn strftime(char*, size_t, char*, tm*): size_t
 extern fn time(time_t*): time_t

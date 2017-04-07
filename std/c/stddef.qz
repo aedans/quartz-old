@@ -6,7 +6,8 @@ import std.qvoid
 #include <stddef.h>
 %%
 
+extern typealias ptrdiff_t = long
 extern typealias size_t = long
-extern typealias wchar_t = long
+extern typealias wchar_t = int
 
 // TODO offsetof

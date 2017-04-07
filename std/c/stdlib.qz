@@ -29,16 +29,16 @@ fn get_MB_CUR_MAX(): int = %%MB_CUR_MAX%%
 extern fn atof(char*): double
 extern fn atoi(char*): int
 extern fn atol(char*): long
-// TODO strtod
-// TODO strtol
+extern fn strtod(char*, char**): double
+extern fn strtol(char*, char**, int): long
 // TODO strtoul
 extern fn abort()
 extern fn atexit(() -> void): int
 extern fn exit(int)
 extern fn getenv(char*): char*
 extern fn system(char*): int
-// TODO bsearch
-// TODO qsort
+extern fn bsearch(void*, void*, size_t, size_t, (void*, void*) -> int): void*
+extern fn qsort(void*, size_t, size_t, (void*, void*) -> int): void*
 extern fn abs(int): int
 extern fn div(int, int): div_t
 extern fn labs(long): long
