@@ -95,7 +95,8 @@ fun ProgramOutputStream.expression(expression: Expression) {
         is StringLiteral -> stringLiteral(expression)
         is Identifier -> identifier(expression)
         is Cast -> cast(expression)
-        is UnaryOperator -> unaryOperator(expression)
+        is PrefixUnaryOperator -> prefixUnaryOperator(expression)
+        is PostfixUnaryOperator -> postfixUnaryOperator(expression)
         is BinaryOperator -> binaryOperator(expression)
         is Assignment -> assignment(expression)
         is ArrayAccess -> arrayAccess(expression)
@@ -122,9 +123,14 @@ fun ProgramOutputStream.cast(cast: Cast) {
     parentheses { expression(cast.expression) }
 }
 
-fun ProgramOutputStream.unaryOperator(unaryOperator: UnaryOperator) {
-    string(unaryOperator.id)
-    parentheses { expression(unaryOperator.expression) }
+fun ProgramOutputStream.prefixUnaryOperator(prefixUnaryOperator: PrefixUnaryOperator) {
+    string(prefixUnaryOperator.id)
+    parentheses { expression(prefixUnaryOperator.expression) }
+}
+
+fun ProgramOutputStream.postfixUnaryOperator(postfixUnaryOperator: PostfixUnaryOperator) {
+    parentheses { expression(postfixUnaryOperator.expression) }
+    string(postfixUnaryOperator.id)
 }
 
 fun ProgramOutputStream.binaryOperator(binaryOperator: BinaryOperator) {

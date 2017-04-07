@@ -56,7 +56,8 @@ private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression
         is StringLiteral -> this
         is Identifier -> this
         is Cast -> Cast(expression.unwrap(newStatements), type)
-        is UnaryOperator -> UnaryOperator(expression.unwrap(newStatements), id, type)
+        is PrefixUnaryOperator -> PrefixUnaryOperator(expression.unwrap(newStatements), id, type)
+        is PostfixUnaryOperator -> PostfixUnaryOperator(expression.unwrap(newStatements), id, type)
         is BinaryOperator -> BinaryOperator(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
         is Assignment -> Assignment(lvalue.unwrap(newStatements).toLValue(), expression.unwrap(newStatements), id, type)
         is FunctionCall -> FunctionCall(expression.unwrap(newStatements), templates, expressions.map { it.unwrap(newStatements) }, type)

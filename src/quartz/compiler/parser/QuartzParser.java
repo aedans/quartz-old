@@ -24,9 +24,9 @@ public class QuartzParser extends Parser {
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
 		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
-		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, DMOD=45, STRING=46, 
-		CHAR=47, INT=48, DOUBLE=49, INLINE_C=50, IDENTIFIER=51, BLOCK_COMMENT=52, 
-		LINE_COMMENT=53, WHITESPACE=54;
+		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
+		T__45=46, DMOD=47, STRING=48, CHAR=49, INT=50, DOUBLE=51, INLINE_C=52, 
+		IDENTIFIER=53, BLOCK_COMMENT=54, LINE_COMMENT=55, WHITESPACE=56;
 	public static final int
 		RULE_program = 0, RULE_declaration = 1, RULE_functionDeclaration = 2, 
 		RULE_fnArgument = 3, RULE_fnArgumentList = 4, RULE_fnModifiers = 5, RULE_fnBlock = 6, 
@@ -61,16 +61,16 @@ public class QuartzParser extends Parser {
 		"'struct'", "'{'", "'}'", "'typealias'", "'import'", "'.'", "'return'", 
 		"'if'", "'else'", "'while'", "'||'", "'&&'", "'+='", "'-='", "'*='", "'/='", 
 		"'%='", "'=='", "'!='", "'>='", "'<='", "'+'", "'-'", "'*'", "'/'", "'%'", 
-		"'!'", "'['", "']'", "'[]'", "'->'", "'...'", "'var'", "'val'", "';'", 
-		"'%%'"
+		"'++'", "'--'", "'!'", "'['", "']'", "'[]'", "'->'", "'...'", "'var'", 
+		"'val'", "';'", "'%%'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, "DMOD", "STRING", 
-		"CHAR", "INT", "DOUBLE", "INLINE_C", "IDENTIFIER", "BLOCK_COMMENT", "LINE_COMMENT", 
-		"WHITESPACE"
+		null, null, null, null, null, null, null, null, null, null, null, "DMOD", 
+		"STRING", "CHAR", "INT", "DOUBLE", "INLINE_C", "IDENTIFIER", "BLOCK_COMMENT", 
+		"LINE_COMMENT", "WHITESPACE"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -374,7 +374,7 @@ public class QuartzParser extends Parser {
 				setState(144);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__43) {
+				if (_la==T__45) {
 					{
 					setState(143);
 					semi();
@@ -557,8 +557,10 @@ public class QuartzParser extends Parser {
 			case T__18:
 			case T__31:
 			case T__35:
-			case T__41:
-			case T__42:
+			case T__36:
+			case T__37:
+			case T__43:
+			case T__44:
 			case STRING:
 			case CHAR:
 			case INT:
@@ -581,7 +583,7 @@ public class QuartzParser extends Parser {
 				setState(169);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__43) {
+				if (_la==T__45) {
 					{
 					setState(168);
 					semi();
@@ -668,7 +670,7 @@ public class QuartzParser extends Parser {
 			setState(188);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__41 || _la==T__42) {
+			while (_la==T__43 || _la==T__44) {
 				{
 				{
 				setState(185);
@@ -684,7 +686,7 @@ public class QuartzParser extends Parser {
 			setState(193);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__43) {
+			if (_la==T__45) {
 				{
 				setState(192);
 				semi();
@@ -741,7 +743,7 @@ public class QuartzParser extends Parser {
 			setState(200);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__43) {
+			if (_la==T__45) {
 				{
 				setState(199);
 				semi();
@@ -806,7 +808,7 @@ public class QuartzParser extends Parser {
 			setState(210);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__43) {
+			if (_la==T__45) {
 				{
 				setState(209);
 				semi();
@@ -853,7 +855,7 @@ public class QuartzParser extends Parser {
 			setState(215);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__43) {
+			if (_la==T__45) {
 				{
 				setState(214);
 				semi();
@@ -1608,7 +1610,7 @@ public class QuartzParser extends Parser {
 			setState(320);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__31 || _la==T__35) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__31) | (1L << T__35) | (1L << T__36) | (1L << T__37))) != 0)) {
 				{
 				{
 				setState(317);
@@ -1975,7 +1977,7 @@ public class QuartzParser extends Parser {
 			{
 			setState(352);
 			_la = _input.LA(1);
-			if ( !(_la==T__31 || _la==T__35) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__31) | (1L << T__35) | (1L << T__36) | (1L << T__37))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -2016,28 +2018,42 @@ public class QuartzParser extends Parser {
 		PostfixOperationContext _localctx = new PostfixOperationContext(_ctx, getState());
 		enterRule(_localctx, 66, RULE_postfixOperation);
 		try {
-			setState(357);
+			setState(359);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__36:
+			case T__35:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(354);
+				match(T__35);
+				}
+				break;
+			case T__36:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(355);
+				match(T__36);
+				}
+				break;
+			case T__38:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(356);
 				arrayAccess();
 				}
 				break;
 			case T__1:
 			case T__3:
-				enterOuterAlt(_localctx, 2);
+				enterOuterAlt(_localctx, 4);
 				{
-				setState(355);
+				setState(357);
 				postfixCall();
 				}
 				break;
 			case T__14:
-				enterOuterAlt(_localctx, 3);
+				enterOuterAlt(_localctx, 5);
 				{
-				setState(356);
+				setState(358);
 				memberAccess();
 				}
 				break;
@@ -2072,12 +2088,12 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(359);
-			match(T__36);
-			setState(360);
-			expression();
 			setState(361);
-			match(T__37);
+			match(T__38);
+			setState(362);
+			expression();
+			setState(363);
+			match(T__39);
 			}
 		}
 		catch (RecognitionException re) {
@@ -2111,25 +2127,25 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(367);
+			setState(369);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__1) {
 				{
-				setState(363);
-				match(T__1);
-				setState(364);
-				typeList();
 				setState(365);
+				match(T__1);
+				setState(366);
+				typeList();
+				setState(367);
 				match(T__2);
 				}
 			}
 
-			setState(369);
-			match(T__3);
-			setState(370);
-			expressionList();
 			setState(371);
+			match(T__3);
+			setState(372);
+			expressionList();
+			setState(373);
 			match(T__4);
 			}
 		}
@@ -2160,9 +2176,9 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(373);
+			setState(375);
 			match(T__14);
-			setState(374);
+			setState(376);
 			identifier();
 			}
 		}
@@ -2199,19 +2215,19 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(376);
-			match(T__16);
-			setState(377);
-			match(T__3);
 			setState(378);
-			((IfExpressionContext)_localctx).test = expression();
+			match(T__16);
 			setState(379);
-			match(T__4);
+			match(T__3);
 			setState(380);
-			((IfExpressionContext)_localctx).ifTrue = expression();
+			((IfExpressionContext)_localctx).test = expression();
 			setState(381);
-			match(T__17);
+			match(T__4);
 			setState(382);
+			((IfExpressionContext)_localctx).ifTrue = expression();
+			setState(383);
+			match(T__17);
+			setState(384);
 			((IfExpressionContext)_localctx).ifFalse = expression();
 			}
 		}
@@ -2244,7 +2260,7 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(384);
+			setState(386);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << STRING) | (1L << CHAR) | (1L << INT) | (1L << DOUBLE))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -2301,23 +2317,23 @@ public class QuartzParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(400);
+			setState(402);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case IDENTIFIER:
 				{
-				setState(387);
+				setState(389);
 				identifier();
-				setState(392);
+				setState(394);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,39,_ctx) ) {
 				case 1:
 					{
-					setState(388);
-					match(T__1);
-					setState(389);
-					typeList();
 					setState(390);
+					match(T__1);
+					setState(391);
+					typeList();
+					setState(392);
 					match(T__2);
 					}
 					break;
@@ -2326,15 +2342,15 @@ public class QuartzParser extends Parser {
 				break;
 			case T__3:
 				{
-				setState(394);
-				match(T__3);
-				setState(395);
-				((TypeContext)_localctx).args = typeList();
 				setState(396);
-				match(T__4);
+				match(T__3);
 				setState(397);
-				match(T__39);
+				((TypeContext)_localctx).args = typeList();
 				setState(398);
+				match(T__4);
+				setState(399);
+				match(T__41);
+				setState(400);
 				((TypeContext)_localctx).returnType = type(1);
 				}
 				break;
@@ -2342,7 +2358,7 @@ public class QuartzParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(406);
+			setState(408);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,41,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -2353,14 +2369,14 @@ public class QuartzParser extends Parser {
 					{
 					_localctx = new TypeContext(_parentctx, _parentState);
 					pushNewRecursionContext(_localctx, _startState, RULE_type);
-					setState(402);
+					setState(404);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-					setState(403);
-					((TypeContext)_localctx).array = match(T__38);
+					setState(405);
+					((TypeContext)_localctx).array = match(T__40);
 					}
 					} 
 				}
-				setState(408);
+				setState(410);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,41,_ctx);
 			}
@@ -2398,30 +2414,30 @@ public class QuartzParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(414);
+			setState(416);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,42,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(409);
+					setState(411);
 					expression();
-					setState(410);
+					setState(412);
 					match(T__7);
 					}
 					} 
 				}
-				setState(416);
+				setState(418);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,42,_ctx);
 			}
-			setState(418);
+			setState(420);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__16) | (1L << T__31) | (1L << T__35) | (1L << STRING) | (1L << CHAR) | (1L << INT) | (1L << DOUBLE) | (1L << INLINE_C) | (1L << IDENTIFIER))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__16) | (1L << T__31) | (1L << T__35) | (1L << T__36) | (1L << T__37) | (1L << STRING) | (1L << CHAR) | (1L << INT) | (1L << DOUBLE) | (1L << INLINE_C) | (1L << IDENTIFIER))) != 0)) {
 				{
-				setState(417);
+				setState(419);
 				expression();
 				}
 			}
@@ -2460,30 +2476,30 @@ public class QuartzParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(425);
+			setState(427);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,44,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(420);
+					setState(422);
 					identifier();
-					setState(421);
+					setState(423);
 					match(T__7);
 					}
 					} 
 				}
-				setState(427);
+				setState(429);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,44,_ctx);
 			}
-			setState(429);
+			setState(431);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==IDENTIFIER) {
 				{
-				setState(428);
+				setState(430);
 				identifier();
 				}
 			}
@@ -2522,37 +2538,37 @@ public class QuartzParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(436);
+			setState(438);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,46,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(431);
+					setState(433);
 					type(0);
-					setState(432);
+					setState(434);
 					match(T__7);
 					}
 					} 
 				}
-				setState(438);
+				setState(440);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,46,_ctx);
 			}
-			setState(441);
+			setState(443);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__40:
+			case T__42:
 				{
-				setState(439);
-				((TypeListContext)_localctx).vararg = match(T__40);
+				setState(441);
+				((TypeListContext)_localctx).vararg = match(T__42);
 				}
 				break;
 			case T__3:
 			case IDENTIFIER:
 				{
-				setState(440);
+				setState(442);
 				type(0);
 				}
 				break;
@@ -2596,36 +2612,36 @@ public class QuartzParser extends Parser {
 		enterRule(_localctx, 86, RULE_block);
 		int _la;
 		try {
-			setState(455);
+			setState(457);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__10:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(443);
+				setState(445);
 				match(T__10);
-				setState(447);
+				setState(449);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__15) | (1L << T__16) | (1L << T__18) | (1L << T__31) | (1L << T__35) | (1L << T__41) | (1L << T__42) | (1L << STRING) | (1L << CHAR) | (1L << INT) | (1L << DOUBLE) | (1L << INLINE_C) | (1L << IDENTIFIER))) != 0)) {
+				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << T__15) | (1L << T__16) | (1L << T__18) | (1L << T__31) | (1L << T__35) | (1L << T__36) | (1L << T__37) | (1L << T__43) | (1L << T__44) | (1L << STRING) | (1L << CHAR) | (1L << INT) | (1L << DOUBLE) | (1L << INLINE_C) | (1L << IDENTIFIER))) != 0)) {
 					{
 					{
-					setState(444);
+					setState(446);
 					statement();
 					}
 					}
-					setState(449);
+					setState(451);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(450);
-				match(T__11);
 				setState(452);
+				match(T__11);
+				setState(454);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,49,_ctx) ) {
 				case 1:
 					{
-					setState(451);
+					setState(453);
 					semi();
 					}
 					break;
@@ -2638,8 +2654,10 @@ public class QuartzParser extends Parser {
 			case T__18:
 			case T__31:
 			case T__35:
-			case T__41:
-			case T__42:
+			case T__36:
+			case T__37:
+			case T__43:
+			case T__44:
 			case STRING:
 			case CHAR:
 			case INT:
@@ -2648,7 +2666,7 @@ public class QuartzParser extends Parser {
 			case IDENTIFIER:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(454);
+				setState(456);
 				statement();
 				}
 				break;
@@ -2681,7 +2699,7 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(457);
+			setState(459);
 			match(IDENTIFIER);
 			}
 		}
@@ -2710,7 +2728,7 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(459);
+			setState(461);
 			match(INLINE_C);
 			}
 		}
@@ -2739,9 +2757,9 @@ public class QuartzParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(461);
+			setState(463);
 			_la = _input.LA(1);
-			if ( !(_la==T__41 || _la==T__42) ) {
+			if ( !(_la==T__43 || _la==T__44) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -2776,7 +2794,7 @@ public class QuartzParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(464); 
+			setState(466); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -2784,15 +2802,15 @@ public class QuartzParser extends Parser {
 				case 1:
 					{
 					{
-					setState(463);
-					match(T__43);
+					setState(465);
+					match(T__45);
 					}
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(466); 
+				setState(468); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,51,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
@@ -2825,7 +2843,7 @@ public class QuartzParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\38\u01d7\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3:\u01d9\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -2851,27 +2869,27 @@ public class QuartzParser extends Parser {
 		"\5\30\u0138\n\30\3\31\3\31\3\31\3\31\5\31\u013e\n\31\3\32\7\32\u0141\n"+
 		"\32\f\32\16\32\u0144\13\32\3\32\3\32\3\33\3\33\7\33\u014a\n\33\f\33\16"+
 		"\33\u014d\13\33\3\34\3\34\3\34\3\34\3\34\3\34\3\34\3\34\5\34\u0157\n\34"+
-		"\3\35\3\35\3\36\3\36\3\37\3\37\3 \3 \3!\3!\3\"\3\"\3#\3#\3#\5#\u0168\n"+
-		"#\3$\3$\3$\3$\3%\3%\3%\3%\5%\u0172\n%\3%\3%\3%\3%\3&\3&\3&\3\'\3\'\3\'"+
-		"\3\'\3\'\3\'\3\'\3\'\3(\3(\3)\3)\3)\3)\3)\3)\5)\u018b\n)\3)\3)\3)\3)\3"+
-		")\3)\5)\u0193\n)\3)\3)\7)\u0197\n)\f)\16)\u019a\13)\3*\3*\3*\7*\u019f"+
-		"\n*\f*\16*\u01a2\13*\3*\5*\u01a5\n*\3+\3+\3+\7+\u01aa\n+\f+\16+\u01ad"+
-		"\13+\3+\5+\u01b0\n+\3,\3,\3,\7,\u01b5\n,\f,\16,\u01b8\13,\3,\3,\5,\u01bc"+
-		"\n,\3-\3-\7-\u01c0\n-\f-\16-\u01c3\13-\3-\3-\5-\u01c7\n-\3-\5-\u01ca\n"+
-		"-\3.\3.\3/\3/\3\60\3\60\3\61\6\61\u01d3\n\61\r\61\16\61\u01d4\3\61\2\3"+
+		"\3\35\3\35\3\36\3\36\3\37\3\37\3 \3 \3!\3!\3\"\3\"\3#\3#\3#\3#\3#\5#\u016a"+
+		"\n#\3$\3$\3$\3$\3%\3%\3%\3%\5%\u0174\n%\3%\3%\3%\3%\3&\3&\3&\3\'\3\'\3"+
+		"\'\3\'\3\'\3\'\3\'\3\'\3(\3(\3)\3)\3)\3)\3)\3)\5)\u018d\n)\3)\3)\3)\3"+
+		")\3)\3)\5)\u0195\n)\3)\3)\7)\u0199\n)\f)\16)\u019c\13)\3*\3*\3*\7*\u01a1"+
+		"\n*\f*\16*\u01a4\13*\3*\5*\u01a7\n*\3+\3+\3+\7+\u01ac\n+\f+\16+\u01af"+
+		"\13+\3+\5+\u01b2\n+\3,\3,\3,\7,\u01b7\n,\f,\16,\u01ba\13,\3,\3,\5,\u01be"+
+		"\n,\3-\3-\7-\u01c2\n-\f-\16-\u01c5\13-\3-\3-\5-\u01c9\n-\3-\5-\u01cc\n"+
+		"-\3.\3.\3/\3/\3\60\3\60\3\61\6\61\u01d5\n\61\r\61\16\61\u01d6\3\61\2\3"+
 		"P\62\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@"+
 		"BDFHJLNPRTVXZ\\^`\2\n\4\2\13\13\30\34\3\2\35\36\4\2\4\5\37 \3\2!\"\3\2"+
-		"#%\4\2\"\"&&\3\2\60\63\3\2,-\u01e5\2e\3\2\2\2\4r\3\2\2\2\6\u0094\3\2\2"+
+		"#%\4\2\"\"&(\3\2\62\65\3\2./\u01e9\2e\3\2\2\2\4r\3\2\2\2\6\u0094\3\2\2"+
 		"\2\b\u0096\3\2\2\2\n\u009f\3\2\2\2\f\u00a5\3\2\2\2\16\u00ad\3\2\2\2\20"+
 		"\u00b0\3\2\2\2\22\u00c5\3\2\2\2\24\u00cd\3\2\2\2\26\u00d6\3\2\2\2\30\u00e0"+
 		"\3\2\2\2\32\u00fa\3\2\2\2\34\u00fc\3\2\2\2\36\u0105\3\2\2\2 \u0108\3\2"+
 		"\2\2\"\u0111\3\2\2\2$\u0117\3\2\2\2&\u011d\3\2\2\2(\u0122\3\2\2\2*\u0127"+
 		"\3\2\2\2,\u012d\3\2\2\2.\u0133\3\2\2\2\60\u0139\3\2\2\2\62\u0142\3\2\2"+
 		"\2\64\u0147\3\2\2\2\66\u0156\3\2\2\28\u0158\3\2\2\2:\u015a\3\2\2\2<\u015c"+
-		"\3\2\2\2>\u015e\3\2\2\2@\u0160\3\2\2\2B\u0162\3\2\2\2D\u0167\3\2\2\2F"+
-		"\u0169\3\2\2\2H\u0171\3\2\2\2J\u0177\3\2\2\2L\u017a\3\2\2\2N\u0182\3\2"+
-		"\2\2P\u0192\3\2\2\2R\u01a0\3\2\2\2T\u01ab\3\2\2\2V\u01b6\3\2\2\2X\u01c9"+
-		"\3\2\2\2Z\u01cb\3\2\2\2\\\u01cd\3\2\2\2^\u01cf\3\2\2\2`\u01d2\3\2\2\2"+
+		"\3\2\2\2>\u015e\3\2\2\2@\u0160\3\2\2\2B\u0162\3\2\2\2D\u0169\3\2\2\2F"+
+		"\u016b\3\2\2\2H\u0173\3\2\2\2J\u0179\3\2\2\2L\u017c\3\2\2\2N\u0184\3\2"+
+		"\2\2P\u0194\3\2\2\2R\u01a2\3\2\2\2T\u01ad\3\2\2\2V\u01b8\3\2\2\2X\u01cb"+
+		"\3\2\2\2Z\u01cd\3\2\2\2\\\u01cf\3\2\2\2^\u01d1\3\2\2\2`\u01d4\3\2\2\2"+
 		"bd\5\26\f\2cb\3\2\2\2dg\3\2\2\2ec\3\2\2\2ef\3\2\2\2fk\3\2\2\2ge\3\2\2"+
 		"\2hj\5\4\3\2ih\3\2\2\2jm\3\2\2\2ki\3\2\2\2kl\3\2\2\2l\3\3\2\2\2mk\3\2"+
 		"\2\2ns\5\6\4\2os\5\20\t\2ps\5\24\13\2qs\5\\/\2rn\3\2\2\2ro\3\2\2\2rp\3"+
@@ -2951,46 +2969,47 @@ public class QuartzParser extends Parser {
 		"\67\3\2\2\2\u0158\u0159\t\2\2\2\u01599\3\2\2\2\u015a\u015b\t\3\2\2\u015b"+
 		";\3\2\2\2\u015c\u015d\t\4\2\2\u015d=\3\2\2\2\u015e\u015f\t\5\2\2\u015f"+
 		"?\3\2\2\2\u0160\u0161\t\6\2\2\u0161A\3\2\2\2\u0162\u0163\t\7\2\2\u0163"+
-		"C\3\2\2\2\u0164\u0168\5F$\2\u0165\u0168\5H%\2\u0166\u0168\5J&\2\u0167"+
-		"\u0164\3\2\2\2\u0167\u0165\3\2\2\2\u0167\u0166\3\2\2\2\u0168E\3\2\2\2"+
-		"\u0169\u016a\7\'\2\2\u016a\u016b\5$\23\2\u016b\u016c\7(\2\2\u016cG\3\2"+
-		"\2\2\u016d\u016e\7\4\2\2\u016e\u016f\5V,\2\u016f\u0170\7\5\2\2\u0170\u0172"+
-		"\3\2\2\2\u0171\u016d\3\2\2\2\u0171\u0172\3\2\2\2\u0172\u0173\3\2\2\2\u0173"+
-		"\u0174\7\6\2\2\u0174\u0175\5R*\2\u0175\u0176\7\7\2\2\u0176I\3\2\2\2\u0177"+
-		"\u0178\7\21\2\2\u0178\u0179\5Z.\2\u0179K\3\2\2\2\u017a\u017b\7\23\2\2"+
-		"\u017b\u017c\7\6\2\2\u017c\u017d\5$\23\2\u017d\u017e\7\7\2\2\u017e\u017f"+
-		"\5$\23\2\u017f\u0180\7\24\2\2\u0180\u0181\5$\23\2\u0181M\3\2\2\2\u0182"+
-		"\u0183\t\b\2\2\u0183O\3\2\2\2\u0184\u0185\b)\1\2\u0185\u018a\5Z.\2\u0186"+
-		"\u0187\7\4\2\2\u0187\u0188\5V,\2\u0188\u0189\7\5\2\2\u0189\u018b\3\2\2"+
-		"\2\u018a\u0186\3\2\2\2\u018a\u018b\3\2\2\2\u018b\u0193\3\2\2\2\u018c\u018d"+
-		"\7\6\2\2\u018d\u018e\5V,\2\u018e\u018f\7\7\2\2\u018f\u0190\7*\2\2\u0190"+
-		"\u0191\5P)\3\u0191\u0193\3\2\2\2\u0192\u0184\3\2\2\2\u0192\u018c\3\2\2"+
-		"\2\u0193\u0198\3\2\2\2\u0194\u0195\f\4\2\2\u0195\u0197\7)\2\2\u0196\u0194"+
-		"\3\2\2\2\u0197\u019a\3\2\2\2\u0198\u0196\3\2\2\2\u0198\u0199\3\2\2\2\u0199"+
-		"Q\3\2\2\2\u019a\u0198\3\2\2\2\u019b\u019c\5$\23\2\u019c\u019d\7\n\2\2"+
-		"\u019d\u019f\3\2\2\2\u019e\u019b\3\2\2\2\u019f\u01a2\3\2\2\2\u01a0\u019e"+
-		"\3\2\2\2\u01a0\u01a1\3\2\2\2\u01a1\u01a4\3\2\2\2\u01a2\u01a0\3\2\2\2\u01a3"+
-		"\u01a5\5$\23\2\u01a4\u01a3\3\2\2\2\u01a4\u01a5\3\2\2\2\u01a5S\3\2\2\2"+
-		"\u01a6\u01a7\5Z.\2\u01a7\u01a8\7\n\2\2\u01a8\u01aa\3\2\2\2\u01a9\u01a6"+
-		"\3\2\2\2\u01aa\u01ad\3\2\2\2\u01ab\u01a9\3\2\2\2\u01ab\u01ac\3\2\2\2\u01ac"+
-		"\u01af\3\2\2\2\u01ad\u01ab\3\2\2\2\u01ae\u01b0\5Z.\2\u01af\u01ae\3\2\2"+
-		"\2\u01af\u01b0\3\2\2\2\u01b0U\3\2\2\2\u01b1\u01b2\5P)\2\u01b2\u01b3\7"+
-		"\n\2\2\u01b3\u01b5\3\2\2\2\u01b4\u01b1\3\2\2\2\u01b5\u01b8\3\2\2\2\u01b6"+
-		"\u01b4\3\2\2\2\u01b6\u01b7\3\2\2\2\u01b7\u01bb\3\2\2\2\u01b8\u01b6\3\2"+
-		"\2\2\u01b9\u01bc\7+\2\2\u01ba\u01bc\5P)\2\u01bb\u01b9\3\2\2\2\u01bb\u01ba"+
-		"\3\2\2\2\u01bb\u01bc\3\2\2\2\u01bcW\3\2\2\2\u01bd\u01c1\7\r\2\2\u01be"+
-		"\u01c0\5\32\16\2\u01bf\u01be\3\2\2\2\u01c0\u01c3\3\2\2\2\u01c1\u01bf\3"+
-		"\2\2\2\u01c1\u01c2\3\2\2\2\u01c2\u01c4\3\2\2\2\u01c3\u01c1\3\2\2\2\u01c4"+
-		"\u01c6\7\16\2\2\u01c5\u01c7\5`\61\2\u01c6\u01c5\3\2\2\2\u01c6\u01c7\3"+
-		"\2\2\2\u01c7\u01ca\3\2\2\2\u01c8\u01ca\5\32\16\2\u01c9\u01bd\3\2\2\2\u01c9"+
-		"\u01c8\3\2\2\2\u01caY\3\2\2\2\u01cb\u01cc\7\65\2\2\u01cc[\3\2\2\2\u01cd"+
-		"\u01ce\7\64\2\2\u01ce]\3\2\2\2\u01cf\u01d0\t\t\2\2\u01d0_\3\2\2\2\u01d1"+
-		"\u01d3\7.\2\2\u01d2\u01d1\3\2\2\2\u01d3\u01d4\3\2\2\2\u01d4\u01d2\3\2"+
-		"\2\2\u01d4\u01d5\3\2\2\2\u01d5a\3\2\2\2\66ekrz\u0082\u008f\u0092\u0094"+
-		"\u009f\u00a3\u00ab\u00ad\u00b0\u00b8\u00be\u00c3\u00ca\u00cd\u00d4\u00d9"+
-		"\u00e0\u00e7\u00f1\u00f5\u00fa\u0100\u010f\u011b\u0120\u0125\u012b\u0131"+
-		"\u0137\u013d\u0142\u014b\u0156\u0167\u0171\u018a\u0192\u0198\u01a0\u01a4"+
-		"\u01ab\u01af\u01b6\u01bb\u01c1\u01c6\u01c9\u01d4";
+		"C\3\2\2\2\u0164\u016a\7&\2\2\u0165\u016a\7\'\2\2\u0166\u016a\5F$\2\u0167"+
+		"\u016a\5H%\2\u0168\u016a\5J&\2\u0169\u0164\3\2\2\2\u0169\u0165\3\2\2\2"+
+		"\u0169\u0166\3\2\2\2\u0169\u0167\3\2\2\2\u0169\u0168\3\2\2\2\u016aE\3"+
+		"\2\2\2\u016b\u016c\7)\2\2\u016c\u016d\5$\23\2\u016d\u016e\7*\2\2\u016e"+
+		"G\3\2\2\2\u016f\u0170\7\4\2\2\u0170\u0171\5V,\2\u0171\u0172\7\5\2\2\u0172"+
+		"\u0174\3\2\2\2\u0173\u016f\3\2\2\2\u0173\u0174\3\2\2\2\u0174\u0175\3\2"+
+		"\2\2\u0175\u0176\7\6\2\2\u0176\u0177\5R*\2\u0177\u0178\7\7\2\2\u0178I"+
+		"\3\2\2\2\u0179\u017a\7\21\2\2\u017a\u017b\5Z.\2\u017bK\3\2\2\2\u017c\u017d"+
+		"\7\23\2\2\u017d\u017e\7\6\2\2\u017e\u017f\5$\23\2\u017f\u0180\7\7\2\2"+
+		"\u0180\u0181\5$\23\2\u0181\u0182\7\24\2\2\u0182\u0183\5$\23\2\u0183M\3"+
+		"\2\2\2\u0184\u0185\t\b\2\2\u0185O\3\2\2\2\u0186\u0187\b)\1\2\u0187\u018c"+
+		"\5Z.\2\u0188\u0189\7\4\2\2\u0189\u018a\5V,\2\u018a\u018b\7\5\2\2\u018b"+
+		"\u018d\3\2\2\2\u018c\u0188\3\2\2\2\u018c\u018d\3\2\2\2\u018d\u0195\3\2"+
+		"\2\2\u018e\u018f\7\6\2\2\u018f\u0190\5V,\2\u0190\u0191\7\7\2\2\u0191\u0192"+
+		"\7,\2\2\u0192\u0193\5P)\3\u0193\u0195\3\2\2\2\u0194\u0186\3\2\2\2\u0194"+
+		"\u018e\3\2\2\2\u0195\u019a\3\2\2\2\u0196\u0197\f\4\2\2\u0197\u0199\7+"+
+		"\2\2\u0198\u0196\3\2\2\2\u0199\u019c\3\2\2\2\u019a\u0198\3\2\2\2\u019a"+
+		"\u019b\3\2\2\2\u019bQ\3\2\2\2\u019c\u019a\3\2\2\2\u019d\u019e\5$\23\2"+
+		"\u019e\u019f\7\n\2\2\u019f\u01a1\3\2\2\2\u01a0\u019d\3\2\2\2\u01a1\u01a4"+
+		"\3\2\2\2\u01a2\u01a0\3\2\2\2\u01a2\u01a3\3\2\2\2\u01a3\u01a6\3\2\2\2\u01a4"+
+		"\u01a2\3\2\2\2\u01a5\u01a7\5$\23\2\u01a6\u01a5\3\2\2\2\u01a6\u01a7\3\2"+
+		"\2\2\u01a7S\3\2\2\2\u01a8\u01a9\5Z.\2\u01a9\u01aa\7\n\2\2\u01aa\u01ac"+
+		"\3\2\2\2\u01ab\u01a8\3\2\2\2\u01ac\u01af\3\2\2\2\u01ad\u01ab\3\2\2\2\u01ad"+
+		"\u01ae\3\2\2\2\u01ae\u01b1\3\2\2\2\u01af\u01ad\3\2\2\2\u01b0\u01b2\5Z"+
+		".\2\u01b1\u01b0\3\2\2\2\u01b1\u01b2\3\2\2\2\u01b2U\3\2\2\2\u01b3\u01b4"+
+		"\5P)\2\u01b4\u01b5\7\n\2\2\u01b5\u01b7\3\2\2\2\u01b6\u01b3\3\2\2\2\u01b7"+
+		"\u01ba\3\2\2\2\u01b8\u01b6\3\2\2\2\u01b8\u01b9\3\2\2\2\u01b9\u01bd\3\2"+
+		"\2\2\u01ba\u01b8\3\2\2\2\u01bb\u01be\7-\2\2\u01bc\u01be\5P)\2\u01bd\u01bb"+
+		"\3\2\2\2\u01bd\u01bc\3\2\2\2\u01bd\u01be\3\2\2\2\u01beW\3\2\2\2\u01bf"+
+		"\u01c3\7\r\2\2\u01c0\u01c2\5\32\16\2\u01c1\u01c0\3\2\2\2\u01c2\u01c5\3"+
+		"\2\2\2\u01c3\u01c1\3\2\2\2\u01c3\u01c4\3\2\2\2\u01c4\u01c6\3\2\2\2\u01c5"+
+		"\u01c3\3\2\2\2\u01c6\u01c8\7\16\2\2\u01c7\u01c9\5`\61\2\u01c8\u01c7\3"+
+		"\2\2\2\u01c8\u01c9\3\2\2\2\u01c9\u01cc\3\2\2\2\u01ca\u01cc\5\32\16\2\u01cb"+
+		"\u01bf\3\2\2\2\u01cb\u01ca\3\2\2\2\u01ccY\3\2\2\2\u01cd\u01ce\7\67\2\2"+
+		"\u01ce[\3\2\2\2\u01cf\u01d0\7\66\2\2\u01d0]\3\2\2\2\u01d1\u01d2\t\t\2"+
+		"\2\u01d2_\3\2\2\2\u01d3\u01d5\7\60\2\2\u01d4\u01d3\3\2\2\2\u01d5\u01d6"+
+		"\3\2\2\2\u01d6\u01d4\3\2\2\2\u01d6\u01d7\3\2\2\2\u01d7a\3\2\2\2\66ekr"+
+		"z\u0082\u008f\u0092\u0094\u009f\u00a3\u00ab\u00ad\u00b0\u00b8\u00be\u00c3"+
+		"\u00ca\u00cd\u00d4\u00d9\u00e0\u00e7\u00f1\u00f5\u00fa\u0100\u010f\u011b"+
+		"\u0120\u0125\u012b\u0131\u0137\u013d\u0142\u014b\u0156\u0169\u0173\u018c"+
+		"\u0194\u019a\u01a2\u01a6\u01ad\u01b1\u01b8\u01bd\u01c3\u01c8\u01cb\u01d6";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

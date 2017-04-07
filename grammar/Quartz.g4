@@ -171,12 +171,16 @@ multiplicativeOperation
     ;
 
 prefixOperation
-    : '-'
+    : '++'
+    | '--'
+    | '-'
     | '!'
     ;
 
 postfixOperation
-    : arrayAccess
+    : '++'
+    | '--'
+    | arrayAccess
     | postfixCall
     | memberAccess
     ;

@@ -75,7 +75,8 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is NumberLiteral -> this
         is StringLiteral -> this
         is Identifier -> verify(symbolTable)
-        is UnaryOperator -> verify(symbolTable)
+        is PrefixUnaryOperator -> verify(symbolTable)
+        is PostfixUnaryOperator -> verify(symbolTable)
         is BinaryOperator -> verify(symbolTable)
         is Assignment -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
@@ -97,8 +98,16 @@ private fun Identifier.verify(symbolTable: SymbolTable): Identifier {
     )
 }
 
-private fun UnaryOperator.verify(symbolTable: SymbolTable): UnaryOperator {
-    return UnaryOperator(
+private fun PrefixUnaryOperator.verify(symbolTable: SymbolTable): PrefixUnaryOperator {
+    return PrefixUnaryOperator(
+            expression.verify(symbolTable),
+            id,
+            type
+    )
+}
+
+private fun PostfixUnaryOperator.verify(symbolTable: SymbolTable): PostfixUnaryOperator {
+    return PostfixUnaryOperator(
             expression.verify(symbolTable),
             id,
             type
