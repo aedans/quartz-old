@@ -19,7 +19,7 @@ fun Program.generateConstructors(): Program {
             functionDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
             externFunctionDeclarations,
             structDeclarations,
-            typealiasDeclarations,
+            typealiasDeclarationDeclarations,
             inlineCNodes
     )
 }

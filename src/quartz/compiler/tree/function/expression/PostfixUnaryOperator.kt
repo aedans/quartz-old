@@ -8,6 +8,12 @@ import quartz.compiler.util.Type
  */
 
 class PostfixUnaryOperator(val expression: Expression, val id: ID, override val type: Type?) : Expression {
+    override val isLValue = false
+
+    override fun getExpressions(): List<Expression> {
+        return listOf(this) + expression.getExpressions()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): PostfixUnaryOperator {
         return PostfixUnaryOperator(function(expression.mapExpressions(function)), id, type)
     }

@@ -2,13 +2,14 @@ package quartz.compiler.builder
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
+import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.import.Library
 import quartz.compiler.tree.import.import
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.InlineC
-import quartz.compiler.tree.misc.Typealias
+import quartz.compiler.tree.misc.TypealiasDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
 import java.io.InputStream
 
@@ -22,16 +23,16 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
             nodes.filterIsInstance(FunctionDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(ExternFunctionDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(StructDeclaration::class.java).map { it.name to it }.toMap(),
-            nodes.filterIsInstance(Typealias::class.java).map { it.name to it }.toMap(),
+            nodes.filterIsInstance(TypealiasDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(InlineC::class.java)
     )
     return programNode
 }
 
-@Suppress("IMPLICIT_CAST_TO_ANY")
-fun QuartzParser.DeclarationContext.toNode(): Any {
+fun QuartzParser.DeclarationContext.toNode(): GlobalDeclaration {
     return when {
         functionDeclaration() != null -> functionDeclaration().toNode()
+        destructorDeclaration() != null -> destructorDeclaration().toNode()
         structDeclaration() != null -> structDeclaration().toNode()
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
         inlineC() != null -> inlineC().toNode()

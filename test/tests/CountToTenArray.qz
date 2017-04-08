@@ -1,0 +1,14 @@
+import std.array
+import std.mem
+import std.c.stdio
+
+fn main(): int {
+    val array = fillArray(11, identity);
+    array.forEach(printInt);
+    return 0;
+}
+
+fn identity(i: int): int = i
+
+fn printInt(i: int)
+    printf("%d ", i);

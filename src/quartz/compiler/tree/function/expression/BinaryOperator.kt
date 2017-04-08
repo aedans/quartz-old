@@ -8,6 +8,12 @@ import quartz.compiler.util.Type
  */
 
 class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, override val type: Type?) : Expression {
+    override val isLValue = false
+
+    override fun getExpressions(): List<Expression> {
+        return listOf(this) + expr1.getExpressions() + expr2.getExpressions()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return BinaryOperator(function(expr1.mapExpressions(function)), function(expr2.mapExpressions(function)), id, type)
     }

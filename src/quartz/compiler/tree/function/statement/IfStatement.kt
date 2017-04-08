@@ -14,6 +14,20 @@ class IfStatement(
         val trueStatements: List<Statement>,
         val falseStatements: List<Statement>
 ) : Statement {
+    override fun mapStatements(function: (Statement) -> Statement): Statement {
+        return IfStatement(
+                test,
+                trueStatements.map { function(it.mapStatements(function)) },
+                falseStatements.map { function(it.mapStatements(function)) }
+        )
+    }
+
+    override fun getExpressions(): List<Expression> {
+        return test.getExpressions() +
+                trueStatements.map { it.getExpressions() }.flatten() +
+                falseStatements.map { it.getExpressions() }.flatten()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Statement {
         return IfStatement(
                 function(test.mapExpressions(function)),

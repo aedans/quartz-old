@@ -1,0 +1,45 @@
+import std.mem
+
+struct Array<T> {
+    val size: size_t
+    val content: T*
+}
+
+destructor <T> Array<T> {
+    var i = 0;
+    while (i < it.size) {
+        delete it.get(i);
+        ++i;
+    }
+    qfree(it.content);
+}
+
+fn <T> get(array: Array<T>, i: int): T {
+    return %%array.content[i]%%;
+}
+
+fn <T> set(array: Array<T>, i: int, value: T) {
+    %%array.content[i] = value%%;
+}
+
+fn <T> fillArray(size: size_t, fill: (int) -> T): Array<T> {
+    val array = Array(size, qmalloc<T>(size * sizeof(T)));
+    var i = 0;
+    while (i < size) {
+        array.set(i, fill(i));
+        ++i;
+    }
+    return array;
+}
+
+fn <T> emptyArray(size: size_t): Array<T> {
+    return Array(size, qcalloc<T>(size));
+}
+
+fn <T> forEach(array: Array<T>, function: (T) -> void) {
+    var i = 0;
+    while (i < array.size) {
+        function(array.get(i));
+        ++i;
+    }
+}

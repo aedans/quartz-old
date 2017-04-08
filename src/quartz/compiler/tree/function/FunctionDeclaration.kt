@@ -9,11 +9,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FunctionDeclaration(
+open class FunctionDeclaration(
         val name: String,
         val argNames: List<String>,
         val function: Function,
-        val statements: List<Statement> = listOf()
+        val statements: List<Statement>
 ) : GlobalDeclaration {
     val argsWithNames by lazy {
         if (argNames.size != function.args.size)
@@ -28,7 +28,7 @@ class FunctionDeclaration(
     }
 
     fun mapStatements(function: (Statement) -> Statement): FunctionDeclaration {
-        return FunctionDeclaration(name, argNames, this.function, statements.map(function))
+        return FunctionDeclaration(name, argNames, this.function, statements.map { function(it.mapStatements(function)) })
     }
 
     fun mapExpressions(function: (Expression) -> Expression): FunctionDeclaration {

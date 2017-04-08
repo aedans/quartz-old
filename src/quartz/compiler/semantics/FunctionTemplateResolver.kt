@@ -15,17 +15,17 @@ import quartz.compiler.util.Type
  */
 
 fun Program.resolveFunctionTemplates(): Program {
-    val newFnDeclarations = mutableListOf<FunctionDeclaration>()
-    newFnDeclarations.addAll(
-        functionDeclarations.filterValues { it.function.templates.isEmpty() }.map {
-            it.value.resolveFunctionTemplates(this, newFnDeclarations)
-        }
+    val newFunctionDeclarations = mutableListOf<FunctionDeclaration>()
+    newFunctionDeclarations.addAll(
+            functionDeclarations.filterValues { it.function.templates.isEmpty() }.map {
+                it.value.resolveFunctionTemplates(this, newFunctionDeclarations)
+            }
     )
     return Program(
-            newFnDeclarations.map { it.name to it }.toMap(),
+            newFunctionDeclarations.map { it.name to it }.toMap(),
             externFunctionDeclarations,
             structDeclarations,
-            typealiasDeclarations,
+            typealiasDeclarationDeclarations,
             inlineCNodes
     )
 }
@@ -56,7 +56,7 @@ private fun FunctionCall.resolveFunctionTemplates(
     val newFunction = resolveFunctionTemplates(expression.name, templates, program, newFunctionDeclarations)
 
     return FunctionCall(
-            Identifier(newFunction.name, FunctionType(newFunction.function)), emptyList(), expressions, type
+            Identifier(newFunction.name, FunctionType(newFunction.function)), emptyList(), args, type
     )
 }
 

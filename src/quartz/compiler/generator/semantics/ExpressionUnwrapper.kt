@@ -7,7 +7,6 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
-import quartz.compiler.tree.function.toLValue
 import quartz.compiler.tree.misc.InlineC
 
 /**
@@ -15,7 +14,7 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun Program.unwrapExpressions(): Program {
-    return this.mapFnDeclarations(FunctionDeclaration::unwrapExpressions)
+    return this.mapFunctionDeclarations(FunctionDeclaration::unwrapExpressions)
 }
 
 private fun FunctionDeclaration.unwrapExpressions(): FunctionDeclaration {
@@ -27,6 +26,8 @@ private fun FunctionDeclaration.unwrapExpressions(): FunctionDeclaration {
 private fun Statement.unwrapExpressions(newStatements: MutableList<Statement>): Statement {
     return when (this) {
         is InlineC -> this
+        is PrefixUnaryOperator -> unwrap(newStatements)
+        is PostfixUnaryOperator -> unwrap(newStatements)
         is VariableDeclaration -> VariableDeclaration(name, expression?.unwrap(newStatements), type, mutable)
         is ReturnStatement -> ReturnStatement(expression.unwrap(newStatements))
         is Assignment -> Assignment(lvalue, expression.unwrap(newStatements), id, type)
@@ -42,7 +43,7 @@ private fun Statement.unwrapExpressions(newStatements: MutableList<Statement>): 
         is FunctionCall -> FunctionCall(
                 expression.unwrap(newStatements),
                 templates,
-                expressions.map { it.unwrap(newStatements) },
+                args.map { it.unwrap(newStatements) },
                 type
         )
         else -> throw QuartzException("Unrecognized node $this")
@@ -60,8 +61,8 @@ private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression
         is PrefixUnaryOperator -> PrefixUnaryOperator(expression.unwrap(newStatements), id, type)
         is PostfixUnaryOperator -> PostfixUnaryOperator(expression.unwrap(newStatements), id, type)
         is BinaryOperator -> BinaryOperator(expr1.unwrap(newStatements), expr2.unwrap(newStatements), id, type)
-        is Assignment -> Assignment(lvalue.unwrap(newStatements).toLValue(), expression.unwrap(newStatements), id, type)
-        is FunctionCall -> FunctionCall(expression.unwrap(newStatements), templates, expressions.map { it.unwrap(newStatements) }, type)
+        is Assignment -> Assignment(lvalue.unwrap(newStatements), expression.unwrap(newStatements), id, type)
+        is FunctionCall -> FunctionCall(expression.unwrap(newStatements), templates, args.map { it.unwrap(newStatements) }, type)
         is ArrayAccess -> ArrayAccess(lvalue.unwrap(newStatements), expr2.unwrap(newStatements), type)
         is MemberAccess -> MemberAccess(name, expression.unwrap(newStatements), type)
         is IfExpression -> {

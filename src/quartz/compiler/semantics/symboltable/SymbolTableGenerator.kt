@@ -14,7 +14,7 @@ import quartz.compiler.tree.struct.StructDeclaration
 fun Program.generateSymbolTable(): SymbolTable {
     val symbolTable = SymbolTable()
     structDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
-    typealiasDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+    typealiasDeclarationDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
     functionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
     externFunctionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
     return symbolTable

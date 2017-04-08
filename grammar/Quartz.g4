@@ -11,6 +11,7 @@ program
 declaration
     : functionDeclaration
     | structDeclaration
+    | destructorDeclaration
     | typealiasDeclaration
     | inlineC
     ;
@@ -18,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : fnModifiers 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? body=fnBlock
+    : fnModifiers 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     | fnModifiers extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;
 
@@ -49,6 +50,12 @@ structMember
     : varDeclarationType identifier ':' type semi?
     ;
 
+// DESTRUCTOR DECLARATION
+
+destructorDeclaration
+    : 'destructor' ('<' identifierList '>')? type fnBlock
+    ;
+
 // TYPEALIAS DECLARATION
 
 typealiasDeclaration
@@ -73,6 +80,7 @@ statement
     | varDeclaration semi
     | ifStatement semi?
     | whileLoop semi?
+    | delete semi?
     | expression semi
     ;
 
@@ -90,6 +98,10 @@ ifStatement
 
 whileLoop
     : 'while' '(' expression ')' block
+    ;
+
+delete
+    : 'delete' expression
     ;
 
 // EXPRESSIONS

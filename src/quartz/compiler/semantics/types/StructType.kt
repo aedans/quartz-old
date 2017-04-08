@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.tree.struct.StructDeclaration
+import quartz.compiler.tree.struct.StructMember
 import quartz.compiler.util.Type
 
 /**
@@ -10,13 +10,15 @@ import quartz.compiler.util.Type
 class StructType(
         string: String,
         val templates: List<Type>,
-        val structDeclarationNode: StructDeclaration
-) : Type(string, string) {
-    val templateMap = structDeclarationNode.templates.zip(templates).toMap()
-    val members = structDeclarationNode.members.mapValues { it.value.mapTypes { templateMap[it] ?: it } }
-
+        val members: Map<String, StructMember>
+) : Type(string, {
+    var s = string
+    templates.forEach { s += '_' + it.descriptiveString }
+    s
+}()) {
     fun withTemplates(templates: List<Type>): Type {
-        return StructType(string, templates, structDeclarationNode)
+        val templateMap = this.templates.zip(templates).toMap()
+        return StructType(string, templates, members.mapValues { it.value.mapTypes { templateMap[it] ?: it } })
     }
 
     override fun equals(other: Any?): Boolean {
@@ -35,6 +37,10 @@ class StructType(
     }
 
     override fun mapTypes(function: (Type?) -> Type?): StructType {
-        return StructType(string, templates.map { function(it.mapTypes(function))!! }, structDeclarationNode)
+        return StructType(string, templates.map { function(it.mapTypes(function))!! }, members.mapValues { it.value.mapTypes(function) })
+    }
+
+    override fun toString(): String {
+        return "$string${if (templates.isNotEmpty()) "<$templates>" else ""}"
     }
 }

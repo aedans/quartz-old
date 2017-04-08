@@ -25,8 +25,7 @@ fun ProgramOutputStream.writeAll() {
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
-        is StructType -> if (!type.structDeclarationNode.external)
-            struct(program.structDeclarations[type.string]
+        is StructType -> struct(program.structDeclarations[type.string]
                     ?: throw QuartzException("Unknown struct $type"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)

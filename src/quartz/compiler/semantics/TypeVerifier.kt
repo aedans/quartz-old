@@ -11,7 +11,6 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
-import quartz.compiler.tree.function.toLValue
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.util.Type
 
@@ -20,7 +19,7 @@ import quartz.compiler.util.Type
  */
 
 fun Program.verifyTypes(): Program {
-    return this.mapFnDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
+    return this.mapFunctionDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
 }
 
 private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
@@ -32,12 +31,15 @@ private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclar
 private fun Statement.verify(symbolTable: SymbolTable): Statement {
     return when (this) {
         is InlineC -> this
+        is PrefixUnaryOperator -> verify(symbolTable)
+        is PostfixUnaryOperator -> verify(symbolTable)
         is VariableDeclaration -> verify(symbolTable)
         is Assignment -> verify(symbolTable)
         is ReturnStatement -> verify(symbolTable)
         is IfStatement -> verify(symbolTable)
         is WhileLoop -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
+        is Delete -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
@@ -83,7 +85,7 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is ArrayAccess -> verify(symbolTable)
         is MemberAccess -> verify(symbolTable)
         is IfExpression -> verify(symbolTable)
-        is Sizeof -> verify(symbolTable)
+        is Sizeof -> verify()
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
@@ -130,7 +132,7 @@ private fun Assignment.verify(symbolTable: SymbolTable): Assignment {
     val newLValue = lvalue.verify(symbolTable)
     val newExpression = expression.verify(symbolTable)
     return Assignment(
-            newLValue.verifyAs(newExpression.type).verifyAs(type).toLValue(),
+            newLValue.verifyAs(newExpression.type).verifyAs(type),
             newExpression.verifyAs(newLValue.type).verifyAs(type),
             id,
             type.verifyAs(lvalue.type).verifyAs(newExpression.type)
@@ -155,10 +157,10 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
         val expressionFunction = newExpression.type.asFunction()?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
-        if (!expressionFunction.vararg && expressionFunction.args.size != expressions.size)
+        if (!expressionFunction.vararg && expressionFunction.args.size != args.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
-        val expressions = expressions.map { it.verify(symbolTable) }
+        val expressions = args.map { it.verify(symbolTable) }
         val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
             templates
         else
@@ -185,6 +187,10 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
 
         resolveDotNotation(symbolTable).verify(symbolTable)
     }
+}
+
+private fun Delete.verify(symbolTable: SymbolTable): Delete {
+    return Delete(expression.verify(symbolTable))
 }
 
 private fun MemberAccess.verify(symbolTable: SymbolTable): MemberAccess {
@@ -215,7 +221,7 @@ private fun IfExpression.verify(symbolTable: SymbolTable): IfExpression {
     )
 }
 
-private fun Sizeof.verify(symbolTable: SymbolTable): Sizeof {
+private fun Sizeof.verify(): Sizeof {
     return this
 }
 

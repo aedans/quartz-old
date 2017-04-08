@@ -48,6 +48,8 @@ fun ProgramOutputStream.block(statements: List<Statement>) {
 fun ProgramOutputStream.statement(statement: Statement) {
     when (statement) {
         is InlineC -> inlineC(statement)
+        is PrefixUnaryOperator -> prefixUnaryOperator(statement)
+        is PostfixUnaryOperator -> postfixUnaryOperator(statement)
         is VariableDeclaration -> varDeclaration(statement)
         is ReturnStatement -> returnStatement(statement)
         is IfStatement -> ifStatement(statement)
@@ -59,7 +61,7 @@ fun ProgramOutputStream.statement(statement: Statement) {
 }
 
 fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
-    type(variableDeclaration.type ?: throw Exception("Unknown aliasedType for $this"))
+    type(variableDeclaration.type ?: throw Exception("Unknown type for $variableDeclaration"))
     name(variableDeclaration.name)
     variableDeclaration.expression?.apply {
         string("=")
@@ -165,12 +167,12 @@ fun ProgramOutputStream.sizeof(sizeof: Sizeof) {
 fun ProgramOutputStream.fnCall(functionCall: FunctionCall) {
     expression(functionCall.expression)
     parentheses {
-        functionCall.expressions.dropLast(1).forEach {
+        functionCall.args.dropLast(1).forEach {
             expression(it)
             string(", ")
         }
-        if (!functionCall.expressions.isEmpty())
-            expression(functionCall.expressions.last())
+        if (!functionCall.args.isEmpty())
+            expression(functionCall.args.last())
     }
 }
 

@@ -8,6 +8,12 @@ import quartz.compiler.util.Type
  */
 
 class Cast(val expression: Expression, override val type: Type?) : Expression {
+    override val isLValue = false
+
+    override fun getExpressions(): List<Expression> {
+        return listOf(this) + expression.getExpressions()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return Cast(function(expression.mapExpressions(function)), type)
     }

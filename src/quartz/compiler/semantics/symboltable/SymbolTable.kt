@@ -7,8 +7,8 @@ import quartz.compiler.util.Type
  */
 
 class SymbolTable(val superTable: SymbolTable? = null) {
-    private val variables = HashMap<String, Type>()
-    private val types = HashMap<String, Type>()
+    val variables = HashMap<String, Type>()
+    val types = HashMap<String, Type>()
 
     fun addVar(name: String, type: Type) {
         variables.put(name, type)
@@ -37,7 +37,8 @@ class SymbolTable(val superTable: SymbolTable? = null) {
 
     override fun toString(): String {
         var string = ""
-        variables.forEach { _, u -> string += u.toString() + '\n' }
+        variables.forEach { key, value -> string += "$key = $value\n" }
+        types.forEach { key, value -> string += "$key = $value\n" }
         return string
     }
 }

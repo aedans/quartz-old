@@ -11,7 +11,12 @@ import quartz.compiler.util.Type
  */
 
 class StringLiteral(val string: String) : Expression {
+    override val isLValue = false
     override val type = PointerType(Primitives.char)
+
+    override fun getExpressions(): List<Expression> {
+        return listOf(this)
+    }
 
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return this

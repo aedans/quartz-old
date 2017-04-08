@@ -1,0 +1,26 @@
+%%
+#include <stdlib.h>
+%%
+
+extern typealias size_t = long
+
+extern fn calloc(size_t, size_t): void*
+extern fn malloc(size_t): void*
+extern fn realloc(void*, size_t): void*
+extern fn free(void*)
+
+fn <T> qcalloc(size: size_t): T* {
+    return calloc(size, sizeof(T));
+}
+
+fn <T> qmalloc(size: size_t): T* {
+    return malloc(size);
+}
+
+fn <T> qrealloc(ptr: T*, size: size_t) {
+    return realloc(ptr, size);
+}
+
+fn <T> qfree(ptr: T*) {
+    free(ptr);
+}

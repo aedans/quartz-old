@@ -8,6 +8,12 @@ import quartz.compiler.util.Type
  */
 
 class NumberLiteral(val string: String, override val type: Type?) : Expression {
+    override val isLValue = false
+
+    override fun getExpressions(): List<Expression> {
+        return listOf(this)
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return this
     }

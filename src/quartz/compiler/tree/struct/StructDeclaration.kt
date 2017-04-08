@@ -15,7 +15,7 @@ data class StructDeclaration(
         val members: Map<String, StructMember>,
         val external: Boolean
 ) : GlobalDeclaration {
-    val type = StructType(name, templates, this)
+    val type = StructType(name, templates, members)
 
     override fun toString(): String {
         return "struct $name${if (templates.isNotEmpty()) "<$templates>" else ""}${members.values}"

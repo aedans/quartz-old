@@ -20,7 +20,7 @@ fun FunctionCall.resolveDotNotation(symbolTable: SymbolTable): FunctionCall {
     return FunctionCall(
             Identifier(expression.name, expressionType),
             templates,
-            expression.expression + expressions,
+            expression.expression + args,
             type
     )
 }

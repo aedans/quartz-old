@@ -10,7 +10,6 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
-import quartz.compiler.tree.function.toLValue
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.util.Function
 
@@ -39,10 +38,10 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
                         returnType?.toType() ?: Primitives.void,
                         false
                 ),
-                if (body.expression() != null) {
-                    listOf(ReturnStatement(body.expression().toNode()))
+                if (fnBlock().expression() != null) {
+                    listOf(ReturnStatement(fnBlock().expression().toNode()))
                 } else {
-                    body.block().statement().map { it.toNode() }
+                    fnBlock().block().statement().map { it.toNode() }
                 }
         )
     }
@@ -55,6 +54,7 @@ fun QuartzParser.StatementContext.toNode(): Statement {
         varDeclaration() != null -> varDeclaration().toNode()
         ifStatement() != null -> ifStatement().toNode()
         whileLoop() != null -> whileLoop().toNode()
+        delete() != null -> delete().toNode()
         expression() != null -> expression().toNode()
         else -> throw QuartzException("Error translating $text")
     }
@@ -85,10 +85,14 @@ fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
     return WhileLoop(expression().toNode(), block().statement()?.map { it.toNode() } ?: listOf())
 }
 
+fun QuartzParser.DeleteContext.toNode(): Delete {
+    return Delete(expression().toNode())
+}
+
 fun QuartzParser.ExpressionContext.toNode(): Expression {
     return when {
         expression() == null -> disjunction().toNode()
-        else -> Assignment(disjunction().toNode().toLValue(), expression().toNode(), assignmentOperator().ID, null)
+        else -> Assignment(disjunction().toNode(), expression().toNode(), assignmentOperator().ID, null)
     }
 }
 
@@ -158,7 +162,7 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Express
     return when {
         memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
-        else -> PostfixUnaryOperator(expression.toLValue(), ID, null)
+        else -> PostfixUnaryOperator(expression, ID, null)
     }
 }
 

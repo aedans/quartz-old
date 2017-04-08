@@ -19,23 +19,19 @@ fun Program.resolveTypeTemplates(): Program {
 }
 
 private fun StructType.resolveTypeTemplates(newStructDeclarations: MutableList<StructDeclaration>): StructType {
-    val typeMap = structDeclarationNode.templates.zip(templates).toMap()
-    var newName = structDeclarationNode.name
+    val typeMap = templates.zip(templates).toMap()
+    var newName = string
     templates.forEach { newName += '_' + it.descriptiveString }
 
     val newStructDeclaration = StructDeclaration(
             newName,
             emptyList(),
-            structDeclarationNode.members,
-            structDeclarationNode.external
+            members,
+            false
     ).mapTypes { typeMap[it] ?: it }
 
     if (!newStructDeclarations.contains(newStructDeclaration))
         newStructDeclarations.add(newStructDeclaration)
 
-    return StructType(
-            newName,
-            emptyList(),
-            newStructDeclaration
-    )
+    return newStructDeclaration.type
 }

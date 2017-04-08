@@ -11,8 +11,8 @@ import quartz.compiler.semantics.types.FunctionType
  */
 
 fun ProgramOutputStream.typedef(type: AliasedType) {
-    declare(type.type)
     declare("typedef_$type") {
+        declare(type.type)
         name("typedef")
         type(type.type)
         name(type.string)
@@ -23,8 +23,8 @@ fun ProgramOutputStream.typedef(type: AliasedType) {
 
 fun ProgramOutputStream.functionTypedef(type: FunctionType) {
     type.function.args.forEach { declare(it) }
-    declare(type.function.returnType)
     declare("typedef_${type.function}") {
+        declare(type.function.returnType)
         name("typedef")
         type(type.function.returnType)
         parentheses {

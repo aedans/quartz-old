@@ -6,7 +6,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class NamedType(string: String, val templates: List<Type>) : Type(string, string) {
+class NamedType(string: String, val templates: List<Type>) : Type(string, {
+    var s = string
+    templates.filter { it !is TemplateType }.forEach { s += '_' + it.descriptiveString }
+    s
+}()) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return NamedType(string, templates.map { function(it.mapTypes(function))!! })
     }

@@ -11,14 +11,20 @@ import quartz.compiler.util.Type
 class FunctionCall(
         val expression: Expression,
         val templates: List<Type>,
-        val expressions: List<Expression>,
+        val args: List<Expression>,
         override val type: Type?
 ) : Expression, Statement {
+    override val isLValue = false
+
+    override fun getExpressions(): List<Expression> {
+        return expression.getExpressions() + args.map { it.getExpressions() }.flatten()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return function(FunctionCall(
                 function(expression.mapExpressions(function)),
                 templates,
-                expressions.map { it.mapExpressions(function) }.map(function),
+                args.map { it.mapExpressions(function) }.map(function),
                 type
         ))
     }
@@ -27,16 +33,16 @@ class FunctionCall(
         return FunctionCall(
                 expression.mapTypes(function),
                 templates.map { function(it.mapTypes(function))!! },
-                expressions.map { it.mapTypes(function) },
+                args.map { it.mapTypes(function) },
                 function(type?.mapTypes(function))
         )
     }
 
     override fun withType(type: Type?): Expression {
-        return FunctionCall(expression, templates, expressions, type)
+        return FunctionCall(expression, templates, args, type)
     }
 
     override fun toString(): String {
-        return "$expression${if (templates.isNotEmpty()) "<$templates>" else ""}$expressions"
+        return "$expression${if (templates.isNotEmpty()) "<$templates>" else ""}$args"
     }
 }

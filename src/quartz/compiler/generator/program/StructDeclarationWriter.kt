@@ -11,8 +11,10 @@ import quartz.compiler.tree.struct.StructMember
  */
 
 fun ProgramOutputStream.struct(structDeclarationNode: StructDeclaration) {
-    structDeclarationNode.members.forEach { declare(it.value.type) }
+    if (structDeclarationNode.external)
+        return
     declare("struct_${structDeclarationNode.name}") {
+        structDeclarationNode.members.forEach { declare(it.value.type) }
         margin {
             name("struct")
             name(structDeclarationNode.name)

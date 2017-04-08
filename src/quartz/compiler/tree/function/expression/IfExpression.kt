@@ -8,6 +8,12 @@ import quartz.compiler.util.Type
  */
 
 class IfExpression(val test: Expression, val ifTrue: Expression, val ifFalse: Expression, override val type: Type?) : Expression {
+    override val isLValue = false
+
+    override fun getExpressions(): List<Expression> {
+        return listOf(this) + test.getExpressions() + ifTrue.getExpressions() + ifFalse.getExpressions()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return IfExpression(
                 function(test.mapExpressions(function)),

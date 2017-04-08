@@ -1,6 +1,5 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.NamedType
@@ -8,7 +7,7 @@ import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.tree.misc.Typealias
+import quartz.compiler.tree.misc.TypealiasDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.util.Type
 
@@ -21,7 +20,7 @@ fun Program.resolveTypes(): Program {
             functionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             externFunctionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             structDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
-            typealiasDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
+            typealiasDeclarationDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
             inlineCNodes
     )
 }
@@ -40,8 +39,8 @@ private fun StructDeclaration.resolveTypes(symbolTable: SymbolTable): StructDecl
     return this.mapTypes { it?.resolve(localSymbolTable) }
 }
 
-private fun Typealias.resolveTypes(symbolTable: SymbolTable): Typealias {
-    return Typealias(name, aliasedType.resolve(symbolTable), external)
+private fun TypealiasDeclaration.resolveTypes(symbolTable: SymbolTable): TypealiasDeclaration {
+    return TypealiasDeclaration(name, aliasedType.resolve(symbolTable), external)
 }
 
 private fun Type.resolve(symbolTable: SymbolTable): Type {
@@ -51,6 +50,6 @@ private fun Type.resolve(symbolTable: SymbolTable): Type {
         } else {
             (symbolTable.getType(this.string) as StructType).withTemplates(templates)
         }?.mapTypes { it?.resolve(symbolTable) }
-                ?: throw QuartzException("Unknown type $this")
+                ?: this
     else this
 }
