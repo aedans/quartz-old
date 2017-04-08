@@ -23,7 +23,7 @@ data class Program(
 ) {
     val symbolTable = generateSymbolTable()
     val destructorDeclarations by lazy {
-        functionDeclarations.values.filter { it.name.startsWith("__Q_destructor") }.map { it.name.substring(15) to it }.toMap()
+        functionDeclarations.values.filter { it.name.startsWith("__destructor") }.map { it.name.substring(15) to it }.toMap()
     }
 
     fun mapFunctionDeclarations(function: (FunctionDeclaration) -> FunctionDeclaration): Program {

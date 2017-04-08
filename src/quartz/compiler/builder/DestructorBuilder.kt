@@ -14,7 +14,7 @@ import quartz.compiler.util.Function
 fun QuartzParser.DestructorDeclarationContext.toNode(): FunctionDeclaration {
     val type = type().toType()
     return FunctionDeclaration(
-            "__Q_destructor_${(type as NamedType).string}",
+            "__destructor_${(type as NamedType).string}",
             listOf("it"),
             Function(
                     listOf(type),

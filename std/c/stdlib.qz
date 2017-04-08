@@ -6,20 +6,20 @@ import std.qvoid
 #include <stdlib.h>
 %%
 
-struct __Q_div_t {
+struct __stdlib_div_t {
     val quot: int
     val rem: int
 }
 
-struct __Q_ldiv_t {
+struct __stdlib_ldiv_t {
     val quot: long
     val rem: long
 }
 
 extern typealias size_t = long
 extern typealias wchar_t = long
-extern typealias div_t = __Q_div_t;
-extern typealias ldiv_t = __Q_ldiv_t
+extern typealias div_t = __stdlib_div_t
+extern typealias ldiv_t = __stdlib_ldiv_t
 
 fn get_EXIT_FAILURE(): int = %%EXIT_FAILURE%%
 fn get_EXIT_SUCCESS(): int = %%EXIT_SUCCESS%%
