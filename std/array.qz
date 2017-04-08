@@ -22,6 +22,10 @@ fn <T> set(array: Array<T>, i: int, value: T) {
     %%array.content[i] = value%%;
 }
 
+fn <T> emptyArray(size: size_t): Array<T> {
+    return Array(size, qcalloc<T>(size));
+}
+
 fn <T> fillArray(size: size_t, fill: (int) -> T): Array<T> {
     val array = Array(size, qmalloc<T>(size * sizeof(T)));
     var i = 0;
@@ -30,10 +34,6 @@ fn <T> fillArray(size: size_t, fill: (int) -> T): Array<T> {
         ++i;
     }
     return array;
-}
-
-fn <T> emptyArray(size: size_t): Array<T> {
-    return Array(size, qcalloc<T>(size));
 }
 
 fn <T> forEach(array: Array<T>, function: (T) -> void) {
