@@ -20,4 +20,4 @@ fn fizzBuzz(i: int) {
 }
 
 fn printInt(i: int)
-    %%printf("%d ", i)%%
+    printf("%d ", i);

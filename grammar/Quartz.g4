@@ -11,7 +11,6 @@ program
 declaration
     : functionDeclaration
     | structDeclaration
-    | destructorDeclaration
     | typealiasDeclaration
     | inlineC
     ;
@@ -50,12 +49,6 @@ structMember
     : varDeclarationType identifier ':' type semi?
     ;
 
-// DESTRUCTOR DECLARATION
-
-destructorDeclaration
-    : 'destructor' ('<' identifierList '>')? type fnBlock
-    ;
-
 // TYPEALIAS DECLARATION
 
 typealiasDeclaration
@@ -80,7 +73,6 @@ statement
     | varDeclaration semi
     | ifStatement semi?
     | whileLoop semi?
-    | delete semi?
     | expression semi
     ;
 
@@ -98,10 +90,6 @@ ifStatement
 
 whileLoop
     : 'while' '(' expression ')' block
-    ;
-
-delete
-    : 'delete' expression
     ;
 
 // EXPRESSIONS

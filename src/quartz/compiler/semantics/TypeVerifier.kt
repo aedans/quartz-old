@@ -39,7 +39,6 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
         is IfStatement -> verify(symbolTable)
         is WhileLoop -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
-        is Delete -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
@@ -187,10 +186,6 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
 
         resolveDotNotation(symbolTable).verify(symbolTable)
     }
-}
-
-private fun Delete.verify(symbolTable: SymbolTable): Delete {
-    return Delete(expression.verify(symbolTable))
 }
 
 private fun MemberAccess.verify(symbolTable: SymbolTable): MemberAccess {
