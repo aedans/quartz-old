@@ -31,10 +31,8 @@ object Compiler {
                             .generateConstructors()
                             .resolveTypes()
                             .verifyTypes()
-                            .generateDestructors()
                             .resolveFunctionTemplates()
                             .resolveTypeTemplates()
-                            .resolveDeletes()
                 },
                 generator: (Program, OutputStream) -> Unit = Generator::write
     ) {
