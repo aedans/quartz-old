@@ -31,6 +31,7 @@ object Compiler {
                             .generateConstructors()
                             .resolveTypes()
                             .verifyTypes()
+                            .simplify()
                             .resolveFunctionTemplates()
                             .resolveTypeTemplates()
                 },

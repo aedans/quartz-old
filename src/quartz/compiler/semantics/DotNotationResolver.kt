@@ -20,13 +20,7 @@ fun FunctionCall.resolveDotNotation(symbolTable: SymbolTable): FunctionCall {
     return FunctionCall(
             Identifier(expression.name, expressionType),
             templates,
-            expression.expression + args,
+            listOf(expression.expression) + args,
             type
     )
-}
-
-private operator fun <T> T.plus(list: List<T>): List<T> {
-    val newList = mutableListOf(this)
-    newList.addAll(list)
-    return newList
 }

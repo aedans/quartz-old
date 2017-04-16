@@ -101,7 +101,6 @@ fun ProgramOutputStream.expression(expression: Expression) {
         is PostfixUnaryOperator -> postfixUnaryOperator(expression)
         is BinaryOperator -> binaryOperator(expression)
         is Assignment -> assignment(expression)
-        is ArrayAccess -> arrayAccess(expression)
         is MemberAccess -> memberAccess(expression)
         is Sizeof -> sizeof(expression)
         is FunctionCall -> fnCall(expression)
@@ -146,11 +145,6 @@ fun ProgramOutputStream.assignment(assignment: Assignment) {
     expression(assignment.lvalue)
     string(assignment.id)
     expression(assignment.expression)
-}
-
-fun ProgramOutputStream.arrayAccess(arrayAccess: ArrayAccess) {
-    parentheses { expression(arrayAccess.lvalue) }
-    brackets { expression(arrayAccess.expr2) }
 }
 
 fun ProgramOutputStream.memberAccess(memberAccess: MemberAccess) {

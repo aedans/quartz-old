@@ -18,8 +18,8 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : fnModifiers 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
-    | fnModifiers extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
+    : 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    | extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;
 
 fnArgument
@@ -28,10 +28,6 @@ fnArgument
 
 fnArgumentList
     : (fnArgument ',')* fnArgument?
-    ;
-
-fnModifiers
-    :
     ;
 
 fnBlock
