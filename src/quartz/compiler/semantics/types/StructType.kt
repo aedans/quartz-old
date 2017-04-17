@@ -32,7 +32,7 @@ class StructType(
         return string.hashCode() * templates.hashCode()
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type == this
     }
 

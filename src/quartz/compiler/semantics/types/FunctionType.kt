@@ -12,7 +12,7 @@ data class FunctionType(val function: Function) : Type("$function", function.des
         return FunctionType(this.function.mapTypes(function))
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type is FunctionType
                 && type.function.returnType == function.returnType
                 && type.function.vararg == function.vararg

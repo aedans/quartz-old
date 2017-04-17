@@ -225,7 +225,7 @@ private fun Expression.verifyAs(type: Type?): Expression {
     return when {
         this.type == null -> this.withType(type)
         this.type == type || type == null -> this
-        Type.canCast(this.type!!, type) -> Cast(this, type)
+        Type.isMutualInstance(this.type!!, type) -> Cast(this, type)
         else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
     }
 }
@@ -234,7 +234,7 @@ private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
         this == type || type == null -> this
-        Type.canCast(this, type) -> this
+        Type.isMutualInstance(this, type) -> this
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }

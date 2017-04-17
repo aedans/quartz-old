@@ -15,7 +15,7 @@ class UnresolvedType(string: String, val templates: List<Type>) : Type(string, {
         return UnresolvedType(string, templates.map { function(it.mapTypes(function))!! })
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type is UnresolvedType
                 && type.string == this.string
                 && templates.size == type.templates.size

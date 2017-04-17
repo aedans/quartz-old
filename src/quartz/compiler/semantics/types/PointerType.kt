@@ -11,7 +11,7 @@ data class PointerType(val type: Type) : Type("$type*", "${type.descriptiveStrin
         return PointerType(function(type.mapTypes(function))!!)
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type is PointerType && (type.type == type.type || type.type == Primitives.void)
     }
 

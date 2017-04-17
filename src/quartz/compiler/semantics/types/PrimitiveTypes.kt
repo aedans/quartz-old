@@ -21,7 +21,7 @@ class NumberType(string: String) : Type(string, string) {
         return this
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type is NumberType
     }
 }
@@ -31,7 +31,7 @@ class VoidType : Type("void", "void") {
         return this
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type == this
     }
 }

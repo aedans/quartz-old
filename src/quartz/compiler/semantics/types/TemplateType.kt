@@ -11,7 +11,7 @@ class TemplateType(string: String) : Type(string, string) {
         return this
     }
 
-    override fun canCastTo(type: Type): Boolean {
+    override fun isInstance(type: Type): Boolean {
         return type is TemplateType && type.string == this.string
     }
 }

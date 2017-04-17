@@ -5,7 +5,7 @@ package quartz.compiler.util
  */
 
 abstract class Type(val string: String, val descriptiveString: String) {
-    abstract fun canCastTo(type: Type): Boolean
+    abstract fun isInstance(type: Type): Boolean
 
     abstract fun mapTypes(function: (Type?) -> Type?): Type
 
@@ -26,8 +26,8 @@ abstract class Type(val string: String, val descriptiveString: String) {
     }
 
     companion object {
-        fun canCast(t1: Type, t2: Type): Boolean {
-            return t1.canCastTo(t2) || t2.canCastTo(t1)
+        fun isMutualInstance(t1: Type, t2: Type): Boolean {
+            return t1.isInstance(t2) || t2.isInstance(t1)
         }
     }
 }

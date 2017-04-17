@@ -15,7 +15,7 @@ class AliasedType(string: String, val type: Type, val external: Boolean) : Type(
         return super.isEqualTo(type) || type.isEqualTo(this.type)
     }
 
-    override fun canCastTo(type: Type): Boolean {
-        return type == this.type || type is AliasedType && type.string == this.string || Type.canCast(type, this.type)
+    override fun isInstance(type: Type): Boolean {
+        return type == this.type || type is AliasedType && type.string == this.string || Type.isMutualInstance(type, this.type)
     }
 }

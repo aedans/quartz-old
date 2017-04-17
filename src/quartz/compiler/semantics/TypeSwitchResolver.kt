@@ -21,7 +21,7 @@ fun Program.resolveTypeSwitch(): Program {
 }
 
 private fun TypeSwitch.resolve(): IfStatement {
-    val branch = branches.keys.firstOrNull { Type.canCast(it, type) }
+    val branch = branches.keys.firstOrNull { Type.isMutualInstance(it, type) }
             ?: throw QuartzException("Could not find branch $type in $this")
     return Block(branches[branch] ?: throw QuartzException("Could not find branch $type in $this"))
 }
