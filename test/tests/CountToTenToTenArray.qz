@@ -1,0 +1,18 @@
+import std.c.stdio
+import std.mem
+import std.array
+
+fn main(): int {
+    11.fillArray(fillArrayInt).forEach(printIntArray);
+    return 0;
+}
+
+fn identityInt(i: int): int = i
+
+fn fillArrayInt(i: int): Array<int> = i.fillArray(identityInt);
+
+fn printIntArray(array: Array<int>)
+    array.forEach(printInt);
+
+fn printInt(i: int)
+    "%d ".printf(i);

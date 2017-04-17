@@ -12,6 +12,7 @@ declaration
     : functionDeclaration
     | structDeclaration
     | typealiasDeclaration
+    | destructorDeclaration
     | inlineC
     ;
 
@@ -51,6 +52,12 @@ typealiasDeclaration
     : extern='extern'? 'typealias' identifier '=' type semi?
     ;
 
+// DESTRUCTOR DECLARATION
+
+destructorDeclaration
+    : 'destructor' ('<' identifierList '>')? type fnBlock
+    ;
+
 // IMPORT DECLARATION
 
 importDeclaration
@@ -69,6 +76,7 @@ statement
     | varDeclaration semi
     | ifStatement semi?
     | whileLoop semi?
+    | delete semi?
     | expression semi
     ;
 
@@ -86,6 +94,10 @@ ifStatement
 
 whileLoop
     : 'while' '(' expression ')' block
+    ;
+
+delete
+    : 'delete' expression
     ;
 
 // EXPRESSIONS

@@ -155,7 +155,7 @@ fun ProgramOutputStream.memberAccess(memberAccess: MemberAccess) {
 
 fun ProgramOutputStream.sizeof(sizeof: Sizeof) {
     name("sizeof")
-    parentheses { type(sizeof.type) }
+    parentheses { type(sizeof.sizeType) }
 }
 
 fun ProgramOutputStream.fnCall(functionCall: FunctionCall) {

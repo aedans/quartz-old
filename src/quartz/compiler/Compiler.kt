@@ -32,8 +32,10 @@ object Compiler {
                             .resolveTypes()
                             .verifyTypes()
                             .simplify()
+                            .generateDestructors()
                             .resolveFunctionTemplates()
                             .resolveTypeTemplates()
+                            .resolveDeletes()
                 },
                 generator: (Program, OutputStream) -> Unit = Generator::write
     ) {

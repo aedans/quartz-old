@@ -38,6 +38,7 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
         is ReturnStatement -> verify(symbolTable)
         is IfStatement -> verify(symbolTable)
         is WhileLoop -> verify(symbolTable)
+        is Delete -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
@@ -68,6 +69,10 @@ private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
             test.verify(symbolTable),
             statements.map { it.verify(localSymbolTable) }
     )
+}
+
+private fun Delete.verify(symbolTable: SymbolTable): Delete {
+    return Delete(expression.verify(symbolTable))
 }
 
 private fun Expression.verify(symbolTable: SymbolTable): Expression {
@@ -101,17 +106,17 @@ private fun Identifier.verify(symbolTable: SymbolTable): Identifier {
 
 private fun PrefixUnaryOperator.verify(symbolTable: SymbolTable): PrefixUnaryOperator {
     return PrefixUnaryOperator(
-            expression.verify(symbolTable),
+            expression.verify(symbolTable).verifyAs(type),
             id,
-            type
+            type.verifyAs(expression.type)
     )
 }
 
 private fun PostfixUnaryOperator.verify(symbolTable: SymbolTable): PostfixUnaryOperator {
     return PostfixUnaryOperator(
-            expression.verify(symbolTable),
+            expression.verify(symbolTable).verifyAs(type),
             id,
-            type
+            type.verifyAs(expression.type)
     )
 }
 

@@ -4,8 +4,10 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.expression.MemberAccess
+import quartz.compiler.tree.function.statement.Delete
 import quartz.compiler.tree.function.statement.FunctionCall
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
@@ -39,6 +41,19 @@ private fun FunctionDeclaration.resolveFunctionTemplates(
             is FunctionCall -> it.resolveFunctionTemplates(program, newFunctionDeclarations)
             else -> it
         }
+    }.mapStatements {
+        when (it) {
+            is Delete -> it.resolveFunctionTemplates(program, newFunctionDeclarations)
+            else -> it
+        }
+    }
+}
+
+private fun Delete.resolveFunctionTemplates(program: Program, newFunctionDeclarations: MutableList<FunctionDeclaration>): Statement {
+    val resolved = this.resolve(program.destructorDeclarations)
+    return when (resolved) {
+        is FunctionCall -> resolved.resolveFunctionTemplates(program, newFunctionDeclarations)
+        else -> this
     }
 }
 

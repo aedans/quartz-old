@@ -10,7 +10,7 @@ import quartz.compiler.util.Type
 
 class Sizeof(val sizeType: Type) : Expression {
     override val isLValue = false
-    override val type = Primitives.int
+    override val type = Primitives.long
 
     override fun getExpressions(): List<Expression> {
         return listOf(this)

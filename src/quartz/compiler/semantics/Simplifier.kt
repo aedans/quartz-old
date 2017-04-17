@@ -34,6 +34,7 @@ private fun Statement.simplify(newStatements: MutableList<Statement>, nameSuppli
         is Assignment -> simplify(newStatements, nameSupplier)
         is IfStatement -> simplify(newStatements, nameSupplier)
         is WhileLoop -> simplify(newStatements, nameSupplier)
+        is Delete -> simplify(newStatements, nameSupplier)
         is FunctionCall -> simplify(newStatements, nameSupplier)
         else -> throw QuartzException("Unrecognized node $this")
     }
@@ -44,22 +45,36 @@ private fun VariableDeclaration.simplify(newStatements: MutableList<Statement>, 
 }
 
 private fun ReturnStatement.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): ReturnStatement {
-    return ReturnStatement(expression.simplify(newStatements, nameSupplier))
+    return ReturnStatement(
+            expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier)
+    )
 }
 
 private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): IfStatement {
+    val newTrueStatements = mutableListOf<Statement>()
+    val newFalseStatements = mutableListOf<Statement>()
+    trueStatements.forEach { newTrueStatements.add(it.simplify(newStatements, nameSupplier)) }
+    falseStatements.forEach { newFalseStatements.add(it.simplify(newStatements, nameSupplier)) }
     return IfStatement(
-            test.simplify(newStatements, nameSupplier),
-            trueStatements.map { it.simplify(newStatements, nameSupplier) },
-            falseStatements.map { it.simplify(newStatements, nameSupplier) }
+            test.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            newTrueStatements,
+            newFalseStatements
     )
 }
 
 private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): WhileLoop {
+    val newLoopStatements = mutableListOf<Statement>()
+    statements.forEach { newLoopStatements.add(it.simplify(newLoopStatements, nameSupplier)) }
+    val testIdentifier = test.toUniqueVariable(newStatements, nameSupplier)
+    newLoopStatements.add(Assignment(testIdentifier, test, Assignment.ID.EQ, testIdentifier.type))
     return WhileLoop(
-            test.simplify(newStatements, nameSupplier),
-            statements.map { it.simplify(newStatements, nameSupplier) }
+            testIdentifier,
+            newLoopStatements
     )
+}
+
+private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Delete {
+    return Delete(expression.toUniqueVariable(newStatements, nameSupplier))
 }
 
 private fun Expression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
@@ -81,50 +96,83 @@ private fun Expression.simplify(newStatements: MutableList<Statement>, nameSuppl
     }
 }
 
-fun Cast.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Cast {
-    return Cast(expression.simplify(newStatements, nameSupplier), type)
+private fun Cast.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Cast {
+    return Cast(
+            expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            type
+    )
 }
 
-fun PrefixUnaryOperator.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): PrefixUnaryOperator {
-    return PrefixUnaryOperator(expression.simplify(newStatements, nameSupplier), id, type)
+private fun PrefixUnaryOperator.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): PrefixUnaryOperator {
+    return PrefixUnaryOperator(
+            expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            id,
+            type
+    )
 }
 
-fun PostfixUnaryOperator.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): PostfixUnaryOperator {
-    return PostfixUnaryOperator(expression.simplify(newStatements, nameSupplier), id, type)
+private fun PostfixUnaryOperator.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): PostfixUnaryOperator {
+    return PostfixUnaryOperator(
+            expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            id,
+            type
+    )
 }
 
-fun BinaryOperator.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): BinaryOperator {
-    return BinaryOperator(expr1.simplify(newStatements, nameSupplier), expr2.simplify(newStatements, nameSupplier), id, type)
+private fun BinaryOperator.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): BinaryOperator {
+    return BinaryOperator(
+            expr1.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            expr2.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            id,
+            type
+    )
 }
 
-fun Assignment.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Assignment {
+private fun Assignment.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Assignment {
     return Assignment(lvalue.simplify(newStatements, nameSupplier), expression.simplify(newStatements, nameSupplier), id, type)
 }
 
-fun FunctionCall.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): FunctionCall {
-    return FunctionCall(expression.simplify(newStatements, nameSupplier), templates, args.map { it.simplify(newStatements, nameSupplier) }, type)
+private fun FunctionCall.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): FunctionCall {
+    return FunctionCall(
+            expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            templates,
+            args.map { it.simplify(newStatements, nameSupplier) }.map { it.toUniqueVariable(newStatements, nameSupplier) },
+            type
+    )
 }
 
-fun MemberAccess.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): MemberAccess {
-    return MemberAccess(name, expression.simplify(newStatements, nameSupplier), type)
+private fun MemberAccess.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): MemberAccess {
+    return MemberAccess(
+            name,
+            expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
+            type
+    )
 }
 
-fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Identifier {
-    val tempVarName = "_${nameSupplier.next()}"
-    newStatements.add(VariableDeclaration(tempVarName, null, type
-            ?: throw QuartzException("Unknown type for $this"), true))
+private fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
+    val tempVarName = "__${nameSupplier.next()}"
+    newStatements.add(VariableDeclaration(tempVarName, null, type ?: throw QuartzException("Unknown type for $this"), true))
+    val identifier = Identifier(tempVarName, type)
 
     val trueStatements = mutableListOf<Statement>()
-    trueStatements.add(Assignment(Identifier(tempVarName, type), ifTrue.simplify(trueStatements, nameSupplier), Assignment.ID.EQ, type))
+    trueStatements.add(Assignment(identifier, ifTrue.simplify(trueStatements, nameSupplier), Assignment.ID.EQ, type))
 
     val falseStatements = mutableListOf<Statement>()
-    falseStatements.add(Assignment(Identifier(tempVarName, type), ifFalse.simplify(falseStatements, nameSupplier), Assignment.ID.EQ, type))
+    falseStatements.add(Assignment(identifier, ifFalse.simplify(falseStatements, nameSupplier), Assignment.ID.EQ, type))
 
     newStatements.add(IfStatement(
             test,
             trueStatements,
             falseStatements
-    ))
+    ).simplify(newStatements, nameSupplier))
 
+    return identifier
+}
+
+private fun Expression.toUniqueVariable(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
+    if (this is InlineC || this is Identifier)
+        return this
+    val tempVarName = "__${nameSupplier.next()}"
+    newStatements.add(VariableDeclaration(tempVarName, this, type ?: throw QuartzException("Unknown type for $this"), true))
     return Identifier(tempVarName, type)
 }
