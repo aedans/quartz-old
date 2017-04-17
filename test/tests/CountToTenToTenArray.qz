@@ -1,5 +1,4 @@
 import std.c.stdio
-import std.mem
 import std.array
 
 fn main(): int {
