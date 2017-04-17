@@ -9,6 +9,7 @@ import java.io.PrintStream
  */
 
 class ProgramOutputStream(val program: Program, outputStream: OutputStream) {
+    private val identifierChars = { c: Char -> c in 'a'..'z' || c in 'A'..'Z' || c == '_' || c in '0'..'9' }
     private val declared = HashSet<String>()
     private var lastChar = ' '
     private var indent = 0
@@ -42,21 +43,14 @@ class ProgramOutputStream(val program: Program, outputStream: OutputStream) {
         string(")")
     }
 
-    fun brackets(function: ProgramOutputStream.() -> Unit) {
-        string("[")
-        function()
-        string("]")
-    }
-
     fun comment(string: String) {
         string("/* $string */\n")
     }
 
     fun name(string: Any) {
-        if (lastChar != ' ' && lastChar != '\n' && lastChar != '\t')
+        if (identifierChars(lastChar))
             string(" ")
         string(string)
-        string(" ")
     }
 
     fun newline() {

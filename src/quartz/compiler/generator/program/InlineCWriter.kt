@@ -8,5 +8,5 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun ProgramOutputStream.inlineC(inlineCNode: InlineC) {
-    string(inlineCNode.src)
+    name(inlineCNode.src)
 }

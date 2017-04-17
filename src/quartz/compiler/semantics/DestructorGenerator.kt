@@ -78,6 +78,6 @@ private fun VariableDeclaration.generateDestructor(statements: MutableList<State
 
 private fun VariableDeclaration.getDestructor(destructorDeclarations: Map<String, FunctionDeclaration>): Statement? {
     val destructor = destructorDeclarations[type?.string]
-    return if (destructor == null) InlineC("/* $type does not have a destructor */") else
+    return if (destructor == null) InlineC("/* ${type?.descriptiveString} does not have a destructor */") else
         Delete(Identifier(name, type))
 }

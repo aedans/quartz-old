@@ -21,7 +21,7 @@ fun ProgramOutputStream.type(type: Type) {
             name(type.string)
         }
         is FunctionType -> {
-            string(type.descriptiveString)
+            name(type.descriptiveString)
             string("_t ")
         }
         else -> name(type)

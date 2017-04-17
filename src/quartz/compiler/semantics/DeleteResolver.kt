@@ -20,7 +20,7 @@ fun Program.resolveDeletes(): Program {
 
 fun Delete.resolve(destructorDeclarations: Map<String, FunctionDeclaration>): Statement {
     val destructor = destructorDeclarations[expression.type?.string]
-    return if (destructor == null) InlineC("/* ${expression.type} does not have a destructor */") else
+    return if (destructor == null) InlineC("/* ${expression.type?.descriptiveString} does not have a destructor */") else
         FunctionCall(
                 Identifier(destructor.name, FunctionType(destructor.function)),
                 expression.type.asStruct()!!.templates,

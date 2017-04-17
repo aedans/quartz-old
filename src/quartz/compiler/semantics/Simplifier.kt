@@ -54,8 +54,8 @@ private fun ReturnStatement.simplify(newStatements: MutableList<Statement>, name
 private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): IfStatement {
     val newTrueStatements = mutableListOf<Statement>()
     val newFalseStatements = mutableListOf<Statement>()
-    trueStatements.forEach { newTrueStatements.add(it.simplify(newStatements, nameSupplier)) }
-    falseStatements.forEach { newFalseStatements.add(it.simplify(newStatements, nameSupplier)) }
+    trueStatements.forEach { newTrueStatements.add(it.simplify(newTrueStatements, nameSupplier)) }
+    falseStatements.forEach { newFalseStatements.add(it.simplify(newFalseStatements, nameSupplier)) }
     return IfStatement(
             test.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
             newTrueStatements,
