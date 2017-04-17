@@ -42,16 +42,29 @@ private fun Statement.generateDestructors(destructorDeclarations: Map<String, Fu
         is Delete -> this
         is IfStatement -> generateDestructors(destructorDeclarations)
         is WhileLoop -> generateDestructors(destructorDeclarations)
+        is TypeSwitch -> generateDestructors(destructorDeclarations)
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
 
 private fun IfStatement.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): IfStatement {
-    return IfStatement(test, trueStatements.generateDestructors(destructorDeclarations), falseStatements.generateDestructors(destructorDeclarations))
+    return IfStatement(
+            test,
+            trueStatements.generateDestructors(destructorDeclarations),
+            falseStatements.generateDestructors(destructorDeclarations)
+    )
 }
 
 private fun WhileLoop.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): WhileLoop {
     return WhileLoop(test, statements.generateDestructors(destructorDeclarations))
+}
+
+private fun TypeSwitch.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): TypeSwitch {
+    return TypeSwitch(
+            type,
+            branches.mapValues { it.value.generateDestructors(destructorDeclarations) },
+            elseBranch.map { it.generateDestructors(destructorDeclarations) }
+    )
 }
 
 private fun VariableDeclaration.generateDestructor(statements: MutableList<Statement>, destructorDeclarations: Map<String, FunctionDeclaration>) {

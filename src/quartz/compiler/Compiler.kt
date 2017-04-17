@@ -35,6 +35,7 @@ object Compiler {
                             .generateDestructors()
                             .resolveFunctionTemplates()
                             .resolveTypeTemplates()
+                            .resolveTypeSwitch()
                             .resolveDeletes()
                 },
                 generator: (Program, OutputStream) -> Unit = Generator::write

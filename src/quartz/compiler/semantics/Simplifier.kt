@@ -35,6 +35,7 @@ private fun Statement.simplify(newStatements: MutableList<Statement>, nameSuppli
         is IfStatement -> simplify(newStatements, nameSupplier)
         is WhileLoop -> simplify(newStatements, nameSupplier)
         is Delete -> simplify(newStatements, nameSupplier)
+        is TypeSwitch -> simplify(newStatements, nameSupplier)
         is FunctionCall -> simplify(newStatements, nameSupplier)
         else -> throw QuartzException("Unrecognized node $this")
     }
@@ -75,6 +76,22 @@ private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSuppli
 
 private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Delete {
     return Delete(expression.toUniqueVariable(newStatements, nameSupplier))
+}
+
+private fun TypeSwitch.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
+    return TypeSwitch(
+            type,
+            branches.mapValues {
+                val newBranchStatements = mutableListOf<Statement>()
+                it.value.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
+                newBranchStatements
+            },
+            {
+                val newBranchStatements = mutableListOf<Statement>()
+                elseBranch.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
+                newBranchStatements
+            }()
+    )
 }
 
 private fun Expression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {

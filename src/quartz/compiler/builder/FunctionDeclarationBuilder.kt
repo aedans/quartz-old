@@ -4,6 +4,7 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
+import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -18,14 +19,14 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
-    return if (extern != null) {
+    return if (signatureDefinition() != null) {
         ExternFunctionDeclaration(
-                identifier().text,
+                signatureDefinition().identifier().text,
                 Function(
-                        typeList().type().map { it.toType() },
+                        signatureDefinition().typeList().type().map { it.toType() },
                         emptyList(),
-                        returnType?.toType() ?: Primitives.void,
-                        typeList().vararg != null
+                        signatureDefinition().returnType?.toType() ?: Primitives.void,
+                        signatureDefinition().typeList().vararg != null
                 )
         )
     } else {
@@ -55,6 +56,7 @@ fun QuartzParser.StatementContext.toNode(): Statement {
         ifStatement() != null -> ifStatement().toNode()
         whileLoop() != null -> whileLoop().toNode()
         delete() != null -> delete().toNode()
+        typeswitch() != null -> typeswitch().toNode()
         expression() != null -> expression().toNode()
         else -> throw QuartzException("Error translating $text")
     }
@@ -87,6 +89,14 @@ fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
 
 fun QuartzParser.DeleteContext.toNode(): Delete {
     return Delete(expression().toNode())
+}
+
+fun QuartzParser.TypeswitchContext.toNode(): TypeSwitch {
+    return TypeSwitch(
+            UnresolvedType(identifier().text, emptyList()),
+            typeswitchBranch().map { it.type().toType() to it.block().statement().map { it.toNode() } }.toMap(),
+            if (block() != null) block().statement().map { it.toNode() } else emptyList()
+    )
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {

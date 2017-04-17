@@ -9,7 +9,7 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-class IfStatement(
+open class IfStatement(
         val test: Expression,
         val trueStatements: List<Statement>,
         val falseStatements: List<Statement>

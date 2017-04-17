@@ -11,6 +11,7 @@ program
 declaration
     : functionDeclaration
     | structDeclaration
+//    | traitDeclaration
     | typealiasDeclaration
     | destructorDeclaration
     | inlineC
@@ -19,8 +20,12 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
-    | extern='extern' 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
+    : 'fn' ('<' identifierList '>')? (receiver='.')?  identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    | 'extern' signatureDefinition
+    ;
+
+signatureDefinition
+    : 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
     ;
 
 fnArgument
@@ -45,6 +50,12 @@ structDeclaration
 structMember
     : varDeclarationType identifier ':' type semi?
     ;
+
+// TRAIT DECLARATION
+
+//traitDeclaration
+//    : 'trait' type '{' signatureDefinition* '}' semi?
+//    ;
 
 // TYPEALIAS DECLARATION
 
@@ -77,6 +88,7 @@ statement
     | ifStatement semi?
     | whileLoop semi?
     | delete semi?
+    | typeswitch semi?
     | expression semi
     ;
 
@@ -98,6 +110,14 @@ whileLoop
 
 delete
     : 'delete' expression
+    ;
+
+typeswitch
+    : 'switch' '(' identifier ')' '{' typeswitchBranch* ('else' block)? '}'
+    ;
+
+typeswitchBranch
+    : type block
     ;
 
 // EXPRESSIONS

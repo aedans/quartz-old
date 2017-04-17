@@ -39,6 +39,7 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
         is IfStatement -> verify(symbolTable)
         is WhileLoop -> verify(symbolTable)
         is Delete -> verify(symbolTable)
+        is TypeSwitch -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
@@ -73,6 +74,14 @@ private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
 
 private fun Delete.verify(symbolTable: SymbolTable): Delete {
     return Delete(expression.verify(symbolTable))
+}
+
+private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
+    return TypeSwitch(
+            type,
+            branches.mapValues { it.value.map { it.verify(symbolTable) } },
+            elseBranch.map { it.verify(symbolTable) }
+    )
 }
 
 private fun Expression.verify(symbolTable: SymbolTable): Expression {

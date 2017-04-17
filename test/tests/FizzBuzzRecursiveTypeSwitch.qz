@@ -1,0 +1,29 @@
+import std.c.stdio
+
+typealias string = char*
+
+fn <T> print(t: T) {
+    switch (T) {
+        int printf("%d ", t);
+        string printf("%s", t);
+    }
+}
+
+fn main(): int {
+    100.fizzBuzz();
+    return 0;
+}
+
+fn fizzBuzz(i: int) {
+    if (i > 1)
+        (i - 1).fizzBuzz();
+
+    if (i % 5 == 0 && i % 3 == 0)
+        "FizzBuzz ".print();
+    else if (i % 3 == 0)
+        "Fizz ".print();
+    else if (i % 5 == 0)
+        "Buzz ".print();
+    else
+        i.print();
+}
