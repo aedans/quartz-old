@@ -1,9 +1,9 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
+import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.util.Function
 
@@ -14,7 +14,7 @@ import quartz.compiler.util.Function
 fun QuartzParser.DestructorDeclarationContext.toNode(): FunctionDeclaration {
     val type = type().toType()
     return FunctionDeclaration(
-            "__destructor_${(type as NamedType).string}",
+            "__destructor_${(type as UnresolvedType).string}",
             listOf("it"),
             Function(
                     listOf(type),

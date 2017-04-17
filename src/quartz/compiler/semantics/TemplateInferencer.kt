@@ -23,7 +23,7 @@ private fun inferTemplates(first: Type, second: Type, templateMap: MutableMap<Te
             throw QuartzException("Conflicting types for $first: ($old, $second)")
     } else
         when (second) {
-            is NamedType -> { }
+            is UnresolvedType -> { }
             is NumberType -> { }
             is VoidType -> { }
             is TemplateType -> { }

@@ -2,9 +2,9 @@ package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -22,7 +22,7 @@ fun QuartzParser.TypeContext.toType(): Type {
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
-            else -> NamedType(identifier().text, typeList()?.type()?.map { it.toType() } ?: emptyList())
+            else -> UnresolvedType(identifier().text, typeList()?.type()?.map { it.toType() } ?: emptyList())
         }
     } else {
         if (ptr != null) {

@@ -2,8 +2,8 @@ package quartz.compiler.semantics
 
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
-import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
@@ -44,7 +44,7 @@ private fun TypealiasDeclaration.resolveTypes(symbolTable: SymbolTable): Typeali
 }
 
 private fun Type.resolve(symbolTable: SymbolTable): Type {
-    return if (this is NamedType)
+    return if (this is UnresolvedType)
         if (templates.isEmpty()) {
             symbolTable.getType(string)
         } else {
