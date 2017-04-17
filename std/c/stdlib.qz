@@ -1,5 +1,3 @@
-import std.qvoid
-
 // Bindings for stdlib.h
 
 %%

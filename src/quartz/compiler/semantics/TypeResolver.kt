@@ -48,7 +48,7 @@ private fun Type.resolve(symbolTable: SymbolTable): Type {
         if (templates.isEmpty()) {
             symbolTable.getType(string)
         } else {
-            (symbolTable.getType(this.string) as StructType).withTemplates(templates)
+            (symbolTable.getType(string) as StructType).withTemplates(templates)
         }?.mapTypes { it?.resolve(symbolTable) }
                 ?: this
     else this

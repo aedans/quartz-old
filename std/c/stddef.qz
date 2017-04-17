@@ -1,5 +1,3 @@
-import std.qvoid
-
 // Bindings for stddef.h
 
 %%
@@ -9,5 +7,7 @@ import std.qvoid
 extern typealias ptrdiff_t = long
 extern typealias size_t = long
 extern typealias wchar_t = int
+
+fn get_NULL(): void* = %%NULL%%
 
 // TODO offsetof

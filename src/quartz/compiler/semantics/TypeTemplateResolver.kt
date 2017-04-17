@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.struct.StructDeclaration
 
@@ -19,6 +20,9 @@ fun Program.resolveTypeTemplates(): Program {
 }
 
 private fun StructType.resolveTypeTemplates(newStructDeclarations: MutableList<StructDeclaration>): StructType {
+    if (templates.any { it is TemplateType })
+        return this
+
     val typeMap = templates.zip(templates).toMap()
     var newName = string
     templates.forEach { newName += '_' + it.descriptiveString }

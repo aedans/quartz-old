@@ -37,7 +37,11 @@ class StructType(
     }
 
     override fun mapTypes(function: (Type?) -> Type?): StructType {
-        return StructType(string, templates.map { function(it.mapTypes(function))!! }, members.mapValues { it.value.mapTypes(function) })
+        return StructType(
+                string,
+                templates.map { function(it.mapTypes(function))!! },
+                members.filterValues { it.type != this }.mapValues { it.value.mapTypes(function) }
+        )
     }
 
     override fun toString(): String {
