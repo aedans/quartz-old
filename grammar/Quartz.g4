@@ -113,7 +113,7 @@ delete
     ;
 
 typeswitch
-    : 'switch' '(' identifier ')' '{' typeswitchBranch* ('else' block)? '}'
+    : 'typeswitch' '(' identifier ')' '{' typeswitchBranch* ('else' block)? '}'
     ;
 
 typeswitchBranch

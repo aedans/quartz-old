@@ -4,7 +4,6 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
-import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -93,7 +92,7 @@ fun QuartzParser.DeleteContext.toNode(): Delete {
 
 fun QuartzParser.TypeswitchContext.toNode(): TypeSwitch {
     return TypeSwitch(
-            UnresolvedType(identifier().text, emptyList()),
+            identifier().toNode(),
             typeswitchBranch().map { it.type().toType() to it.block().statement().map { it.toNode() } }.toMap(),
             if (block() != null) block().statement().map { it.toNode() } else emptyList()
     )

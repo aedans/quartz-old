@@ -3,9 +3,9 @@ import std.c.stdio
 typealias string = char*
 
 fn <T> print(t: T) {
-    switch (T) {
+    typeswitch (t) {
         int printf("%d ", t);
-        string printf("%s", t);
+        string printf(t);
     }
 }
 

@@ -61,7 +61,7 @@ private fun WhileLoop.generateDestructors(destructorDeclarations: Map<String, Fu
 
 private fun TypeSwitch.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): TypeSwitch {
     return TypeSwitch(
-            type,
+            identifier,
             branches.mapValues { it.value.generateDestructors(destructorDeclarations) },
             elseBranch.map { it.generateDestructors(destructorDeclarations) }
     )

@@ -80,7 +80,7 @@ private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier:
 
 private fun TypeSwitch.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
     return TypeSwitch(
-            type,
+            identifier,
             branches.mapValues {
                 val newBranchStatements = mutableListOf<Statement>()
                 it.value.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }

@@ -4,7 +4,10 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
-import quartz.compiler.semantics.types.*
+import quartz.compiler.semantics.types.AliasedType
+import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -25,7 +28,12 @@ fun Program.verifyTypes(): Program {
 private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
 
-    return mapStatements { it.verify(localSymbolTable) }
+    return FunctionDeclaration(
+            name,
+            argNames,
+            function,
+            statements.map { it.verify(localSymbolTable) }
+    )
 }
 
 private fun Statement.verify(symbolTable: SymbolTable): Statement {
@@ -48,7 +56,12 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
 private fun VariableDeclaration.verify(symbolTable: SymbolTable): VariableDeclaration {
     val newExpression = expression?.verify(symbolTable)
 
-    return VariableDeclaration(name, newExpression, type.verifyAs(newExpression?.type), mutable).apply { addTo(symbolTable) }
+    return VariableDeclaration(
+            name,
+            newExpression,
+            type.verifyAs(newExpression?.type),
+            mutable
+    ).apply { addTo(symbolTable) }
 }
 
 private fun ReturnStatement.verify(symbolTable: SymbolTable): ReturnStatement {
@@ -77,10 +90,17 @@ private fun Delete.verify(symbolTable: SymbolTable): Delete {
 }
 
 private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
+    val newIdentifier = identifier.verify(symbolTable)
     return TypeSwitch(
-            type,
-            branches.mapValues { it.value.map { it.verify(symbolTable) } },
-            elseBranch.map { it.verify(symbolTable) }
+            newIdentifier,
+            branches.mapValues {
+                val localSymbolTable = it.localSymbolTable(symbolTable, identifier.name)
+                it.value.map { it.verify(localSymbolTable) }
+            },
+            elseBranch.map {
+                val localSymbolTable = symbolTable.localSymbolTable()
+                it.verify(localSymbolTable)
+            }
     )
 }
 
@@ -114,18 +134,20 @@ private fun Identifier.verify(symbolTable: SymbolTable): Identifier {
 }
 
 private fun PrefixUnaryOperator.verify(symbolTable: SymbolTable): PrefixUnaryOperator {
+    val newExpression = expression.verify(symbolTable).verifyAs(type)
     return PrefixUnaryOperator(
-            expression.verify(symbolTable).verifyAs(type),
+            newExpression,
             id,
-            type.verifyAs(expression.type)
+            type.verifyAs(newExpression.type)
     )
 }
 
 private fun PostfixUnaryOperator.verify(symbolTable: SymbolTable): PostfixUnaryOperator {
+    val newExpression = expression.verify(symbolTable).verifyAs(type)
     return PostfixUnaryOperator(
-            expression.verify(symbolTable).verifyAs(type),
+            newExpression,
             id,
-            type.verifyAs(expression.type)
+            type.verifyAs(newExpression.type)
     )
 }
 
@@ -251,14 +273,6 @@ fun Type?.asFunction(): FunctionType? {
     return when (this) {
         is AliasedType -> type.asFunction()
         is FunctionType -> this
-        else -> null
-    }
-}
-
-fun Type?.asArray(): PointerType? {
-    return when (this) {
-        is PointerType -> this
-        is AliasedType -> type.asArray()
         else -> null
     }
 }

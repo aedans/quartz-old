@@ -76,7 +76,7 @@ WHITESPACE=57
 'else'=19
 'while'=20
 'delete'=21
-'switch'=22
+'typeswitch'=22
 '||'=23
 '&&'=24
 '+='=25

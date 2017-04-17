@@ -62,7 +62,7 @@ public class QuartzParser extends Parser {
 	private static final String[] _LITERAL_NAMES = {
 		null, "'fn'", "'<'", "'>'", "'.'", "'('", "')'", "':'", "'extern'", "','", 
 		"'='", "'struct'", "'{'", "'}'", "'typealias'", "'destructor'", "'import'", 
-		"'return'", "'if'", "'else'", "'while'", "'delete'", "'switch'", "'||'", 
+		"'return'", "'if'", "'else'", "'while'", "'delete'", "'typeswitch'", "'||'", 
 		"'&&'", "'+='", "'-='", "'*='", "'/='", "'%='", "'=='", "'!='", "'>='", 
 		"'<='", "'+'", "'-'", "'*'", "'/'", "'%'", "'++'", "'--'", "'!'", "'sizeof'", 
 		"'->'", "'...'", "'var'", "'val'", "';'", "'%%'"
