@@ -11,7 +11,6 @@ program
 declaration
     : functionDeclaration
     | structDeclaration
-//    | traitDeclaration
     | typealiasDeclaration
     | destructorDeclaration
     | inlineC
@@ -50,12 +49,6 @@ structDeclaration
 structMember
     : varDeclarationType identifier ':' type semi?
     ;
-
-// TRAIT DECLARATION
-
-//traitDeclaration
-//    : 'trait' type '{' signatureDefinition* '}' semi?
-//    ;
 
 // TYPEALIAS DECLARATION
 

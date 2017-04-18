@@ -258,7 +258,7 @@ private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
         this == type || type == null -> this
-        this.isInstance(type) -> this
+        this.isInstance(type) -> type
         type is AliasedType -> this.verifyAs(type.type)
         else -> throw QuartzException("Could not cast $this to $type")
     }
