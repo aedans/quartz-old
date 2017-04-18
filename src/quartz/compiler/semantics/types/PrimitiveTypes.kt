@@ -10,13 +10,17 @@ object Primitives {
     val char: Type = NumberType("char")
     val short: Type = NumberType("short")
     val int: Type = NumberType("int")
-    val long: Type = NumberType("long")
+    val long: Type = NumberType("long long")
+    val uchar: Type = NumberType("unsigned char")
+    val ushort: Type = NumberType("unsigned short")
+    val uint: Type = NumberType("unsigned int")
+    val ulong: Type = NumberType("unsigned long long")
     val float: Type = NumberType("float")
     val double: Type = NumberType("double")
     val void: Type = VoidType()
 }
 
-class NumberType(string: String) : Type(string, string) {
+class NumberType(string: String) : Type(string, string.replace(' ', '_')) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }

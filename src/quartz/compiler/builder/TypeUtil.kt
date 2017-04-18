@@ -19,6 +19,10 @@ fun QuartzParser.TypeContext.toType(): Type {
             "short" -> Primitives.short
             "int" -> Primitives.int
             "long" -> Primitives.long
+            "uchar" -> Primitives.uchar
+            "ushort" -> Primitives.ushort
+            "uint" -> Primitives.uint
+            "ulong" -> Primitives.ulong
             "float" -> Primitives.float
             "double" -> Primitives.double
             "void" -> Primitives.void
