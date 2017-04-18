@@ -1,0 +1,7 @@
+fn <T> forEach(array: Array<T>, function: (T) -> void) {
+    var i = 0;
+    while (i < array.size) {
+        function(array.get(i));
+        ++i;
+    }
+}

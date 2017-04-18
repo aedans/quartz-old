@@ -1,0 +1,3 @@
+fn <T> set(array: Array<T>, i: int, value: T) {
+    %%array.content[i] = value%%;
+}

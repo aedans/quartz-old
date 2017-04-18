@@ -1,0 +1,9 @@
+fn <T> fillArray(size: size_t, fill: (int) -> T): Array<T> {
+    val array = Array(size, qmalloc<T>(size * sizeof(T)));
+    var i = 0;
+    while (i < size) {
+        array.set(i, fill(i));
+        ++i;
+    }
+    return array;
+}

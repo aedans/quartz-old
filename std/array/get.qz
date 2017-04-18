@@ -1,0 +1,3 @@
+fn <T> get(array: Array<T>, i: int): T {
+    return %%array.content[i]%%;
+}

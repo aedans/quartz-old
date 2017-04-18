@@ -17,14 +17,17 @@ sealed class Library(val name: String) {
         return toString(0)
     }
 
-    class LibraryPackage(name: String, val subLibraries: Map<String, Library>) : Library(name) {
+    class LibraryPackage(name: String, val file: File, val subLibraries: Map<String, Library>) : Library(name) {
         override fun get(path: List<String>): File {
-            return subLibraries[path.first()]?.get(path.drop(1))
-                    ?: throw QuartzException("Could not find package $path in $name")
+            if (path.isNotEmpty())
+                return subLibraries[path.first()]?.get(path.drop(1))
+                        ?: throw QuartzException("Could not find package $path in $name")
+            else
+                return file
         }
 
         operator fun plus(library: Library): LibraryPackage {
-            return LibraryPackage(name, subLibraries + (library.name to library))
+            return LibraryPackage(name, file, subLibraries + (library.name to library))
         }
 
         override fun toString(depth: Int): String {
@@ -51,12 +54,12 @@ sealed class Library(val name: String) {
             if (!file.isDirectory)
                 throw QuartzException("Could not find ${file.absolutePath}")
 
-            return LibraryPackage(file.name, file.listFiles().map { createLocal(it) }.map { it.name to it }.toMap())
+            return LibraryPackage(file.name, file, file.listFiles().map { createLocal(it) }.map { it.name to it }.toMap())
         }
 
         private fun createLocal(file: File): Library {
             if (file.isDirectory) {
-                return LibraryPackage(file.name, file.listFiles().map { createLocal(it) }.map { it.name to it }.toMap())
+                return LibraryPackage(file.name, file, file.listFiles().map { createLocal(it) }.map { it.name to it }.toMap())
             } else {
                 return LibraryFile(file.nameWithoutExtension, file)
             }
