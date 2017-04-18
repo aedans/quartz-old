@@ -183,6 +183,7 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
             throw QuartzException("Incorrect number of arguments for $this")
 
         val expressions = args.map { it.verify(symbolTable) }
+
         val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
             templates
         else
@@ -214,7 +215,7 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
 private fun MemberAccess.verify(symbolTable: SymbolTable): MemberAccess {
     val newExpression = expression.verify(symbolTable)
     val owner = newExpression.type.asStruct()
-            ?: throw QuartzException("${newExpression.type} is not a struct")
+            ?: throw QuartzException("${newExpression.type.asStruct()} is not a struct")
     val memberType = owner.members[name]?.type
             ?: throw QuartzException("Unknown member $owner.$type")
 

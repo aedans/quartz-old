@@ -7,6 +7,7 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.statement.VariableDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
+import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
 /**
@@ -23,13 +24,18 @@ fun Program.generateSymbolTable(): SymbolTable {
 }
 
 fun FunctionDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
-    val localSymbolTable = symbolTable.localSymbolTable()
-    this.function.templates.forEach { localSymbolTable.addType(it.string, it) }
+    val localSymbolTable = this.function.localSymbolTable(symbolTable.localSymbolTable())
     this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
     return localSymbolTable
 }
 
 fun StructDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
+    val localSymbolTable = symbolTable.localSymbolTable()
+    this.templates.forEach { localSymbolTable.addType(it.string, it) }
+    return localSymbolTable
+}
+
+fun Function.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
     this.templates.forEach { localSymbolTable.addType(it.string, it) }
     return localSymbolTable

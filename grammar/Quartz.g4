@@ -20,7 +20,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' ('<' identifierList '>')? (receiver='.')?  identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    : 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     | 'extern' signatureDefinition
     ;
 
@@ -83,13 +83,13 @@ packageList
 
 statement
     : inlineC semi?
-    | returnStatement semi
-    | varDeclaration semi
+    | returnStatement semi?
+    | varDeclaration semi?
     | ifStatement semi?
     | whileLoop semi?
     | delete semi?
     | typeswitch semi?
-    | expression semi
+    | expression semi?
     ;
 
 varDeclaration
@@ -160,6 +160,7 @@ postfixExpression
 
 atomicExpression
     : '(' expression ')'
+    | lambda
     | ifExpression
     | sizeof
     | identifier
@@ -219,6 +220,10 @@ postfixCall
 
 memberAccess
     : '.' identifier
+    ;
+
+lambda
+    : 'fn' '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     ;
 
 ifExpression

@@ -15,12 +15,7 @@ class SymbolTable(val superTable: SymbolTable? = null) {
     }
 
     fun getVar(name: String): Type? {
-        val variable = variables[name]
-        if (variable != null) {
-            return variable
-        } else {
-            return superTable?.getVar(name)
-        }
+        return variables[name] ?: superTable?.getVar(name)
     }
 
     fun addType(name: String, type: Type) {
