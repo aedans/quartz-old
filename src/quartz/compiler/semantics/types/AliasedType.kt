@@ -16,6 +16,10 @@ class AliasedType(string: String, val type: Type, val external: Boolean) : Type(
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type == this.type || type is AliasedType && type.string == this.string || Type.isMutualInstance(type, this.type)
+        return type == this.type
+                || this.type.isInstance(type)
+                || type.isInstance(this.type)
+                || type is AliasedType && type.string == this.string
+                || type is AliasedType && this.type.isInstance(type.type)
     }
 }

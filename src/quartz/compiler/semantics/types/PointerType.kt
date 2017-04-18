@@ -12,7 +12,7 @@ data class PointerType(val type: Type) : Type("$type*", "${type.descriptiveStrin
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type is PointerType && (type.type == type.type || type.type == Primitives.void)
+        return type is PointerType && (this.type == type.type || type.type == Primitives.void)
     }
 
     override fun toString(): String {

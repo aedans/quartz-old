@@ -247,7 +247,8 @@ private fun Expression.verifyAs(type: Type?): Expression {
     return when {
         this.type == null -> this.withType(type)
         this.type == type || type == null -> this
-        Type.isMutualInstance(this.type!!, type) -> Cast(this, type)
+        this.type?.isInstance(type) ?: false -> Cast(this, type)
+        type is AliasedType -> this.verifyAs(type.type)
         else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
     }
 }
@@ -256,7 +257,8 @@ private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
         this == type || type == null -> this
-        Type.isMutualInstance(this, type) -> this
+        this.isInstance(type) -> this
+        type is AliasedType -> this.verifyAs(type.type)
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }

@@ -24,10 +24,4 @@ abstract class Type(val string: String, val descriptiveString: String) {
     override fun toString(): String {
         return string
     }
-
-    companion object {
-        fun isMutualInstance(t1: Type, t2: Type): Boolean {
-            return t1.isInstance(t2) || t2.isInstance(t1)
-        }
-    }
 }
