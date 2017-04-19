@@ -28,10 +28,10 @@ object Compiler {
                 },
                 analyzer: Program.() -> Program = {
                     this
-                            .resolveLambdas()
                             .generateConstructors()
                             .resolveTypes()
                             .verifyTypes()
+                            .resolveLambdas()
                             .simplify()
                             .generateDestructors()
                             .resolveFunctionTemplates()

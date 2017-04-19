@@ -1,13 +1,13 @@
 - Allow importing of functions, structs, etc.
 - Improve lambdas
     - Add control flow utilities
-    - Add implicit return types
     - Allow nullable function parameters
 - Add Interfaces
     - Improve .mapX functions
     - Allow passing templated functions to functions
 - Add collection literals, ranges, etc.
     - Add _default.qz
+- Add implicit return types for single expression functions
 - Add ranges
 - Add function templates
 - Improve error handling

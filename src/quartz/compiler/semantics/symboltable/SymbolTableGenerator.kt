@@ -4,6 +4,7 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
+import quartz.compiler.tree.function.expression.Lambda
 import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.tree.function.statement.VariableDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
@@ -24,18 +25,24 @@ fun Program.generateSymbolTable(): SymbolTable {
 }
 
 fun FunctionDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
-    val localSymbolTable = this.function.localSymbolTable(symbolTable.localSymbolTable())
+    val localSymbolTable = function.localSymbolTable(symbolTable.localSymbolTable())
     this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
     return localSymbolTable
 }
 
-fun StructDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
+fun Lambda.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
+    val localSymbolTable = function.localSymbolTable(symbolTable.localSymbolTable())
+    this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
+    return localSymbolTable
+}
+
+fun Function.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
     this.templates.forEach { localSymbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 
-fun Function.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
+fun StructDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
     this.templates.forEach { localSymbolTable.addType(it.string, it) }
     return localSymbolTable

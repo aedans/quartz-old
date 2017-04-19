@@ -16,7 +16,7 @@ import quartz.compiler.tree.misc.InlineC
 
 fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclaration) {
     declare("fnPrototype_${functionDeclaration.name}") {
-        type(functionDeclaration.function.returnType)
+        type(functionDeclaration.function.returnType!!)
         name(functionDeclaration.name)
         args(functionDeclaration.argsWithNames)
         string(";")
@@ -27,7 +27,7 @@ fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclarati
 fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
     margin {
         declare("fn_${functionDeclaration.name}") {
-            type(functionDeclaration.function.returnType)
+            type(functionDeclaration.function.returnType!!)
             name(functionDeclaration.name)
             args(functionDeclaration.argsWithNames)
             block(functionDeclaration.block)

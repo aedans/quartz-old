@@ -1,5 +1,6 @@
 package quartz.compiler.tree.function.expression
 
+import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.Statement
@@ -16,14 +17,21 @@ class Lambda(
         override val type: FunctionType,
         val block: Block
 ) : Expression {
+    val function get() = type.function
     override val isLValue = false
+
+    val argsWithNames by lazy {
+        if (argNames.size != function.args.size)
+            throw QuartzException("$argNames.size != ${function.args}.size")
+        argNames.zip(function.args)
+    }
 
     override fun getExpressions(): List<Expression> {
         return block.getExpressions()
     }
 
     override fun getStatements(): List<Statement> {
-        return block.getStatements()
+        return emptyList()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Expression {

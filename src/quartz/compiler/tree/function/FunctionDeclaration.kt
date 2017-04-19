@@ -26,6 +26,10 @@ open class FunctionDeclaration(
         return "$name$function\n${block.toString(1)}"
     }
 
+    fun getStatements(): List<Statement> {
+        return block.getStatements()
+    }
+
     fun mapStatements(function: (Statement) -> Statement): FunctionDeclaration {
         return FunctionDeclaration(name, argNames, this.function, block.mapStatements(function))
     }

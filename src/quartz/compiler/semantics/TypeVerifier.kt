@@ -26,9 +26,7 @@ fun Program.verifyTypes(): Program {
 }
 
 private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
-    val localSymbolTable = localSymbolTable(symbolTable)
-
-    return FunctionDeclaration(name, argNames, function, Block(block.statementList.map { it.verify(localSymbolTable) }))
+    return FunctionDeclaration(name, argNames, function, block.verify(localSymbolTable(symbolTable)))
 }
 
 private fun Statement.verify(symbolTable: SymbolTable): Statement {
@@ -44,6 +42,7 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
         is Delete -> verify(symbolTable)
         is TypeSwitch -> verify(symbolTable)
         is FunctionCall -> verify(symbolTable)
+        is Block -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
@@ -64,11 +63,10 @@ private fun ReturnStatement.verify(symbolTable: SymbolTable): ReturnStatement {
 }
 
 private fun IfStatement.verify(symbolTable: SymbolTable): IfStatement {
-    val localSymbolTable = symbolTable.localSymbolTable()
     return IfStatement(
             test.verify(symbolTable).verifyAs(Primitives.int),
-            trueBlock.mapStatements { it.verify(localSymbolTable) },
-            falseBlock.mapStatements { it.verify(localSymbolTable) }
+            trueBlock.verify(symbolTable.localSymbolTable()),
+            falseBlock.verify(symbolTable.localSymbolTable())
     )
 }
 
@@ -76,7 +74,7 @@ private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
     val localSymbolTable = symbolTable.localSymbolTable()
     return WhileLoop(
             test.verify(symbolTable),
-            block.mapStatements { it.verify(localSymbolTable) }
+            block.verify(localSymbolTable)
     )
 }
 
@@ -89,13 +87,9 @@ private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
     return TypeSwitch(
             newIdentifier,
             branches.mapValues {
-                val localSymbolTable = it.localSymbolTable(symbolTable, identifier.name)
-                it.value.mapStatements { it.verify(localSymbolTable) }
+                it.value.verify(it.localSymbolTable(symbolTable, identifier.name))
             },
-            elseBranch.let {
-                val localSymbolTable = symbolTable.localSymbolTable()
-                it.mapStatements { it.verify(localSymbolTable) }
-            }
+            elseBranch.verify(symbolTable.localSymbolTable())
     )
 }
 
@@ -113,16 +107,18 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is FunctionCall -> verify(symbolTable)
         is MemberAccess -> verify(symbolTable)
         is IfExpression -> verify(symbolTable)
+        is Lambda -> verify(symbolTable)
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
 
 private fun Identifier.verify(symbolTable: SymbolTable): Identifier {
     val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
-    return Identifier(name,
+    return Identifier(
+            name,
             when {
                 type == null -> expectedType
-                type != expectedType -> throw QuartzException("Expected $expectedType, found $type ($this)")
+                !type.isInstance(expectedType) -> throw QuartzException("Expected $expectedType, found $type ($this)")
                 else -> type
             }
     )
@@ -207,6 +203,10 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
     }
 }
 
+private fun Block.verify(symbolTable: SymbolTable): Block {
+    return Block(statementList.map { it.verify(symbolTable) })
+}
+
 private fun MemberAccess.verify(symbolTable: SymbolTable): MemberAccess {
     val newExpression = expression.verify(symbolTable)
     val owner = newExpression.type.asStruct()
@@ -232,6 +232,16 @@ private fun IfExpression.verify(symbolTable: SymbolTable): IfExpression {
             newIfTrue.verifyAs(newType).verifyAs(ifFalse.type),
             newIfFalse.verifyAs(newType).verifyAs(ifTrue.type),
             newType
+    )
+}
+
+private fun Lambda.verify(symbolTable: SymbolTable): Lambda {
+    val localSymbolTable = localSymbolTable(symbolTable)
+    val newBlock = block.verify(localSymbolTable)
+    return Lambda(
+            argNames,
+            FunctionType(function.copy(returnType = newBlock.verifyReturnType(function.returnType))),
+            newBlock
     )
 }
 

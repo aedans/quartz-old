@@ -2,7 +2,7 @@ import std.c.stdio
 import std.array
 
 fn main(): int {
-    11.fillArray(fn (i: int): Array<int> = i.fillArray(fn (i: int): int = i))
+    11.fillArray(fn (i: int) = i.fillArray(fn (i: int) = i))
         .forEach(fn (array: Array<int>) array.forEach(fn (i: int) "%d ".printf(i)));
     return 0;
 }

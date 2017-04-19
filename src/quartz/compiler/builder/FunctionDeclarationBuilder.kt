@@ -204,7 +204,7 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
             FunctionType(Function(
                     fnArgumentList().fnArgument().map { it.type().toType() },
                     emptyList(),
-                    returnType?.toType() ?: Primitives.void,
+                    returnType?.toType(),
                     false
             )),
             fnBlock().toNode()

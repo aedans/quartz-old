@@ -32,7 +32,7 @@ private fun Function.description(): String {
             string += "process"
         }
         args.isEmpty() && returnType != Primitives.void -> {
-            string += returnType.descriptiveString + "_supplier"
+            string += returnType?.descriptiveString + "_supplier"
         }
         returnType == Primitives.void -> {
             args.forEach { string += it.descriptiveString + '_' }
@@ -41,7 +41,7 @@ private fun Function.description(): String {
         else -> {
             args.forEach { string += it.descriptiveString + '_' }
             string += "to_"
-            string += returnType.descriptiveString
+            string += returnType?.descriptiveString
         }
     }
     if (vararg)

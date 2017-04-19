@@ -34,7 +34,7 @@ private fun inferTemplates(first: Type, second: Type, templateMap: MutableMap<Te
                         .forEach { inferTemplates(it.first, it.second, templateMap) }
             }
             is FunctionType -> {
-                inferTemplates((first as FunctionType).function.returnType, second.function.returnType, templateMap)
+                inferTemplates((first as FunctionType).function.returnType!!, second.function.returnType!!, templateMap)
                 first.function.args.zip(second.function.args).forEach { inferTemplates(it.first, it.second, templateMap) }
             }
             else -> throw QuartzException("Unrecognized type $second")

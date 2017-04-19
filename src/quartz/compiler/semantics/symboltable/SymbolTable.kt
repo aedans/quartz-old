@@ -31,9 +31,6 @@ class SymbolTable(val superTable: SymbolTable? = null) {
     }
 
     override fun toString(): String {
-        var string = ""
-        variables.forEach { key, value -> string += "$key = $value\n" }
-        types.forEach { key, value -> string += "$key = $value\n" }
-        return string
+        return "SymbolTable($types, $variables, $superTable)"
     }
 }
