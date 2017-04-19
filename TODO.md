@@ -1,5 +1,4 @@
 - Allow importing of functions, structs, etc.
-- Add collection literals
 - Improve lambdas
     - Add control flow utilities
     - Add implicit return types
@@ -7,7 +6,11 @@
 - Add Interfaces
     - Improve .mapX functions
     - Allow passing templated functions to functions
+- Add collection literals, ranges, etc.
+    - Add _default.qz
+- Add ranges
 - Add function templates
+- Improve error handling
 - Improve standard library
 - Add for loops
 - Improve generator
