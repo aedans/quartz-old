@@ -1,0 +1,14 @@
+- Allow importing of functions, structs, etc.
+- Add collection literals
+- Improve lambdas
+    - Add control flow utilities
+    - Add implicit return types
+    - Allow nullable function parameters
+- Add Interfaces
+    - Improve .mapX functions
+    - Allow passing templated functions to functions
+- Add function templates
+- Improve standard library
+- Add for loops
+- Improve generator
+- Add optimizer
