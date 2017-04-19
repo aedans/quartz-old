@@ -14,8 +14,8 @@ struct __stdlib_ldiv_t {
     val rem: long
 }
 
-extern typealias size_t = long
-extern typealias wchar_t = long
+extern typealias size_t = ulong
+extern typealias wchar_t = uint
 extern typealias div_t = __stdlib_div_t
 extern typealias ldiv_t = __stdlib_ldiv_t
 

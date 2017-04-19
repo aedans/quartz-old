@@ -2,7 +2,7 @@
 #include <stdlib.h>
 %%
 
-extern typealias size_t = long
+extern typealias size_t = ulong
 
 extern fn calloc(size_t, size_t): void*
 extern fn malloc(size_t): void*

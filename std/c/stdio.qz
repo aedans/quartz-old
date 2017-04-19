@@ -4,8 +4,8 @@
 #include <stdio.h>
 %%
 
-extern typealias size_t = long
-extern typealias fpos_t = long
+extern typealias size_t = ulong
+extern typealias fpos_t = ulong
 extern typealias FILE = void
 
 // TODO get__IOFBF

@@ -16,9 +16,9 @@ extern struct tm {
     val tm_isds: int
 };
 
-extern typealias size_t = long
-extern typealias clock_t = long
-extern typealias time_t = long
+extern typealias size_t = ulong
+extern typealias clock_t = ulong
+extern typealias time_t = ulong
 
 fn get_CLOCKS_PER_SEC(): long = %%CLOCKS_PER_SEC%%
 
