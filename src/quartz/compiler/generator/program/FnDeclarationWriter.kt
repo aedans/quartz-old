@@ -37,7 +37,7 @@ fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
 
 fun ProgramOutputStream.block(block: Block) {
     braces {
-        block.statements.forEach {
+        block.statementList.forEach {
             newline()
             statement(it)
             string(";")
@@ -79,7 +79,7 @@ fun ProgramOutputStream.ifStatement(ifStatement: IfStatement) {
     name("if")
     parentheses { expression(ifStatement.test) }
     block(ifStatement.trueBlock)
-    if (!ifStatement.falseBlock.statements.isEmpty()) {
+    if (!ifStatement.falseBlock.statementList.isEmpty()) {
         name("else")
         block(ifStatement.falseBlock)
     }

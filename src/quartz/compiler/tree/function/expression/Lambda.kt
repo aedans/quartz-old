@@ -2,6 +2,7 @@ package quartz.compiler.tree.function.expression
 
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Type
 import quartz.compiler.util.times
@@ -17,16 +18,20 @@ class Lambda(
 ) : Expression {
     override val isLValue = false
 
-    override fun withType(type: Type?): Expression {
-        return Lambda(argNames, type as FunctionType, block)
-    }
-
     override fun getExpressions(): List<Expression> {
         return block.getExpressions()
     }
 
+    override fun getStatements(): List<Statement> {
+        return block.getStatements()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return Lambda(argNames, type, block.mapExpressions(function))
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Expression {
+        return Lambda(argNames, type, block.mapStatements(function))
     }
 
     override fun mapTypes(function: (Type?) -> Type?): Expression {
@@ -35,6 +40,10 @@ class Lambda(
                 function(type.mapTypes(function)) as FunctionType,
                 block.mapTypes(function)
         )
+    }
+
+    override fun withType(type: Type?): Expression {
+        return Lambda(argNames, type as FunctionType, block)
     }
 
     override fun toString(): String {

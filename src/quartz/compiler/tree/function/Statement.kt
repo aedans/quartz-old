@@ -12,9 +12,11 @@ interface Statement {
         return ("|   " * i) + toString()
     }
 
-    fun mapStatements(function: (Statement) -> Statement): Statement
+    fun getStatements(): List<Statement>
 
     fun getExpressions(): List<Expression>
+
+    fun mapStatements(function: (Statement) -> Statement): Statement
 
     fun mapExpressions(function: (Expression) -> Expression): Statement
 

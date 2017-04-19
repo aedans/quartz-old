@@ -15,11 +15,15 @@ class Identifier(val name: String, override val type: Type?) : Expression {
         return listOf(this)
     }
 
-    override fun mapStatements(function: (Statement) -> Statement): Identifier {
-        return this
+    override fun getStatements(): List<Statement> {
+        return emptyList()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Identifier {
+        return this
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Identifier {
         return this
     }
 

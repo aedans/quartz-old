@@ -1,6 +1,7 @@
 package quartz.compiler.tree.function.expression
 
 import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.util.Type
 
 /**
@@ -11,11 +12,19 @@ class PostfixUnaryOperator(val expression: Expression, val id: ID, override val 
     override val isLValue = false
 
     override fun getExpressions(): List<Expression> {
-        return listOf(this) + expression.getExpressions()
+        return expression.getExpressions() + this
+    }
+
+    override fun getStatements(): List<Statement> {
+        return expression.getStatements()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): PostfixUnaryOperator {
         return PostfixUnaryOperator(function(expression.mapExpressions(function)), id, type)
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Expression {
+        return PostfixUnaryOperator(expression.mapStatements(function), id, type)
     }
 
     override fun mapTypes(function: (Type?) -> Type?): PostfixUnaryOperator {

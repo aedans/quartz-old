@@ -24,8 +24,8 @@ private fun FunctionDeclaration.generateDestructors(destructorDeclarations: Map<
 }
 
 private fun Block.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): Block {
-    val variables = statements.filterIsInstance(VariableDeclaration::class.java).filter { it.type.asStruct() != null }
-    val newStatements = statements.map { it.generateDestructors(destructorDeclarations) }.toMutableList()
+    val variables = statementList.filterIsInstance(VariableDeclaration::class.java).filter { it.type.asStruct() != null }
+    val newStatements = statementList.map { it.generateDestructors(destructorDeclarations) }.toMutableList()
     variables.forEach { it.generateDestructor(newStatements, destructorDeclarations) }
     return Block(newStatements)
 }

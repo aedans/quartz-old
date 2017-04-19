@@ -20,6 +20,19 @@ class FunctionCall(
         return expression.getExpressions() + args.map { it.getExpressions() }.flatten()
     }
 
+    override fun getStatements(): List<Statement> {
+        return expression.getStatements() + args.map { it.getStatements() }.flatten() + this
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Expression {
+        return FunctionCall(
+                expression.mapStatements(function),
+                templates,
+                args.map { it.mapStatements(function) },
+                type
+        )
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
         return function(FunctionCall(
                 function(expression.mapExpressions(function)),

@@ -4,6 +4,7 @@ import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.util.Type
 
 /**
@@ -18,7 +19,15 @@ class StringLiteral(val string: String) : Expression {
         return listOf(this)
     }
 
+    override fun getStatements(): List<Statement> {
+        return emptyList()
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
+        return this
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Expression {
         return this
     }
 
@@ -27,7 +36,7 @@ class StringLiteral(val string: String) : Expression {
     }
 
     override fun withType(type: Type?): Expression {
-        if (type is PointerType && type.type == Primitives.char)
+        if (type is PointerType && type.type.isInstance(Primitives.char))
             return this
         else
             throw QuartzException("Could not cast $this to $type")

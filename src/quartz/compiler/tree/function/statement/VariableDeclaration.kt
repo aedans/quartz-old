@@ -9,12 +9,16 @@ import quartz.compiler.util.Type
  */
 
 class VariableDeclaration(val name: String, val expression: Expression?, val type: Type?, val mutable: Boolean) : Statement {
-    override fun mapStatements(function: (Statement) -> Statement): Statement {
-        return this
-    }
-
     override fun getExpressions(): List<Expression> {
         return expression?.getExpressions() ?: emptyList()
+    }
+
+    override fun getStatements(): List<Statement> {
+        return expression?.getStatements() ?: emptyList()
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Statement {
+        return this
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Statement {

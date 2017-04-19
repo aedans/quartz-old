@@ -10,12 +10,16 @@ import quartz.compiler.util.times
  */
 
 class WhileLoop(val test: Expression, val block: Block) : Statement {
-    override fun mapStatements(function: (Statement) -> Statement): Statement {
-        return WhileLoop(test, block.mapStatements(function))
-    }
-
     override fun getExpressions(): List<Expression> {
         return test.getExpressions() + block.getExpressions()
+    }
+
+    override fun getStatements(): List<Statement> {
+        return test.getStatements() + block.getStatements() + this
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Statement {
+        return WhileLoop(test, block.mapStatements(function))
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Statement {

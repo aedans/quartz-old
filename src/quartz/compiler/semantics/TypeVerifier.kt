@@ -28,7 +28,7 @@ fun Program.verifyTypes(): Program {
 private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
 
-    return FunctionDeclaration(name, argNames, function, Block(block.statements.map { it.verify(localSymbolTable) }))
+    return FunctionDeclaration(name, argNames, function, Block(block.statementList.map { it.verify(localSymbolTable) }))
 }
 
 private fun Statement.verify(symbolTable: SymbolTable): Statement {

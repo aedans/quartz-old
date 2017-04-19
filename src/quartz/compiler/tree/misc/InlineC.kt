@@ -16,7 +16,15 @@ class InlineC(val src: String, override val type: Type? = null) : GlobalDeclarat
         return listOf(this)
     }
 
+    override fun getStatements(): List<Statement> {
+        return listOf(this)
+    }
+
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
+        return this
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Expression {
         return this
     }
 

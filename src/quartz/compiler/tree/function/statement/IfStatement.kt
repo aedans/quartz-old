@@ -9,21 +9,25 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-open class IfStatement(
+class IfStatement(
         val test: Expression,
         val trueBlock: Block,
         val falseBlock: Block
 ) : Statement {
+    override fun getExpressions(): List<Expression> {
+        return test.getExpressions() + trueBlock.getExpressions() + falseBlock.getExpressions()
+    }
+
+    override fun getStatements(): List<Statement> {
+        return test.getStatements() + trueBlock.getStatements() + falseBlock.getStatements() + this
+    }
+
     override fun mapStatements(function: (Statement) -> Statement): Statement {
         return IfStatement(
                 test,
                 trueBlock.mapStatements(function),
                 falseBlock.mapStatements(function)
         )
-    }
-
-    override fun getExpressions(): List<Expression> {
-        return test.getExpressions() + trueBlock.getExpressions() + falseBlock.getExpressions()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Statement {
@@ -48,6 +52,6 @@ open class IfStatement(
 
     override fun toString(i: Int): String {
         return "${"|   " * i}$this\n${trueBlock.toString(i+1)}" +
-                "${("|   " * i)}else${if (falseBlock.statements.isEmpty()) "" else "\n${falseBlock.toString(i+1)}"}"
+                "${("|   " * i)}else${if (falseBlock.statementList.isEmpty()) "" else "\n${falseBlock.toString(i+1)}"}"
     }
 }

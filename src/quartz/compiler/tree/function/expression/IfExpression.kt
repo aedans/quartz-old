@@ -1,6 +1,7 @@
 package quartz.compiler.tree.function.expression
 
 import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.Statement
 import quartz.compiler.util.Type
 
 /**
@@ -11,7 +12,11 @@ class IfExpression(val test: Expression, val ifTrue: Expression, val ifFalse: Ex
     override val isLValue = false
 
     override fun getExpressions(): List<Expression> {
-        return listOf(this) + test.getExpressions() + ifTrue.getExpressions() + ifFalse.getExpressions()
+        return test.getExpressions() + ifTrue.getExpressions() + ifFalse.getExpressions() + this
+    }
+
+    override fun getStatements(): List<Statement> {
+        return test.getStatements() + ifTrue.getStatements() + ifFalse.getStatements()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
@@ -19,6 +24,15 @@ class IfExpression(val test: Expression, val ifTrue: Expression, val ifFalse: Ex
                 function(test.mapExpressions(function)),
                 function(ifTrue.mapExpressions(function)),
                 function(ifFalse.mapExpressions(function)),
+                type
+        )
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Expression {
+        return IfExpression(
+                test.mapStatements(function),
+                ifTrue.mapStatements(function),
+                ifFalse.mapStatements(function),
                 type
         )
     }

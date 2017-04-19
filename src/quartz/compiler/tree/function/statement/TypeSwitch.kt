@@ -11,18 +11,22 @@ import quartz.compiler.util.times
  */
 
 class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val elseBranch: Block) : Statement {
+    override fun getExpressions(): List<Expression> {
+        return (branches.map { it.value.getExpressions() }).flatten() +
+                elseBranch.getExpressions() +
+                identifier.getExpressions()
+    }
+
+    override fun getStatements(): List<Statement> {
+        return branches.map { it.value.getStatements() }.flatten() + elseBranch.getStatements()
+    }
+
     override fun mapStatements(function: (Statement) -> Statement): TypeSwitch {
         return TypeSwitch(
                 identifier.mapStatements(function),
                 branches.mapValues { it.value.mapStatements(function) },
                 elseBranch.mapStatements(function)
         )
-    }
-
-    override fun getExpressions(): List<Expression> {
-        return (branches.map { it.value.getExpressions() }).flatten() +
-                elseBranch.getExpressions() +
-                identifier.getExpressions()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): TypeSwitch {
@@ -50,7 +54,7 @@ class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val
         branches.forEach {
             s += "${"|   " * i}${it.key}\n${it.value.toString(i + 1)}"
         }
-        s += "${"|   " * i}else${if (elseBranch.statements.isEmpty()) "" else elseBranch.toString(i + 1)}"
+        s += "${"|   " * i}else${if (elseBranch.statementList.isEmpty()) "" else elseBranch.toString(i + 1)}"
         return s
     }
 }

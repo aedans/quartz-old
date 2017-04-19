@@ -9,12 +9,16 @@ import quartz.compiler.util.Type
  */
 
 class ReturnStatement(val expression: Expression) : Statement {
-    override fun mapStatements(function: (Statement) -> Statement): Statement {
-        return this
-    }
-
     override fun getExpressions(): List<Expression> {
         return expression.getExpressions()
+    }
+
+    override fun getStatements(): List<Statement> {
+        return expression.getStatements() + this
+    }
+
+    override fun mapStatements(function: (Statement) -> Statement): Statement {
+        return this
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Statement {

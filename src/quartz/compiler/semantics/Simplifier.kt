@@ -20,7 +20,7 @@ fun Program.simplify(): Program {
 private fun FunctionDeclaration.simplify(): FunctionDeclaration {
     val newStatements = mutableListOf<Statement>()
     val nameSupplier = (0..Integer.MAX_VALUE).iterator()
-    block.statements.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }
+    block.statementList.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }
     return FunctionDeclaration(name, argNames, function, Block(newStatements))
 }
 
@@ -54,8 +54,8 @@ private fun ReturnStatement.simplify(newStatements: MutableList<Statement>, name
 private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): IfStatement {
     val newTrueStatements = mutableListOf<Statement>()
     val newFalseStatements = mutableListOf<Statement>()
-    trueBlock.statements.forEach { newTrueStatements.add(it.simplify(newTrueStatements, nameSupplier)) }
-    falseBlock.statements.forEach { newFalseStatements.add(it.simplify(newFalseStatements, nameSupplier)) }
+    trueBlock.statementList.forEach { newTrueStatements.add(it.simplify(newTrueStatements, nameSupplier)) }
+    falseBlock.statementList.forEach { newFalseStatements.add(it.simplify(newFalseStatements, nameSupplier)) }
     return IfStatement(
             test.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
             Block(newTrueStatements),
@@ -65,7 +65,7 @@ private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupp
 
 private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): WhileLoop {
     val newLoopStatements = mutableListOf<Statement>()
-    block.statements.forEach { newLoopStatements.add(it.simplify(newLoopStatements, nameSupplier)) }
+    block.statementList.forEach { newLoopStatements.add(it.simplify(newLoopStatements, nameSupplier)) }
     val testIdentifier = test.toUniqueVariable(newStatements, nameSupplier)
     newLoopStatements.add(Assignment(testIdentifier, test, Assignment.ID.EQ, testIdentifier.type))
     return WhileLoop(
@@ -78,17 +78,17 @@ private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier:
     return Delete(expression.toUniqueVariable(newStatements, nameSupplier))
 }
 
-private fun TypeSwitch.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
+private fun TypeSwitch.simplify(@Suppress("UNUSED_PARAMETER") newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
     return TypeSwitch(
             identifier,
             branches.mapValues {
                 val newBranchStatements = mutableListOf<Statement>()
-                it.value.statements.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
+                it.value.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
                 Block(newBranchStatements)
             },
             {
                 val newBranchStatements = mutableListOf<Statement>()
-                elseBranch.statements.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
+                elseBranch.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
                 Block(newBranchStatements)
             }()
     )
