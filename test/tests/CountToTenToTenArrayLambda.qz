@@ -3,6 +3,6 @@ import std.array
 
 fn main(): int {
     11.fillArray(fn (i: int) = i.fillArray(fn (i: int) = i))
-        .forEach(fn (array: Array<int>) array.forEach(fn (i: int) "%d ".printf(i)));
+        .forEach({ array: Array<int> -> array.forEach({ i: int -> "%d ".printf(i) }) });
     return 0;
 }
