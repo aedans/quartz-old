@@ -240,7 +240,7 @@ private fun Lambda.verify(symbolTable: SymbolTable): Lambda {
     val newBlock = block.verify(localSymbolTable)
     return Lambda(
             argNames,
-            FunctionType(function.copy(returnType = newBlock.verifyReturnType(function.returnType))),
+            function.copy(returnType = newBlock.verifyReturnType(function.returnType)),
             newBlock
     )
 }

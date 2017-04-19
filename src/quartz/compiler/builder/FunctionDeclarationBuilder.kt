@@ -2,7 +2,6 @@ package quartz.compiler.builder
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.GlobalDeclaration
@@ -202,22 +201,22 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
     return when {
         fnBlock() != null -> Lambda(
                 fnArgumentList().fnArgument().map { it.identifier().text },
-                FunctionType(Function(
+                Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
                         emptyList(),
                         returnType?.toType(),
                         false
-                )),
+                ),
                 fnBlock().toNode()
         )
         fnArgumentList() != null -> Lambda(
                 fnArgumentList().fnArgument().map { it.identifier().text },
-                FunctionType(Function(
+                Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
                         emptyList(),
                         null,
                         false
-                )),
+                ),
                 Block(statement().map { it.toNode() })
         )
         else -> throw QuartzException("Error translating $this")
