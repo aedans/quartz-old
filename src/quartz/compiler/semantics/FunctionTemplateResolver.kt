@@ -19,8 +19,7 @@ import quartz.compiler.util.Type
 fun Program.resolveFunctionTemplates(): Program {
     val newFunctionDeclarations = mutableMapOf<String, FunctionDeclaration>()
     functionDeclarations.filterValues { it.function.templates.isEmpty() }.forEach {
-        it.value.resolveFunctionTemplates(this, newFunctionDeclarations)
-                .also { newFunctionDeclarations.put(it.name, it) }
+        it.value.resolveFunctionTemplates(this, newFunctionDeclarations).also { newFunctionDeclarations.put(it.name, it) }
     }
     return Program(
             newFunctionDeclarations,
@@ -94,7 +93,7 @@ private fun resolveFunctionTemplates(
                         functionDeclaration.function.returnType,
                         functionDeclaration.function.vararg
                 ),
-                functionDeclaration.statements
+                functionDeclaration.block
         ).mapTypes { typeMap[it] ?: it })
         newFunctionDeclarations.put(newName, newFunctionDeclarations[newName]!!
                 .resolveFunctionTemplates(program, newFunctionDeclarations))

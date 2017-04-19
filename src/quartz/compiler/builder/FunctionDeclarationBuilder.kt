@@ -39,11 +39,7 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
                         returnType?.toType() ?: Primitives.void,
                         false
                 ),
-                if (fnBlock().expression() != null) {
-                    listOf(ReturnStatement(fnBlock().expression().toNode()))
-                } else {
-                    fnBlock().block().statement().map { it.toNode() }
-                }
+                fnBlock().toNode()
         )
     }
 }
@@ -78,13 +74,13 @@ fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
 fun QuartzParser.IfStatementContext.toNode(): IfStatement {
     return IfStatement(
             expression().toNode(),
-            trueBlock?.statement()?.map { it.toNode() } ?: listOf(),
-            falseBlock?.statement()?.map { it.toNode() } ?: listOf()
+            trueBlock?.toNode() ?: Block(emptyList()),
+            falseBlock?.toNode() ?: Block(emptyList())
     )
 }
 
 fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
-    return WhileLoop(expression().toNode(), block().statement()?.map { it.toNode() } ?: listOf())
+    return WhileLoop(expression().toNode(), block()?.toNode() ?: Block(emptyList()))
 }
 
 fun QuartzParser.DeleteContext.toNode(): Delete {
@@ -94,8 +90,8 @@ fun QuartzParser.DeleteContext.toNode(): Delete {
 fun QuartzParser.TypeswitchContext.toNode(): TypeSwitch {
     return TypeSwitch(
             identifier().toNode(),
-            typeswitchBranch().map { it.type().toType() to it.block().statement().map { it.toNode() } }.toMap(),
-            if (block() != null) block().statement().map { it.toNode() } else emptyList()
+            typeswitchBranch().map { it.type().toType() to it.block().toNode() }.toMap(),
+            block()?.toNode() ?: Block(emptyList())
     )
 }
 
@@ -211,11 +207,7 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
                     returnType?.toType() ?: Primitives.void,
                     false
             )),
-            if (fnBlock().expression() != null) {
-                listOf(ReturnStatement(fnBlock().expression().toNode()))
-            } else {
-                fnBlock().block().statement().map { it.toNode() }
-            }
+            fnBlock().toNode()
     )
 }
 

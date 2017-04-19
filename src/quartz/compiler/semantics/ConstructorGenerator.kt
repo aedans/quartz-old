@@ -4,6 +4,7 @@ import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.Identifier
+import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.tree.function.statement.ReturnStatement
 import quartz.compiler.tree.function.statement.VariableDeclaration
 import quartz.compiler.tree.misc.InlineC
@@ -38,5 +39,5 @@ private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
     statements.addAll(assignmentNodes)
     statements.add(returnNode)
 
-    return FunctionDeclaration(name, argsNames, Function(argTypes, templates, newType, false), statements)
+    return FunctionDeclaration(name, argsNames, Function(argTypes, templates, newType, false), Block(statements))
 }

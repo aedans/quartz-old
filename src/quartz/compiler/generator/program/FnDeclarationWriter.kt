@@ -30,14 +30,14 @@ fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
             type(functionDeclaration.function.returnType)
             name(functionDeclaration.name)
             args(functionDeclaration.argsWithNames)
-            block(functionDeclaration.statements)
+            block(functionDeclaration.block)
         }
     }
 }
 
-fun ProgramOutputStream.block(statements: List<Statement>) {
+fun ProgramOutputStream.block(block: Block) {
     braces {
-        statements.forEach {
+        block.statements.forEach {
             newline()
             statement(it)
             string(";")
@@ -56,6 +56,7 @@ fun ProgramOutputStream.statement(statement: Statement) {
         is WhileLoop -> whileLoop(statement)
         is FunctionCall -> fnCall(statement)
         is Assignment -> varAssignment(statement)
+        is Block -> block(statement)
         else -> throw Exception("Unrecognized statement $statement")
     }
 }
@@ -77,17 +78,17 @@ fun ProgramOutputStream.returnStatement(returnStatement: ReturnStatement) {
 fun ProgramOutputStream.ifStatement(ifStatement: IfStatement) {
     name("if")
     parentheses { expression(ifStatement.test) }
-    block(ifStatement.trueStatements)
-    if (!ifStatement.falseStatements.isEmpty()) {
+    block(ifStatement.trueBlock)
+    if (!ifStatement.falseBlock.statements.isEmpty()) {
         name("else")
-        block(ifStatement.falseStatements)
+        block(ifStatement.falseBlock)
     }
 }
 
 fun ProgramOutputStream.whileLoop(whileLoop: WhileLoop) {
     name("while")
     parentheses { expression(whileLoop.test) }
-    block(whileLoop.statements)
+    block(whileLoop.block)
 }
 
 fun ProgramOutputStream.expression(expression: Expression) {

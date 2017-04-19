@@ -28,12 +28,7 @@ fun Program.verifyTypes(): Program {
 private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     val localSymbolTable = localSymbolTable(symbolTable)
 
-    return FunctionDeclaration(
-            name,
-            argNames,
-            function,
-            statements.map { it.verify(localSymbolTable) }
-    )
+    return FunctionDeclaration(name, argNames, function, Block(block.statements.map { it.verify(localSymbolTable) }))
 }
 
 private fun Statement.verify(symbolTable: SymbolTable): Statement {
@@ -72,8 +67,8 @@ private fun IfStatement.verify(symbolTable: SymbolTable): IfStatement {
     val localSymbolTable = symbolTable.localSymbolTable()
     return IfStatement(
             test.verify(symbolTable).verifyAs(Primitives.int),
-            trueStatements.map { it.verify(localSymbolTable) },
-            falseStatements.map { it.verify(localSymbolTable) }
+            trueBlock.mapStatements { it.verify(localSymbolTable) },
+            falseBlock.mapStatements { it.verify(localSymbolTable) }
     )
 }
 
@@ -81,7 +76,7 @@ private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
     val localSymbolTable = symbolTable.localSymbolTable()
     return WhileLoop(
             test.verify(symbolTable),
-            statements.map { it.verify(localSymbolTable) }
+            block.mapStatements { it.verify(localSymbolTable) }
     )
 }
 
@@ -95,11 +90,11 @@ private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
             newIdentifier,
             branches.mapValues {
                 val localSymbolTable = it.localSymbolTable(symbolTable, identifier.name)
-                it.value.map { it.verify(localSymbolTable) }
+                it.value.mapStatements { it.verify(localSymbolTable) }
             },
-            elseBranch.map {
+            elseBranch.let {
                 val localSymbolTable = symbolTable.localSymbolTable()
-                it.verify(localSymbolTable)
+                it.mapStatements { it.verify(localSymbolTable) }
             }
     )
 }
@@ -109,6 +104,7 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is InlineC -> this
         is NumberLiteral -> this
         is StringLiteral -> this
+        is Sizeof -> this
         is Identifier -> verify(symbolTable)
         is PrefixUnaryOperator -> verify(symbolTable)
         is PostfixUnaryOperator -> verify(symbolTable)
@@ -117,7 +113,6 @@ private fun Expression.verify(symbolTable: SymbolTable): Expression {
         is FunctionCall -> verify(symbolTable)
         is MemberAccess -> verify(symbolTable)
         is IfExpression -> verify(symbolTable)
-        is Sizeof -> verify()
         else -> throw QuartzException("Unrecognized node $this")
     }
 }
@@ -238,10 +233,6 @@ private fun IfExpression.verify(symbolTable: SymbolTable): IfExpression {
             newIfFalse.verifyAs(newType).verifyAs(ifTrue.type),
             newType
     )
-}
-
-private fun Sizeof.verify(): Sizeof {
-    return this
 }
 
 private fun Expression.verifyAs(type: Type?): Expression {

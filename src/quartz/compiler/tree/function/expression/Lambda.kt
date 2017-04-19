@@ -2,8 +2,9 @@ package quartz.compiler.tree.function.expression
 
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.Statement
+import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Type
+import quartz.compiler.util.times
 
 /**
  * Created by Aedan Smith.
@@ -12,31 +13,35 @@ import quartz.compiler.util.Type
 class Lambda(
         val argNames: List<String>,
         override val type: FunctionType,
-        val statements: List<Statement>
+        val block: Block
 ) : Expression {
     override val isLValue = false
 
     override fun withType(type: Type?): Expression {
-        return Lambda(argNames, type as FunctionType, statements)
+        return Lambda(argNames, type as FunctionType, block)
     }
 
     override fun getExpressions(): List<Expression> {
-        return statements.map { it.getExpressions() }.flatten()
+        return block.getExpressions()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Expression {
-        return Lambda(argNames, type, statements.map { it.mapExpressions(function) })
+        return Lambda(argNames, type, block.mapExpressions(function))
     }
 
     override fun mapTypes(function: (Type?) -> Type?): Expression {
         return Lambda(
                 argNames,
                 function(type.mapTypes(function)) as FunctionType,
-                statements.map { it.mapTypes(function) }
+                block.mapTypes(function)
         )
     }
 
     override fun toString(): String {
-        return "${type.function} $statements"
+        return "${type.function} $block"
+    }
+
+    override fun toString(i: Int): String {
+        return "${"|   " * i}\n${block.toString(i+1)}"
     }
 }

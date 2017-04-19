@@ -11,36 +11,34 @@ import quartz.compiler.util.times
 
 open class IfStatement(
         val test: Expression,
-        val trueStatements: List<Statement>,
-        val falseStatements: List<Statement>
+        val trueBlock: Block,
+        val falseBlock: Block
 ) : Statement {
     override fun mapStatements(function: (Statement) -> Statement): Statement {
         return IfStatement(
                 test,
-                trueStatements.map { function(it.mapStatements(function)) },
-                falseStatements.map { function(it.mapStatements(function)) }
+                trueBlock.mapStatements(function),
+                falseBlock.mapStatements(function)
         )
     }
 
     override fun getExpressions(): List<Expression> {
-        return test.getExpressions() +
-                trueStatements.map { it.getExpressions() }.flatten() +
-                falseStatements.map { it.getExpressions() }.flatten()
+        return test.getExpressions() + trueBlock.getExpressions() + falseBlock.getExpressions()
     }
 
     override fun mapExpressions(function: (Expression) -> Expression): Statement {
         return IfStatement(
                 function(test.mapExpressions(function)),
-                trueStatements.map { it.mapExpressions(function) },
-                falseStatements.map { it.mapExpressions(function) }
+                trueBlock.mapExpressions(function),
+                falseBlock.mapExpressions(function)
         )
     }
 
     override fun mapTypes(function: (Type?) -> Type?): Statement {
         return IfStatement(
                 test.mapTypes(function),
-                trueStatements.map { it.mapTypes(function) },
-                falseStatements.map { it.mapTypes(function) }
+                trueBlock.mapTypes(function),
+                falseBlock.mapTypes(function)
         )
     }
 
@@ -49,16 +47,7 @@ open class IfStatement(
     }
 
     override fun toString(i: Int): String {
-        var s = ("|   " * i) + toString()
-        trueStatements.forEach {
-            s += '\n' + it.toString(i + 1)
-        }
-        if (!falseStatements.isEmpty()) {
-            s += '\n' + ("|   " * i) + "else"
-            falseStatements.forEach {
-                s += '\n' + it.toString(i + 1)
-            }
-        }
-        return s
+        return "${"|   " * i}$this\n${trueBlock.toString(i+1)}" +
+                "${("|   " * i)}else${if (falseBlock.statements.isEmpty()) "" else "\n${falseBlock.toString(i+1)}"}"
     }
 }

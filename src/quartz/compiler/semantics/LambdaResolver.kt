@@ -37,7 +37,7 @@ private fun Lambda.resolve(lambdas: MutableList<FunctionDeclaration>, nameSuppli
             name,
             argNames,
             type.function,
-            statements
+            block
     ).resolveLambdas(lambdas, nameSupplier))
     return Identifier(name, type)
 }

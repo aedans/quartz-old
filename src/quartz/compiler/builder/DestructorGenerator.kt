@@ -22,6 +22,6 @@ fun QuartzParser.DestructorDeclarationContext.toNode(): FunctionDeclaration {
                     Primitives.void,
                     false
             ),
-            fnBlock().block().statement().map { it.toNode() }
+            fnBlock().block().toNode()
     )
 }

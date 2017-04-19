@@ -20,14 +20,14 @@ fun Program.generateDestructors(): Program {
 }
 
 private fun FunctionDeclaration.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): FunctionDeclaration {
-    return FunctionDeclaration(name, argNames, function, statements.generateDestructors(destructorDeclarations))
+    return FunctionDeclaration(name, argNames, function, block.generateDestructors(destructorDeclarations))
 }
 
-private fun List<Statement>.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): List<Statement> {
-    val variables = filterIsInstance(VariableDeclaration::class.java).filter { it.type.asStruct() != null }
-    val statements = map { it.generateDestructors(destructorDeclarations) }.toMutableList()
-    variables.forEach { it.generateDestructor(statements, destructorDeclarations) }
-    return statements
+private fun Block.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): Block {
+    val variables = statements.filterIsInstance(VariableDeclaration::class.java).filter { it.type.asStruct() != null }
+    val newStatements = statements.map { it.generateDestructors(destructorDeclarations) }.toMutableList()
+    variables.forEach { it.generateDestructor(newStatements, destructorDeclarations) }
+    return Block(newStatements)
 }
 
 private fun Statement.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): Statement {
@@ -50,20 +50,20 @@ private fun Statement.generateDestructors(destructorDeclarations: Map<String, Fu
 private fun IfStatement.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): IfStatement {
     return IfStatement(
             test,
-            trueStatements.generateDestructors(destructorDeclarations),
-            falseStatements.generateDestructors(destructorDeclarations)
+            trueBlock.generateDestructors(destructorDeclarations),
+            falseBlock.generateDestructors(destructorDeclarations)
     )
 }
 
 private fun WhileLoop.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): WhileLoop {
-    return WhileLoop(test, statements.generateDestructors(destructorDeclarations))
+    return WhileLoop(test, block.generateDestructors(destructorDeclarations))
 }
 
 private fun TypeSwitch.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): TypeSwitch {
     return TypeSwitch(
             identifier,
             branches.mapValues { it.value.generateDestructors(destructorDeclarations) },
-            elseBranch.map { it.generateDestructors(destructorDeclarations) }
+            elseBranch.generateDestructors(destructorDeclarations)
     )
 }
 

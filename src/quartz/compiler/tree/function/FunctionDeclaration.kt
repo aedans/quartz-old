@@ -2,6 +2,7 @@ package quartz.compiler.tree.function
 
 import quartz.compiler.exceptions.QuartzException
 import quartz.compiler.tree.GlobalDeclaration
+import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
@@ -13,7 +14,7 @@ open class FunctionDeclaration(
         val name: String,
         val argNames: List<String>,
         val function: Function,
-        val statements: List<Statement>
+        val block: Block
 ) : GlobalDeclaration {
     val argsWithNames by lazy {
         if (argNames.size != function.args.size)
@@ -22,17 +23,15 @@ open class FunctionDeclaration(
     }
 
     override fun toString(): String {
-        var s = "$name$function"
-        statements.forEach { s += '\n' + it.toString(1) }
-        return s
+        return "$name$function\n${block.toString(1)}"
     }
 
     fun mapStatements(function: (Statement) -> Statement): FunctionDeclaration {
-        return FunctionDeclaration(name, argNames, this.function, statements.map { function(it.mapStatements(function)) })
+        return FunctionDeclaration(name, argNames, this.function, block.mapStatements(function))
     }
 
     fun mapExpressions(function: (Expression) -> Expression): FunctionDeclaration {
-        return mapStatements { it.mapExpressions(function) }
+        return FunctionDeclaration(name, argNames, this.function, block.mapExpressions(function))
     }
 
     fun mapTypes(function: (Type?) -> Type?): FunctionDeclaration {
@@ -40,7 +39,7 @@ open class FunctionDeclaration(
                 name,
                 argNames,
                 this.function.mapTypes(function),
-                statements.map { it.mapTypes(function) }
+                block.mapTypes(function)
         )
     }
 }
