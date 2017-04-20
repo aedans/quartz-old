@@ -3,6 +3,7 @@ package quartz.compiler
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import quartz.compiler.builder.toNode
+import quartz.compiler.errors.ErrorListener
 import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
@@ -23,7 +24,10 @@ object Compiler {
                 library: Library.LibraryPackage,
                 parser: (InputStream) -> QuartzParser.ProgramContext = {
                     errorScope({ "parser" }) {
-                        QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program()
+                        val errorListener = ErrorListener()
+                        val qlexer = QuartzLexer(ANTLRInputStream(it)).apply { addErrorListener(errorListener) }
+                        val qparser = QuartzParser(CommonTokenStream(qlexer)).apply { addErrorListener(errorListener) }
+                        qparser.program()
                     }
                 },
                 builder: (QuartzParser.ProgramContext) -> Program = {
