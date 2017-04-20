@@ -89,7 +89,7 @@ private fun resolveFunctionTemplates(
     return errorScope({ "function template resolver $name" }) {
         val functionDeclaration = program.functionDeclarations[name] ?: throw QuartzException("Could not find function with name $name")
         val typeMap = functionDeclaration.function.templates.zip(types).toMap()
-        var newName = functionDeclaration.name
+        var newName = "__${functionDeclaration.name}"
         typeMap.forEach { newName += "_${it.value.descriptiveString}" }
         if (!newFunctionDeclarations.containsKey(newName)) {
             newFunctionDeclarations.put(newName, FunctionDeclaration(

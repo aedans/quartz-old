@@ -29,7 +29,7 @@ private fun StructType.resolveTypeTemplates(newStructDeclarations: MutableList<S
         return this
 
     val typeMap = templates.zip(templates).toMap()
-    var newName = string
+    var newName = "__$string"
     templates.forEach { newName += '_' + it.descriptiveString }
 
     val newStructDeclaration = StructDeclaration(

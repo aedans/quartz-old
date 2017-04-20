@@ -201,7 +201,7 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
                 templates,
                 expressions
                         .zip(templateExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
-                        .map { it.first.verifyAs(it.first.type.verifyAs(it.second)) },
+                        .map { it.first.verifyAs(it.second) },
                 type.verifyAs(templateExpressionFunction.returnType)
         )
     } catch (e: QuartzException) {

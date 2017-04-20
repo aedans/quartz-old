@@ -29,7 +29,7 @@ fun ProgramOutputStream.functionTypedef(type: FunctionType) {
         type(type.function.returnType)
         parentheses {
             string("*")
-            string(type.descriptiveString)
+            string("__${type.descriptiveString}")
             string("_t")
         }
         parentheses {
