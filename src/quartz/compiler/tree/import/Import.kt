@@ -1,5 +1,6 @@
 package quartz.compiler.tree.import
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import java.io.File
 import java.io.FileInputStream
@@ -14,7 +15,7 @@ fun QuartzParser.ImportDeclarationContext.import(
         parser: (InputStream) -> QuartzParser.ProgramContext
 ): List<QuartzParser.DeclarationContext> {
     val path = packageList().identifier().map { it.text }.toMutableList()
-    val file = library.get(path)
+    val file = errorScope({ "${library.name}/" + path.joinToString(".") { it.toString() } }) { library.get(path) }
     val programs = parse(file, parser)
     return programs.map { it.declaration() }.flatten() +
             programs.map { it.importDeclaration().map { it.import(library, parser) }.flatten() }.flatten()

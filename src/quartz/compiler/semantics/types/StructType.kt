@@ -45,6 +45,6 @@ class StructType(
     }
 
     override fun toString(): String {
-        return "$string${if (templates.isNotEmpty()) "<$templates>" else ""}"
+        return "$string${if (templates.isNotEmpty()) templates.joinToString(prefix = "<", postfix = ">") { it.toString() } else ""}"
     }
 }

@@ -1,5 +1,6 @@
 package quartz.compiler.semantics
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.StructType
 import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.Program
@@ -10,13 +11,17 @@ import quartz.compiler.tree.struct.StructDeclaration
  */
 
 fun Program.resolveTypeTemplates(): Program {
-    val newStructDeclarations = mutableListOf<StructDeclaration>()
-    return this.mapTypes {
-        when (it) {
-            is StructType -> it.resolveTypeTemplates(newStructDeclarations)
-            else -> it
-        }
-    }.copy(structDeclarations = newStructDeclarations.map { it.name to it }.toMap())
+    return errorScope({ "type template resolver" }) {
+        val newStructDeclarations = mutableListOf<StructDeclaration>()
+        this.mapTypes {
+            when (it) {
+                is StructType -> errorScope({ "struct type $it" }) {
+                    it.resolveTypeTemplates(newStructDeclarations)
+                }
+                else -> it
+            }
+        }.copy(structDeclarations = newStructDeclarations.map { it.name to it }.toMap())
+    }
 }
 
 private fun StructType.resolveTypeTemplates(newStructDeclarations: MutableList<StructDeclaration>): StructType {

@@ -1,5 +1,6 @@
 package quartz.compiler.generator
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.Program
 import java.io.OutputStream
 import java.io.PrintStream
@@ -16,9 +17,11 @@ class ProgramOutputStream(val program: Program, outputStream: OutputStream) {
     val printStream = PrintStream(outputStream)
 
     fun declare(name: String, function: ProgramOutputStream.() -> Unit) {
-        if (!declared.contains(name)) {
-            declared.add(name)
-            this.function()
+        errorScope({ "declaration $name" }) {
+            if (!declared.contains(name)) {
+                declared.add(name)
+                this.function()
+            }
         }
     }
 

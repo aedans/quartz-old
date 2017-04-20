@@ -56,6 +56,7 @@ class FunctionCall(
     }
 
     override fun toString(): String {
-        return "$expression${if (templates.isNotEmpty()) "<$templates>" else ""}$args"
+        return "$expression${if (templates.isNotEmpty()) "<$templates>" else ""}" +
+                args.joinToString(prefix = "(", postfix = ")") { it.toString() }
     }
 }

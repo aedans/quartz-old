@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function.expression
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.util.Type
@@ -42,7 +42,7 @@ class Assignment(val lvalue: Expression, val expression: Expression, val id: ID,
     }
 
     override fun toString(): String {
-        return "$lvalue = $expression"
+        return "$lvalue $id $expression"
     }
 
     enum class ID(val string: String) {

@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.tree.function.statement.TypeSwitch
@@ -10,16 +11,20 @@ import quartz.compiler.tree.function.statement.TypeSwitch
  */
 
 fun Program.resolveTypeSwitch(): Program {
-    return this.mapStatements {
-        when (it) {
-            is TypeSwitch -> it.resolve()
-            else -> it
+    return errorScope({ "typeswitch resolver" }) {
+        this.mapStatements {
+            when (it) {
+                is TypeSwitch -> it.resolve()
+                else -> it
+            }
         }
     }
 }
 
 private fun TypeSwitch.resolve(): Block {
-    val branch = branches.keys.firstOrNull { it.isInstance(identifier.type!!) }
-            ?: throw QuartzException("Could not find branch ${identifier.type} in $this")
-    return branches[branch] ?: throw QuartzException("Could not find branch $branch in $branches")
+    return errorScope({ "$this" }) {
+        val branch = branches.keys.firstOrNull { it.isInstance(identifier.type!!) }
+                ?: throw QuartzException("Could not find branch ${identifier.type} in $this")
+        branches[branch] ?: throw QuartzException("Could not find branch $branch in $branches")
+    }
 }

@@ -1,5 +1,6 @@
 package quartz.compiler.builder
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
@@ -12,16 +13,18 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.DestructorDeclarationContext.toNode(): FunctionDeclaration {
-    val type = type().toType()
-    return FunctionDeclaration(
-            "__destructor_${(type as UnresolvedType).string}",
-            listOf("it"),
-            Function(
-                    listOf(type),
-                    identifierList().identifier().map { TemplateType(it.text) },
-                    Primitives.void,
-                    false
-            ),
-            fnBlock().block().toNode()
-    )
+    errorScope({ "destructor ${type().type()}" }) {
+        val type = type().toType()
+        return FunctionDeclaration(
+                "__destructor_${(type as UnresolvedType).string}",
+                listOf("it"),
+                Function(
+                        listOf(type),
+                        identifierList().identifier().map { TemplateType(it.text) },
+                        Primitives.void,
+                        false
+                ),
+                fnBlock().block().toNode()
+        )
+    }
 }

@@ -50,11 +50,11 @@ class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val
     }
 
     override fun toString(i: Int): String {
-        var s = "${"|   " * i}$this\n"
+        var s = "${"\t" * i}$this"
         branches.forEach {
-            s += "${"|   " * i}${it.key}\n${it.value.toString(i + 1)}"
+            s += "\n${"\t" * i}${it.key} {\n${it.value.toString(i + 1)}${"\t" * i}}"
         }
-        s += "${"|   " * i}else${if (elseBranch.statementList.isEmpty()) "" else elseBranch.toString(i + 1)}"
+        s += "\n${"\t" * i}else {${if (elseBranch.statementList.isEmpty()) " }" else "${elseBranch.toString(i + 1)}${"\t" * i}}"}"
         return s
     }
 }

@@ -8,7 +8,8 @@ import quartz.compiler.semantics.types.TemplateType
 
 data class Function(val args: List<Type>, val templates: List<TemplateType>, val returnType: Type?, val vararg: Boolean) {
     override fun toString(): String {
-        return "${if (templates.isNotEmpty()) "<$templates>" else ""}$args${if (vararg) "..." else ""} -> $returnType"
+        return (if (templates.isNotEmpty()) templates.joinToString(prefix = "<", postfix = ">") { it.toString() } else "") +
+                "${args.joinToString(prefix = "(", postfix = ")") { it.toString() }}${if (vararg) "..." else ""} -> $returnType"
     }
 
     fun mapTypes(function: (Type?) -> Type?): Function {

@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -16,11 +17,15 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun Program.generateDestructors(): Program {
-    return this.mapFunctionDeclarations { it.generateDestructors(destructorDeclarations) }
+    return errorScope({ "destructor generator" }) {
+        this.mapFunctionDeclarations { it.generateDestructors(destructorDeclarations) }
+    }
 }
 
 private fun FunctionDeclaration.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): FunctionDeclaration {
-    return FunctionDeclaration(name, argNames, function, block.generateDestructors(destructorDeclarations))
+    return errorScope({ "function $name" }) {
+        FunctionDeclaration(name, argNames, function, block.generateDestructors(destructorDeclarations))
+    }
 }
 
 private fun Block.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): Block {
@@ -31,19 +36,21 @@ private fun Block.generateDestructors(destructorDeclarations: Map<String, Functi
 }
 
 private fun Statement.generateDestructors(destructorDeclarations: Map<String, FunctionDeclaration>): Statement {
-    return when (this) {
-        is InlineC -> this
-        is PrefixUnaryOperator -> this
-        is PostfixUnaryOperator -> this
-        is VariableDeclaration -> this
-        is Assignment -> this
-        is ReturnStatement -> this
-        is FunctionCall -> this
-        is Delete -> this
-        is IfStatement -> generateDestructors(destructorDeclarations)
-        is WhileLoop -> generateDestructors(destructorDeclarations)
-        is TypeSwitch -> generateDestructors(destructorDeclarations)
-        else -> throw QuartzException("Unrecognized node $this")
+    return errorScope({ "statement $this" }) {
+        when (this) {
+            is InlineC -> this
+            is PrefixUnaryOperator -> this
+            is PostfixUnaryOperator -> this
+            is VariableDeclaration -> this
+            is Assignment -> this
+            is ReturnStatement -> this
+            is FunctionCall -> this
+            is Delete -> this
+            is IfStatement -> generateDestructors(destructorDeclarations)
+            is WhileLoop -> generateDestructors(destructorDeclarations)
+            is TypeSwitch -> generateDestructors(destructorDeclarations)
+            else -> throw QuartzException("Unrecognized node $this")
+        }
     }
 }
 

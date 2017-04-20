@@ -1,5 +1,6 @@
 package quartz.compiler.builder
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.misc.TypealiasDeclaration
 
@@ -8,5 +9,7 @@ import quartz.compiler.tree.misc.TypealiasDeclaration
  */
 
 fun QuartzParser.TypealiasDeclarationContext.toNode(): TypealiasDeclaration {
-    return TypealiasDeclaration(identifier().text, type().toType(), extern != null)
+    errorScope({ "typealias ${identifier().text}" }) {
+        return TypealiasDeclaration(identifier().text, type().toType(), extern != null)
+    }
 }

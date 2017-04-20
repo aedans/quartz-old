@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Function
@@ -23,7 +23,7 @@ open class FunctionDeclaration(
     }
 
     override fun toString(): String {
-        return "$name$function\n${block.toString(1)}"
+        return "$name$function {\n${block.toString(1)}}"
     }
 
     fun getStatements(): List<Statement> {

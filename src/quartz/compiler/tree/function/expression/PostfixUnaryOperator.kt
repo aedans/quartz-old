@@ -36,7 +36,7 @@ class PostfixUnaryOperator(val expression: Expression, val id: ID, override val 
     }
 
     override fun toString(): String {
-        return "($expression)$id"
+        return "$expression$id"
     }
 
     enum class ID(val string: String) {

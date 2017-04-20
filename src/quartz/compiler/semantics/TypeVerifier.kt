@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
@@ -22,28 +23,34 @@ import quartz.compiler.util.Type
  */
 
 fun Program.verifyTypes(): Program {
-    return this.mapFunctionDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
+    return errorScope({ "type verifier" }) {
+        this.mapFunctionDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
+    }
 }
 
 private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
-    return FunctionDeclaration(name, argNames, function, block.verify(localSymbolTable(symbolTable)))
+    return errorScope({ "function $name" }) {
+        FunctionDeclaration(name, argNames, function, block.verify(localSymbolTable(symbolTable)))
+    }
 }
 
 private fun Statement.verify(symbolTable: SymbolTable): Statement {
-    return when (this) {
-        is InlineC -> this
-        is PrefixUnaryOperator -> verify(symbolTable)
-        is PostfixUnaryOperator -> verify(symbolTable)
-        is VariableDeclaration -> verify(symbolTable)
-        is Assignment -> verify(symbolTable)
-        is ReturnStatement -> verify(symbolTable)
-        is IfStatement -> verify(symbolTable)
-        is WhileLoop -> verify(symbolTable)
-        is Delete -> verify(symbolTable)
-        is TypeSwitch -> verify(symbolTable)
-        is FunctionCall -> verify(symbolTable)
-        is Block -> verify(symbolTable)
-        else -> throw QuartzException("Unrecognized node $this")
+    return errorScope({ "statement $this" }) {
+        when (this) {
+            is InlineC -> this
+            is PrefixUnaryOperator -> verify(symbolTable)
+            is PostfixUnaryOperator -> verify(symbolTable)
+            is VariableDeclaration -> verify(symbolTable)
+            is Assignment -> verify(symbolTable)
+            is ReturnStatement -> verify(symbolTable)
+            is IfStatement -> verify(symbolTable)
+            is WhileLoop -> verify(symbolTable)
+            is Delete -> verify(symbolTable)
+            is TypeSwitch -> verify(symbolTable)
+            is FunctionCall -> verify(symbolTable)
+            is Block -> verify(symbolTable)
+            else -> throw QuartzException("Expected statement, found $this")
+        }
     }
 }
 
@@ -94,21 +101,23 @@ private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
 }
 
 private fun Expression.verify(symbolTable: SymbolTable): Expression {
-    return when (this) {
-        is InlineC -> this
-        is NumberLiteral -> this
-        is StringLiteral -> this
-        is Sizeof -> this
-        is Identifier -> verify(symbolTable)
-        is PrefixUnaryOperator -> verify(symbolTable)
-        is PostfixUnaryOperator -> verify(symbolTable)
-        is BinaryOperator -> verify(symbolTable)
-        is Assignment -> verify(symbolTable)
-        is FunctionCall -> verify(symbolTable)
-        is MemberAccess -> verify(symbolTable)
-        is IfExpression -> verify(symbolTable)
-        is Lambda -> verify(symbolTable)
-        else -> throw QuartzException("Unrecognized node $this")
+    return errorScope({ "expression $this" }) {
+        when (this) {
+            is InlineC -> this
+            is NumberLiteral -> this
+            is StringLiteral -> this
+            is Sizeof -> this
+            is Identifier -> verify(symbolTable)
+            is PrefixUnaryOperator -> verify(symbolTable)
+            is PostfixUnaryOperator -> verify(symbolTable)
+            is BinaryOperator -> verify(symbolTable)
+            is Assignment -> verify(symbolTable)
+            is FunctionCall -> verify(symbolTable)
+            is MemberAccess -> verify(symbolTable)
+            is IfExpression -> verify(symbolTable)
+            is Lambda -> verify(symbolTable)
+            else -> throw QuartzException("Expected expression, found $this")
+        }
     }
 }
 

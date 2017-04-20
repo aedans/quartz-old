@@ -1,6 +1,7 @@
 package quartz.compiler.semantics.symboltable
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -16,12 +17,14 @@ import quartz.compiler.util.Type
  */
 
 fun Program.generateSymbolTable(): SymbolTable {
-    val symbolTable = SymbolTable()
-    structDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
-    typealiasDeclarationDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
-    functionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
-    externFunctionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
-    return symbolTable
+    return errorScope({ "symbol table generator" }) {
+        val symbolTable = SymbolTable()
+        structDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+        typealiasDeclarationDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+        functionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
+        externFunctionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
+        symbolTable
+    }
 }
 
 fun FunctionDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {

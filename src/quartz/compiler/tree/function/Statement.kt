@@ -9,7 +9,7 @@ import quartz.compiler.util.times
 
 interface Statement {
     fun toString(i: Int): String {
-        return ("|   " * i) + toString()
+        return ("\t" * i) + toString()
     }
 
     fun getExpressions(): List<Expression>

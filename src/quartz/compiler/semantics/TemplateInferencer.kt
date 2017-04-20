@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.*
 import quartz.compiler.util.Type
 
@@ -9,9 +10,11 @@ import quartz.compiler.util.Type
  */
 
 fun List<Pair<Type, Type>>.inferTemplates(templates: List<TemplateType>): List<Type> {
-    val templateMap = mutableMapOf<TemplateType, Type>()
-    this.forEach { inferTemplates(it.first, it.second, templateMap) }
-    return templates.map { templateMap[it] ?: throw QuartzException("Unable to infer type for $it") }
+    return errorScope({ "template inferencer" }) {
+        val templateMap = mutableMapOf<TemplateType, Type>()
+        this.forEach { inferTemplates(it.first, it.second, templateMap) }
+        templates.map { templateMap[it] ?: throw QuartzException("Unable to infer type for $it") }
+    }
 }
 
 private fun inferTemplates(first: Type, second: Type, templateMap: MutableMap<TemplateType, Type>) {

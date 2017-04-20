@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -14,30 +15,36 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun Program.simplify(): Program {
-    return this.mapFunctionDeclarations(FunctionDeclaration::simplify)
+    return errorScope({ "simplifier" }) {
+        this.mapFunctionDeclarations(FunctionDeclaration::simplify)
+    }
 }
 
 private fun FunctionDeclaration.simplify(): FunctionDeclaration {
-    val newStatements = mutableListOf<Statement>()
-    val nameSupplier = (0..Integer.MAX_VALUE).iterator()
-    block.statementList.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }
-    return FunctionDeclaration(name, argNames, function, Block(newStatements))
+    return errorScope({ "function declaration $name"}) {
+        val newStatements = mutableListOf<Statement>()
+        val nameSupplier = (0..Integer.MAX_VALUE).iterator()
+        block.statementList.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }
+        FunctionDeclaration(name, argNames, function, Block(newStatements))
+    }
 }
 
 private fun Statement.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Statement {
-    return when (this) {
-        is InlineC -> this
-        is PrefixUnaryOperator -> simplify(newStatements, nameSupplier)
-        is PostfixUnaryOperator -> simplify(newStatements, nameSupplier)
-        is VariableDeclaration -> simplify(newStatements, nameSupplier)
-        is ReturnStatement -> simplify(newStatements, nameSupplier)
-        is Assignment -> simplify(newStatements, nameSupplier)
-        is IfStatement -> simplify(newStatements, nameSupplier)
-        is WhileLoop -> simplify(newStatements, nameSupplier)
-        is Delete -> simplify(newStatements, nameSupplier)
-        is TypeSwitch -> simplify(newStatements, nameSupplier)
-        is FunctionCall -> simplify(newStatements, nameSupplier)
-        else -> throw QuartzException("Unrecognized node $this")
+    return errorScope({ "statement $this" }) {
+        when (this) {
+            is InlineC -> this
+            is PrefixUnaryOperator -> simplify(newStatements, nameSupplier)
+            is PostfixUnaryOperator -> simplify(newStatements, nameSupplier)
+            is VariableDeclaration -> simplify(newStatements, nameSupplier)
+            is ReturnStatement -> simplify(newStatements, nameSupplier)
+            is Assignment -> simplify(newStatements, nameSupplier)
+            is IfStatement -> simplify(newStatements, nameSupplier)
+            is WhileLoop -> simplify(newStatements, nameSupplier)
+            is Delete -> simplify(newStatements, nameSupplier)
+            is TypeSwitch -> simplify(newStatements, nameSupplier)
+            is FunctionCall -> simplify(newStatements, nameSupplier)
+            else -> throw QuartzException("Unrecognized node $this")
+        }
     }
 }
 
@@ -95,21 +102,23 @@ private fun TypeSwitch.simplify(@Suppress("UNUSED_PARAMETER") newStatements: Mut
 }
 
 private fun Expression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
-    return when (this) {
-        is InlineC -> this
-        is NumberLiteral -> this
-        is StringLiteral -> this
-        is Identifier -> this
-        is Sizeof -> this
-        is Cast -> simplify(newStatements, nameSupplier)
-        is PrefixUnaryOperator -> simplify(newStatements, nameSupplier)
-        is PostfixUnaryOperator -> simplify(newStatements, nameSupplier)
-        is BinaryOperator -> simplify(newStatements, nameSupplier)
-        is Assignment -> simplify(newStatements, nameSupplier)
-        is FunctionCall -> simplify(newStatements, nameSupplier)
-        is MemberAccess -> simplify(newStatements, nameSupplier)
-        is IfExpression -> simplify(newStatements, nameSupplier)
-        else -> throw QuartzException("Unrecognized node $this")
+    return errorScope({ "expression $this" }) {
+        when (this) {
+            is InlineC -> this
+            is NumberLiteral -> this
+            is StringLiteral -> this
+            is Identifier -> this
+            is Sizeof -> this
+            is Cast -> simplify(newStatements, nameSupplier)
+            is PrefixUnaryOperator -> simplify(newStatements, nameSupplier)
+            is PostfixUnaryOperator -> simplify(newStatements, nameSupplier)
+            is BinaryOperator -> simplify(newStatements, nameSupplier)
+            is Assignment -> simplify(newStatements, nameSupplier)
+            is FunctionCall -> simplify(newStatements, nameSupplier)
+            is MemberAccess -> simplify(newStatements, nameSupplier)
+            is IfExpression -> simplify(newStatements, nameSupplier)
+            else -> throw QuartzException("Unrecognized node $this")
+        }
     }
 }
 

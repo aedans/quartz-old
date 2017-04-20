@@ -3,6 +3,7 @@ package quartz.compiler
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import quartz.compiler.builder.toNode
+import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
@@ -21,25 +22,31 @@ object Compiler {
                 output: OutputStream,
                 library: Library.LibraryPackage,
                 parser: (InputStream) -> QuartzParser.ProgramContext = {
-                    QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program()
+                    errorScope({ "parser" }) {
+                        QuartzParser(CommonTokenStream(QuartzLexer(ANTLRInputStream(it)))).program()
+                    }
                 },
                 builder: (QuartzParser.ProgramContext) -> Program = {
-                    it.toNode(library, parser)
+                    errorScope({ "ast builder" }) { it.toNode(library, parser) }
                 },
                 analyzer: Program.() -> Program = {
-                    this
-                            .generateConstructors()
-                            .resolveTypes()
-                            .verifyTypes()
-                            .resolveLambdas()
-                            .simplify()
-                            .generateDestructors()
-                            .resolveFunctionTemplates()
-                            .resolveTypeTemplates()
-                            .resolveTypeSwitch()
-                            .resolveDeletes()
+                    errorScope({ "semantic analyzer" }) {
+                        this
+                                .generateConstructors()
+                                .resolveTypes()
+                                .verifyTypes()
+                                .resolveLambdas()
+                                .simplify()
+                                .generateDestructors()
+                                .resolveFunctionTemplates()
+                                .resolveTypeTemplates()
+                                .resolveTypeSwitch()
+                                .resolveDeletes()
+                    }
                 },
-                generator: (Program, OutputStream) -> Unit = Generator::write
+                generator: (Program, OutputStream) -> Unit = { program, outputStream ->
+                    errorScope({ "generator" }) { Generator.write(program, outputStream) }
+                }
     ) {
         var program = builder(parser(input))
         println('\n' + program.toString())

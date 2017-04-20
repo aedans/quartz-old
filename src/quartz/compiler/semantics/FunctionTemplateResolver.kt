@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -17,17 +18,19 @@ import quartz.compiler.util.Type
  */
 
 fun Program.resolveFunctionTemplates(): Program {
-    val newFunctionDeclarations = mutableMapOf<String, FunctionDeclaration>()
-    functionDeclarations.filterValues { it.function.templates.isEmpty() }.forEach {
-        it.value.resolveFunctionTemplates(this, newFunctionDeclarations).also { newFunctionDeclarations.put(it.name, it) }
+    return errorScope({ "function template resolver" }) {
+        val newFunctionDeclarations = mutableMapOf<String, FunctionDeclaration>()
+        functionDeclarations.filterValues { it.function.templates.isEmpty() }.forEach {
+            it.value.resolveFunctionTemplates(this, newFunctionDeclarations).also { newFunctionDeclarations.put(it.name, it) }
+        }
+        Program(
+                newFunctionDeclarations,
+                externFunctionDeclarations,
+                structDeclarations,
+                typealiasDeclarationDeclarations,
+                inlineCNodes
+        )
     }
-    return Program(
-            newFunctionDeclarations,
-            externFunctionDeclarations,
-            structDeclarations,
-            typealiasDeclarationDeclarations,
-            inlineCNodes
-    )
 }
 
 private fun FunctionDeclaration.resolveFunctionTemplates(
@@ -36,12 +39,16 @@ private fun FunctionDeclaration.resolveFunctionTemplates(
 ): FunctionDeclaration {
     return this.mapExpressions {
         when (it) {
-            is FunctionCall -> it.resolveFunctionTemplates(program, newFunctionDeclarations)
+            is FunctionCall -> errorScope({ "function call $it" }) {
+                it.resolveFunctionTemplates(program, newFunctionDeclarations)
+            }
             else -> it
         }
     }.mapStatements {
         when (it) {
-            is Delete -> it.resolveFunctionTemplates(program, newFunctionDeclarations)
+            is Delete -> errorScope({ "delete $it" }) {
+                it.resolveFunctionTemplates(program, newFunctionDeclarations)
+            }
             else -> it
         }
     }
@@ -79,24 +86,26 @@ private fun resolveFunctionTemplates(
         program: Program,
         newFunctionDeclarations: MutableMap<String, FunctionDeclaration>
 ): FunctionDeclaration {
-    val functionDeclaration = program.functionDeclarations[name] ?: throw QuartzException("Could not find function with name $name")
-    val typeMap = functionDeclaration.function.templates.zip(types).toMap()
-    var newName = functionDeclaration.name
-    typeMap.forEach { newName += "_${it.value.descriptiveString}" }
-    if (!newFunctionDeclarations.containsKey(newName)) {
-        newFunctionDeclarations.put(newName, FunctionDeclaration(
-                newName,
-                functionDeclaration.argNames,
-                Function(
-                        functionDeclaration.function.args,
-                        emptyList(),
-                        functionDeclaration.function.returnType,
-                        functionDeclaration.function.vararg
-                ),
-                functionDeclaration.block
-        ).mapTypes { typeMap[it] ?: it })
-        newFunctionDeclarations.put(newName, newFunctionDeclarations[newName]!!
-                .resolveFunctionTemplates(program, newFunctionDeclarations))
+    return errorScope({ "function template resolver $name" }) {
+        val functionDeclaration = program.functionDeclarations[name] ?: throw QuartzException("Could not find function with name $name")
+        val typeMap = functionDeclaration.function.templates.zip(types).toMap()
+        var newName = functionDeclaration.name
+        typeMap.forEach { newName += "_${it.value.descriptiveString}" }
+        if (!newFunctionDeclarations.containsKey(newName)) {
+            newFunctionDeclarations.put(newName, FunctionDeclaration(
+                    newName,
+                    functionDeclaration.argNames,
+                    Function(
+                            functionDeclaration.function.args,
+                            emptyList(),
+                            functionDeclaration.function.returnType,
+                            functionDeclaration.function.vararg
+                    ),
+                    functionDeclaration.block
+            ).mapTypes { typeMap[it] ?: it })
+            newFunctionDeclarations.put(newName, newFunctionDeclarations[newName]!!
+                    .resolveFunctionTemplates(program, newFunctionDeclarations))
+        }
+        newFunctionDeclarations[newName]!!
     }
-    return newFunctionDeclarations[newName]!!
 }

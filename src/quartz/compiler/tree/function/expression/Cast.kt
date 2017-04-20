@@ -36,6 +36,6 @@ class Cast(val expression: Expression, override val type: Type?) : Expression {
     }
 
     override fun toString(): String {
-        return "${if (type != null) "($type)" else ""} ($expression)"
+        return "${if (type != null) "($type)" else ""} $expression"
     }
 }

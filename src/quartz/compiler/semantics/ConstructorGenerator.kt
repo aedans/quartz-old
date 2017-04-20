@@ -1,5 +1,6 @@
 package quartz.compiler.semantics
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -16,28 +17,32 @@ import quartz.compiler.util.Function
  */
 
 fun Program.generateConstructors(): Program {
-    return Program(
-            functionDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
-            externFunctionDeclarations,
-            structDeclarations,
-            typealiasDeclarationDeclarations,
-            inlineCNodes
-    )
+    return errorScope({ "constructor generator" }) {
+        Program(
+                functionDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
+                externFunctionDeclarations,
+                structDeclarations,
+                typealiasDeclarationDeclarations,
+                inlineCNodes
+        )
+    }
 }
 
 private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
-    val argsNames = members.map { it.key }
-    val argTypes = members.map { it.value.type }
-    val newType = type.withTemplates(templates)
+    errorScope({ "$name default constructor" }) {
+        val argsNames = members.map { it.key }
+        val argTypes = members.map { it.value.type }
+        val newType = type.withTemplates(templates)
 
-    val declarationNode = VariableDeclaration("instance", null, newType, true)
-    val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
-    val returnNode = ReturnStatement(Identifier("instance", newType))
+        val declarationNode = VariableDeclaration("instance", null, newType, true)
+        val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
+        val returnNode = ReturnStatement(Identifier("instance", newType))
 
-    val statements = mutableListOf<Statement>()
-    statements.add(declarationNode)
-    statements.addAll(assignmentNodes)
-    statements.add(returnNode)
+        val statements = mutableListOf<Statement>()
+        statements.add(declarationNode)
+        statements.addAll(assignmentNodes)
+        statements.add(returnNode)
 
-    return FunctionDeclaration(name, argsNames, Function(argTypes, templates, newType, false), Block(statements))
+        return FunctionDeclaration(name, argsNames, Function(argTypes, templates, newType, false), Block(statements))
+    }
 }

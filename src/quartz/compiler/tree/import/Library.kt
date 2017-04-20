@@ -1,6 +1,6 @@
 package quartz.compiler.tree.import
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.util.times
 import java.io.File
 
@@ -21,7 +21,7 @@ sealed class Library(val name: String) {
         override fun get(path: List<String>): File {
             if (path.isNotEmpty())
                 return subLibraries[path.first()]?.get(path.drop(1))
-                        ?: throw QuartzException("Could not find package $path in $name")
+                        ?: throw QuartzException("Could not find package $path")
             else
                 return file
         }

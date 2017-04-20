@@ -18,7 +18,9 @@ data class StructDeclaration(
     val type = StructType(name, templates, members)
 
     override fun toString(): String {
-        return "struct $name${if (templates.isNotEmpty()) "<$templates>" else ""}${members.values}"
+        return "struct $name" +
+                (if (templates.isNotEmpty()) templates.joinToString(prefix = "<", postfix = ">") { it.toString() } else "") +
+                members.values.joinToString(prefix = "{\n\t", postfix = "\n}", separator = "\n\t") { it.toString() }
     }
 
     fun mapTypes(function: (Type?) -> Type?): StructDeclaration {

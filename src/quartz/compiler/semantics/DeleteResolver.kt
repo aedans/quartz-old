@@ -1,5 +1,6 @@
 package quartz.compiler.semantics
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.tree.Program
@@ -15,16 +16,20 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun Program.resolveDeletes(): Program {
-    return this.mapStatements { (it as? Delete)?.resolve(destructorDeclarations) ?: it }
+    return errorScope({ "delete resolver" }) {
+        this.mapStatements { (it as? Delete)?.resolve(destructorDeclarations) ?: it }
+    }
 }
 
 fun Delete.resolve(destructorDeclarations: Map<String, FunctionDeclaration>): Statement {
-    val destructor = destructorDeclarations[expression.type?.string]
-    return if (destructor == null) InlineC("/* ${expression.type?.descriptiveString} does not have a destructor */") else
-        FunctionCall(
-                Identifier(destructor.name, FunctionType(destructor.function)),
-                expression.type.asStruct()!!.templates,
-                listOf(expression),
-                Primitives.void
-        )
+    errorScope({ "$this" }) {
+        val destructor = destructorDeclarations[expression.type?.string]
+        return if (destructor == null) InlineC("/* ${expression.type?.descriptiveString} does not have a destructor */") else
+            FunctionCall(
+                    Identifier(destructor.name, FunctionType(destructor.function)),
+                    expression.type.asStruct()!!.templates,
+                    listOf(expression),
+                    Primitives.void
+            )
+    }
 }

@@ -1,5 +1,6 @@
 package quartz.compiler.semantics
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Identifier
@@ -10,22 +11,26 @@ import quartz.compiler.tree.function.expression.Lambda
  */
 
 fun Program.resolveLambdas(): Program {
-    val lambdas = mutableListOf<FunctionDeclaration>()
-    val nameSupplier = (0..Integer.MAX_VALUE).iterator()
-    val newNode = mapFunctionDeclarations { it.resolveLambdas(lambdas, nameSupplier) }
-    return Program(
-            newNode.functionDeclarations + lambdas.map { it.name to it }.toMap(),
-            newNode.externFunctionDeclarations,
-            newNode.structDeclarations,
-            newNode.typealiasDeclarationDeclarations,
-            newNode.inlineCNodes
-    )
+    return errorScope({ "lambda resolver" }) {
+        val lambdas = mutableListOf<FunctionDeclaration>()
+        val nameSupplier = (0..Integer.MAX_VALUE).iterator()
+        val newNode = mapFunctionDeclarations { it.resolveLambdas(lambdas, nameSupplier) }
+        Program(
+                newNode.functionDeclarations + lambdas.map { it.name to it }.toMap(),
+                newNode.externFunctionDeclarations,
+                newNode.structDeclarations,
+                newNode.typealiasDeclarationDeclarations,
+                newNode.inlineCNodes
+        )
+    }
 }
 
 fun FunctionDeclaration.resolveLambdas(lambdas: MutableList<FunctionDeclaration>, nameSupplier: Iterator<Int>): FunctionDeclaration {
     return this.mapExpressions {
         when (it) {
-            is Lambda -> it.resolve(lambdas, nameSupplier)
+            is Lambda -> errorScope({ "$it" }) {
+                it.resolve(lambdas, nameSupplier)
+            }
             else -> it
         }
     }

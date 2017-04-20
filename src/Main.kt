@@ -1,5 +1,6 @@
 
 import quartz.compiler.Compiler
+import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.import.Library
 import java.io.File
 import java.io.FileInputStream
@@ -26,11 +27,13 @@ fun main(args: Array<String>) {
 }
 
 fun compile(inPath: String, outPath: String) {
-    val inFile = File(inPath)
-    val library = (inFile.parentFile?.let { Library.create(it) } ?: Library.LibraryPackage("empty", File("."), emptyMap())) +
-            Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
-    val input = FileInputStream(inFile)
-    val output = FileOutputStream(File(outPath))
+    errorScope({ "file $inPath" }) {
+        val inFile = File(inPath)
+        val library = (inFile.parentFile?.let { Library.create(it) } ?: Library.LibraryPackage(".", File("."), emptyMap())) +
+                Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
+        val input = FileInputStream(inFile)
+        val output = FileOutputStream(File(outPath))
 
-    Compiler.compile(input, output, library)
+        Compiler.compile(input, output, library)
+    }
 }

@@ -1,6 +1,7 @@
 package quartz.compiler.builder
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.TemplateType
@@ -18,42 +19,46 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
-    return if (signatureDefinition() != null) {
-        ExternFunctionDeclaration(
-                signatureDefinition().identifier().text,
-                Function(
-                        signatureDefinition().typeList().type().map { it.toType() },
-                        emptyList(),
-                        signatureDefinition().returnType?.toType() ?: Primitives.void,
-                        signatureDefinition().typeList().vararg != null
-                )
-        )
-    } else {
-        FunctionDeclaration(
-                identifier().text,
-                fnArgumentList().fnArgument().map { it.identifier().text },
-                Function(
-                        fnArgumentList().fnArgument().map { it.type().toType() },
-                        identifierList()?.identifier()?.map { TemplateType(it.text) } ?: emptyList(),
-                        returnType?.toType() ?: Primitives.void,
-                        false
-                ),
-                fnBlock().toNode()
-        )
+    return errorScope({ "function ${identifier()?.text ?: signatureDefinition().identifier().text}" }) {
+        if (signatureDefinition() != null) {
+            ExternFunctionDeclaration(
+                    signatureDefinition().identifier().text,
+                    Function(
+                            signatureDefinition().typeList().type().map { it.toType() },
+                            emptyList(),
+                            signatureDefinition().returnType?.toType() ?: Primitives.void,
+                            signatureDefinition().typeList().vararg != null
+                    )
+            )
+        } else {
+            FunctionDeclaration(
+                    identifier().text,
+                    fnArgumentList().fnArgument().map { it.identifier().text },
+                    Function(
+                            fnArgumentList().fnArgument().map { it.type().toType() },
+                            identifierList()?.identifier()?.map { TemplateType(it.text) } ?: emptyList(),
+                            returnType?.toType() ?: Primitives.void,
+                            false
+                    ),
+                    fnBlock().toNode()
+            )
+        }
     }
 }
 
 fun QuartzParser.StatementContext.toNode(): Statement {
-    return when {
-        inlineC() != null -> inlineC().toNode()
-        returnStatement() != null -> returnStatement().toNode()
-        varDeclaration() != null -> varDeclaration().toNode()
-        ifStatement() != null -> ifStatement().toNode()
-        whileLoop() != null -> whileLoop().toNode()
-        delete() != null -> delete().toNode()
-        typeswitch() != null -> typeswitch().toNode()
-        expression() != null -> expression().toNode()
-        else -> throw QuartzException("Error translating $text")
+    return errorScope({ "statement $text" }) {
+        when {
+            inlineC() != null -> inlineC().toNode()
+            returnStatement() != null -> returnStatement().toNode()
+            varDeclaration() != null -> varDeclaration().toNode()
+            ifStatement() != null -> ifStatement().toNode()
+            whileLoop() != null -> whileLoop().toNode()
+            delete() != null -> delete().toNode()
+            typeswitch() != null -> typeswitch().toNode()
+            expression() != null -> expression().toNode()
+            else -> throw QuartzException("Error translating $text")
+        }
     }
 }
 
@@ -95,9 +100,11 @@ fun QuartzParser.TypeswitchContext.toNode(): TypeSwitch {
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {
-    return when {
-        expression() == null -> disjunction().toNode()
-        else -> Assignment(disjunction().toNode(), expression().toNode(), assignmentOperator().ID, null)
+    return errorScope({ "expression $text" }) {
+        when {
+            expression() == null -> disjunction().toNode()
+            else -> Assignment(disjunction().toNode(), expression().toNode(), assignmentOperator().ID, null)
+        }
     }
 }
 

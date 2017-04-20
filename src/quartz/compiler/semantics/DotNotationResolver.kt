@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.expression.Identifier
@@ -12,15 +13,19 @@ import quartz.compiler.tree.function.statement.FunctionCall
  */
 
 fun FunctionCall.resolveDotNotation(symbolTable: SymbolTable): FunctionCall {
-    if (expression !is MemberAccess)
-        throw QuartzException("Dot notation ambiguity in $this")
+    return errorScope({ "dot notation resolver" }) {
+        errorScope({ "$this" }) {
+            if (expression !is MemberAccess)
+                throw QuartzException("Dot notation ambiguity in $this")
 
-    val expressionType = symbolTable.getVar(expression.name) as? FunctionType
-            ?: throw QuartzException("Could not find function ${expression.name}")
-    return FunctionCall(
-            Identifier(expression.name, expressionType),
-            templates,
-            listOf(expression.expression) + args,
-            type
-    )
+            val expressionType = symbolTable.getVar(expression.name) as? FunctionType
+                    ?: throw QuartzException("Could not find function ${expression.name}")
+            FunctionCall(
+                    Identifier(expression.name, expressionType),
+                    templates,
+                    listOf(expression.expression) + args,
+                    type
+            )
+        }
+    }
 }

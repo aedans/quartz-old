@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function.expression
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.Statement
@@ -56,7 +56,7 @@ class Lambda(
     }
 
     override fun toString(): String {
-        return "${type.function} $block"
+        return "lambda ${type.function}"
     }
 
     override fun toString(i: Int): String {

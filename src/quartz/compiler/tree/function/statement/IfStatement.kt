@@ -51,7 +51,8 @@ class IfStatement(
     }
 
     override fun toString(i: Int): String {
-        return "${"|   " * i}$this\n${trueBlock.toString(i+1)}" +
-                "${("|   " * i)}else${if (falseBlock.statementList.isEmpty()) "" else "\n${falseBlock.toString(i+1)}"}"
+        return "${"\t" * i}$this {\n${trueBlock.toString(i+1)}" +
+                "${("\t" * i)}} else {" +
+                if (falseBlock.statementList.isEmpty()) " }" else "\n${falseBlock.toString(i+1)}${"\t" * i}}"
     }
 }

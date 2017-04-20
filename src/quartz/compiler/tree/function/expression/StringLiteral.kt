@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function.expression
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.tree.function.Expression

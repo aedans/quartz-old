@@ -1,6 +1,6 @@
 package quartz.compiler.builder
 
-import quartz.compiler.exceptions.QuartzException
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.Program
@@ -37,5 +37,5 @@ fun QuartzParser.DeclarationContext.toNode(): GlobalDeclaration {
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
         inlineC() != null -> inlineC().toNode()
         else -> throw QuartzException("Error translating $text")
-    }.also { println("Found $it") }
+    }.also { println("Found $it\n") }
 }

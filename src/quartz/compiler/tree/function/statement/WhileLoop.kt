@@ -35,6 +35,6 @@ class WhileLoop(val test: Expression, val block: Block) : Statement {
     }
 
     override fun toString(i: Int): String {
-        return "${("|   " * i)}$this\n${block.toString(i+1)}"
+        return "${("\t" * i)}$this {\n${block.toString(i+1)}${("\t" * i)}}"
     }
 }

@@ -36,7 +36,7 @@ class PrefixUnaryOperator(val expression: Expression, val id: ID, override val t
     }
 
     override fun toString(): String {
-        return "$id($expression)"
+        return "$id$expression"
     }
 
     enum class ID(val string: String) {

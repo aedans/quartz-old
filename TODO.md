@@ -10,7 +10,6 @@
 - Add implicit return types for single expression functions
 - Add ranges
 - Add function templates
-- Improve error handling
 - Improve standard library
 - Add for loops
 - Improve generator

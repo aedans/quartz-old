@@ -1,5 +1,6 @@
 package quartz.compiler.generator.program
 
+import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.util.args
 import quartz.compiler.generator.util.type
@@ -46,18 +47,20 @@ fun ProgramOutputStream.block(block: Block) {
 }
 
 fun ProgramOutputStream.statement(statement: Statement) {
-    when (statement) {
-        is InlineC -> inlineC(statement)
-        is PrefixUnaryOperator -> prefixUnaryOperator(statement)
-        is PostfixUnaryOperator -> postfixUnaryOperator(statement)
-        is VariableDeclaration -> varDeclaration(statement)
-        is ReturnStatement -> returnStatement(statement)
-        is IfStatement -> ifStatement(statement)
-        is WhileLoop -> whileLoop(statement)
-        is FunctionCall -> fnCall(statement)
-        is Assignment -> varAssignment(statement)
-        is Block -> block(statement)
-        else -> throw Exception("Unrecognized statement $statement")
+    errorScope({ "statement $statement" }) {
+        when (statement) {
+            is InlineC -> inlineC(statement)
+            is PrefixUnaryOperator -> prefixUnaryOperator(statement)
+            is PostfixUnaryOperator -> postfixUnaryOperator(statement)
+            is VariableDeclaration -> varDeclaration(statement)
+            is ReturnStatement -> returnStatement(statement)
+            is IfStatement -> ifStatement(statement)
+            is WhileLoop -> whileLoop(statement)
+            is FunctionCall -> fnCall(statement)
+            is Assignment -> varAssignment(statement)
+            is Block -> block(statement)
+            else -> throw Exception("Unrecognized statement $statement")
+        }
     }
 }
 
@@ -92,20 +95,22 @@ fun ProgramOutputStream.whileLoop(whileLoop: WhileLoop) {
 }
 
 fun ProgramOutputStream.expression(expression: Expression) {
-    when (expression) {
-        is InlineC -> inlineC(expression)
-        is NumberLiteral -> numberLiteral(expression)
-        is StringLiteral -> stringLiteral(expression)
-        is Identifier -> identifier(expression)
-        is Cast -> cast(expression)
-        is PrefixUnaryOperator -> prefixUnaryOperator(expression)
-        is PostfixUnaryOperator -> postfixUnaryOperator(expression)
-        is BinaryOperator -> binaryOperator(expression)
-        is Assignment -> assignment(expression)
-        is MemberAccess -> memberAccess(expression)
-        is Sizeof -> sizeof(expression)
-        is FunctionCall -> fnCall(expression)
-        else -> throw Exception("Unrecognized expression $expression")
+    errorScope({ "expression $expression" }) {
+        when (expression) {
+            is InlineC -> inlineC(expression)
+            is NumberLiteral -> numberLiteral(expression)
+            is StringLiteral -> stringLiteral(expression)
+            is Identifier -> identifier(expression)
+            is Cast -> cast(expression)
+            is PrefixUnaryOperator -> prefixUnaryOperator(expression)
+            is PostfixUnaryOperator -> postfixUnaryOperator(expression)
+            is BinaryOperator -> binaryOperator(expression)
+            is Assignment -> assignment(expression)
+            is MemberAccess -> memberAccess(expression)
+            is Sizeof -> sizeof(expression)
+            is FunctionCall -> fnCall(expression)
+            else -> throw Exception("Unrecognized expression $expression")
+        }
     }
 }
 

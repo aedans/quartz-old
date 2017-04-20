@@ -30,7 +30,7 @@ class Block(val statementList: List<Statement>) : Statement {
     }
 
     override fun toString(): String {
-        return "Block $statementList"
+        return "Block"
     }
 
     override fun toString(i: Int): String {
