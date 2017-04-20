@@ -198,29 +198,16 @@ fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall
 }
 
 fun QuartzParser.LambdaContext.toNode(): Lambda {
-    return when {
-        fnBlock() != null -> Lambda(
-                fnArgumentList().fnArgument().map { it.identifier().text },
-                Function(
-                        fnArgumentList().fnArgument().map { it.type().toType() },
-                        emptyList(),
-                        returnType?.toType(),
-                        false
-                ),
-                fnBlock().toNode()
-        )
-        fnArgumentList() != null -> Lambda(
-                fnArgumentList().fnArgument().map { it.identifier().text },
-                Function(
-                        fnArgumentList().fnArgument().map { it.type().toType() },
-                        emptyList(),
-                        null,
-                        false
-                ),
-                Block(statement().map { it.toNode() })
-        )
-        else -> throw QuartzException("Error translating $this")
-    }
+    return Lambda(
+            fnArgumentList().fnArgument().map { it.identifier().text },
+            Function(
+                    fnArgumentList().fnArgument().map { it.type().toType() },
+                    emptyList(),
+                    returnType?.toType(),
+                    false
+            ),
+            fnBlock().toNode()
+    )
 }
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpression {

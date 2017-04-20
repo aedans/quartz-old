@@ -216,9 +216,7 @@ memberAccess
     ;
 
 lambda
-    : 'fn' '(' fnArgumentList ')' (':' returnType=type)? fnBlock
-    | '{' fnArgumentList '->' statement* '}'
-//    | '{' statement* '}'
+    : 'fn' ('(' fnArgumentList ')')? (':' returnType=type)? fnBlock
     ;
 
 ifExpression
