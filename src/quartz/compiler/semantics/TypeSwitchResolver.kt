@@ -23,8 +23,8 @@ fun Program.resolveTypeSwitch(): Program {
 
 private fun TypeSwitch.resolve(): Block {
     return errorScope({ "$this" }) {
-        val branch = branches.keys.firstOrNull { it.isInstance(identifier.type!!) }
-                ?: throw QuartzException("Could not find branch ${identifier.type} in $this")
+        val branch = branches.keys.firstOrNull { it.isInstance(expression.type!!) }
+                ?: throw QuartzException("Could not find branch ${expression.type} in $this")
         branches[branch] ?: throw QuartzException("Could not find branch $branch in $branches")
     }
 }

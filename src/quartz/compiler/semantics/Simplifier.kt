@@ -87,7 +87,7 @@ private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier:
 
 private fun TypeSwitch.simplify(@Suppress("UNUSED_PARAMETER") newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
     return TypeSwitch(
-            identifier,
+            expression,
             branches.mapValues {
                 val newBranchStatements = mutableListOf<Statement>()
                 it.value.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }

@@ -38,16 +38,16 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
     return errorScope({ "statement $this" }) {
         when (this) {
             is InlineC -> this
-            is PrefixUnaryOperator -> verify(symbolTable)
-            is PostfixUnaryOperator -> verify(symbolTable)
+            is PrefixUnaryOperator -> verify(symbolTable, null)
+            is PostfixUnaryOperator -> verify(symbolTable, null)
             is VariableDeclaration -> verify(symbolTable)
-            is Assignment -> verify(symbolTable)
+            is Assignment -> verify(symbolTable, null)
             is ReturnStatement -> verify(symbolTable)
             is IfStatement -> verify(symbolTable)
             is WhileLoop -> verify(symbolTable)
             is Delete -> verify(symbolTable)
             is TypeSwitch -> verify(symbolTable)
-            is FunctionCall -> verify(symbolTable)
+            is FunctionCall -> verify(symbolTable, null)
             is Block -> verify(symbolTable)
             else -> throw QuartzException("Expected statement, found $this")
         }
@@ -55,7 +55,7 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
 }
 
 private fun VariableDeclaration.verify(symbolTable: SymbolTable): VariableDeclaration {
-    val newExpression = expression?.verify(symbolTable)
+    val newExpression = expression?.verify(symbolTable, type)
 
     return VariableDeclaration(
             name,
@@ -66,12 +66,12 @@ private fun VariableDeclaration.verify(symbolTable: SymbolTable): VariableDeclar
 }
 
 private fun ReturnStatement.verify(symbolTable: SymbolTable): ReturnStatement {
-    return ReturnStatement(expression.verify(symbolTable))
+    return ReturnStatement(expression.verify(symbolTable, null))
 }
 
 private fun IfStatement.verify(symbolTable: SymbolTable): IfStatement {
     return IfStatement(
-            test.verify(symbolTable).verifyAs(Primitives.int),
+            test.verify(symbolTable, Primitives.int),
             trueBlock.verify(symbolTable.localSymbolTable()),
             falseBlock.verify(symbolTable.localSymbolTable())
     )
@@ -80,48 +80,62 @@ private fun IfStatement.verify(symbolTable: SymbolTable): IfStatement {
 private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
     val localSymbolTable = symbolTable.localSymbolTable()
     return WhileLoop(
-            test.verify(symbolTable),
+            test.verify(symbolTable, Primitives.int),
             block.verify(localSymbolTable)
     )
 }
 
 private fun Delete.verify(symbolTable: SymbolTable): Delete {
-    return Delete(expression.verify(symbolTable))
+    return Delete(expression.verify(symbolTable, null))
 }
 
 private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
-    val newIdentifier = identifier.verify(symbolTable)
+    val newIdentifier = expression.verify(symbolTable, null)
     return TypeSwitch(
             newIdentifier,
             branches.mapValues {
-                it.value.verify(it.localSymbolTable(symbolTable, identifier.name))
+                it.value.verify(it.localSymbolTable(symbolTable, (expression as? Identifier)?.name ?: "___"))
             },
             elseBranch.verify(symbolTable.localSymbolTable())
     )
 }
 
-private fun Expression.verify(symbolTable: SymbolTable): Expression {
+private fun Block.verify(symbolTable: SymbolTable): Block {
+    return Block(statementList.map { it.verify(symbolTable) })
+}
+
+private fun Expression.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     return errorScope({ "expression $this" }) {
         when (this) {
-            is InlineC -> this
-            is NumberLiteral -> this
-            is StringLiteral -> this
-            is Sizeof -> this
-            is Identifier -> verify(symbolTable)
-            is PrefixUnaryOperator -> verify(symbolTable)
-            is PostfixUnaryOperator -> verify(symbolTable)
-            is BinaryOperator -> verify(symbolTable)
-            is Assignment -> verify(symbolTable)
-            is FunctionCall -> verify(symbolTable)
-            is MemberAccess -> verify(symbolTable)
-            is IfExpression -> verify(symbolTable)
-            is Lambda -> verify(symbolTable)
+            is InlineC -> verifyAs(expected)
+            is NumberLiteral -> verifyAs(expected)
+            is StringLiteral -> verifyAs(expected)
+            is Sizeof -> verifyAs(expected)
+            is Identifier -> verify(symbolTable, expected)
+            is PrefixUnaryOperator -> verify(symbolTable, expected)
+            is PostfixUnaryOperator -> verify(symbolTable, expected)
+            is BinaryOperator -> verify(symbolTable, expected)
+            is Assignment -> verify(symbolTable, expected)
+            is FunctionCall -> verify(symbolTable, expected)
+            is MemberAccess -> verify(symbolTable, expected)
+            is IfExpression -> verify(symbolTable, expected)
+            is Lambda -> verify(symbolTable, expected)
             else -> throw QuartzException("Expected expression, found $this")
         }
     }
 }
 
-private fun Identifier.verify(symbolTable: SymbolTable): Identifier {
+private fun Expression.verifyAs(type: Type?): Expression {
+    return when {
+        this.type == null -> this.withType(type)
+        this.type == type || type == null -> this
+        this.type?.isInstance(type) ?: false -> Cast(this, type)
+        type is AliasedType -> this.verifyAs(type.type)
+        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
+    }
+}
+
+private fun Identifier.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
     return Identifier(
             name,
@@ -130,59 +144,59 @@ private fun Identifier.verify(symbolTable: SymbolTable): Identifier {
                 !type.isInstance(expectedType) -> throw QuartzException("Expected $expectedType, found $type ($this)")
                 else -> type
             }
-    )
+    ).verifyAs(expected)
 }
 
-private fun PrefixUnaryOperator.verify(symbolTable: SymbolTable): PrefixUnaryOperator {
-    val newExpression = expression.verify(symbolTable).verifyAs(type)
+private fun PrefixUnaryOperator.verify(symbolTable: SymbolTable, expected: Type?): PrefixUnaryOperator {
+    val newExpression = expression.verify(symbolTable, expected)
     return PrefixUnaryOperator(
             newExpression,
             id,
-            type.verifyAs(newExpression.type)
+            expected.verifyAs(newExpression.type)
     )
 }
 
-private fun PostfixUnaryOperator.verify(symbolTable: SymbolTable): PostfixUnaryOperator {
-    val newExpression = expression.verify(symbolTable).verifyAs(type)
+private fun PostfixUnaryOperator.verify(symbolTable: SymbolTable, expected: Type?): PostfixUnaryOperator {
+    val newExpression = expression.verify(symbolTable, expected)
     return PostfixUnaryOperator(
             newExpression,
             id,
-            type.verifyAs(newExpression.type)
+            expected.verifyAs(newExpression.type)
     )
 }
 
-private fun BinaryOperator.verify(symbolTable: SymbolTable): BinaryOperator {
-    val newExpr1 = expr1.verify(symbolTable)
-    val newExpr2 = expr2.verify(symbolTable)
+private fun BinaryOperator.verify(symbolTable: SymbolTable, expected: Type?): BinaryOperator {
+    val newExpr1 = expr1.verify(symbolTable, expected)
+    val newExpr2 = expr2.verify(symbolTable, expected)
     return BinaryOperator(
-            newExpr1.verifyAs(newExpr1.type).verifyAs(type),
-            newExpr2.verifyAs(newExpr2.type).verifyAs(type),
+            newExpr1,
+            newExpr2,
             id,
-            type.verifyAs(newExpr1.type).verifyAs(newExpr2.type)
+            expected.verifyAs(newExpr1.type).verifyAs(newExpr2.type)
     )
 }
 
-private fun Assignment.verify(symbolTable: SymbolTable): Assignment {
-    val newLValue = lvalue.verify(symbolTable)
-    val newExpression = expression.verify(symbolTable)
+private fun Assignment.verify(symbolTable: SymbolTable, expected: Type?): Assignment {
+    val newLValue = lvalue.verify(symbolTable, expected)
+    val newExpression = expression.verify(symbolTable, expected)
     return Assignment(
-            newLValue.verifyAs(newExpression.type).verifyAs(type),
-            newExpression.verifyAs(newLValue.type).verifyAs(type),
+            newLValue,
+            newExpression,
             id,
-            type.verifyAs(lvalue.type).verifyAs(newExpression.type)
+            expected.verifyAs(newLValue.type).verifyAs(newExpression.type)
     )
 }
 
-private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
+private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     return try {
-        val newExpression = expression.verify(symbolTable)
+        val newExpression = expression.verify(symbolTable, null)
         val expressionFunction = newExpression.type.asFunction()?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
         if (!expressionFunction.vararg && expressionFunction.args.size != args.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
-        val expressions = args.map { it.verify(symbolTable) }
+        val expressions = args.map { it.verify(symbolTable, null) }
 
         val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
             templates
@@ -203,21 +217,17 @@ private fun FunctionCall.verify(symbolTable: SymbolTable): FunctionCall {
                         .zip(templateExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
                         .map { it.first.verifyAs(it.second) },
                 type.verifyAs(templateExpressionFunction.returnType)
-        )
+        ).verifyAs(expected)
     } catch (e: QuartzException) {
         if (expression !is MemberAccess)
             throw e
 
-        resolveDotNotation(symbolTable).verify(symbolTable)
+        resolveDotNotation(symbolTable).verify(symbolTable, expected)
     }
 }
 
-private fun Block.verify(symbolTable: SymbolTable): Block {
-    return Block(statementList.map { it.verify(symbolTable) })
-}
-
-private fun MemberAccess.verify(symbolTable: SymbolTable): MemberAccess {
-    val newExpression = expression.verify(symbolTable)
+private fun MemberAccess.verify(symbolTable: SymbolTable, expected: Type?): Expression {
+    val newExpression = expression.verify(symbolTable, null)
     val owner = newExpression.type.asStruct()
             ?: throw QuartzException("${newExpression.type.asStruct()} is not a struct")
     val memberType = owner.members[name]?.type
@@ -227,41 +237,30 @@ private fun MemberAccess.verify(symbolTable: SymbolTable): MemberAccess {
             name,
             newExpression,
             memberType
-    )
+    ).verifyAs(expected)
 }
 
-private fun IfExpression.verify(symbolTable: SymbolTable): IfExpression {
-    val newTest = test.verify(symbolTable)
-    val newIfTrue = ifTrue.verify(symbolTable)
-    val newIfFalse = ifFalse.verify(symbolTable)
-    val newType = type.verifyAs(newIfTrue.type).verifyAs(newIfFalse.type)
+private fun IfExpression.verify(symbolTable: SymbolTable, expected: Type?): IfExpression {
+    val newTest = test.verify(symbolTable, Primitives.int)
+    val newIfTrue = ifTrue.verify(symbolTable, expected)
+    val newIfFalse = ifFalse.verify(symbolTable, expected)
 
     return IfExpression(
-            newTest.verifyAs(Primitives.int),
-            newIfTrue.verifyAs(newType).verifyAs(ifFalse.type),
-            newIfFalse.verifyAs(newType).verifyAs(ifTrue.type),
-            newType
+            newTest,
+            newIfTrue,
+            newIfFalse,
+            type.verifyAs(newIfTrue.type).verifyAs(newIfFalse.type)
     )
 }
 
-private fun Lambda.verify(symbolTable: SymbolTable): Lambda {
+private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     val localSymbolTable = localSymbolTable(symbolTable)
     val newBlock = block.verify(localSymbolTable)
     return Lambda(
             argNames,
             function.copy(returnType = newBlock.verifyReturnType(function.returnType)),
             newBlock
-    )
-}
-
-private fun Expression.verifyAs(type: Type?): Expression {
-    return when {
-        this.type == null -> this.withType(type)
-        this.type == type || type == null -> this
-        this.type?.isInstance(type) ?: false -> Cast(this, type)
-        type is AliasedType -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
-    }
+    ).verifyAs(expected)
 }
 
 private fun Type?.verifyAs(type: Type?): Type? {

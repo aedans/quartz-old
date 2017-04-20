@@ -2,7 +2,6 @@ package quartz.compiler.tree.function.statement
 
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.Statement
-import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.util.Type
 import quartz.compiler.util.times
 
@@ -10,11 +9,11 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val elseBranch: Block) : Statement {
+class TypeSwitch(val expression: Expression, val branches: Map<Type, Block>, val elseBranch: Block) : Statement {
     override fun getExpressions(): List<Expression> {
         return (branches.map { it.value.getExpressions() }).flatten() +
                 elseBranch.getExpressions() +
-                identifier.getExpressions()
+                expression.getExpressions()
     }
 
     override fun getStatements(): List<Statement> {
@@ -23,7 +22,7 @@ class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val
 
     override fun mapStatements(function: (Statement) -> Statement): TypeSwitch {
         return TypeSwitch(
-                identifier.mapStatements(function),
+                expression.mapStatements(function),
                 branches.mapValues { it.value.mapStatements(function) },
                 elseBranch.mapStatements(function)
         )
@@ -31,7 +30,7 @@ class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val
 
     override fun mapExpressions(function: (Expression) -> Expression): TypeSwitch {
         return TypeSwitch(
-                identifier.mapExpressions(function),
+                expression.mapExpressions(function),
                 branches.mapValues { it.value.mapExpressions(function) },
                 elseBranch.mapExpressions(function)
         )
@@ -39,14 +38,14 @@ class TypeSwitch(val identifier: Identifier, val branches: Map<Type, Block>, val
 
     override fun mapTypes(function: (Type?) -> Type?): TypeSwitch {
         return TypeSwitch(
-                identifier.mapTypes(function),
+                expression.mapTypes(function),
                 branches.map { function(it.key.mapTypes(function))!! to it.value.mapTypes(function) }.toMap(),
                 elseBranch.mapTypes(function)
         )
     }
 
     override fun toString(): String {
-        return "typeswitch ($identifier)"
+        return "typeswitch ($expression)"
     }
 
     override fun toString(i: Int): String {
