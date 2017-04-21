@@ -21,7 +21,9 @@ data class Program(
         val typealiasDeclarationDeclarations: Map<String, TypealiasDeclaration>,
         val inlineCNodes: List<InlineC>
 ) {
-    val symbolTable = generateSymbolTable()
+    val symbolTable by lazy {
+        generateSymbolTable()
+    }
     val destructorDeclarations by lazy {
         functionDeclarations.values.filter { it.name.startsWith("__destructor") }.map { it.name.substring(13) to it }.toMap()
     }

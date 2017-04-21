@@ -6,7 +6,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class UnresolvedType(override val string: String, val templates: List<Type>) : Type({
+data class UnresolvedType(override val string: String, val templates: List<Type>) : Type({
     var s = string
     templates.filter { it !is TemplateType }.forEach { s += '_' + it.descriptiveString }
     s
@@ -20,5 +20,9 @@ class UnresolvedType(override val string: String, val templates: List<Type>) : T
                 && type.string == this.string
                 && templates.size == type.templates.size
                 && templates.zip(type.templates).all { it.first == it.second }
+    }
+
+    override fun toString(): String {
+        return string
     }
 }

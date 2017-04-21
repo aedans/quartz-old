@@ -60,9 +60,10 @@ private fun Type.resolve(symbolTable: SymbolTable): Type {
         this is UnresolvedType -> (if (templates.isEmpty())
             symbolTable.getType(string)
         else
-            (symbolTable.getType(string) as StructType).withTemplates(templates)
-                )?.mapTypes { it?.resolve(symbolTable) }
-        this is FunctionType -> function.localSymbolTable(symbolTable).run { this@resolve.mapTypes { it?.resolve(this) } }
+            (symbolTable.getType(string) as StructType).withTemplates(templates))
+                ?.mapTypes { it?.resolve(symbolTable) }
+        this is FunctionType -> function.localSymbolTable(symbolTable)
+                .run { this@resolve.mapTypes { it?.resolve(this) } }
         else -> this.mapTypes { it?.resolve(symbolTable) }
     }) ?: this
 }

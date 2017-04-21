@@ -17,19 +17,8 @@ data class StructType(
     s
 }()) {
     fun withTemplates(templates: List<Type>): Type {
-        val templateMap = this.templates.zip(templates).toMap()
-        return StructType(string, templates, members.mapValues { it.value.mapTypes { templateMap[it] ?: it } })
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return other is StructType
-                && other.string == this.string
-                && templates.size == other.templates.size
-                && templates.zip(other.templates).all { it.first == it.second }
-    }
-
-    override fun hashCode(): Int {
-        return string.hashCode() * templates.hashCode()
+        val templateMap = this.templates.map(Type::string).zip(templates).toMap()
+        return StructType(string, templates, members.mapValues { it.value.mapTypes { templateMap[it?.string] ?: it } })
     }
 
     override fun isInstance(type: Type): Boolean {

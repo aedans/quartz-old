@@ -14,4 +14,8 @@ data class TemplateType(override val string: String) : Type(string) {
     override fun isInstance(type: Type): Boolean {
         return type is TemplateType && type.string == this.string
     }
+
+    override fun toString(): String {
+        return string
+    }
 }

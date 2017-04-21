@@ -125,11 +125,11 @@ private fun Expression.verify(symbolTable: SymbolTable, expected: Type?): Expres
 private fun Expression.verifyAs(type: Type?): Expression {
     return when {
         this.type == null -> this.withType(type)
-        this.type == type || type == null -> this
+        type == null || this.type!!.isEqualTo(type) -> this
         this.type?.isInstance(type) ?: false -> Cast(this, type)
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast ${this.type!!::class} to $type")
+        else -> throw QuartzException("Could not cast $this to $type")
     }
 }
 
@@ -228,7 +228,7 @@ private fun MemberAccess.verify(symbolTable: SymbolTable, expected: Type?): Expr
     val newExpression = expression.verify(symbolTable, null)
     val owner = newExpression.type.asStruct()
             ?: throw QuartzException("${newExpression.type.asStruct()} is not a struct")
-    val memberType = owner.members[name]?.type
+    val memberType = owner.members[name]?.type.verifyAs(expected)
             ?: throw QuartzException("Unknown member $owner.$type")
 
     return MemberAccess(
@@ -264,7 +264,7 @@ private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression
 private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
-        this == type || type == null -> this
+        type == null || this.isEqualTo(type) -> this
         this.isInstance(type) -> type
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this) -> this.verifyAs(type.type)

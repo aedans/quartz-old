@@ -14,7 +14,7 @@ data class PointerType(val type: Type) : Type("${type.descriptiveString}_ptr") {
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type is PointerType && (this.type == type.type || type.type == Primitives.void)
+        return type is PointerType && (this.type.isEqualTo(type.type) || type.type == Primitives.void)
     }
 
     override fun toString(): String {
