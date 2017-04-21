@@ -29,19 +29,19 @@ extern fn malloc(size_t): void*
 extern fn realloc(void*, size_t): void*
 extern fn free(void*)
 
-extern fn atof(char*): double
-extern fn atoi(char*): int
-extern fn atol(char*): long
-extern fn strtod(char*, char**): double
-extern fn strtol(char*, char**, int): long
-// TODO strtoul
+extern fn atof(const char*): double
+extern fn atoi(const char*): int
+extern fn atol(const char*): long
+extern fn strtod(const char*, char**): double
+extern fn strtol(const char*, char**, int): long
+extern fn stroul(const char*, char**, int): ulong
 extern fn abort()
 extern fn atexit(() -> void): int
 extern fn exit(int)
-extern fn getenv(char*): char*
-extern fn system(char*): int
-extern fn bsearch(void*, void*, size_t, size_t, (void*, void*) -> int): void*
-extern fn qsort(void*, size_t, size_t, (void*, void*) -> int): void*
+extern fn getenv(const char*): char*
+extern fn system(const char*): int
+extern fn bsearch(const void*, const void*, size_t, size_t, (const void*, const void*) -> int): void*
+extern fn qsort(void*, size_t, size_t, (const void*, const void*) -> int): void*
 extern fn abs(int): int
 extern fn div(int, int): div_t
 extern fn labs(long): long

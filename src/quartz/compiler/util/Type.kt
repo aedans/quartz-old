@@ -4,7 +4,9 @@ package quartz.compiler.util
  * Created by Aedan Smith.
  */
 
-abstract class Type(val string: String, val descriptiveString: String) {
+abstract class Type(val descriptiveString: String) {
+    abstract val string: String
+
     abstract fun isInstance(type: Type): Boolean
 
     abstract fun mapTypes(function: (Type?) -> Type?): Type

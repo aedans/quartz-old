@@ -6,15 +6,16 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class PointerType(val type: Type) : Type("${type.descriptiveString}_ptr") {
-    override val string = "$type*"
+data class ConstType(val type: Type) : Type("const_${type.descriptiveString}_ptr") {
+    override val string = "const $type"
 
     override fun mapTypes(function: (Type?) -> Type?): Type {
-        return PointerType(function(type.mapTypes(function))!!)
+        return ConstType(function(type.mapTypes(function))!!)
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type is PointerType && (this.type == type.type || type.type == Primitives.void)
+        return type.isInstance(this.type)
+                || type is ConstType && this.type.isInstance(type.type)
     }
 
     override fun toString(): String {

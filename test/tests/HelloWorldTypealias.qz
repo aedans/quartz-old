@@ -1,6 +1,6 @@
 import std.c.stdio
 
-typealias string = char*
+typealias string = const char*
 
 fn main(): int {
     val helloWorld: string = "Hello, World!";

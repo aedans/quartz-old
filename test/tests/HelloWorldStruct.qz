@@ -1,7 +1,7 @@
 import std.c.stdio
 
 struct String {
-    val value: char*
+    val value: const char*
 }
 
 fn main(): int {

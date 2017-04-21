@@ -1,6 +1,6 @@
 import std.c.stdio
 
-typealias string = char*
+typealias string = const char*
 
 fn <T> print(t: T) {
     typeswitch (t) {

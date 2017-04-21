@@ -20,7 +20,7 @@ object Primitives {
     val void: Type = VoidType()
 }
 
-class NumberType(string: String) : Type(string, string.replace(' ', '_')) {
+class NumberType(override val string: String) : Type(string.replace(' ', '_')) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }
@@ -30,7 +30,9 @@ class NumberType(string: String) : Type(string, string.replace(' ', '_')) {
     }
 }
 
-class VoidType : Type("void", "void") {
+class VoidType : Type("void") {
+    override val string = "void"
+
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }

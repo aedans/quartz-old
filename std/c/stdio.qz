@@ -30,37 +30,37 @@ extern fn feof(FILE*): int
 extern fn ferror(FILE*): int
 extern fn fflush(FILE*): int
 extern fn fgetpos(FILE*, fpos_t*): int
-extern fn fopen(char*, char*): FILE*
+extern fn fopen(const char*, const char*): FILE*
 extern fn fread(void*, size_t, size_t, FILE*): size_t
 extern fn fseek(FILE*, long, int): int
 extern fn fsetpos(FILE*, fpos_t*): int
 extern fn ftell(FILE*): long
 extern fn fwrite(void*, size_t, size_t, FILE*): size_t
-extern fn remove(char*): int
-extern fn rename(char*, char*): int
+extern fn remove(const char*): int
+extern fn rename(const char*, const char*): int
 extern fn rewind(FILE*)
 extern fn setbuf(FILE*, char*)
 extern fn setvbuf(FILE*, char*, int, size_t): int
 extern fn tmpfile(): FILE*
 extern fn tmpnam(char*): char*
-extern fn fprintf(FILE*, char*, ...): int
-extern fn printf(char*, ...): int
-extern fn sprintf(char*, char*, ...): int
+extern fn fprintf(FILE*, const char*, ...): int
+extern fn printf(const char*, ...): int
+extern fn sprintf(char*, const char*, ...): int
 // TODO vfprintf
 // TODO vprintf
 // TODO vsprintf
-extern fn fscanf(FILE*, char*, ...): int
-extern fn scanf(char*, ...): int
-extern fn sscanf(char*, char*, ...): int
+extern fn fscanf(FILE*, const char*, ...): int
+extern fn scanf(const char*, ...): int
+extern fn sscanf(const char*, const char*, ...): int
 extern fn fgetc(FILE*): int
 extern fn fgets(char*, int, FILE*): char*
 extern fn fputc(int, FILE*): int
-extern fn fputs(char*, FILE*): int
+extern fn fputs(const char*, FILE*): int
 extern fn getc(FILE*): int
 extern fn getchar(): int
 extern fn gets(char*): char*
 extern fn putc(int, FILE*): int
 extern fn putchar(int): int
-extern fn puts(char*): int
+extern fn puts(const char*): int
 extern fn ungetc(int, FILE*): int
-extern fn perror(char*)
+extern fn perror(const char*)

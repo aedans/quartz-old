@@ -13,7 +13,7 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.DestructorDeclarationContext.toNode(): FunctionDeclaration {
-    errorScope({ "destructor ${type().type()}" }) {
+    errorScope({ "destructor ${type().toType()}" }) {
         val type = type().toType()
         return FunctionDeclaration(
                 "__destructor_${(type as UnresolvedType).string}",

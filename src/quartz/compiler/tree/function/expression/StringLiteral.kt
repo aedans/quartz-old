@@ -1,6 +1,7 @@
 package quartz.compiler.tree.function.expression
 
 import quartz.compiler.errors.QuartzException
+import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.tree.function.Expression
@@ -13,7 +14,7 @@ import quartz.compiler.util.Type
 
 class StringLiteral(val string: String) : Expression {
     override val isLValue = false
-    override val type = PointerType(Primitives.char)
+    override val type = ConstType(PointerType(Primitives.char))
 
     override fun getExpressions(): List<Expression> {
         return listOf(this)

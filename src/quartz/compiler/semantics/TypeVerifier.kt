@@ -5,10 +5,7 @@ import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
-import quartz.compiler.semantics.types.AliasedType
-import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -131,7 +128,8 @@ private fun Expression.verifyAs(type: Type?): Expression {
         this.type == type || type == null -> this
         this.type?.isInstance(type) ?: false -> Cast(this, type)
         type is AliasedType -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
+        type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
+        else -> throw QuartzException("Could not cast ${this.type!!::class} to $type")
     }
 }
 
@@ -269,6 +267,7 @@ private fun Type?.verifyAs(type: Type?): Type? {
         this == type || type == null -> this
         this.isInstance(type) -> type
         type is AliasedType -> this.verifyAs(type.type)
+        type is ConstType && type.type.isInstance(this) -> this.verifyAs(type.type)
         else -> throw QuartzException("Could not cast $this to $type")
     }
 }

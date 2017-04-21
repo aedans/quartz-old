@@ -6,6 +6,6 @@ fn main(): int {
     return 0;
 }
 
-fn greeter(): () -> char* = helloWorld
+fn greeter(): () -> const char* = helloWorld
 
-fn helloWorld(): char* = "Hello, World!"
+fn helloWorld(): const char* = "Hello, World!"

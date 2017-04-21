@@ -7,11 +7,11 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class StructType(
-        string: String,
+data class StructType(
+        override val string: String,
         val templates: List<Type>,
         val members: Map<String, StructMember>
-) : Type(string, {
+) : Type({
     var s = string
     templates.forEach { s += '_' + it.descriptiveString }
     s

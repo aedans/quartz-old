@@ -7,7 +7,9 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class FunctionType(val function: Function) : Type("$function", function.description()) {
+data class FunctionType(val function: Function) : Type(function.description()) {
+    override val string = function.toString()
+
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return FunctionType(this.function.mapTypes(function))
     }
@@ -23,29 +25,31 @@ data class FunctionType(val function: Function) : Type("$function", function.des
     override fun toString(): String {
         return string
     }
-}
 
-private fun Function.description(): String {
-    var string = ""
-    when {
-        args.isEmpty() && returnType == Primitives.void -> {
-            string += "process"
-        }
-        args.isEmpty() && returnType != Primitives.void -> {
-            string += returnType?.descriptiveString + "_supplier"
-        }
-        returnType == Primitives.void -> {
-            args.forEach { string += it.descriptiveString + '_' }
-            string += "consumer"
-        }
-        else -> {
-            args.forEach { string += it.descriptiveString + '_' }
-            string += "to_"
-            string += returnType?.descriptiveString
+    companion object {
+        fun Function.description(): String {
+            var string = ""
+            when {
+                args.isEmpty() && returnType == Primitives.void -> {
+                    string += "process"
+                }
+                args.isEmpty() && returnType != Primitives.void -> {
+                    string += returnType?.descriptiveString + "_supplier"
+                }
+                returnType == Primitives.void -> {
+                    args.forEach { string += it.descriptiveString + '_' }
+                    string += "consumer"
+                }
+                else -> {
+                    args.forEach { string += it.descriptiveString + '_' }
+                    string += "to_"
+                    string += returnType?.descriptiveString
+                }
+            }
+            if (vararg)
+                string += "_vararg"
+
+            return string
         }
     }
-    if (vararg)
-        string += "_vararg"
-
-    return string
 }

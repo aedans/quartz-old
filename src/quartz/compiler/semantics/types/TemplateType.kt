@@ -6,7 +6,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class TemplateType(string: String) : Type(string, string) {
+data class TemplateType(override val string: String) : Type(string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return this
     }

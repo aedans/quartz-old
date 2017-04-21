@@ -237,8 +237,12 @@ literal
 // TYPES
 
 type
+    : isConst='const'? ltype
+    ;
+
+ltype
     : identifier ('<' typeList '>')?
-    | type ptr='*'
+    | ltype ptr='*'
     | '(' args=typeList ')' '->' returnType=type
     ;
 
