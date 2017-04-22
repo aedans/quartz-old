@@ -25,7 +25,7 @@ fun FunctionDeclaration.resolveFunctions(
         program: Program,
         newFunctionDeclarations: MutableMap<String, FunctionDeclaration>
 ): FunctionDeclaration {
-    return this.mapExpressions {
+    return this.analyze(program).mapExpressions {
         if (it is Identifier) errorScope({ "identifier $it" }) {
             it.resolveFunction(program, newFunctionDeclarations)
         } else it

@@ -1,8 +1,7 @@
-package quartz.compiler.semantics
+package quartz.compiler.semantics.analyzer
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
-import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -14,14 +13,8 @@ import quartz.compiler.tree.misc.InlineC
  * Created by Aedan Smith.
  */
 
-fun Program.simplify(): Program {
-    return errorScope({ "simplifier" }) {
-        this.mapFunctionDeclarations(FunctionDeclaration::simplify)
-    }
-}
-
-private fun FunctionDeclaration.simplify(): FunctionDeclaration {
-    return errorScope({ "function declaration $name"}) {
+fun FunctionDeclaration.simplify(): FunctionDeclaration {
+    return errorScope({ "function $name"}) {
         val newStatements = mutableListOf<Statement>()
         val nameSupplier = (0..Integer.MAX_VALUE).iterator()
         block.statementList.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }

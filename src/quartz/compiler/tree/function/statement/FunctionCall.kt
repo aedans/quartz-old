@@ -52,6 +52,6 @@ data class FunctionCall(
     }
 
     override fun toString(): String {
-        return args.joinToString(prefix = "(", postfix = ")") { it.toString() }
+        return "$expression" + args.joinToString(prefix = "(", postfix = ")") { it.toString() }
     }
 }

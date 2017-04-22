@@ -1,12 +1,13 @@
-package quartz.compiler.semantics
+package quartz.compiler.semantics.analyzer
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.resolveDotNotation
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
-import quartz.compiler.tree.Program
+import quartz.compiler.semantics.verifyReturnType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -19,13 +20,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-fun Program.verify(): Program {
-    return errorScope({ "type verifier" }) {
-        this.mapFunctionDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
-    }
-}
-
-private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
+fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     return errorScope({ "function $name" }) {
         FunctionDeclaration(name, argNames, function, block.verify(localSymbolTable(symbolTable)))
     }
