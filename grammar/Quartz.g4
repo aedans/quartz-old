@@ -10,6 +10,7 @@ program
 
 declaration
     : functionDeclaration
+    | externFunctionDeclaration
     | structDeclaration
     | typealiasDeclaration
     | inlineC
@@ -19,7 +20,10 @@ declaration
 
 functionDeclaration
     : 'fn' identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
-    | 'extern' signatureDefinition
+    ;
+
+externFunctionDeclaration
+    : 'extern' signatureDefinition
     ;
 
 signatureDefinition

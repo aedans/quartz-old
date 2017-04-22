@@ -10,7 +10,6 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.util.Function
 
 /**
@@ -18,28 +17,17 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
-    return errorScope({ "function ${identifier()?.text ?: signatureDefinition().identifier().text}" }) {
-        if (signatureDefinition() != null) {
-            ExternFunctionDeclaration(
-                    signatureDefinition().identifier().text,
-                    Function(
-                            signatureDefinition().typeList().type().map { it.toType() },
-                            signatureDefinition().returnType?.toType() ?: Primitives.void,
-                            signatureDefinition().typeList().vararg != null
-                    )
-            )
-        } else {
-            FunctionDeclaration(
-                    identifier().text,
-                    fnArgumentList().fnArgument().map { it.identifier().text },
-                    Function(
-                            fnArgumentList().fnArgument().map { it.type().toType() },
-                            returnType?.toType() ?: Primitives.void,
-                            false
-                    ),
-                    fnBlock().toNode()
-            )
-        }
+    return errorScope({ "function ${identifier()?.text}" }) {
+        FunctionDeclaration(
+                identifier().text,
+                fnArgumentList().fnArgument().map { it.identifier().text },
+                Function(
+                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        returnType?.toType() ?: Primitives.void,
+                        false
+                ),
+                fnBlock().toNode()
+        )
     }
 }
 

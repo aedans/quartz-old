@@ -32,6 +32,7 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
 fun QuartzParser.DeclarationContext.toNode(): GlobalDeclaration {
     return when {
         functionDeclaration() != null -> functionDeclaration().toNode()
+        externFunctionDeclaration() != null -> externFunctionDeclaration().toNode()
         structDeclaration() != null -> structDeclaration().toNode()
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
         inlineC() != null -> inlineC().toNode()
