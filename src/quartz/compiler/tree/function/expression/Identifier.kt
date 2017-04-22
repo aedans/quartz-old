@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class Identifier(val name: String, override val type: Type?) : Expression {
+data class Identifier(val name: String, override val type: Type?) : Expression {
     override val isLValue = true
 
     override fun getExpressions(): List<Expression> {

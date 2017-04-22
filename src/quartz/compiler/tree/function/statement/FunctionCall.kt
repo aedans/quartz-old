@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class FunctionCall(
+data class FunctionCall(
         val expression: Expression,
         val args: List<Expression>,
         override val type: Type?

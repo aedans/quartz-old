@@ -19,7 +19,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-fun Program.verifyTypes(): Program {
+fun Program.verify(): Program {
     return errorScope({ "type verifier" }) {
         this.mapFunctionDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
     }
@@ -37,12 +37,12 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
             is InlineC -> this
             is PrefixUnaryOperator -> verify(symbolTable, null)
             is PostfixUnaryOperator -> verify(symbolTable, null)
-            is VariableDeclaration -> verify(symbolTable)
+            is FunctionCall -> verify(symbolTable, null)
             is Assignment -> verify(symbolTable, null)
+            is VariableDeclaration -> verify(symbolTable)
             is ReturnStatement -> verify(symbolTable)
             is IfStatement -> verify(symbolTable)
             is WhileLoop -> verify(symbolTable)
-            is FunctionCall -> verify(symbolTable, null)
             is Block -> verify(symbolTable)
             else -> throw QuartzException("Expected statement, found $this")
         }
@@ -234,7 +234,8 @@ private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression
 private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
-        type == null || this.isEqualTo(type) -> this
+        type == null -> this
+        this.isEqualTo(type) -> type
         this.isInstance(type) -> type
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this) -> this.verifyAs(type.type)
