@@ -2,78 +2,73 @@ package quartz.compiler.semantics
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
-import quartz.compiler.semantics.symboltable.SymbolTable
-import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.TypealiasDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
-import quartz.compiler.tree.struct.StructMember
-import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
+
 fun Program.resolveTypes(): Program {
-    return errorScope({ "type resolver" }) {
-        Program(
-                functionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
-                externFunctionDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
-                structDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
-                typealiasDeclarationDeclarations.mapValues { it.value.resolveTypes(symbolTable) },
-                inlineCNodes
-        )
+    return errorScope({ "struct resolver" }) {
+        val newTypealiasDeclarations = mutableMapOf<String, TypealiasDeclaration>()
+        val newStructDeclarations = mutableMapOf<String, StructDeclaration>()
+        functionDeclarations.forEach { it.value.mapTypes { it?.resolveType(this, newTypealiasDeclarations, newStructDeclarations) } }
+        copy(structDeclarations = newStructDeclarations, typealiasDeclarationDeclarations = newTypealiasDeclarations)
     }
 }
 
-private fun FunctionDeclaration.resolveTypes(symbolTable: SymbolTable): FunctionDeclaration {
-    return errorScope({ "function $name" }) {
-        val localSymbolTable = localSymbolTable(symbolTable)
-        this.mapTypes { it?.resolve(localSymbolTable) }
-    }
-}
+fun Type.resolveType(
+        program: Program,
+        newTypealiasDeclarations: MutableMap<String, TypealiasDeclaration>,
+        newStructDeclarations: MutableMap<String, StructDeclaration>
+): Type {
+    return when {
+        this is AliasedType -> {
+            val newAlias = resolveAlias(string, program) ?: return this
 
-private fun ExternFunctionDeclaration.resolveTypes(symbolTable: SymbolTable): ExternFunctionDeclaration {
-    return errorScope({ "extern function $name" }) {
-        this.mapTypes { it?.resolve(symbolTable) }
-    }
-}
+            if (!newTypealiasDeclarations.contains(newAlias.name)) {
+                newTypealiasDeclarations.put(newAlias.name, newAlias)
+                newTypealiasDeclarations.put(newAlias.name, newAlias
+                        .mapTypes { it?.resolveType(program, newTypealiasDeclarations, newStructDeclarations) })
+            }
 
-private fun StructDeclaration.resolveTypes(symbolTable: SymbolTable): StructDeclaration {
-    return errorScope({ "struct declaration $name" }) {
-        val localSymbolTable = localSymbolTable(symbolTable)
-        this.mapTypes { it?.resolve(localSymbolTable) }
-    }
-}
-
-private fun TypealiasDeclaration.resolveTypes(symbolTable: SymbolTable): TypealiasDeclaration {
-    return errorScope({ "typealias declaration $name" }) {
-        TypealiasDeclaration(name, aliasedType.resolve(symbolTable)!!, external)
-    }
-}
-
-fun Type?.resolve(symbolTable: SymbolTable): Type? {
-    return if (this == null) this else when (this) {
-        is AliasedType -> AliasedType(string, type.resolve(symbolTable)!!, external)
-        is ConstType -> ConstType(type.resolve(symbolTable)!!)
-        is FunctionType -> function.localSymbolTable(symbolTable).run {
-            FunctionType(Function(
-                    function.args.map { it.resolve(this)!! },
-                    function.returnType.resolve(this),
-                    function.vararg
-            ))
+            this.copy(string = newAlias.name)
         }
-        is PointerType -> PointerType(type.resolve(symbolTable)!!)
-        is NumberType -> this
-        is VoidType -> this
-        is StructType -> StructType(
-                string,
-                this.members.mapValues { StructMember(it.value.name, it.value.type.resolve(symbolTable)!!, it.value.mutable) }
-        )
-        is UnresolvedType -> symbolTable.getType(string)?.mapTypes { it?.resolve(symbolTable) }
-        else -> throw QuartzException("Unexpected type $this")
+        this is StructType -> {
+            val newStruct = resolveStruct(string, program) ?: return this
+
+            if (!newStructDeclarations.contains(newStruct.name)) {
+                newStructDeclarations.put(newStruct.name, newStruct)
+                newStructDeclarations.put(newStruct.name, newStruct
+                        .mapTypes { it?.resolveType(program, newTypealiasDeclarations, newStructDeclarations) })
+            }
+
+            this.copy(string = newStruct.name)
+        }
+        this is ConstType -> this
+        this is FunctionType -> this
+        this is PointerType -> this
+        this is NumberType -> this
+        this is VoidType -> this
+        this is UnresolvedType -> this
+        else -> throw QuartzException("Expected type, found $this")
     }
+}
+
+fun resolveAlias(
+        name: String,
+        program: Program
+): TypealiasDeclaration? {
+    return program.typealiasDeclarationDeclarations[name]
+}
+
+fun resolveStruct(
+        name: String,
+        program: Program
+): StructDeclaration? {
+    return program.structDeclarations[name]
 }

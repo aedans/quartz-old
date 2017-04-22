@@ -16,6 +16,6 @@ class TypealiasDeclaration(val name: String, val aliasedType: Type, val external
     }
 
     fun mapTypes(function: (Type?) -> Type?): TypealiasDeclaration {
-        return TypealiasDeclaration(name, function(aliasedType.mapTypes(function))!!, false)
+        return TypealiasDeclaration(name, function(aliasedType.mapTypes(function))!!, external)
     }
 }

@@ -36,13 +36,13 @@ object Compiler {
                 analyzer: Program.() -> Program = {
                     errorScope({ "semantic analyzer" }) {
                         this
-                                .resolveTypes()
+                                .generateTypes()
                                 .generateConstructors()
                                 .verify()
-                                .resolveLambdas()
                                 .simplify()
+                                .resolveLambdas()
                                 .resolveFunctions()
-                                .resolveStructs()
+                                .resolveTypes()
                     }
                 },
                 generator: (Program, OutputStream) -> Unit = { program, outputStream ->

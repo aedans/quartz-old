@@ -7,6 +7,7 @@
     - Allow passing templated functions to functions
 - Add collection literals, ranges, etc.
     - Add _default.qz
+- Improve external functions
 - Add implicit return types for single expression functions
 - Add ranges
 - Add function templates

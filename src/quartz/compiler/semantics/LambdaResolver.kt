@@ -29,14 +29,14 @@ fun FunctionDeclaration.resolveLambdas(lambdas: MutableList<FunctionDeclaration>
     return this.mapExpressions {
         when (it) {
             is Lambda -> errorScope({ "$it" }) {
-                it.resolve(lambdas, nameSupplier)
+                it.generate(lambdas, nameSupplier)
             }
             else -> it
         }
     }
 }
 
-private fun Lambda.resolve(lambdas: MutableList<FunctionDeclaration>, nameSupplier: Iterator<Int>): Identifier {
+private fun Lambda.generate(lambdas: MutableList<FunctionDeclaration>, nameSupplier: Iterator<Int>): Identifier {
     val name = "__lambda_${nameSupplier.next()}"
     lambdas.add(FunctionDeclaration(
             name,

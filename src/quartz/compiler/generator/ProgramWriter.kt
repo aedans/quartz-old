@@ -15,7 +15,9 @@ import quartz.compiler.util.Type
 fun ProgramOutputStream.writeAll() {
     program.inlineCNodes.forEach { inlineC(it) }
 
-    program.mapTypes { it?.also { declare(it) } }
+    program.functionDeclarations.map { declare(FunctionType(it.value.function)) }
+    program.structDeclarations.map { declare(it.value.type) }
+    program.typealiasDeclarationDeclarations.map { declare(it.value.type) }
 
     program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
     program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
