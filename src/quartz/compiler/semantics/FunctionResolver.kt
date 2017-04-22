@@ -17,7 +17,7 @@ fun Program.resolveFunctions(): Program {
                 ?.resolveFunctions(this, newFunctionDeclarations)
                 ?.also { newFunctionDeclarations.put(it.name, it) }
                 ?: throw QuartzException("Could not find function main")
-        copy(newFunctionDeclarations)
+        copy(functionDeclarations = newFunctionDeclarations)
     }
 }
 

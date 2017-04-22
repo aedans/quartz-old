@@ -42,6 +42,7 @@ object Compiler {
                                 .resolveLambdas()
                                 .simplify()
                                 .resolveFunctions()
+                                .resolveStructs()
                     }
                 },
                 generator: (Program, OutputStream) -> Unit = { program, outputStream ->
