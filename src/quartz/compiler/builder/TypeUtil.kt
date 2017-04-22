@@ -31,8 +31,7 @@ fun QuartzParser.LtypeContext.toType(): Type {
                 "double" -> Primitives.double
                 "void" -> Primitives.void
                 else -> UnresolvedType(
-                        identifier().text,
-                        typeList()?.type()?.map { it.toType() } ?: emptyList()
+                        identifier().text
                 )
             }
         } else {
@@ -41,7 +40,6 @@ fun QuartzParser.LtypeContext.toType(): Type {
             } else {
                 FunctionType(Function(
                         args.type().map { it.toType() },
-                        emptyList(),
                         returnType.toType(),
                         args.vararg != null
                 ))

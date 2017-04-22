@@ -40,8 +40,6 @@ private fun Statement.simplify(newStatements: MutableList<Statement>, nameSuppli
             is Assignment -> simplify(newStatements, nameSupplier)
             is IfStatement -> simplify(newStatements, nameSupplier)
             is WhileLoop -> simplify(newStatements, nameSupplier)
-            is Delete -> simplify(newStatements, nameSupplier)
-            is TypeSwitch -> simplify(newStatements, nameSupplier)
             is FunctionCall -> simplify(newStatements, nameSupplier)
             else -> throw QuartzException("Unrecognized node $this")
         }
@@ -78,26 +76,6 @@ private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSuppli
     return WhileLoop(
             testIdentifier,
             Block(newLoopStatements)
-    )
-}
-
-private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Delete {
-    return Delete(expression.toUniqueVariable(newStatements, nameSupplier))
-}
-
-private fun TypeSwitch.simplify(@Suppress("UNUSED_PARAMETER") newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
-    return TypeSwitch(
-            expression,
-            branches.mapValues {
-                val newBranchStatements = mutableListOf<Statement>()
-                it.value.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
-                Block(newBranchStatements)
-            },
-            {
-                val newBranchStatements = mutableListOf<Statement>()
-                elseBranch.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
-                Block(newBranchStatements)
-            }()
     )
 }
 
@@ -161,7 +139,6 @@ private fun Assignment.simplify(newStatements: MutableList<Statement>, nameSuppl
 private fun FunctionCall.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): FunctionCall {
     return FunctionCall(
             expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
-            templates,
             args.map { it.simplify(newStatements, nameSupplier) }.map { it.toUniqueVariable(newStatements, nameSupplier) },
             type
     )

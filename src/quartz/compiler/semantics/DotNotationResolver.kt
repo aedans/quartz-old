@@ -22,7 +22,6 @@ fun FunctionCall.resolveDotNotation(symbolTable: SymbolTable): FunctionCall {
                     ?: throw QuartzException("Could not find function ${expression.name}")
             FunctionCall(
                     Identifier(expression.name, expressionType),
-                    templates,
                     listOf(expression.expression) + args,
                     type
             )

@@ -41,11 +41,6 @@ object Compiler {
                                 .verifyTypes()
                                 .resolveLambdas()
                                 .simplify()
-                                .generateDestructors()
-                                .resolveFunctionTemplates()
-                                .resolveTypeTemplates()
-                                .resolveTypeSwitch()
-                                .resolveDeletes()
                     }
                 },
                 generator: (Program, OutputStream) -> Unit = { program, outputStream ->

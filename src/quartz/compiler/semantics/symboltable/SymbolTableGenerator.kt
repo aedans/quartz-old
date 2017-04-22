@@ -41,13 +41,11 @@ fun Lambda.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
 
 fun Function.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
-    this.templates.forEach { localSymbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 
 fun StructDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
-    this.templates.forEach { localSymbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 

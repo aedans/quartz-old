@@ -42,8 +42,6 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
             is ReturnStatement -> verify(symbolTable)
             is IfStatement -> verify(symbolTable)
             is WhileLoop -> verify(symbolTable)
-            is Delete -> verify(symbolTable)
-            is TypeSwitch -> verify(symbolTable)
             is FunctionCall -> verify(symbolTable, null)
             is Block -> verify(symbolTable)
             else -> throw QuartzException("Expected statement, found $this")
@@ -79,21 +77,6 @@ private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
     return WhileLoop(
             test.verify(symbolTable, Primitives.int),
             block.verify(localSymbolTable)
-    )
-}
-
-private fun Delete.verify(symbolTable: SymbolTable): Delete {
-    return Delete(expression.verify(symbolTable, null))
-}
-
-private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
-    val newIdentifier = expression.verify(symbolTable, null)
-    return TypeSwitch(
-            newIdentifier,
-            branches.mapValues {
-                it.value.verify(it.localSymbolTable(symbolTable, (expression as? Identifier)?.name ?: "___"))
-            },
-            elseBranch.verify(symbolTable.localSymbolTable())
     )
 }
 
@@ -196,25 +179,12 @@ private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expr
 
         val expressions = args.map { it.verify(symbolTable, null) }
 
-        val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
-            templates
-        else
-            expressionFunction.args.zip(expressions.map { it.type ?: throw QuartzException("Could not infer type for $this") })
-                    .inferTemplates(expressionFunction.templates)
-
-        if (templates.size != expressionFunction.templates.size)
-            throw QuartzException("Could not infer types for $this")
-
-        val templateMap = expressionFunction.templates.zip(templates).toMap()
-        val templateExpressionFunction = expressionFunction.mapTypes { templateMap[it] ?: it }
-
         FunctionCall(
                 newExpression,
-                templates,
                 expressions
-                        .zip(templateExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
+                        .zip(expressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
                         .map { it.first.verifyAs(it.second) },
-                type.verifyAs(templateExpressionFunction.returnType)
+                type.verifyAs(expressionFunction.returnType)
         ).verifyAs(expected)
     } catch (e: QuartzException) {
         if (expression !is MemberAccess)

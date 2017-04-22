@@ -4,7 +4,6 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -25,7 +24,6 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
                     signatureDefinition().identifier().text,
                     Function(
                             signatureDefinition().typeList().type().map { it.toType() },
-                            emptyList(),
                             signatureDefinition().returnType?.toType() ?: Primitives.void,
                             signatureDefinition().typeList().vararg != null
                     )
@@ -36,7 +34,6 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
                     fnArgumentList().fnArgument().map { it.identifier().text },
                     Function(
                             fnArgumentList().fnArgument().map { it.type().toType() },
-                            identifierList()?.identifier()?.map { TemplateType(it.text) } ?: emptyList(),
                             returnType?.toType() ?: Primitives.void,
                             false
                     ),
@@ -54,8 +51,6 @@ fun QuartzParser.StatementContext.toNode(): Statement {
             varDeclaration() != null -> varDeclaration().toNode()
             ifStatement() != null -> ifStatement().toNode()
             whileLoop() != null -> whileLoop().toNode()
-            delete() != null -> delete().toNode()
-            typeswitch() != null -> typeswitch().toNode()
             expression() != null -> expression().toNode()
             else -> throw QuartzException("Error translating $text")
         }
@@ -85,18 +80,6 @@ fun QuartzParser.IfStatementContext.toNode(): IfStatement {
 
 fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
     return WhileLoop(expression().toNode(), block()?.toNode() ?: Block(emptyList()))
-}
-
-fun QuartzParser.DeleteContext.toNode(): Delete {
-    return Delete(expression().toNode())
-}
-
-fun QuartzParser.TypeswitchContext.toNode(): TypeSwitch {
-    return TypeSwitch(
-            identifier().toNode(),
-            typeswitchBranch().map { it.type().toType() to it.block().toNode() }.toMap(),
-            block()?.toNode() ?: Block(emptyList())
-    )
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {
@@ -198,7 +181,6 @@ fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAcces
 fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
-            typeList()?.type()?.map { it.toType() } ?: emptyList(),
             expressionList().expression().map { it.toNode() },
             null
     )
@@ -209,7 +191,6 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
             fnArgumentList().fnArgument().map { it.identifier().text },
             Function(
                     fnArgumentList().fnArgument().map { it.type().toType() },
-                    emptyList(),
                     returnType?.toType(),
                     false
             ),

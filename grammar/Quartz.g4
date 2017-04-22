@@ -12,14 +12,13 @@ declaration
     : functionDeclaration
     | structDeclaration
     | typealiasDeclaration
-    | destructorDeclaration
     | inlineC
     ;
 
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    : 'fn' identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     | 'extern' signatureDefinition
     ;
 
@@ -43,7 +42,7 @@ fnBlock
 // STRUCT DECLARATION
 
 structDeclaration
-    : extern='extern'? 'struct' identifier ('<' identifierList '>')? '{' structMember* '}' semi?
+    : extern='extern'? 'struct' identifier '{' structMember* '}' semi?
     ;
 
 structMember
@@ -54,12 +53,6 @@ structMember
 
 typealiasDeclaration
     : extern='extern'? 'typealias' identifier '=' type semi?
-    ;
-
-// DESTRUCTOR DECLARATION
-
-destructorDeclaration
-    : 'destructor' ('<' identifierList '>')? type fnBlock
     ;
 
 // IMPORT DECLARATION
@@ -80,8 +73,6 @@ statement
     | varDeclaration semi?
     | ifStatement semi?
     | whileLoop semi?
-    | delete semi?
-    | typeswitch semi?
     | expression semi?
     ;
 
@@ -99,18 +90,6 @@ ifStatement
 
 whileLoop
     : 'while' '(' expression ')' block
-    ;
-
-delete
-    : 'delete' expression
-    ;
-
-typeswitch
-    : 'typeswitch' '(' identifier ')' '{' typeswitchBranch* ('else' block)? '}'
-    ;
-
-typeswitchBranch
-    : type block
     ;
 
 // EXPRESSIONS
@@ -208,7 +187,7 @@ postfixOperation
     ;
 
 postfixCall
-    : ('<' typeList '>')? '(' expressionList ')'
+    : '(' expressionList ')'
     ;
 
 memberAccess
@@ -241,7 +220,7 @@ type
     ;
 
 ltype
-    : identifier ('<' typeList '>')?
+    : identifier
     | ltype ptr='*'
     | '(' args=typeList ')' '->' returnType=type
     ;

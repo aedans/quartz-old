@@ -4,7 +4,6 @@ import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.StructType
 import quartz.compiler.semantics.types.UnresolvedType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -57,11 +56,7 @@ private fun TypealiasDeclaration.resolveTypes(symbolTable: SymbolTable): Typeali
 
 private fun Type.resolve(symbolTable: SymbolTable): Type {
     return (when {
-        this is UnresolvedType -> (if (templates.isEmpty())
-            symbolTable.getType(string)
-        else
-            (symbolTable.getType(string) as StructType).withTemplates(templates))
-                ?.mapTypes { it?.resolve(symbolTable) }
+        this is UnresolvedType -> symbolTable.getType(string)?.mapTypes { it?.resolve(symbolTable) }
         this is FunctionType -> function.localSymbolTable(symbolTable)
                 .run { this@resolve.mapTypes { it?.resolve(this) } }
         else -> this.mapTypes { it?.resolve(symbolTable) }
