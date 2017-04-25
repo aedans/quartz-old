@@ -18,7 +18,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 fun Program.generateTypes(): Program {
-    return errorScope({ "type resolver" }) {
+    return errorScope({ "type generator" }) {
         Program(
                 functionDeclarations.mapValues { it.value.generateTypes(symbolTable) },
                 externFunctionDeclarations.mapValues { it.value.generateTypes(symbolTable) },
@@ -63,6 +63,7 @@ fun Type?.generate(symbolTable: SymbolTable): Type? {
             FunctionType(Function(
                     function.args.map { it.generate(this)!! },
                     function.returnType.generate(this),
+                    function.templates,
                     function.vararg
             ))
         }
@@ -73,7 +74,8 @@ fun Type?.generate(symbolTable: SymbolTable): Type? {
                 string,
                 this.members.mapValues { StructMember(it.value.name, it.value.type.generate(symbolTable)!!, it.value.mutable) }
         )
-        is UnresolvedType -> symbolTable.getType(string)?.mapTypes { it?.generate(symbolTable) }
+        is TemplateType -> this
+        is UnresolvedType -> symbolTable.getType(string)?.mapTypes { it?.generate(symbolTable) } ?: TemplateType(string)
         else -> throw QuartzException("Unexpected type $this")
     }
 }

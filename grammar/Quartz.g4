@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    : 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     ;
 
 externFunctionDeclaration
@@ -251,7 +251,7 @@ block
     ;
 
 identifier
-    : IDENTIFIER
+    : IDENTIFIER ('<' typeList '>')?
     ;
 
 inlineC

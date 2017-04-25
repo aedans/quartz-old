@@ -6,16 +6,13 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class ConstType(val type: Type) : Type("const_${type.descriptiveString}") {
-    override val string = "const $type"
-
+data class TemplateType(override val string: String) : Type(string) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
-        return ConstType(function(type.mapTypes(function))!!)
+        return this
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type.isInstance(this.type)
-                || type is ConstType && this.type.isInstance(type.type)
+        return type is TemplateType && type.string == this.string
     }
 
     override fun toString(): String {

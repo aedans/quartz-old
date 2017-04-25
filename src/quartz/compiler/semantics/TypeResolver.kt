@@ -13,10 +13,14 @@ import quartz.compiler.util.Type
  */
 
 fun Program.resolveTypes(): Program {
-    return errorScope({ "struct resolver" }) {
+    return errorScope({ "type resolver" }) {
         val newTypealiasDeclarations = mutableMapOf<String, TypealiasDeclaration>()
         val newStructDeclarations = mutableMapOf<String, StructDeclaration>()
-        functionDeclarations.forEach { it.value.mapTypes { it?.resolveType(this, newTypealiasDeclarations, newStructDeclarations) } }
+        functionDeclarations.forEach {
+            errorScope({ "function ${it.value.name}" }) {
+                it.value.mapTypes { it?.resolveType(this, newTypealiasDeclarations, newStructDeclarations) }
+            }
+        }
         copy(structDeclarations = newStructDeclarations, typealiasDeclarationDeclarations = newTypealiasDeclarations)
     }
 }

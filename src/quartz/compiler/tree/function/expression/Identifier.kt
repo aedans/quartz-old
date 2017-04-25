@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class Identifier(val name: String, override val type: Type?) : Expression {
+data class Identifier(val name: String, val templates: List<Type>, override val type: Type?) : Expression {
     override val isLValue = true
 
     override fun getExpressions(): List<Expression> {
@@ -28,14 +28,14 @@ data class Identifier(val name: String, override val type: Type?) : Expression {
     }
 
     override fun mapTypes(function: (Type?) -> Type?): Identifier {
-        return Identifier(name, function(type?.mapTypes(function)))
+        return Identifier(name, templates.map { function(it.mapTypes(function))!! }, function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): Identifier {
-        return Identifier(name, type)
+        return Identifier(name, templates, type)
     }
 
     override fun toString(): String {
-        return name
+        return "$name${if (!templates.isEmpty()) templates.joinToString(prefix = "<", postfix = ">") { it.toString() } else ""}"
     }
 }

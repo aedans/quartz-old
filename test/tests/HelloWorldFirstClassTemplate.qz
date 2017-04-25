@@ -1,0 +1,11 @@
+import std.c.stdio
+
+fn main() {
+    print(identity<const char *>)
+}
+
+fn print(func: (const char *) -> const char *) {
+    printf(func("Hello, World!"));
+}
+
+fn <T> identity(t: T): T = t

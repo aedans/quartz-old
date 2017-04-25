@@ -2,6 +2,7 @@ package quartz.compiler.semantics
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Identifier
@@ -33,19 +34,22 @@ fun FunctionDeclaration.resolveFunctions(
 }
 
 fun Identifier.resolveFunction(program: Program, newFunctionDeclarations: MutableMap<String, FunctionDeclaration>): Identifier {
-    val newFunction = resolveFunction(name, program) ?: return this
+    val newFunction = resolveFunction(program) ?: return this
 
     if (!newFunctionDeclarations.contains(newFunction.name)) {
         newFunctionDeclarations.put(newFunction.name, newFunction)
         newFunctionDeclarations.put(newFunction.name, newFunction.resolveFunctions(program, newFunctionDeclarations))
     }
 
-    return this.copy(name = newFunction.name)
+    return this.copy(name = newFunction.name, templates = emptyList(), type = FunctionType(newFunction.function))
 }
 
-fun resolveFunction(
-        name: String,
-        program: Program
-): FunctionDeclaration? {
-    return program.functionDeclarations[name]
+fun Identifier.resolveFunction(program: Program): FunctionDeclaration? {
+    val function = program.functionDeclarations[name] ?: return null
+    var newName = function.name
+    templates.forEach { newName += "_${it.descriptiveString}" }
+    val templateMap = function.function.templates.zip(templates).toMap()
+    return function.mapTypes { templateMap[it] ?: it }.let {
+        it.copy(name = newName, function = it.function.copy(templates = emptyList()))
+    }
 }

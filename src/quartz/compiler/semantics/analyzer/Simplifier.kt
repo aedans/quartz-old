@@ -18,7 +18,7 @@ fun FunctionDeclaration.simplify(): FunctionDeclaration {
         val newStatements = mutableListOf<Statement>()
         val nameSupplier = (0..Integer.MAX_VALUE).iterator()
         block.statementList.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }
-        FunctionDeclaration(name, argNames, function, Block(newStatements))
+        copy(block = Block(newStatements))
     }
 }
 
@@ -148,7 +148,7 @@ private fun MemberAccess.simplify(newStatements: MutableList<Statement>, nameSup
 private fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
     val tempVarName = "__${nameSupplier.next()}"
     newStatements.add(VariableDeclaration(tempVarName, null, type ?: throw QuartzException("Unknown type for $this"), true))
-    val identifier = Identifier(tempVarName, type)
+    val identifier = Identifier(tempVarName, emptyList(), type)
 
     val trueStatements = mutableListOf<Statement>()
     trueStatements.add(Assignment(identifier, ifTrue.simplify(trueStatements, nameSupplier), Assignment.ID.EQ, type))
@@ -170,5 +170,5 @@ private fun Expression.toUniqueVariable(newStatements: MutableList<Statement>, n
         return this
     val tempVarName = "__${nameSupplier.next()}"
     newStatements.add(VariableDeclaration(tempVarName, this, type ?: throw QuartzException("Unknown type for $this"), true))
-    return Identifier(tempVarName, type)
+    return Identifier(tempVarName, emptyList(), type)
 }

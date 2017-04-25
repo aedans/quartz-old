@@ -44,5 +44,5 @@ private fun Lambda.generate(lambdas: MutableList<FunctionDeclaration>, nameSuppl
             type.function,
             block
     ).resolveLambdas(lambdas, nameSupplier))
-    return Identifier(name, type)
+    return Identifier(name, emptyList(), type)
 }

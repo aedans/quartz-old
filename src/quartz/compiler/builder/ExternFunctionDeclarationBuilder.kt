@@ -15,6 +15,7 @@ fun QuartzParser.ExternFunctionDeclarationContext.toNode(): ExternFunctionDeclar
             Function(
                     signatureDefinition().typeList().type().map { it.toType() },
                     signatureDefinition().returnType?.toType() ?: Primitives.void,
+                    emptyList(),
                     signatureDefinition().typeList().vararg != null
             )
     )

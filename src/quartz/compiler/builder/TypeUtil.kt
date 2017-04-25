@@ -41,6 +41,7 @@ fun QuartzParser.LtypeContext.toType(): Type {
                 FunctionType(Function(
                         args.type().map { it.toType() },
                         returnType.toType(),
+                        emptyList(),
                         args.vararg != null
                 ))
             }

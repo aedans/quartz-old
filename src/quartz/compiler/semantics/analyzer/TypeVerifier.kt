@@ -22,7 +22,7 @@ import quartz.compiler.util.Type
 
 fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     return errorScope({ "function $name" }) {
-        FunctionDeclaration(name, argNames, function, block.verify(localSymbolTable(symbolTable)))
+        copy(block = block.verify(localSymbolTable(symbolTable)))
     }
 }
 
@@ -115,10 +115,16 @@ private fun Identifier.verify(symbolTable: SymbolTable, expected: Type?): Expres
     val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
     return Identifier(
             name,
+            templates,
             when {
                 type == null -> expectedType
                 !type.isInstance(expectedType) -> throw QuartzException("Expected $expectedType, found $type ($this)")
                 else -> type
+            }.let {
+                when (it) {
+                    is FunctionType -> FunctionType(it.function.withTemplates(templates))
+                    else -> it
+                }
             }
     ).verifyAs(expected)
 }
@@ -167,6 +173,15 @@ private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expr
     return try {
         val newExpression = expression.verify(symbolTable, null)
         val expressionFunction = newExpression.type.asFunction()?.function
+                ?.let {
+                    if (expression is Identifier && expression.templates.isNotEmpty()) {
+                        if (expression.templates.size != it.templates.size)
+                            throw QuartzException("Incorrect number of templates for $this")
+                        else {
+                            it.withTemplates(expression.templates)
+                        }
+                    } else it
+                }
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
         if (!expressionFunction.vararg && expressionFunction.args.size != args.size)

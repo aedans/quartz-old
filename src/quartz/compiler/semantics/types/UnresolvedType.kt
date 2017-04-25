@@ -12,8 +12,7 @@ data class UnresolvedType(override val string: String) : Type(string) {
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type is UnresolvedType
-                && type.string == this.string
+        return type is UnresolvedType && type.string == this.string
     }
 
     override fun toString(): String {
