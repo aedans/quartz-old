@@ -3,6 +3,7 @@ package quartz.compiler.semantics.symboltable
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Lambda
@@ -17,7 +18,7 @@ import quartz.compiler.util.Function
 fun Program.generateSymbolTable(): SymbolTable {
     return errorScope({ "symbol table generator" }) {
         val symbolTable = SymbolTable()
-        structDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+        structDeclarations.forEach { symbolTable.addType(it.key, StructType(it.value)) }
         typealiasDeclarationDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
         functionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
         externFunctionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }

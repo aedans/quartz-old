@@ -107,7 +107,7 @@ private fun Expression.verifyAs(type: Type?): Expression {
         this.type?.isInstance(type) ?: false -> Cast(this, type)
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this to $type")
+        else -> throw QuartzException("Could not cast $this to ${(type as TemplateType)}")
     }
 }
 
@@ -174,12 +174,11 @@ private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expr
         val newExpression = expression.verify(symbolTable, null)
         val expressionFunction = newExpression.type.asFunction()?.function
                 ?.let {
-                    if (expression is Identifier && expression.templates.isNotEmpty()) {
+                    if (expression is Identifier && it.templates.isNotEmpty()) {
                         if (expression.templates.size != it.templates.size)
-                            throw QuartzException("Incorrect number of templates for $this")
-                        else {
+                            throw QuartzException("Incorrect number of templates for $it (${expression.templates})")
+                        else
                             it.withTemplates(expression.templates)
-                        }
                     } else it
                 }
                 ?: throw QuartzException("Could not call ${newExpression.type}")

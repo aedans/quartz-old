@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' ('<' identifierList '>')? identifier '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    : 'fn' ('<' nameList '>')? NAME '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     ;
 
 externFunctionDeclaration
@@ -27,11 +27,11 @@ externFunctionDeclaration
     ;
 
 signatureDefinition
-    : 'fn' identifier '(' typeList ')' (':' returnType=type)? semi?
+    : 'fn' NAME '(' typeList ')' (':' returnType=type)? semi?
     ;
 
 fnArgument
-    : (identifier ':' type)
+    : (NAME ':' type)
     ;
 
 fnArgumentList
@@ -46,17 +46,17 @@ fnBlock
 // STRUCT DECLARATION
 
 structDeclaration
-    : extern='extern'? 'struct' identifier '{' structMember* '}' semi?
+    : extern='extern'? 'struct' NAME ('<' nameList '>')? '{' structMember* '}' semi?
     ;
 
 structMember
-    : varDeclarationType identifier ':' type semi?
+    : varDeclarationType NAME ':' type semi?
     ;
 
 // TYPEALIAS DECLARATION
 
 typealiasDeclaration
-    : extern='extern'? 'typealias' identifier '=' type semi?
+    : extern='extern'? 'typealias' NAME '=' type semi?
     ;
 
 // IMPORT DECLARATION
@@ -66,7 +66,7 @@ importDeclaration
     ;
 
 packageList
-    : (identifier '.')* identifier
+    : (NAME '.')* NAME
     ;
 
 // STATEMENTS
@@ -224,7 +224,7 @@ type
     ;
 
 ltype
-    : identifier
+    : NAME ('<' typeList '>')?
     | ltype ptr='*'
     | '(' args=typeList ')' '->' returnType=type
     ;
@@ -235,8 +235,8 @@ expressionList
     : (expression ',')* expression?
     ;
 
-identifierList
-    : (identifier ',')* identifier?
+nameList
+    : (NAME ',')* NAME?
     ;
 
 typeList
@@ -251,7 +251,7 @@ block
     ;
 
 identifier
-    : IDENTIFIER ('<' typeList '>')?
+    : NAME ('<' typeList '>')?
     ;
 
 inlineC
@@ -275,7 +275,7 @@ INT: [0-9]+;
 DOUBLE: [0-9]*'.'[0-9]+;
 INLINE_C: DMOD .*? DMOD;
 
-IDENTIFIER: ([_a-zA-Z][_a-zA-Z0-9]*);
+NAME: ([_a-zA-Z][_a-zA-Z0-9]*);
 
 // WHITESPACE
 

@@ -2,6 +2,7 @@ package quartz.compiler.builder
 
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
+import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.tree.struct.StructMember
 
@@ -10,9 +11,10 @@ import quartz.compiler.tree.struct.StructMember
  */
 
 fun QuartzParser.StructDeclarationContext.toNode(): StructDeclaration {
-    errorScope({ "struct ${identifier().text}" }) {
+    errorScope({ "struct ${NAME().text}" }) {
         return StructDeclaration(
-                identifier().text,
+                NAME().text,
+                nameList()?.NAME()?.map { TemplateType(it.text) } ?: emptyList(),
                 structMember().map {
                     val node = it.toNode()
                     node.name to node
@@ -23,7 +25,7 @@ fun QuartzParser.StructDeclarationContext.toNode(): StructDeclaration {
 }
 
 fun QuartzParser.StructMemberContext.toNode(): StructMember {
-    return errorScope({ "struct member ${identifier().text}" }) {
-        StructMember(identifier().text, type().toType(), type().text == "var")
+    return errorScope({ "struct member ${NAME().text}" }) {
+        StructMember(NAME().text, type().toType(), type().text == "var")
     }
 }

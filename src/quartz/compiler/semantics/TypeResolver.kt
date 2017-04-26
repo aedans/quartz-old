@@ -16,12 +16,16 @@ fun Program.resolveTypes(): Program {
     return errorScope({ "type resolver" }) {
         val newTypealiasDeclarations = mutableMapOf<String, TypealiasDeclaration>()
         val newStructDeclarations = mutableMapOf<String, StructDeclaration>()
-        functionDeclarations.forEach {
+        val newFunctionDeclarations = functionDeclarations.map {
             errorScope({ "function ${it.value.name}" }) {
                 it.value.mapTypes { it?.resolveType(this, newTypealiasDeclarations, newStructDeclarations) }
             }
         }
-        copy(structDeclarations = newStructDeclarations, typealiasDeclarationDeclarations = newTypealiasDeclarations)
+        copy(
+                functionDeclarations = newFunctionDeclarations.map { it.name to it }.toMap(),
+                structDeclarations = newStructDeclarations,
+                typealiasDeclarationDeclarations = newTypealiasDeclarations
+        )
     }
 }
 
@@ -30,8 +34,8 @@ fun Type.resolveType(
         newTypealiasDeclarations: MutableMap<String, TypealiasDeclaration>,
         newStructDeclarations: MutableMap<String, StructDeclaration>
 ): Type {
-    return when {
-        this is AliasedType -> {
+    return when (this) {
+        is AliasedType -> {
             val newAlias = resolveAlias(string, program) ?: return this
 
             if (!newTypealiasDeclarations.contains(newAlias.name)) {
@@ -42,8 +46,8 @@ fun Type.resolveType(
 
             this.copy(string = newAlias.name)
         }
-        this is StructType -> {
-            val newStruct = resolveStruct(string, program) ?: return this
+        is StructType -> {
+            val newStruct = resolveStruct(program) ?: return this
 
             if (!newStructDeclarations.contains(newStruct.name)) {
                 newStructDeclarations.put(newStruct.name, newStruct)
@@ -51,14 +55,14 @@ fun Type.resolveType(
                         .mapTypes { it?.resolveType(program, newTypealiasDeclarations, newStructDeclarations) })
             }
 
-            this.copy(string = newStruct.name)
+            StructType(newStruct)
         }
-        this is ConstType -> this
-        this is FunctionType -> this
-        this is PointerType -> this
-        this is NumberType -> this
-        this is VoidType -> this
-        this is UnresolvedType -> this
+        is ConstType -> this
+        is FunctionType -> this
+        is PointerType -> this
+        is NumberType -> this
+        is VoidType -> this
+        is TemplateType -> this
         else -> throw QuartzException("Expected type, found $this")
     }
 }
@@ -70,9 +74,10 @@ fun resolveAlias(
     return program.typealiasDeclarationDeclarations[name]
 }
 
-fun resolveStruct(
-        name: String,
-        program: Program
-): StructDeclaration? {
-    return program.structDeclarations[name]
+fun StructType.resolveStruct(program: Program): StructDeclaration? {
+    val struct = program.structDeclarations[string] ?: return null
+    var newName = struct.name
+    templates.forEach { newName += "_${it.descriptiveString}" }
+    val templateMap = struct.templates.zip(templates).toMap()
+    return struct.mapTypes { templateMap[it] ?: it }.copy(name = newName, templates = emptyList())
 }

@@ -72,10 +72,19 @@ fun Type?.generate(symbolTable: SymbolTable): Type? {
         is VoidType -> this
         is StructType -> StructType(
                 string,
+                templates,
                 this.members.mapValues { StructMember(it.value.name, it.value.type.generate(symbolTable)!!, it.value.mutable) }
         )
         is TemplateType -> this
-        is UnresolvedType -> symbolTable.getType(string)?.mapTypes { it?.generate(symbolTable) } ?: TemplateType(string)
+        is UnresolvedType -> symbolTable.getType(string)
+                ?.mapTypes { it?.generate(symbolTable) }
+                ?.let {
+                    when (it) {
+                        is StructType -> it.copy(templates = templates)
+                        else -> it
+                    }
+                }
+                ?: TemplateType(string)
         else -> throw QuartzException("Unexpected type $this")
     }
 }

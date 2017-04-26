@@ -18,14 +18,14 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
-    return errorScope({ "function ${identifier()?.text}" }) {
+    return errorScope({ "function ${NAME()?.text}" }) {
         FunctionDeclaration(
-                identifier().text,
-                fnArgumentList().fnArgument().map { it.identifier().text },
+                NAME().text,
+                fnArgumentList().fnArgument().map { it.NAME().text },
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
                         returnType?.toType() ?: Primitives.void,
-                        identifierList()?.identifier()?.map { TemplateType(it.text) } ?: emptyList(),
+                        nameList()?.NAME()?.map { TemplateType(it.text) } ?: emptyList(),
                         false
                 ),
                 fnBlock().toNode()
@@ -178,7 +178,7 @@ fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall
 
 fun QuartzParser.LambdaContext.toNode(): Lambda {
     return Lambda(
-            fnArgumentList().fnArgument().map { it.identifier().text },
+            fnArgumentList().fnArgument().map { it.NAME().text },
             Function(
                     fnArgumentList().fnArgument().map { it.type().toType() },
                     returnType?.toType(),
@@ -198,7 +198,7 @@ fun QuartzParser.SizeofContext.toNode(): Sizeof {
 }
 
 fun QuartzParser.IdentifierContext.toNode(): Identifier {
-    return Identifier(IDENTIFIER().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
+    return Identifier(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
 }
 
 fun QuartzParser.LiteralContext.toNode(): Expression {

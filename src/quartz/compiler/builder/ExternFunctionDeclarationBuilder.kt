@@ -11,7 +11,7 @@ import quartz.compiler.util.Function
 
 fun QuartzParser.ExternFunctionDeclarationContext.toNode(): ExternFunctionDeclaration {
     return ExternFunctionDeclaration(
-            signatureDefinition().identifier().text,
+            signatureDefinition().NAME().text,
             Function(
                     signatureDefinition().typeList().type().map { it.toType() },
                     signatureDefinition().returnType?.toType() ?: Primitives.void,

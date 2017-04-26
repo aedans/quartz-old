@@ -22,7 +22,7 @@ public class QuartzLexer extends Lexer {
 		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
 		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
 		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
-		DMOD=46, STRING=47, CHAR=48, INT=49, DOUBLE=50, INLINE_C=51, IDENTIFIER=52, 
+		DMOD=46, STRING=47, CHAR=48, INT=49, DOUBLE=50, INLINE_C=51, NAME=52, 
 		BLOCK_COMMENT=53, LINE_COMMENT=54, WHITESPACE=55;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
@@ -35,7 +35,7 @@ public class QuartzLexer extends Lexer {
 		"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32", 
 		"T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40", 
 		"T__41", "T__42", "T__43", "T__44", "DMOD", "STRING", "CHAR", "INT", "DOUBLE", 
-		"INLINE_C", "IDENTIFIER", "BLOCK_COMMENT", "LINE_COMMENT", "WHITESPACE"
+		"INLINE_C", "NAME", "BLOCK_COMMENT", "LINE_COMMENT", "WHITESPACE"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -51,7 +51,7 @@ public class QuartzLexer extends Lexer {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, "DMOD", "STRING", 
-		"CHAR", "INT", "DOUBLE", "INLINE_C", "IDENTIFIER", "BLOCK_COMMENT", "LINE_COMMENT", 
+		"CHAR", "INT", "DOUBLE", "INLINE_C", "NAME", "BLOCK_COMMENT", "LINE_COMMENT", 
 		"WHITESPACE"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);

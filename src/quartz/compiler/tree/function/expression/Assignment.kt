@@ -34,7 +34,7 @@ class Assignment(val lvalue: Expression, val expression: Expression, val id: ID,
     }
 
     override fun mapTypes(function: (Type?) -> Type?): Expression {
-        return Assignment(lvalue, expression.mapTypes(function), id, function(type?.mapTypes(function)))
+        return Assignment(lvalue.mapTypes(function), expression.mapTypes(function), id, function(type?.mapTypes(function)))
     }
 
     override fun withType(type: Type?): Expression {
