@@ -18,7 +18,9 @@ import java.io.InputStream
  */
 
 fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: (InputStream) -> QuartzParser.ProgramContext): Program {
-    val nodes = declaration().map { it.toNode() } + importDeclaration().map { it.import(library, parser) }.flatten().map { it.toNode() }
+    val nodes = declaration().map { it.toNode() } +
+            importDeclaration().map { it.import(library, parser) }.flatten().map { it.toNode() } +
+            parser(library.get(listOf("std", "_default")).inputStream()).declaration().map { it.toNode() }
     val programNode = Program(
             nodes.filterIsInstance(FunctionDeclaration::class.java).map { it.name to it }.toMap(),
             nodes.filterIsInstance(ExternFunctionDeclaration::class.java).map { it.name to it }.toMap(),

@@ -9,7 +9,6 @@
 - Add casting
 - Add true/false
 - Add collection literals, ranges, pairs, etc.
-    - Add _default.qz
     - Improve standard library
 - Add for loops
 - Improve generator
