@@ -1,4 +1,0 @@
-struct Array<T> {
-    val size: size_t
-    val content: T*
-}

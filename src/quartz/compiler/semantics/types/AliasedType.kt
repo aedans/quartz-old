@@ -1,5 +1,6 @@
 package quartz.compiler.semantics.types
 
+import quartz.compiler.tree.misc.TypealiasDeclaration
 import quartz.compiler.util.Type
 
 /**
@@ -11,6 +12,9 @@ data class AliasedType(
         val type: Type,
         val external: Boolean
 ) : Type(string) {
+    constructor(typealiasDeclaration: TypealiasDeclaration) :
+            this(typealiasDeclaration.name, typealiasDeclaration.aliasedType, typealiasDeclaration.external)
+
     override fun mapTypes(function: (Type?) -> Type?): Type {
         return AliasedType(string, function(type.mapTypes(function))!!, external)
     }

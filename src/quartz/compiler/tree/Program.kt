@@ -21,41 +21,19 @@ data class Program(
         val typealiasDeclarationDeclarations: Map<String, TypealiasDeclaration>,
         val inlineCNodes: List<InlineC>
 ) {
-    val symbolTable by lazy {
-        generateSymbolTable()
-    }
-    val destructorDeclarations by lazy {
-        functionDeclarations.values.filter { it.name.startsWith("__destructor") }.map { it.name.substring(13) to it }.toMap()
-    }
+    val symbolTable by lazy(this::generateSymbolTable)
 
     fun mapFunctionDeclarations(function: (FunctionDeclaration) -> FunctionDeclaration): Program {
-        return Program(
-                functionDeclarations.mapValues { function(it.value) },
-                externFunctionDeclarations,
-                structDeclarations,
-                typealiasDeclarationDeclarations,
-                inlineCNodes
-        )
+        return copy(functionDeclarations = functionDeclarations.mapValues { function(it.value) })
     }
 
     fun mapStatements(function: (Statement) -> Statement): Program {
-        return Program(
-                functionDeclarations.mapValues { it.value.mapStatements { function(it.mapStatements(function)) } },
-                externFunctionDeclarations,
-                structDeclarations,
-                typealiasDeclarationDeclarations,
-                inlineCNodes
-        )
+        return copy(functionDeclarations = functionDeclarations
+                .mapValues { it.value.mapStatements { function(it.mapStatements(function)) } })
     }
 
     fun mapExpressions(function: (Expression) -> Expression): Program {
-        return Program(
-                functionDeclarations.mapValues { it.value.mapExpressions(function) },
-                externFunctionDeclarations,
-                structDeclarations,
-                typealiasDeclarationDeclarations,
-                inlineCNodes
-        )
+        return copy(functionDeclarations = functionDeclarations.mapValues { it.value.mapExpressions(function) })
     }
 
     fun mapTypes(function: (Type?) -> Type?): Program {

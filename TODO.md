@@ -8,6 +8,9 @@
 - Add collection literals, ranges, etc.
     - Add _default.qz
 - Add implicit return types for single expression functions
+- Add char literals
+- Add break/continue
+- Improve operators
 - Add ranges
 - Add function templates
 - Improve standard library

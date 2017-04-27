@@ -10,7 +10,7 @@ import quartz.compiler.util.Type
 data class FunctionType(val function: Function) : Type(function.description()) {
     override val string = function.toString()
 
-    override fun mapTypes(function: (Type?) -> Type?): Type {
+    override fun mapTypes(function: (Type?) -> Type?): FunctionType {
         return FunctionType(this.function.mapTypes(function))
     }
 

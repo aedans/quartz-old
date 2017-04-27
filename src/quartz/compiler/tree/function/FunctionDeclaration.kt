@@ -10,7 +10,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-open class FunctionDeclaration(
+data class FunctionDeclaration(
         val name: String,
         val argNames: List<String>,
         val function: Function,
@@ -31,11 +31,11 @@ open class FunctionDeclaration(
     }
 
     fun mapStatements(function: (Statement) -> Statement): FunctionDeclaration {
-        return FunctionDeclaration(name, argNames, this.function, block.mapStatements(function))
+        return copy(block = block.mapStatements(function))
     }
 
     fun mapExpressions(function: (Expression) -> Expression): FunctionDeclaration {
-        return FunctionDeclaration(name, argNames, this.function, block.mapExpressions(function))
+        return copy(block = block.mapExpressions(function))
     }
 
     fun mapTypes(function: (Type?) -> Type?): FunctionDeclaration {

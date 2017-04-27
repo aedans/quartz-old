@@ -6,7 +6,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class ConstType(val type: Type) : Type("const_${type.descriptiveString}_ptr") {
+data class ConstType(val type: Type) : Type("const_${type.descriptiveString}") {
     override val string = "const $type"
 
     override fun mapTypes(function: (Type?) -> Type?): Type {

@@ -16,8 +16,8 @@ class ExternFunctionDeclaration(val name: String, val function: Function) : Glob
     fun mapTypes(function: (Type?) -> Type?): ExternFunctionDeclaration {
         return ExternFunctionDeclaration(name, Function(
                 this.function.args.map { function(it.mapTypes(function))!! },
-                this.function.templates,
                 function(this.function.returnType?.mapTypes(function)),
+                this.function.templates,
                 this.function.vararg
         ))
     }

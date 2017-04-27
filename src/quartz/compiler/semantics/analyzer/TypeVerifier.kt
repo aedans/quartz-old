@@ -1,12 +1,13 @@
-package quartz.compiler.semantics
+package quartz.compiler.semantics.analyzer
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.resolveDotNotation
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
-import quartz.compiler.tree.Program
+import quartz.compiler.semantics.verifyReturnType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -19,15 +20,9 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-fun Program.verifyTypes(): Program {
-    return errorScope({ "type verifier" }) {
-        this.mapFunctionDeclarations { fnDeclaration -> fnDeclaration.verify(symbolTable) }
-    }
-}
-
-private fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
+fun FunctionDeclaration.verify(symbolTable: SymbolTable): FunctionDeclaration {
     return errorScope({ "function $name" }) {
-        FunctionDeclaration(name, argNames, function, block.verify(localSymbolTable(symbolTable)))
+        copy(block = block.verify(localSymbolTable(symbolTable)))
     }
 }
 
@@ -37,14 +32,12 @@ private fun Statement.verify(symbolTable: SymbolTable): Statement {
             is InlineC -> this
             is PrefixUnaryOperator -> verify(symbolTable, null)
             is PostfixUnaryOperator -> verify(symbolTable, null)
-            is VariableDeclaration -> verify(symbolTable)
+            is FunctionCall -> verify(symbolTable, null)
             is Assignment -> verify(symbolTable, null)
+            is VariableDeclaration -> verify(symbolTable)
             is ReturnStatement -> verify(symbolTable)
             is IfStatement -> verify(symbolTable)
             is WhileLoop -> verify(symbolTable)
-            is Delete -> verify(symbolTable)
-            is TypeSwitch -> verify(symbolTable)
-            is FunctionCall -> verify(symbolTable, null)
             is Block -> verify(symbolTable)
             else -> throw QuartzException("Expected statement, found $this")
         }
@@ -82,21 +75,6 @@ private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
     )
 }
 
-private fun Delete.verify(symbolTable: SymbolTable): Delete {
-    return Delete(expression.verify(symbolTable, null))
-}
-
-private fun TypeSwitch.verify(symbolTable: SymbolTable): TypeSwitch {
-    val newIdentifier = expression.verify(symbolTable, null)
-    return TypeSwitch(
-            newIdentifier,
-            branches.mapValues {
-                it.value.verify(it.localSymbolTable(symbolTable, (expression as? Identifier)?.name ?: "___"))
-            },
-            elseBranch.verify(symbolTable.localSymbolTable())
-    )
-}
-
 private fun Block.verify(symbolTable: SymbolTable): Block {
     return Block(statementList.map { it.verify(symbolTable) })
 }
@@ -129,7 +107,7 @@ private fun Expression.verifyAs(type: Type?): Expression {
         this.type?.isInstance(type) ?: false -> Cast(this, type)
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this to $type")
+        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
     }
 }
 
@@ -137,10 +115,16 @@ private fun Identifier.verify(symbolTable: SymbolTable, expected: Type?): Expres
     val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
     return Identifier(
             name,
+            templates,
             when {
                 type == null -> expectedType
                 !type.isInstance(expectedType) -> throw QuartzException("Expected $expectedType, found $type ($this)")
                 else -> type
+            }.let {
+                when (it) {
+                    is FunctionType -> FunctionType(it.function.withTemplates(templates))
+                    else -> it
+                }
             }
     ).verifyAs(expected)
 }
@@ -187,40 +171,89 @@ private fun Assignment.verify(symbolTable: SymbolTable, expected: Type?): Assign
 
 private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     return try {
-        val newExpression = expression.verify(symbolTable, null)
+        val newExpression = when {
+            expression is Identifier && expression.templates.isEmpty() -> expression.inferTemplates(args, symbolTable)
+            else -> expression.verify(symbolTable, null)
+        }
         val expressionFunction = newExpression.type.asFunction()?.function
+                ?.let {
+                    if (newExpression is Identifier && it.templates.isNotEmpty()) {
+                        if (newExpression.templates.size != it.templates.size)
+                            throw QuartzException("Incorrect number of templates for $it (${newExpression.templates})")
+                        else
+                            it.withTemplates(newExpression.templates)
+                    } else it
+                }
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
         if (!expressionFunction.vararg && expressionFunction.args.size != args.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
-        val expressions = args.map { it.verify(symbolTable, null) }
-
-        val templates = if (templates.isNotEmpty() || expressionFunction.templates.isEmpty())
-            templates
-        else
-            expressionFunction.args.zip(expressions.map { it.type ?: throw QuartzException("Could not infer type for $this") })
-                    .inferTemplates(expressionFunction.templates)
-
-        if (templates.size != expressionFunction.templates.size)
-            throw QuartzException("Could not infer types for $this")
-
-        val templateMap = expressionFunction.templates.zip(templates).toMap()
-        val templateExpressionFunction = expressionFunction.mapTypes { templateMap[it] ?: it }
+        val expressions = args.zip(expressionFunction.args + arrayOfNulls<Type>(args.size - expressionFunction.args.size))
+                .map { it.first.verify(symbolTable, it.second) }
 
         FunctionCall(
                 newExpression,
-                templates,
-                expressions
-                        .zip(templateExpressionFunction.args + arrayOfNulls<Type>(expressions.size - expressionFunction.args.size))
-                        .map { it.first.verifyAs(it.second) },
-                type.verifyAs(templateExpressionFunction.returnType)
+                expressions,
+                type.verifyAs(expressionFunction.returnType)
         ).verifyAs(expected)
     } catch (e: QuartzException) {
         if (expression !is MemberAccess)
             throw e
 
         resolveDotNotation(symbolTable).verify(symbolTable, expected)
+    }
+}
+
+fun Identifier.inferTemplates(args: List<Expression>, symbolTable: SymbolTable): Identifier {
+    val functionType = symbolTable.getVar(name).asFunction() ?: throw QuartzException("Could not find function $name")
+    return Identifier(
+            name,
+            inferTemplates(functionType.function.args.zip(args), functionType.function.templates, symbolTable),
+            functionType
+    )
+}
+
+fun inferTemplates(args: List<Pair<Type, Expression>>, templates: List<TemplateType>, symbolTable: SymbolTable): List<Type> {
+    return if (templates.isNotEmpty()) listOf(inferTemplate(args, templates.first(), symbolTable)) +
+            inferTemplates(args, templates.drop(1), symbolTable) else emptyList()
+}
+
+fun inferTemplate(args: List<Pair<Type, Expression>>, template: TemplateType, symbolTable: SymbolTable): Type {
+    for ((type, expression) in args) {
+        val iType = template.infer(expression.verify(symbolTable, null).type!!, type)
+        if (iType != null)
+            return iType
+    }
+    throw QuartzException("Unable to infer type for $template")
+}
+
+fun TemplateType.infer(type: Type, expected: Type): Type? {
+    return if (expected == this)
+        type
+    else when (type) {
+        is AliasedType -> infer(type.type, expected)
+        is ConstType -> {
+            expected as? ConstType ?: return null
+            infer(type.type, expected.type)
+        }
+        is FunctionType -> {
+            expected as? FunctionType ?: return null
+            (type.function.args + type.function.returnType).zip(expected.function.args + expected.function.returnType)
+                    .map { if (it.first == null || it.second == null) null else infer(it.first!!, it.second!!) }
+                    .first { it != null }
+        }
+        is PointerType -> {
+            expected as? PointerType ?: return null
+            infer(type.type, expected.type)
+        }
+        is StructType -> {
+            expected as? StructType ?: return null
+            (type.members.values.map { it.type }).zip(expected.members.values.map { it.type })
+                    .map { infer(it.first, it.second) }
+                    .first { it != null }
+        }
+        else -> null
     }
 }
 
@@ -264,7 +297,8 @@ private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression
 private fun Type?.verifyAs(type: Type?): Type? {
     return when {
         this == null -> type
-        type == null || this.isEqualTo(type) -> this
+        type == null -> this
+        this.isEqualTo(type) -> type
         this.isInstance(type) -> type
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this) -> this.verifyAs(type.type)

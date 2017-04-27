@@ -11,7 +11,6 @@ import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.util.Function
 
 /**
@@ -19,30 +18,18 @@ import quartz.compiler.util.Function
  */
 
 fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
-    return errorScope({ "function ${identifier()?.text ?: signatureDefinition().identifier().text}" }) {
-        if (signatureDefinition() != null) {
-            ExternFunctionDeclaration(
-                    signatureDefinition().identifier().text,
-                    Function(
-                            signatureDefinition().typeList().type().map { it.toType() },
-                            emptyList(),
-                            signatureDefinition().returnType?.toType() ?: Primitives.void,
-                            signatureDefinition().typeList().vararg != null
-                    )
-            )
-        } else {
-            FunctionDeclaration(
-                    identifier().text,
-                    fnArgumentList().fnArgument().map { it.identifier().text },
-                    Function(
-                            fnArgumentList().fnArgument().map { it.type().toType() },
-                            identifierList()?.identifier()?.map { TemplateType(it.text) } ?: emptyList(),
-                            returnType?.toType() ?: Primitives.void,
-                            false
-                    ),
-                    fnBlock().toNode()
-            )
-        }
+    return errorScope({ "function ${NAME()?.text}" }) {
+        FunctionDeclaration(
+                NAME().text,
+                fnArgumentList().fnArgument().map { it.NAME().text },
+                Function(
+                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        returnType?.toType() ?: Primitives.void,
+                        nameList()?.NAME()?.map { TemplateType(it.text) } ?: emptyList(),
+                        false
+                ),
+                fnBlock().toNode()
+        )
     }
 }
 
@@ -54,8 +41,6 @@ fun QuartzParser.StatementContext.toNode(): Statement {
             varDeclaration() != null -> varDeclaration().toNode()
             ifStatement() != null -> ifStatement().toNode()
             whileLoop() != null -> whileLoop().toNode()
-            delete() != null -> delete().toNode()
-            typeswitch() != null -> typeswitch().toNode()
             expression() != null -> expression().toNode()
             else -> throw QuartzException("Error translating $text")
         }
@@ -85,18 +70,6 @@ fun QuartzParser.IfStatementContext.toNode(): IfStatement {
 
 fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
     return WhileLoop(expression().toNode(), block()?.toNode() ?: Block(emptyList()))
-}
-
-fun QuartzParser.DeleteContext.toNode(): Delete {
-    return Delete(expression().toNode())
-}
-
-fun QuartzParser.TypeswitchContext.toNode(): TypeSwitch {
-    return TypeSwitch(
-            identifier().toNode(),
-            typeswitchBranch().map { it.type().toType() to it.block().toNode() }.toMap(),
-            block()?.toNode() ?: Block(emptyList())
-    )
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {
@@ -174,6 +147,7 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Express
     return when {
         memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
+        dotCall() != null -> dotCall().toNode(expression)
         else -> PostfixUnaryOperator(expression, ID, null)
     }
 }
@@ -192,25 +166,32 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAccess {
-    return MemberAccess(identifier().text, expression, null)
+    return MemberAccess(NAME().text, expression, null)
 }
 
 fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
-            typeList()?.type()?.map { it.toType() } ?: emptyList(),
             expressionList().expression().map { it.toNode() },
+            null
+    )
+}
+
+fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
+    return FunctionCall(
+            identifier().toNode(),
+            listOf(expression) + expressionList().expression().map { it.toNode() },
             null
     )
 }
 
 fun QuartzParser.LambdaContext.toNode(): Lambda {
     return Lambda(
-            fnArgumentList().fnArgument().map { it.identifier().text },
+            fnArgumentList().fnArgument().map { it.NAME().text },
             Function(
                     fnArgumentList().fnArgument().map { it.type().toType() },
-                    emptyList(),
                     returnType?.toType(),
+                    emptyList(),
                     false
             ),
             fnBlock().toNode()
@@ -226,7 +207,7 @@ fun QuartzParser.SizeofContext.toNode(): Sizeof {
 }
 
 fun QuartzParser.IdentifierContext.toNode(): Identifier {
-    return Identifier(text, null)
+    return Identifier(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
 }
 
 fun QuartzParser.LiteralContext.toNode(): Expression {

@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
 
 data class UnresolvedType(override val string: String, val templates: List<Type>) : Type({
     var s = string
-    templates.filter { it !is TemplateType }.forEach { s += '_' + it.descriptiveString }
+    templates.forEach { s += '_' + it.descriptiveString }
     s
 }()) {
     override fun mapTypes(function: (Type?) -> Type?): Type {
@@ -16,13 +16,11 @@ data class UnresolvedType(override val string: String, val templates: List<Type>
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type is UnresolvedType
-                && type.string == this.string
-                && templates.size == type.templates.size
-                && templates.zip(type.templates).all { it.first == it.second }
+        return type is UnresolvedType && type.string == this.string
     }
 
     override fun toString(): String {
-        return string
+        return string +
+                if (templates.isNotEmpty()) templates.joinToString(prefix = "<", postfix = ">") { it.toString() } else ""
     }
 }

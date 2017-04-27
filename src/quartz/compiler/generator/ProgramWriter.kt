@@ -12,7 +12,9 @@ import quartz.compiler.util.Type
 fun ProgramOutputStream.writeAll() {
     program.inlineCNodes.forEach { inlineC(it) }
 
-    program.mapTypes { it?.also { declare(it) } }
+    program.functionDeclarations.map { declare(FunctionType(it.value.function)) }
+    program.structDeclarations.map { declare(StructType(it.value)) }
+    program.typealiasDeclarationDeclarations.map { declare(AliasedType(it.value)) }
 
     program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
     program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
@@ -24,10 +26,10 @@ fun ProgramOutputStream.writeAll() {
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
         is StructType -> struct(program.structDeclarations[type.string]
-                    ?: throw QuartzException("Unknown struct $type"))
+                    ?: throw QuartzException("Unknown struct ${type.string}"))
         is AliasedType -> if (!type.external) typedef(type)
         is FunctionType -> functionTypedef(type)
-        is TemplateType -> throw QuartzException("Unexpected template $type")
         is UnresolvedType -> throw QuartzException("Unresolved type $type")
+        is TemplateType -> throw QuartzException("Unexpected template $type")
     }
 }

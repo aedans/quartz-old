@@ -1,10 +1,17 @@
 import std.c.stdio
 
-struct Container<T> {
-    val value: T
-}
+typealias string = const char*
 
 fn main(): int {
-    "Hello, World!".Container().value.printf();
+    val _greeter = greeter;
+    _greeter().invoke().printf();
     return 0;
 }
+
+fn <O> invoke(function: () -> O): O {
+    return function();
+}
+
+fn greeter(): () -> string = helloWorld
+
+fn helloWorld(): string = "Hello, World!"

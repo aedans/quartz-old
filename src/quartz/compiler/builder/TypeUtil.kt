@@ -17,8 +17,8 @@ fun QuartzParser.TypeContext.toType(): Type {
 
 fun QuartzParser.LtypeContext.toType(): Type {
     return errorScope({ "type $text" }) {
-        if (identifier() != null) {
-            when (identifier().text) {
+        if (NAME() != null) {
+            when (NAME().text) {
                 "char" -> Primitives.char
                 "short" -> Primitives.short
                 "int" -> Primitives.int
@@ -30,10 +30,7 @@ fun QuartzParser.LtypeContext.toType(): Type {
                 "float" -> Primitives.float
                 "double" -> Primitives.double
                 "void" -> Primitives.void
-                else -> UnresolvedType(
-                        identifier().text,
-                        typeList()?.type()?.map { it.toType() } ?: emptyList()
-                )
+                else -> UnresolvedType(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList())
             }
         } else {
             if (ptr != null) {
@@ -41,8 +38,8 @@ fun QuartzParser.LtypeContext.toType(): Type {
             } else {
                 FunctionType(Function(
                         args.type().map { it.toType() },
-                        emptyList(),
                         returnType.toType(),
+                        emptyList(),
                         args.vararg != null
                 ))
             }

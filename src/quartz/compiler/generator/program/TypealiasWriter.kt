@@ -39,6 +39,11 @@ fun ProgramOutputStream.functionTypedef(type: FunctionType) {
             }
             if (type.function.args.isNotEmpty())
                 type(type.function.args.last())
+            if (type.function.vararg) {
+                if (type.function.args.isNotEmpty())
+                    string(", ")
+                string("...")
+            }
         }
         string(";")
         newline()

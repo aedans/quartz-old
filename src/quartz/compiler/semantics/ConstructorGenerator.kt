@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -19,7 +20,9 @@ import quartz.compiler.util.Function
 fun Program.generateConstructors(): Program {
     return errorScope({ "constructor generator" }) {
         Program(
-                functionDeclarations + structDeclarations.filterValues { !it.external }.mapValues { it.value.defaultConstructor() },
+                functionDeclarations + structDeclarations
+                        .filterValues { !it.external }
+                        .mapValues { it.value.defaultConstructor() },
                 externFunctionDeclarations,
                 structDeclarations,
                 typealiasDeclarationDeclarations,
@@ -32,17 +35,17 @@ private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
     errorScope({ "$name default constructor" }) {
         val argsNames = members.map { it.key }
         val argTypes = members.map { it.value.type }
-        val newType = type.withTemplates(templates)
+        val newType = StructType(this).copy(templates = templates)
 
         val declarationNode = VariableDeclaration("instance", null, newType, true)
         val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
-        val returnNode = ReturnStatement(Identifier("instance", newType))
+        val returnNode = ReturnStatement(Identifier("instance", emptyList(), newType))
 
         val statements = mutableListOf<Statement>()
         statements.add(declarationNode)
         statements.addAll(assignmentNodes)
         statements.add(returnNode)
 
-        return FunctionDeclaration(name, argsNames, Function(argTypes, templates, newType, false), Block(statements))
+        return FunctionDeclaration(name, argsNames, Function(argTypes, newType, templates, false), Block(statements))
     }
 }

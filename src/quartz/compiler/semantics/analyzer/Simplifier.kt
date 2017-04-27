@@ -1,31 +1,26 @@
-package quartz.compiler.semantics
+package quartz.compiler.semantics.analyzer
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
-import quartz.compiler.tree.Program
+import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
 import quartz.compiler.tree.misc.InlineC
+import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-fun Program.simplify(): Program {
-    return errorScope({ "simplifier" }) {
-        this.mapFunctionDeclarations(FunctionDeclaration::simplify)
-    }
-}
-
-private fun FunctionDeclaration.simplify(): FunctionDeclaration {
-    return errorScope({ "function declaration $name"}) {
+fun FunctionDeclaration.simplify(): FunctionDeclaration {
+    return errorScope({ "function $name"}) {
         val newStatements = mutableListOf<Statement>()
         val nameSupplier = (0..Integer.MAX_VALUE).iterator()
         block.statementList.forEach { newStatements.add(it.simplify(newStatements, nameSupplier)) }
-        FunctionDeclaration(name, argNames, function, Block(newStatements))
+        copy(block = Block(newStatements))
     }
 }
 
@@ -40,8 +35,6 @@ private fun Statement.simplify(newStatements: MutableList<Statement>, nameSuppli
             is Assignment -> simplify(newStatements, nameSupplier)
             is IfStatement -> simplify(newStatements, nameSupplier)
             is WhileLoop -> simplify(newStatements, nameSupplier)
-            is Delete -> simplify(newStatements, nameSupplier)
-            is TypeSwitch -> simplify(newStatements, nameSupplier)
             is FunctionCall -> simplify(newStatements, nameSupplier)
             else -> throw QuartzException("Unrecognized node $this")
         }
@@ -72,32 +65,16 @@ private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupp
 
 private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): WhileLoop {
     val newLoopStatements = mutableListOf<Statement>()
+    val testIdentifier = test.toUniqueVariable(newLoopStatements, nameSupplier)
+    newLoopStatements.add(IfStatement(
+            PrefixUnaryOperator(testIdentifier, PrefixUnaryOperator.ID.INVERT, Primitives.int),
+            Block(listOf(InlineC("break"))),
+            Block(emptyList())
+    ))
     block.statementList.forEach { newLoopStatements.add(it.simplify(newLoopStatements, nameSupplier)) }
-    val testIdentifier = test.toUniqueVariable(newStatements, nameSupplier)
-    newLoopStatements.add(Assignment(testIdentifier, test, Assignment.ID.EQ, testIdentifier.type))
     return WhileLoop(
-            testIdentifier,
+            NumberLiteral("1", Primitives.int),
             Block(newLoopStatements)
-    )
-}
-
-private fun Delete.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Delete {
-    return Delete(expression.toUniqueVariable(newStatements, nameSupplier))
-}
-
-private fun TypeSwitch.simplify(@Suppress("UNUSED_PARAMETER") newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): TypeSwitch {
-    return TypeSwitch(
-            expression,
-            branches.mapValues {
-                val newBranchStatements = mutableListOf<Statement>()
-                it.value.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
-                Block(newBranchStatements)
-            },
-            {
-                val newBranchStatements = mutableListOf<Statement>()
-                elseBranch.statementList.forEach { newBranchStatements.add(it.simplify(newBranchStatements, nameSupplier)) }
-                Block(newBranchStatements)
-            }()
     )
 }
 
@@ -117,6 +94,7 @@ private fun Expression.simplify(newStatements: MutableList<Statement>, nameSuppl
             is FunctionCall -> simplify(newStatements, nameSupplier)
             is MemberAccess -> simplify(newStatements, nameSupplier)
             is IfExpression -> simplify(newStatements, nameSupplier)
+            is Lambda -> simplify(newStatements, nameSupplier)
             else -> throw QuartzException("Unrecognized node $this")
         }
     }
@@ -161,7 +139,6 @@ private fun Assignment.simplify(newStatements: MutableList<Statement>, nameSuppl
 private fun FunctionCall.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): FunctionCall {
     return FunctionCall(
             expression.simplify(newStatements, nameSupplier).toUniqueVariable(newStatements, nameSupplier),
-            templates,
             args.map { it.simplify(newStatements, nameSupplier) }.map { it.toUniqueVariable(newStatements, nameSupplier) },
             type
     )
@@ -176,9 +153,7 @@ private fun MemberAccess.simplify(newStatements: MutableList<Statement>, nameSup
 }
 
 private fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
-    val tempVarName = "__${nameSupplier.next()}"
-    newStatements.add(VariableDeclaration(tempVarName, null, type ?: throw QuartzException("Unknown type for $this"), true))
-    val identifier = Identifier(tempVarName, type)
+    val identifier = uniqueVariable(type ?: throw QuartzException("Unknown type for $this"), newStatements, nameSupplier)
 
     val trueStatements = mutableListOf<Statement>()
     trueStatements.add(Assignment(identifier, ifTrue.simplify(trueStatements, nameSupplier), Assignment.ID.EQ, type))
@@ -195,10 +170,22 @@ private fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSup
     return identifier
 }
 
+private fun Lambda.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
+    val newLambdaStatements = mutableListOf<Statement>()
+    block.statementList.forEach { newLambdaStatements.add(it.simplify(newStatements, nameSupplier)) }
+    return Lambda(argNames, function, Block(newLambdaStatements))
+}
+
 private fun Expression.toUniqueVariable(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
     if (this is InlineC || this is Identifier)
         return this
     val tempVarName = "__${nameSupplier.next()}"
     newStatements.add(VariableDeclaration(tempVarName, this, type ?: throw QuartzException("Unknown type for $this"), true))
-    return Identifier(tempVarName, type)
+    return Identifier(tempVarName, emptyList(), type)
+}
+
+private fun uniqueVariable(type: Type, newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Identifier {
+    val tempVarName = "__${nameSupplier.next()}"
+    newStatements.add(VariableDeclaration(tempVarName, null, type, true))
+    return Identifier(tempVarName, emptyList(), type)
 }
