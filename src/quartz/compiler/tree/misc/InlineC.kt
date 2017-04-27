@@ -9,7 +9,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class InlineC(val src: String, override val type: Type? = null) : GlobalDeclaration, Statement, Expression {
+open class InlineC(val src: String, override val type: Type? = null) : GlobalDeclaration, Statement, Expression {
     override val isLValue = true
 
     override fun getExpressions(): List<Expression> {

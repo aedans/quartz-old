@@ -41,6 +41,8 @@ fun QuartzParser.StatementContext.toNode(): Statement {
             varDeclaration() != null -> varDeclaration().toNode()
             ifStatement() != null -> ifStatement().toNode()
             whileLoop() != null -> whileLoop().toNode()
+            breakStatement() != null -> breakStatement().toNode()
+            continueStatement() != null -> continueStatement().toNode()
             expression() != null -> expression().toNode()
             else -> throw QuartzException("Error translating $text")
         }
@@ -70,6 +72,16 @@ fun QuartzParser.IfStatementContext.toNode(): IfStatement {
 
 fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
     return WhileLoop(expression().toNode(), block()?.toNode() ?: Block(emptyList()))
+}
+
+@Suppress("unused")
+fun QuartzParser.BreakStatementContext.toNode(): Break {
+    return Break
+}
+
+@Suppress("unused")
+fun QuartzParser.ContinueStatementContext.toNode(): Continue {
+    return Continue
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {

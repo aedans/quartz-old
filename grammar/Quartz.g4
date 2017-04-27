@@ -77,6 +77,8 @@ statement
     | varDeclaration semi?
     | ifStatement semi?
     | whileLoop semi?
+    | breakStatement semi?
+    | continueStatement semi?
     | expression semi?
     ;
 
@@ -94,6 +96,14 @@ ifStatement
 
 whileLoop
     : 'while' '(' expression ')' block
+    ;
+
+breakStatement
+    : 'break'
+    ;
+
+continueStatement
+    : 'continue'
     ;
 
 // EXPRESSIONS

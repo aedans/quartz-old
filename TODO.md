@@ -2,18 +2,12 @@
 - Improve lambdas
     - Add control flow utilities
     - Allow nullable function parameters
-- Add Interfaces
-    - Improve .mapX functions
-    - Allow passing templated functions to functions
-- Add collection literals, ranges, etc.
-    - Add _default.qz
 - Add implicit return types for single expression functions
 - Add char literals
-- Add break/continue
 - Improve operators
-- Add ranges
-- Add function templates
-- Improve standard library
+- Add collection literals, ranges, etc.
+    - Add _default.qz
+    - Improve standard library
 - Add for loops
 - Improve generator
 - Add optimizer
