@@ -2,12 +2,14 @@ package quartz.compiler.semantics.analyzer
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.function.statement.*
 import quartz.compiler.tree.misc.InlineC
+import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
@@ -63,11 +65,15 @@ private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupp
 
 private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): WhileLoop {
     val newLoopStatements = mutableListOf<Statement>()
+    val testIdentifier = test.toUniqueVariable(newLoopStatements, nameSupplier)
+    newLoopStatements.add(IfStatement(
+            PrefixUnaryOperator(testIdentifier, PrefixUnaryOperator.ID.INVERT, Primitives.int),
+            Block(listOf(InlineC("break"))),
+            Block(emptyList())
+    ))
     block.statementList.forEach { newLoopStatements.add(it.simplify(newLoopStatements, nameSupplier)) }
-    val testIdentifier = test.toUniqueVariable(newStatements, nameSupplier)
-    newLoopStatements.add(Assignment(testIdentifier, test, Assignment.ID.EQ, testIdentifier.type))
     return WhileLoop(
-            testIdentifier,
+            NumberLiteral("1", Primitives.int),
             Block(newLoopStatements)
     )
 }
@@ -88,6 +94,7 @@ private fun Expression.simplify(newStatements: MutableList<Statement>, nameSuppl
             is FunctionCall -> simplify(newStatements, nameSupplier)
             is MemberAccess -> simplify(newStatements, nameSupplier)
             is IfExpression -> simplify(newStatements, nameSupplier)
+            is Lambda -> simplify(newStatements, nameSupplier)
             else -> throw QuartzException("Unrecognized node $this")
         }
     }
@@ -146,9 +153,7 @@ private fun MemberAccess.simplify(newStatements: MutableList<Statement>, nameSup
 }
 
 private fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
-    val tempVarName = "__${nameSupplier.next()}"
-    newStatements.add(VariableDeclaration(tempVarName, null, type ?: throw QuartzException("Unknown type for $this"), true))
-    val identifier = Identifier(tempVarName, emptyList(), type)
+    val identifier = uniqueVariable(type ?: throw QuartzException("Unknown type for $this"), newStatements, nameSupplier)
 
     val trueStatements = mutableListOf<Statement>()
     trueStatements.add(Assignment(identifier, ifTrue.simplify(trueStatements, nameSupplier), Assignment.ID.EQ, type))
@@ -165,10 +170,22 @@ private fun IfExpression.simplify(newStatements: MutableList<Statement>, nameSup
     return identifier
 }
 
+private fun Lambda.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
+    val newLambdaStatements = mutableListOf<Statement>()
+    block.statementList.forEach { newLambdaStatements.add(it.simplify(newStatements, nameSupplier)) }
+    return Lambda(argNames, function, Block(newLambdaStatements))
+}
+
 private fun Expression.toUniqueVariable(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Expression {
     if (this is InlineC || this is Identifier)
         return this
     val tempVarName = "__${nameSupplier.next()}"
     newStatements.add(VariableDeclaration(tempVarName, this, type ?: throw QuartzException("Unknown type for $this"), true))
+    return Identifier(tempVarName, emptyList(), type)
+}
+
+private fun uniqueVariable(type: Type, newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): Identifier {
+    val tempVarName = "__${nameSupplier.next()}"
+    newStatements.add(VariableDeclaration(tempVarName, null, type, true))
     return Identifier(tempVarName, emptyList(), type)
 }

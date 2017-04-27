@@ -1,0 +1,12 @@
+import std.c.stdio
+
+typealias string_container = Container<const char*>
+
+struct Container<T> {
+    val value: T
+}
+
+fn main(): int {
+    "Hello, World!".Container().Container<string_container>().value.value.printf();
+    return 0;
+}

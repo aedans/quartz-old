@@ -188,6 +188,7 @@ postfixOperation
     | '--'
     | postfixCall
     | memberAccess
+    | dotCall
     ;
 
 postfixCall
@@ -195,7 +196,11 @@ postfixCall
     ;
 
 memberAccess
-    : '.' identifier
+    : '.' NAME
+    ;
+
+dotCall
+    : '.' identifier '(' expressionList ')'
     ;
 
 lambda

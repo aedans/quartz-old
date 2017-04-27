@@ -18,7 +18,7 @@ data class StructType(
     s
 }()) {
     constructor(structDeclaration: StructDeclaration) :
-            this(structDeclaration.name, emptyList(), structDeclaration.members)
+            this(structDeclaration.name, structDeclaration.templates, structDeclaration.members)
 
     override fun isInstance(type: Type): Boolean {
         return type == this

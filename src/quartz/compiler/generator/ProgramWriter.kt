@@ -14,7 +14,7 @@ fun ProgramOutputStream.writeAll() {
 
     program.functionDeclarations.map { declare(FunctionType(it.value.function)) }
     program.structDeclarations.map { declare(StructType(it.value)) }
-    program.typealiasDeclarationDeclarations.map { declare(it.value.type) }
+    program.typealiasDeclarationDeclarations.map { declare(AliasedType(it.value)) }
 
     program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
     program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }

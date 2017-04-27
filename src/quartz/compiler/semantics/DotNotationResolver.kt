@@ -20,8 +20,9 @@ fun FunctionCall.resolveDotNotation(symbolTable: SymbolTable): FunctionCall {
 
             val expressionType = symbolTable.getVar(expression.name) as? FunctionType
                     ?: throw QuartzException("Could not find function ${expression.name}")
+
             FunctionCall(
-                    Identifier(expression.name, (expression.expression as? Identifier)?.templates ?: emptyList(), expressionType),
+                    Identifier(expression.name, (expression as? Identifier)?.templates ?: emptyList(), expressionType),
                     listOf(expression.expression) + args,
                     type
             )

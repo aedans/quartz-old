@@ -147,6 +147,7 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Express
     return when {
         memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
+        dotCall() != null -> dotCall().toNode(expression)
         else -> PostfixUnaryOperator(expression, ID, null)
     }
 }
@@ -165,13 +166,21 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAccess {
-    return MemberAccess(identifier().text, expression, null)
+    return MemberAccess(NAME().text, expression, null)
 }
 
 fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
             expressionList().expression().map { it.toNode() },
+            null
+    )
+}
+
+fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
+    return FunctionCall(
+            identifier().toNode(),
+            listOf(expression) + expressionList().expression().map { it.toNode() },
             null
     )
 }

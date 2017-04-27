@@ -127,7 +127,7 @@ fun ProgramOutputStream.identifier(identifier: Identifier) {
 }
 
 fun ProgramOutputStream.cast(cast: Cast) {
-    parentheses { type(cast.type ?: throw Exception("Unknown aliasedType for $this")) }
+    parentheses { type(cast.type ?: throw Exception("Unknown type for $this")) }
     parentheses { expression(cast.expression) }
 }
 

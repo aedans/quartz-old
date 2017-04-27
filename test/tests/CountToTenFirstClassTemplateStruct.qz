@@ -1,0 +1,27 @@
+import std.c.stdio
+
+struct Pair<_1, _2> {
+    val first: _1
+    val second: _2
+}
+
+typealias CountToInfo = Pair<int, (int) -> void>
+
+fn main(): int {
+    val counter = countTo;
+    counter(Pair(10, print));
+    return 0;
+}
+
+fn countTo(info: CountToInfo) {
+    val counter = countTo;
+    if (info.first > 0)
+        counter.invoke(Pair(info.first - 1, info.second));
+    info.second(info.first);
+}
+
+fn <I> invoke(function: (I) -> void, i: I)
+    function(i);
+
+fn print(i: int)
+    printf("%d ", i);

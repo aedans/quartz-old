@@ -38,8 +38,8 @@ object Compiler {
                         this
                                 .generateTypes()
                                 .generateConstructors()
-                                .resolveLambdas()
                                 .resolveFunctions()
+                                .resolveLambdas()
                                 .resolveTypes()
                     }
                 },

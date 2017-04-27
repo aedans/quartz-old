@@ -2,6 +2,7 @@ package quartz.compiler.semantics.symboltable
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
@@ -19,7 +20,7 @@ fun Program.generateSymbolTable(): SymbolTable {
     return errorScope({ "symbol table generator" }) {
         val symbolTable = SymbolTable()
         structDeclarations.forEach { symbolTable.addType(it.key, StructType(it.value)) }
-        typealiasDeclarationDeclarations.forEach { symbolTable.addType(it.key, it.value.type) }
+        typealiasDeclarationDeclarations.forEach { symbolTable.addType(it.key, AliasedType(it.value)) }
         functionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
         externFunctionDeclarations.forEach { symbolTable.addVar(it.key, FunctionType(it.value.function)) }
         symbolTable
@@ -38,18 +39,18 @@ fun Lambda.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     return localSymbolTable
 }
 
-@Suppress("unused")
 fun Function.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
+    this.templates.forEach { symbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 
-@Suppress("unused")
 fun StructDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
+    this.templates.forEach { symbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 
 fun VariableDeclaration.addTo(symbolTable: SymbolTable) {
-    symbolTable.addVar(name, type ?: throw QuartzException("Unknown aliasedType for $this"))
+    symbolTable.addVar(name, type ?: throw QuartzException("Unknown type for $this"))
 }

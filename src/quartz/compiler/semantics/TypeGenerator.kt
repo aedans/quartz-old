@@ -2,6 +2,7 @@ package quartz.compiler.semantics
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.semantics.analyzer.asStruct
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.types.*
@@ -80,11 +81,16 @@ fun Type?.generate(symbolTable: SymbolTable): Type? {
                 ?.mapTypes { it?.generate(symbolTable) }
                 ?.let {
                     when (it) {
-                        is StructType -> it.copy(templates = templates)
+                        is StructType -> it.copy(templates = templates.map { it.generate(symbolTable)!! }).let {
+                            val struct = symbolTable.getType(string).asStruct()!!
+                            val templateMap = struct.templates.zip(it.templates).toMap()
+                            it.mapTypes { templateMap[it] ?: it }
+                        }
                         else -> it
                     }
                 }
+                ?.generate(symbolTable)
                 ?: TemplateType(string)
-        else -> throw QuartzException("Unexpected type $this")
+        else -> throw QuartzException("Expected type, found $this")
     }
 }
