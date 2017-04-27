@@ -61,7 +61,7 @@ private fun ReturnStatement.verify(symbolTable: SymbolTable): ReturnStatement {
 
 private fun IfStatement.verify(symbolTable: SymbolTable): IfStatement {
     return IfStatement(
-            test.verify(symbolTable, Primitives.int),
+            test.verify(symbolTable, null),
             trueBlock.verify(symbolTable.localSymbolTable()),
             falseBlock.verify(symbolTable.localSymbolTable())
     )
@@ -70,7 +70,7 @@ private fun IfStatement.verify(symbolTable: SymbolTable): IfStatement {
 private fun WhileLoop.verify(symbolTable: SymbolTable): WhileLoop {
     val localSymbolTable = symbolTable.localSymbolTable()
     return WhileLoop(
-            test.verify(symbolTable, Primitives.int),
+            test.verify(symbolTable, null),
             block.verify(localSymbolTable)
     )
 }
@@ -272,7 +272,7 @@ private fun MemberAccess.verify(symbolTable: SymbolTable, expected: Type?): Expr
 }
 
 private fun IfExpression.verify(symbolTable: SymbolTable, expected: Type?): IfExpression {
-    val newTest = test.verify(symbolTable, Primitives.int)
+    val newTest = test.verify(symbolTable, null)
     val newIfTrue = ifTrue.verify(symbolTable, expected)
     val newIfFalse = ifFalse.verify(symbolTable, expected)
 

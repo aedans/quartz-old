@@ -7,6 +7,7 @@ import quartz.compiler.util.Type
  */
 
 object Primitives {
+    val bool: Type = NumberType("_Bool")
     val char: Type = NumberType("char")
     val short: Type = NumberType("short")
     val int: Type = NumberType("int")

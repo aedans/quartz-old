@@ -5,8 +5,9 @@
 - Add implicit return types for single expression functions
 - Add char literals
 - Improve operators
+- Add comma operator
 - Add casting
-- Add bools
+- Add true/false
 - Add collection literals, ranges, pairs, etc.
     - Add _default.qz
     - Improve standard library

@@ -67,13 +67,13 @@ private fun WhileLoop.simplify(@Suppress("UNUSED_PARAMETER") newStatements: Muta
     val newLoopStatements = mutableListOf<Statement>()
     val testIdentifier = test.toUniqueVariable(newLoopStatements, nameSupplier)
     newLoopStatements.add(IfStatement(
-            PrefixUnaryOperator(testIdentifier, PrefixUnaryOperator.ID.NOT, Primitives.int),
+            PrefixUnaryOperator(testIdentifier, PrefixUnaryOperator.ID.NOT, Primitives.bool),
             Block(listOf(InlineC("break"))),
             Block(emptyList())
     ))
     block.statementList.forEach { newLoopStatements.add(it.simplify(newLoopStatements, nameSupplier)) }
     return WhileLoop(
-            NumberLiteral("1", Primitives.int),
+            NumberLiteral("1", Primitives.bool),
             Block(newLoopStatements)
     )
 }

@@ -19,6 +19,7 @@ fun QuartzParser.LtypeContext.toType(): Type {
     return errorScope({ "type $text" }) {
         if (NAME() != null) {
             when (NAME().text) {
+                "bool" -> Primitives.bool
                 "char" -> Primitives.char
                 "short" -> Primitives.short
                 "int" -> Primitives.int
