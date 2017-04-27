@@ -109,15 +109,15 @@ continueStatement
 // EXPRESSIONS
 
 expression
-    : disjunction (assignmentOperator expression)?
+    : disjunction (assignmentOperation expression)?
     ;
 
 disjunction
-    : conjunction ('||' disjunction)?
+    : conjunction (disjunctionOperation disjunction)?
     ;
 
 conjunction
-    : equalityComparison ('&&' conjunction)?
+    : equalityComparison (conjunctionOperation conjunction)?
     ;
 
 equalityComparison
@@ -125,7 +125,11 @@ equalityComparison
     ;
 
 comparison
-    : additiveExpression (comparisonOperation comparison)?
+    : bitshiftExpression (comparisonOperation comparison)?
+    ;
+
+bitshiftExpression
+    : additiveExpression (bitshiftOperation bitshiftExpression)?
     ;
 
 additiveExpression
@@ -154,13 +158,29 @@ atomicExpression
     | literal
     ;
 
-assignmentOperator
+assignmentOperation
     : '='
     | '+='
     | '-='
     | '*='
     | '/='
     | '%='
+    | '&='
+    | '|='
+    | '^='
+    | '<<='
+    | '>>='
+    ;
+
+disjunctionOperation
+    : '||'
+    | '|'
+    | '^'
+    ;
+
+conjunctionOperation
+    : '&&'
+    | '&'
     ;
 
 equalityOperation
@@ -173,6 +193,11 @@ comparisonOperation
     | '<'
     | '>='
     | '<='
+    ;
+
+bitshiftOperation
+    : '>>'
+    | '<<'
     ;
 
 additiveOperation
@@ -189,8 +214,10 @@ multiplicativeOperation
 prefixOperation
     : '++'
     | '--'
+    | '+'
     | '-'
     | '!'
+    | '~'
     ;
 
 postfixOperation

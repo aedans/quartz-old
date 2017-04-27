@@ -63,11 +63,11 @@ private fun IfStatement.simplify(newStatements: MutableList<Statement>, nameSupp
     )
 }
 
-private fun WhileLoop.simplify(newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): WhileLoop {
+private fun WhileLoop.simplify(@Suppress("UNUSED_PARAMETER") newStatements: MutableList<Statement>, nameSupplier: Iterator<Int>): WhileLoop {
     val newLoopStatements = mutableListOf<Statement>()
     val testIdentifier = test.toUniqueVariable(newLoopStatements, nameSupplier)
     newLoopStatements.add(IfStatement(
-            PrefixUnaryOperator(testIdentifier, PrefixUnaryOperator.ID.INVERT, Primitives.int),
+            PrefixUnaryOperator(testIdentifier, PrefixUnaryOperator.ID.NOT, Primitives.int),
             Block(listOf(InlineC("break"))),
             Block(emptyList())
     ))

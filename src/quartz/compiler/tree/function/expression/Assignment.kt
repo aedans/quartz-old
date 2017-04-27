@@ -51,7 +51,12 @@ class Assignment(val lvalue: Expression, val expression: Expression, val id: ID,
         MINUS_EQ("-="),
         TIMES_EQ("*="),
         DIV_EQ("/="),
-        MOD_EQ("%=");
+        MOD_EQ("%="),
+        BAND_EQ("&="),
+        BOR_EQ("|="),
+        BXOR_EQ("^="),
+        SHR_EQ(">>="),
+        SHL_EQ("<<=");
 
         override fun toString(): String {
             return string

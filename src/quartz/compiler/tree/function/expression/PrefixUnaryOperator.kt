@@ -42,8 +42,10 @@ class PrefixUnaryOperator(val expression: Expression, val id: ID, override val t
     enum class ID(val string: String) {
         INCREMENT("++"),
         DECREMENT("--"),
-        INVERT("!"),
-        NEGATE("-");
+        NOT("!"),
+        BNOT("~"),
+        PLUS("+"),
+        MINUS("-");
 
         override fun toString(): String {
             return string

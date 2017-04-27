@@ -88,7 +88,7 @@ fun QuartzParser.ExpressionContext.toNode(): Expression {
     return errorScope({ "expression $text" }) {
         when {
             expression() == null -> disjunction().toNode()
-            else -> Assignment(disjunction().toNode(), expression().toNode(), assignmentOperator().ID, null)
+            else -> Assignment(disjunction().toNode(), expression().toNode(), assignmentOperation().ID, null)
         }
     }
 }
@@ -96,14 +96,14 @@ fun QuartzParser.ExpressionContext.toNode(): Expression {
 fun QuartzParser.DisjunctionContext.toNode(): Expression {
     return when {
         disjunction() == null -> conjunction().toNode()
-        else -> BinaryOperator(conjunction().toNode(), disjunction().toNode(), BinaryOperator.ID.OR, null)
+        else -> BinaryOperator(conjunction().toNode(), disjunction().toNode(), disjunctionOperation().ID, null)
     }
 }
 
 fun QuartzParser.ConjunctionContext.toNode(): Expression {
     return when {
         conjunction() == null -> equalityComparison().toNode()
-        else -> BinaryOperator(equalityComparison().toNode(), conjunction().toNode(), BinaryOperator.ID.AND, null)
+        else -> BinaryOperator(equalityComparison().toNode(), conjunction().toNode(), conjunctionOperation().ID, null)
     }
 }
 
@@ -116,8 +116,15 @@ fun QuartzParser.EqualityComparisonContext.toNode(): Expression {
 
 fun QuartzParser.ComparisonContext.toNode(): Expression {
     return when {
-        comparison() == null -> additiveExpression().toNode()
-        else -> BinaryOperator(additiveExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
+        comparison() == null -> bitshiftExpression().toNode()
+        else -> BinaryOperator(bitshiftExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
+    }
+}
+
+fun QuartzParser.BitshiftExpressionContext.toNode(): Expression {
+    return when {
+        bitshiftExpression() == null -> additiveExpression().toNode()
+        else -> BinaryOperator(additiveExpression().toNode(), bitshiftExpression().toNode(), bitshiftOperation().ID, null)
     }
 }
 
@@ -232,7 +239,7 @@ fun QuartzParser.LiteralContext.toNode(): Expression {
     }
 }
 
-val QuartzParser.AssignmentOperatorContext.ID: Assignment.ID
+val QuartzParser.AssignmentOperationContext.ID: Assignment.ID
     get() = when (text) {
         "=" -> Assignment.ID.EQ
         "+=" -> Assignment.ID.PLUS_EQ
@@ -240,14 +247,34 @@ val QuartzParser.AssignmentOperatorContext.ID: Assignment.ID
         "*=" -> Assignment.ID.TIMES_EQ
         "/=" -> Assignment.ID.DIV_EQ
         "%=" -> Assignment.ID.MOD_EQ
-        else -> throw QuartzException("Unrecognized assignment operator $text")
+        "&=" -> Assignment.ID.BAND_EQ
+        "|=" -> Assignment.ID.BOR_EQ
+        "^=" -> Assignment.ID.BXOR_EQ
+        "<<=" -> Assignment.ID.SHL_EQ
+        ">>=" -> Assignment.ID.SHR_EQ
+        else -> throw QuartzException("Unrecognized assignment operation $text")
+    }
+
+val QuartzParser.DisjunctionOperationContext.ID: BinaryOperator.ID
+    get() = when (text) {
+        "||" -> BinaryOperator.ID.OR
+        "|" -> BinaryOperator.ID.BOR
+        "^" -> BinaryOperator.ID.BXOR
+        else -> throw QuartzException("Unrecognized disjunction $text")
+    }
+
+val QuartzParser.ConjunctionOperationContext.ID: BinaryOperator.ID
+    get() = when (text) {
+        "&&" -> BinaryOperator.ID.AND
+        "&" -> BinaryOperator.ID.BAND
+        else -> throw QuartzException("Unrecognized conjunction $text")
     }
 
 val QuartzParser.EqualityOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         "==" -> BinaryOperator.ID.EQ
         "!=" -> BinaryOperator.ID.NEQ
-        else -> throw QuartzException("Unrecognized equality operator $text")
+        else -> throw QuartzException("Unrecognized equality operation $text")
     }
 
 val QuartzParser.ComparisonOperationContext.ID: BinaryOperator.ID
@@ -256,14 +283,21 @@ val QuartzParser.ComparisonOperationContext.ID: BinaryOperator.ID
         "<" -> BinaryOperator.ID.LT
         ">=" -> BinaryOperator.ID.GEQ
         "<=" -> BinaryOperator.ID.LEQ
-        else -> throw QuartzException("Unrecognized comparison operator $text")
+        else -> throw QuartzException("Unrecognized comparison operation $text")
+    }
+
+val QuartzParser.BitshiftOperationContext.ID: BinaryOperator.ID
+    get() = when (text) {
+        ">>" -> BinaryOperator.ID.SHR
+        "<<" -> BinaryOperator.ID.SHL
+        else -> throw QuartzException("Unrecognized bitshift operation $text")
     }
 
 val QuartzParser.AdditiveOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         "+" -> BinaryOperator.ID.ADD
         "-" -> BinaryOperator.ID.SUBT
-        else -> throw QuartzException("Unrecognized additive operator $text")
+        else -> throw QuartzException("Unrecognized additive operation $text")
     }
 
 val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
@@ -271,21 +305,23 @@ val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
         "*" -> BinaryOperator.ID.MULT
         "/" -> BinaryOperator.ID.DIV
         "%" -> BinaryOperator.ID.MOD
-        else -> throw QuartzException("Unrecognized multiplicative operator $text")
+        else -> throw QuartzException("Unrecognized multiplicative operation $text")
     }
 
 val QuartzParser.PrefixOperationContext.ID: PrefixUnaryOperator.ID
     get() = when (text) {
         "++" -> PrefixUnaryOperator.ID.INCREMENT
         "--" -> PrefixUnaryOperator.ID.DECREMENT
-        "-" -> PrefixUnaryOperator.ID.NEGATE
-        "!" -> PrefixUnaryOperator.ID.INVERT
-        else -> throw QuartzException("Unrecognized prefix operator $text")
+        "+" -> PrefixUnaryOperator.ID.PLUS
+        "-" -> PrefixUnaryOperator.ID.MINUS
+        "!" -> PrefixUnaryOperator.ID.NOT
+        "~" -> PrefixUnaryOperator.ID.BNOT
+        else -> throw QuartzException("Unrecognized prefix operation $text")
     }
 
 val QuartzParser.PostfixOperationContext.ID: PostfixUnaryOperator.ID
     get() = when (text) {
         "++" -> PostfixUnaryOperator.ID.INCREMENT
         "--" -> PostfixUnaryOperator.ID.DECREMENT
-        else -> throw QuartzException("Unrecognized postfix operator $text")
+        else -> throw QuartzException("Unrecognized postfix operation $text")
     }

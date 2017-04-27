@@ -41,7 +41,10 @@ class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, o
 
     enum class ID(val string: String) {
         OR("||"),
+        BOR("|"),
         AND("&&"),
+        BAND("&"),
+        BXOR("^"),
         EQ("=="),
         NEQ("!="),
         LT("<"),
@@ -52,7 +55,9 @@ class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, o
         SUBT("-"),
         MULT("*"),
         DIV("/"),
-        MOD("%");
+        MOD("%"),
+        SHL("<<"),
+        SHR(">>");
 
         override fun toString(): String {
             return string
