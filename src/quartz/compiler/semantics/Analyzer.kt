@@ -1,7 +1,6 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.errors.errorScope
-import quartz.compiler.semantics.analyzer.simplify
 import quartz.compiler.semantics.analyzer.verify
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -13,7 +12,5 @@ import quartz.compiler.tree.function.FunctionDeclaration
 fun FunctionDeclaration.analyze(program: Program): FunctionDeclaration {
     return errorScope({ "type verifier" }) {
         this.verify(program.symbolTable)
-    }.run { errorScope({ "simplifier" }) {
-        this.simplify()
-    } }
+    }
 }

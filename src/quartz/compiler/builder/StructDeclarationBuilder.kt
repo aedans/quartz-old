@@ -11,8 +11,8 @@ import quartz.compiler.tree.struct.StructMember
  */
 
 fun QuartzParser.StructDeclarationContext.toNode(): StructDeclaration {
-    errorScope({ "struct ${NAME().text}" }) {
-        return StructDeclaration(
+    return errorScope({ "struct ${NAME().text}" }) {
+        StructDeclaration(
                 NAME().text,
                 nameList()?.NAME()?.map { TemplateType(it.text) } ?: emptyList(),
                 structMember().map {

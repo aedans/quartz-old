@@ -32,7 +32,7 @@ fun Program.generateConstructors(): Program {
 }
 
 private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
-    errorScope({ "$name default constructor" }) {
+    return errorScope({ "$name default constructor" }) {
         val argsNames = members.map { it.key }
         val argTypes = members.map { it.value.type }
         val newType = StructType(this).copy(templates = templates)
@@ -46,6 +46,6 @@ private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
         statements.addAll(assignmentNodes)
         statements.add(returnNode)
 
-        return FunctionDeclaration(name, argsNames, Function(argTypes, newType, templates, false), Block(statements))
+        FunctionDeclaration(name, argsNames, Function(argTypes, newType, templates, false), Block(statements))
     }
 }

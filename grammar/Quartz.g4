@@ -168,8 +168,8 @@ assignmentOperation
     | '&='
     | '|='
     | '^='
-    | '<<='
-    | '>>='
+    | '<' '<' '='
+    | '>' '>' '='
     ;
 
 disjunctionOperation
@@ -196,8 +196,8 @@ comparisonOperation
     ;
 
 bitshiftOperation
-    : '>>'
-    | '<<'
+    : '>' '>'
+    | '<' '<'
     ;
 
 additiveOperation
@@ -312,7 +312,7 @@ semi
 
 DMOD: '%%';
 STRING: '"' ('\\'.|.)*? '"';
-CHAR: '\''.'\'';
+CHAR: '\'' ('\\'.|.)*? '\'';
 INT: [0-9]+;
 DOUBLE: [0-9]*'.'[0-9]+;
 INLINE_C: DMOD .*? DMOD;

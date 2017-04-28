@@ -5,8 +5,7 @@ import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.import.Library
-import quartz.compiler.tree.import.import
+import quartz.compiler.tree.library.Library
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.tree.misc.TypealiasDeclaration

@@ -3,7 +3,6 @@
     - Add control flow utilities
     - Allow nullable function parameters
 - Add implicit return types for single expression functions
-- Add char literals
 - Improve operators
 - Add comma operator
 - Add casting

@@ -12,10 +12,10 @@ import quartz.compiler.util.Type
  */
 
 fun Block.verifyReturnType(returnType: Type?): Type {
-    errorScope({ "return type verifier" }) {
+    return errorScope({ "return type verifier" }) {
         val returnNodes = getStatements().filterIsInstance(ReturnStatement::class.java)
         val returnTypes = (returnNodes.map { it.expression.type } + returnType).filterNotNull()
-        return returnTypes.greatestCommonType()
+        returnTypes.greatestCommonType()
     }
 }
 
