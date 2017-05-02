@@ -241,7 +241,7 @@ fun TemplateType.infer(type: Type, expected: Type): Type? {
             expected as? FunctionType ?: return null
             (type.function.args + type.function.returnType).zip(expected.function.args + expected.function.returnType)
                     .map { if (it.first == null || it.second == null) null else infer(it.first!!, it.second!!) }
-                    .first { it != null }
+                    .firstOrNull { it != null }
         }
         is PointerType -> {
             expected as? PointerType ?: return null
@@ -251,7 +251,7 @@ fun TemplateType.infer(type: Type, expected: Type): Type? {
             expected as? StructType ?: return null
             (type.members.values.map { it.type }).zip(expected.members.values.map { it.type })
                     .map { infer(it.first, it.second) }
-                    .first { it != null }
+                    .firstOrNull { it != null }
         }
         else -> null
     }

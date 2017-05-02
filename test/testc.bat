@@ -5,6 +5,6 @@
 @mkdir out
 @mkdir src
 java -jar ../jar/Quartz.jar tests src > debug.txt
-@for %%f in (src/*) do gcc src/%%f -o exe/%%f.exe
+@for %%f in (src/*) do gcc src/%%f -o exe/%%f.exe -Wall -Wextra -Wpedantic
 @cd exe
 @for %%f in (*.exe) do @for /F "tokens=*" %%i in ('call %%f') DO @echo %%i > ../out/%%f.txt
