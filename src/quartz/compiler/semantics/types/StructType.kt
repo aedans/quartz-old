@@ -10,15 +10,10 @@ import quartz.compiler.util.Type
 
 data class StructType(
         override val string: String,
-        val templates: List<Type>,
         val members: Map<String, StructMember>
-) : Type({
-    var s = string
-    templates.forEach { s += '_' + it.descriptiveString }
-    s
-}()) {
+) : Type(string) {
     constructor(structDeclaration: StructDeclaration) :
-            this(structDeclaration.name, structDeclaration.templates, structDeclaration.members)
+            this(structDeclaration.name, structDeclaration.members)
 
     override fun isInstance(type: Type): Boolean {
         return type == this
@@ -26,13 +21,11 @@ data class StructType(
 
     override fun mapTypes(function: (Type?) -> Type?): StructType {
         return copy(
-                templates = templates.map { function(it.mapTypes(function))!! },
                 members = members.filterValues { it.type != this }.mapValues { it.value.mapTypes(function) }
         )
     }
 
     override fun toString(): String {
-        return string +
-                if (templates.isNotEmpty()) templates.joinToString(prefix = "<", postfix = ">") { it.toString() } else ""
+        return string
     }
 }

@@ -79,17 +79,17 @@ private fun Expression.unwrap(newStatements: MutableList<Statement>): Expression
                         ?: throw QuartzException("Unknown aliasedType for $this"), true))
 
                 val trueStatements = mutableListOf<Statement>()
-                trueStatements.add(Assignment(Identifier(tempVarName, emptyList(), type), ifTrue.unwrap(trueStatements), Assignment.ID.EQ, type))
+                trueStatements.add(Assignment(Identifier(tempVarName, type), ifTrue.unwrap(trueStatements), Assignment.ID.EQ, type))
 
                 val falseStatements = mutableListOf<Statement>()
-                falseStatements.add(Assignment(Identifier(tempVarName, emptyList(), type), ifFalse.unwrap(falseStatements), Assignment.ID.EQ, type))
+                falseStatements.add(Assignment(Identifier(tempVarName, type), ifFalse.unwrap(falseStatements), Assignment.ID.EQ, type))
 
                 newStatements.add(IfStatement(
                         test,
                         Block(trueStatements),
                         Block(falseStatements)
                 ))
-                Identifier(tempVarName, emptyList(), type)
+                Identifier(tempVarName, type)
             }
             else -> throw QuartzException("Expected expression, found $this")
         }

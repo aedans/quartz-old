@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' ('<' nameList '>')? NAME '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    : 'fn' NAME '(' fnArgumentList ')' (':' returnType=type)? fnBlock
     ;
 
 externFunctionDeclaration
@@ -46,7 +46,7 @@ fnBlock
 // STRUCT DECLARATION
 
 structDeclaration
-    : extern='extern'? 'struct' NAME ('<' nameList '>')? '{' structMember* '}' semi?
+    : extern='extern'? 'struct' NAME '{' structMember* '}' semi?
     ;
 
 structMember
@@ -266,7 +266,7 @@ type
     ;
 
 ltype
-    : NAME ('<' typeList '>')?
+    : NAME
     | ltype ptr='*'
     | '(' args=typeList ')' '->' returnType=type
     ;
@@ -293,7 +293,7 @@ block
     ;
 
 identifier
-    : NAME ('<' typeList '>')?
+    : NAME
     ;
 
 inlineC

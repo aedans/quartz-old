@@ -35,17 +35,17 @@ private fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
     return errorScope({ "$name default constructor" }) {
         val argsNames = members.map { it.key }
         val argTypes = members.map { it.value.type }
-        val newType = StructType(this).copy(templates = templates)
+        val newType = StructType(this)
 
         val declarationNode = VariableDeclaration("instance", null, newType, true)
         val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
-        val returnNode = ReturnStatement(Identifier("instance", emptyList(), newType))
+        val returnNode = ReturnStatement(Identifier("instance", newType))
 
         val statements = mutableListOf<Statement>()
         statements.add(declarationNode)
         statements.addAll(assignmentNodes)
         statements.add(returnNode)
 
-        FunctionDeclaration(name, argsNames, Function(argTypes, newType, templates, false), Block(statements))
+        FunctionDeclaration(name, argsNames, Function(argTypes, newType, false), Block(statements))
     }
 }

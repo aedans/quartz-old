@@ -41,15 +41,10 @@ fun Identifier.resolveFunction(program: Program, newFunctionDeclarations: Mutabl
         newFunctionDeclarations.put(newFunction.name, newFunction.resolveFunctions(program, newFunctionDeclarations))
     }
 
-    return this.copy(name = newFunction.name, templates = emptyList(), type = FunctionType(newFunction.function))
+    return this.copy(name = newFunction.name, type = FunctionType(newFunction.function))
 }
 
 fun Identifier.resolveFunction(program: Program): FunctionDeclaration? {
     val function = program.functionDeclarations[name] ?: return null
-    var newName = function.name
-    templates.forEach { newName += "_${it.descriptiveString}" }
-    val templateMap = function.function.templates.zip(templates).toMap()
-    return function.mapTypes { templateMap[it] ?: it }.let {
-        it.copy(name = newName, function = it.function.copy(templates = emptyList()))
-    }
+    return function
 }

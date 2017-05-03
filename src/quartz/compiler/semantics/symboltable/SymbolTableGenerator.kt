@@ -39,15 +39,15 @@ fun Lambda.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     return localSymbolTable
 }
 
+@Suppress("unused")
 fun Function.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
-    this.templates.forEach { symbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 
+@Suppress("unused")
 fun StructDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = symbolTable.localSymbolTable()
-    this.templates.forEach { symbolTable.addType(it.string, it) }
     return localSymbolTable
 }
 

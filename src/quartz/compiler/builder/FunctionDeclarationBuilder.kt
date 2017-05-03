@@ -4,7 +4,6 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.semantics.types.TemplateType
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -25,7 +24,6 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
                         returnType?.toType() ?: Primitives.void,
-                        nameList()?.NAME()?.map { TemplateType(it.text) } ?: emptyList(),
                         false
                 ),
                 fnBlock().toNode()
@@ -210,7 +208,6 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
             Function(
                     fnArgumentList().fnArgument().map { it.type().toType() },
                     returnType?.toType(),
-                    emptyList(),
                     false
             ),
             fnBlock().toNode()
@@ -226,7 +223,7 @@ fun QuartzParser.SizeofContext.toNode(): Sizeof {
 }
 
 fun QuartzParser.IdentifierContext.toNode(): Identifier {
-    return Identifier(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
+    return Identifier(NAME().text, null)
 }
 
 fun QuartzParser.LiteralContext.toNode(): Expression {

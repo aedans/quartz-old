@@ -76,8 +76,5 @@ fun resolveAlias(
 
 fun StructType.resolveStruct(program: Program): StructDeclaration? {
     val struct = program.structDeclarations[string] ?: return null
-    var newName = struct.name
-    templates.forEach { newName += "_${it.descriptiveString}" }
-    val templateMap = struct.templates.zip(templates).toMap()
-    return struct.mapTypes { templateMap[it] ?: it }.copy(name = newName, templates = emptyList())
+    return struct
 }

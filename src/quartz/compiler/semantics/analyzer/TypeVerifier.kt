@@ -6,7 +6,10 @@ import quartz.compiler.semantics.resolveDotNotation
 import quartz.compiler.semantics.symboltable.SymbolTable
 import quartz.compiler.semantics.symboltable.addTo
 import quartz.compiler.semantics.symboltable.localSymbolTable
-import quartz.compiler.semantics.types.*
+import quartz.compiler.semantics.types.AliasedType
+import quartz.compiler.semantics.types.ConstType
+import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.semantics.verifyReturnType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -115,16 +118,10 @@ private fun Identifier.verify(symbolTable: SymbolTable, expected: Type?): Expres
     val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
     return Identifier(
             name,
-            templates,
             when {
                 type == null -> expectedType
                 !type.isInstance(expectedType) -> throw QuartzException("Expected $expectedType, found $type ($this)")
                 else -> type
-            }.let {
-                when (it) {
-                    is FunctionType -> FunctionType(it.function.withTemplates(templates))
-                    else -> it
-                }
             }
     ).verifyAs(expected)
 }
@@ -171,19 +168,8 @@ private fun Assignment.verify(symbolTable: SymbolTable, expected: Type?): Assign
 
 private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     return try {
-        val newExpression = when {
-            expression is Identifier && expression.templates.isEmpty() -> expression.inferTemplates(args, symbolTable)
-            else -> expression.verify(symbolTable, null)
-        }
+        val newExpression = expression.verify(symbolTable, null)
         val expressionFunction = newExpression.type.asFunction()?.function
-                ?.let {
-                    if (newExpression is Identifier && it.templates.isNotEmpty()) {
-                        if (newExpression.templates.size != it.templates.size)
-                            throw QuartzException("Incorrect number of templates for $it (${newExpression.templates})")
-                        else
-                            it.withTemplates(newExpression.templates)
-                    } else it
-                }
                 ?: throw QuartzException("Could not call ${newExpression.type}")
 
         if (!expressionFunction.vararg && expressionFunction.args.size != args.size)
@@ -202,58 +188,6 @@ private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expr
             throw e
 
         resolveDotNotation(symbolTable).verify(symbolTable, expected)
-    }
-}
-
-fun Identifier.inferTemplates(args: List<Expression>, symbolTable: SymbolTable): Identifier {
-    val functionType = symbolTable.getVar(name).asFunction() ?: throw QuartzException("Could not find function $name")
-    return Identifier(
-            name,
-            inferTemplates(functionType.function.args.zip(args), functionType.function.templates, symbolTable),
-            functionType
-    )
-}
-
-fun inferTemplates(args: List<Pair<Type, Expression>>, templates: List<TemplateType>, symbolTable: SymbolTable): List<Type> {
-    return if (templates.isNotEmpty()) listOf(inferTemplate(args, templates.first(), symbolTable)) +
-            inferTemplates(args, templates.drop(1), symbolTable) else emptyList()
-}
-
-fun inferTemplate(args: List<Pair<Type, Expression>>, template: TemplateType, symbolTable: SymbolTable): Type {
-    for ((type, expression) in args) {
-        val iType = template.infer(expression.verify(symbolTable, null).type!!, type)
-        if (iType != null)
-            return iType
-    }
-    throw QuartzException("Unable to infer type for $template")
-}
-
-fun TemplateType.infer(type: Type, expected: Type): Type? {
-    return if (expected == this)
-        type
-    else when (type) {
-        is AliasedType -> infer(type.type, expected)
-        is ConstType -> {
-            expected as? ConstType ?: return null
-            infer(type.type, expected.type)
-        }
-        is FunctionType -> {
-            expected as? FunctionType ?: return null
-            (type.function.args + type.function.returnType).zip(expected.function.args + expected.function.returnType)
-                    .map { if (it.first == null || it.second == null) null else infer(it.first!!, it.second!!) }
-                    .firstOrNull { it != null }
-        }
-        is PointerType -> {
-            expected as? PointerType ?: return null
-            infer(type.type, expected.type)
-        }
-        is StructType -> {
-            expected as? StructType ?: return null
-            (type.members.values.map { it.type }).zip(expected.members.values.map { it.type })
-                    .map { infer(it.first, it.second) }
-                    .firstOrNull { it != null }
-        }
-        else -> null
     }
 }
 
