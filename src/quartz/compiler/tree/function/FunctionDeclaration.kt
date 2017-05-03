@@ -17,9 +17,11 @@ data class FunctionDeclaration(
         val block: Block
 ) : GlobalDeclaration {
     val argsWithNames by lazy {
-        if (argNames.size != function.args.size)
-            throw QuartzException("$argNames.size != ${function.args}.size")
-        argNames.zip(function.args)
+        when {
+            function.args == null -> null
+            argNames.size != function.args.size -> throw QuartzException("$argNames.size != ${function.args}.size")
+            else -> argNames.zip(function.args)
+        }
     }
 
     override fun toString(): String {

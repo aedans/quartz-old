@@ -8,6 +8,10 @@ fn main(): int {
     return 0;
 }
 
-fn greeter(): () -> string = helloWorld
+fn greeter(): () -> string {
+    return helloWorld;
+}
 
-fn helloWorld(): string = "Hello, World!"
+fn helloWorld(): string {
+    return "Hello, World!";
+}

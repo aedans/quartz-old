@@ -9,6 +9,7 @@ extern fn malloc(size_t): void*
 extern fn realloc(void*, size_t): void*
 extern fn free(void*)
 
+/*
 fn <T> qcalloc(size: size_t): T* {
     return calloc(size, sizeof(T));
 }
@@ -24,3 +25,4 @@ fn <T> qrealloc(ptr: T*, size: size_t) {
 fn <T> qfree(ptr: T*) {
     free(ptr);
 }
+*/

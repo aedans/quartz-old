@@ -10,8 +10,14 @@ fn main(): int {
     return 0;
 }
 
-fn helloWorld(): const char* = "Hello, World!"
+fn helloWorld(): const char* {
+    return "Hello, World!";
+}
 
-fn _true(): int = 1
+fn _true(): bool {
+    return 1;
+}
 
-fn _false(): int = 0
+fn _false(): bool {
+    return 0;
+}

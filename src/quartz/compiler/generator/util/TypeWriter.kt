@@ -10,7 +10,8 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-fun ProgramOutputStream.type(type: Type) {
+fun ProgramOutputStream.type(type: Type?) {
+    type!!
     when (type) {
         is PointerType -> {
             type(type.type)

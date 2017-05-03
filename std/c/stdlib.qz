@@ -19,10 +19,21 @@ extern typealias wchar_t = uint
 extern typealias div_t = __stdlib_div_t
 extern typealias ldiv_t = __stdlib_ldiv_t
 
-fn get_EXIT_FAILURE(): int = %%EXIT_FAILURE%%
-fn get_EXIT_SUCCESS(): int = %%EXIT_SUCCESS%%
-fn get_RAND_MAX(): int = %%RAND_MAX%%
-fn get_MB_CUR_MAX(): int = %%MB_CUR_MAX%%
+fn get_EXIT_FAILURE(): int {
+    return %%EXIT_FAILURE%%;
+}
+
+fn get_EXIT_SUCCESS(): int {
+    return %%EXIT_SUCCESS%%;
+}
+
+fn get_RAND_MAX(): int {
+    return %%RAND_MAX%%;
+}
+
+fn get_MB_CUR_MAX(): int {
+    return %%MB_CUR_MAX%%;
+}
 
 extern fn calloc(size_t, size_t): void*
 extern fn malloc(size_t): void*

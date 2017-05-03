@@ -7,14 +7,15 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-fun ProgramOutputStream.args(args: List<Pair<String, Type>>) {
+fun ProgramOutputStream.args(args: List<Pair<String, Type?>>?) {
+    args!!
     string("(")
     args.dropLast(1).forEach {
-        arg(it)
+        arg(it.let { it.first to it.second!! })
         string(", ")
     }
     if (!args.isEmpty())
-        arg(args.last())
+        arg(args.last().let { it.first to it.second!! })
     string(")")
 }
 

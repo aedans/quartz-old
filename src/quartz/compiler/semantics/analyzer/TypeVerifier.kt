@@ -110,7 +110,7 @@ private fun Expression.verifyAs(type: Type?): Expression {
         this.type?.isInstance(type) ?: false -> Cast(this, type)
         type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
+        else -> throw QuartzException("Could not cast $this to $type")
     }
 }
 
@@ -171,6 +171,7 @@ private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expr
         val newExpression = expression.verify(symbolTable, null)
         val expressionFunction = newExpression.type.asFunction()?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
+        expressionFunction.args!!
 
         if (!expressionFunction.vararg && expressionFunction.args.size != args.size)
             throw QuartzException("Incorrect number of arguments for $this")
@@ -219,6 +220,11 @@ private fun IfExpression.verify(symbolTable: SymbolTable, expected: Type?): IfEx
 }
 
 private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression {
+    if (function.args == null)
+        return copy(function = (expected as FunctionType).function).verify(symbolTable, expected)
+    if (argNames == null)
+        return copy(argNames = function.args.mapIndexed { i, _ -> "p$i"}).verify(symbolTable, expected)
+
     val localSymbolTable = localSymbolTable(symbolTable)
     val newBlock = block.verify(localSymbolTable)
     return Lambda(

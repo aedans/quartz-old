@@ -9,5 +9,6 @@ fn main(): int {
     return 0;
 }
 
-fn print(string: String)
+fn print(string: String) {
     string.value.printf();
+}

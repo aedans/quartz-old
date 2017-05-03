@@ -40,7 +40,7 @@ private fun Lambda.generate(lambdas: MutableList<FunctionDeclaration>, nameSuppl
     val name = "__lambda_${nameSupplier.next()}"
     lambdas.add(FunctionDeclaration(
             name,
-            argNames,
+            argNames!!,
             type.function,
             block
     ).resolveLambdas(lambdas, nameSupplier))

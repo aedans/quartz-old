@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME '(' fnArgumentList ')' (':' returnType=type)? fnBlock
+    : 'fn' NAME '(' fnArgumentList ')' (':' returnType=type)? block
     ;
 
 externFunctionDeclaration
@@ -36,11 +36,6 @@ fnArgument
 
 fnArgumentList
     : (fnArgument ',')* fnArgument?
-    ;
-
-fnBlock
-    : block
-    | '=' expression semi?
     ;
 
 // STRUCT DECLARATION
@@ -229,7 +224,8 @@ postfixOperation
     ;
 
 postfixCall
-    : '(' expressionList ')'
+    : '(' expressionList ')' lambda?
+    | lambda
     ;
 
 memberAccess
@@ -237,11 +233,13 @@ memberAccess
     ;
 
 dotCall
-    : '.' identifier '(' expressionList ')'
+    : '.' identifier '(' expressionList ')' lambda?
+    | lambda
     ;
 
 lambda
-    : 'fn' ('(' fnArgumentList ')')? (':' returnType=type)? fnBlock
+    : 'fn' ('(' fnArgumentList ')')? (':' returnType=type)? block
+    | (nameList '->')? '{' statementBlock '}'
     ;
 
 ifExpression
@@ -285,10 +283,14 @@ typeList
     : (type ',')* (vararg='...'|type)?
     ;
 
+statementBlock
+    : statement*
+    ;
+
 // UTIL
 
 block
-    : '{' statement* '}' semi?
+    : '{' statementBlock '}' semi?
     | statement
     ;
 

@@ -25,5 +25,6 @@ fn decrement(i: int): int {
     return i - 1;
 }
 
-fn printInt(i: int)
+fn printInt(i: int) {
     printf("%d ", i);
+}

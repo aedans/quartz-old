@@ -18,8 +18,8 @@ data class FunctionType(val function: Function) : Type(function.description()) {
         return type is FunctionType
                 && type.function.returnType == function.returnType
                 && type.function.vararg == function.vararg
-                && type.function.args.size == function.args.size
-                && type.function.args.zip(function.args).all { it.first == it.second }
+                && type.function.args?.size == function.args?.size
+                && type.function.args?.zip(function.args ?: emptyList())?.all { it.first == it.second } ?: true
     }
 
     override fun toString(): String {
@@ -28,6 +28,7 @@ data class FunctionType(val function: Function) : Type(function.description()) {
 
     companion object {
         fun Function.description(): String {
+            val args = args ?: emptyList()
             var string = ""
             when {
                 args.isEmpty() && returnType == Primitives.void -> {
@@ -37,11 +38,11 @@ data class FunctionType(val function: Function) : Type(function.description()) {
                     string += returnType?.descriptiveString + "_supplier"
                 }
                 returnType == Primitives.void -> {
-                    args.forEach { string += it.descriptiveString + '_' }
+                    args.forEach { string += it?.descriptiveString + '_' }
                     string += "consumer"
                 }
                 else -> {
-                    args.forEach { string += it.descriptiveString + '_' }
+                    args.forEach { string += it?.descriptiveString + '_' }
                     string += "to_"
                     string += returnType?.descriptiveString
                 }

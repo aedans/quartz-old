@@ -13,5 +13,6 @@ fn countTo(i: int, printer: (int) -> void) {
     printer(i);
 }
 
-fn print(i: int)
+fn print(i: int) {
     printf("%d ", i);
+}

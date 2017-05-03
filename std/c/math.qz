@@ -4,7 +4,9 @@
 #include <math.h>
 %%
 
-fn get_HUGE_VAL(): double = %%HUGE_VAL%%
+fn get_HUGE_VAL(): double {
+    return %%HUGE_VAL%%;
+}
 
 extern fn acos(double): double
 extern fn asin(double): double

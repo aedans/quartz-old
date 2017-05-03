@@ -10,4 +10,6 @@ fn main(): int {
     return 0;
 }
 
-fn addFour(one: char, two: short, three: int, four: long): int = one + four + three + two
+fn addFour(one: char, two: short, three: int, four: long): int {
+    return one + four + three + two;
+}

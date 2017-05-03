@@ -20,7 +20,9 @@ extern typealias size_t = ulong
 extern typealias clock_t = ulong
 extern typealias time_t = ulong
 
-fn get_CLOCKS_PER_SEC(): long = %%CLOCKS_PER_SEC%%
+fn get_CLOCKS_PER_SEC(): long {
+    return %%CLOCKS_PER_SEC%%;
+}
 
 extern fn asctime(tm*): char*
 extern fn clock(): clock_t

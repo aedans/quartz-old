@@ -19,5 +19,6 @@ fn fizzBuzz(i: int) {
         printInt(i);
 }
 
-fn printInt(i: int)
+fn printInt(i: int) {
     printf("%d ", i);
+}

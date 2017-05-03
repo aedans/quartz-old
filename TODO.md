@@ -1,7 +1,5 @@
 - Allow importing of functions, structs, etc.
-- Improve lambdas
-    - Add control flow utilities
-    - Allow nullable function parameters
+- Add templates
 - Add implicit return types for single expression functions
 - Improve operators
 - Add comma operator

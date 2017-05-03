@@ -26,7 +26,7 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
                         returnType?.toType() ?: Primitives.void,
                         false
                 ),
-                fnBlock().toNode()
+                block().toNode()
         )
     }
 }
@@ -189,7 +189,8 @@ fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAcces
 fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
-            expressionList().expression().map { it.toNode() },
+            expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>()
+                    .let { if (lambda() != null) it + lambda().toNode() else it },
             null
     )
 }
@@ -197,21 +198,33 @@ fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall
 fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             identifier().toNode(),
-            listOf(expression) + expressionList().expression().map { it.toNode() },
+            (listOf(expression) + (expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>()))
+                    .let { if (lambda() != null) it + lambda().toNode() else it },
             null
     )
 }
 
 fun QuartzParser.LambdaContext.toNode(): Lambda {
-    return Lambda(
-            fnArgumentList().fnArgument().map { it.NAME().text },
-            Function(
-                    fnArgumentList().fnArgument().map { it.type().toType() },
-                    returnType?.toType(),
-                    false
-            ),
-            fnBlock().toNode()
-    )
+    return when {
+        block() != null -> Lambda(
+                fnArgumentList().fnArgument().map { it.NAME().text },
+                Function(
+                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        returnType?.toType(),
+                        false
+                ),
+                block().toNode()
+        )
+        else -> Lambda(
+                nameList()?.NAME()?.map { it.text },
+                Function(
+                        null,
+                        returnType?.toType(),
+                        false
+                ),
+                Block(statementBlock().toNode())
+        )
+    }
 }
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpression {

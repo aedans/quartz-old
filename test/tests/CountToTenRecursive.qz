@@ -11,5 +11,6 @@ fn countTo(i: int) {
     print(i);
 }
 
-fn print(i: int)
+fn print(i: int) {
     printf("%d ", i);
+}

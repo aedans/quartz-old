@@ -8,6 +8,8 @@ extern typealias ptrdiff_t = long
 extern typealias size_t = long
 extern typealias wchar_t = int
 
-fn get_NULL(): void* = %%NULL%%
+fn get_NULL(): void* {
+    return %%NULL%%;
+}
 
 // TODO offsetof

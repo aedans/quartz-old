@@ -4,6 +4,7 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -29,13 +30,13 @@ fun Program.generateSymbolTable(): SymbolTable {
 
 fun FunctionDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = function.localSymbolTable(symbolTable.localSymbolTable())
-    this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
+    this.argsWithNames?.forEach { localSymbolTable.addVar(it.first, it.second ?: Primitives.void) }
     return localSymbolTable
 }
 
 fun Lambda.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     val localSymbolTable = function.localSymbolTable(symbolTable.localSymbolTable())
-    this.argsWithNames.forEach { localSymbolTable.addVar(it.first, it.second) }
+    this.argsWithNames?.forEach { localSymbolTable.addVar(it.first, it.second ?: Primitives.void) }
     return localSymbolTable
 }
 

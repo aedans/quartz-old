@@ -12,17 +12,49 @@ extern typealias FILE = void
 // TODO get__IOLBF
 // TODO get__IONBF
 // TODO get_BUFSIZ
-fn get_EOF(): int = %%EOF%%
-fn get_FOPEN_MAX(): int = %%FOPEN_MAX%%
-fn get_FILENAME_MAX(): int = %%FILENAME_MAX%%
-fn get_L_tmpnam(): int = %%L_tmpnam%%
-fn get_SEEK_CUR(): int = %%SEEK_CUR%%
-fn get_SEEK_END(): int = %%SEEK_END%%
-fn get_SEEK_SET(): int = %%SEEK_SET%%
-fn get_TMP_MAX(): int = %%TMP_MAX%%
-fn get_stderr(): FILE* = %%stderr%%
-fn get_stdin(): FILE* = %%stdin%%
-fn get_stdout(): FILE* = %%stdout%%
+fn get_EOF(): int {
+    return %%EOF%%;
+}
+
+fn get_FOPEN_MAX(): int {
+    return %%FOPEN_MAX%%;
+}
+
+fn get_FILENAME_MAX(): int {
+    return %%FILENAME_MAX%%;
+}
+
+fn get_L_tmpnam(): int {
+    return %%L_tmpnam%%;
+}
+
+fn get_SEEK_CUR(): int {
+    return %%SEEK_CUR%%;
+}
+
+fn get_SEEK_END(): int {
+    return %%SEEK_END%%;
+}
+
+fn get_SEEK_SET(): int {
+    return %%SEEK_SET%%;
+}
+
+fn get_TMP_MAX(): int {
+    return %%TMP_MAX%%;
+}
+
+fn get_stderr(): FILE* {
+    return %%stderr%%;
+}
+
+fn get_stdin(): FILE* {
+    return %%stdin%%;
+}
+
+fn get_stdout(): FILE* {
+    return %%stdout%%;
+}
 
 extern fn fclose(FILE*): int
 extern fn clearerr(FILE*)

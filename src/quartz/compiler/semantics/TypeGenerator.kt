@@ -61,7 +61,7 @@ fun Type?.generate(symbolTable: SymbolTable): Type? {
         is ConstType -> ConstType(type.generate(symbolTable)!!)
         is FunctionType -> function.localSymbolTable(symbolTable).run {
             FunctionType(Function(
-                    function.args.map { it.generate(this)!! },
+                    function.args?.map { it.generate(this)!! },
                     function.returnType.generate(this),
                     function.vararg
             ))
