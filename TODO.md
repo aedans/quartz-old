@@ -1,10 +1,12 @@
 - Allow importing of functions, structs, etc.
-- Add templates
+- Optimize parser
+- Add static vals
 - Add implicit return types for single expression functions
 - Improve operators
 - Add comma operator
 - Add casting
 - Add true/false
+- Add templates
 - Add collection literals, ranges, pairs, etc.
     - Improve standard library
 - Add for loops

@@ -1,4 +1,3 @@
-
 import quartz.compiler.Compiler
 import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.library.Library

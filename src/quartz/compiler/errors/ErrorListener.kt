@@ -13,15 +13,15 @@ import java.util.*
  */
 
 class ErrorListener : ANTLRErrorListener {
-    override fun reportAttemptingFullContext(p0: Parser?, p1: DFA?, p2: Int, p3: Int, p4: BitSet?, p5: ATNConfigSet?) {
-
-    }
-
     override fun syntaxError(parser: Recognizer<*, *>?, p1: Any?, line: Int, char: Int, message: String?, e: RecognitionException?) {
         throw QuartzException("line $line:$char $message", emptyList())
     }
 
     override fun reportAmbiguity(p0: Parser?, p1: DFA?, p2: Int, p3: Int, p4: Boolean, p5: BitSet?, p6: ATNConfigSet?) {
+
+    }
+
+    override fun reportAttemptingFullContext(p0: Parser?, p1: DFA?, p2: Int, p3: Int, p4: BitSet?, p5: ATNConfigSet?) {
 
     }
 

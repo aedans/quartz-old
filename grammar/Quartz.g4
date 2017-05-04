@@ -265,8 +265,8 @@ type
 
 ltype
     : NAME
-    | ltype ptr='*'
     | '(' args=typeList ')' '->' returnType=type
+    | ltype ptr='*'
     ;
 
 // LISTS

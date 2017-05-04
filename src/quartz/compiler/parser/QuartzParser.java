@@ -19,58 +19,58 @@ public class QuartzParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
-		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
-		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, T__50=51, T__51=52, 
-		T__52=53, T__53=54, DMOD=55, STRING=56, CHAR=57, INT=58, DOUBLE=59, INLINE_C=60, 
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9,
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17,
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24,
+		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31,
+		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38,
+		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45,
+		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, T__50=51, T__51=52,
+		T__52=53, T__53=54, DMOD=55, STRING=56, CHAR=57, INT=58, DOUBLE=59, INLINE_C=60,
 		NAME=61, BLOCK_COMMENT=62, LINE_COMMENT=63, WHITESPACE=64;
 	public static final int
-		RULE_program = 0, RULE_declaration = 1, RULE_functionDeclaration = 2, 
-		RULE_externFunctionDeclaration = 3, RULE_signatureDefinition = 4, RULE_fnArgument = 5, 
-		RULE_fnArgumentList = 6, RULE_structDeclaration = 7, RULE_structMember = 8, 
-		RULE_typealiasDeclaration = 9, RULE_importDeclaration = 10, RULE_packageList = 11, 
-		RULE_statement = 12, RULE_varDeclaration = 13, RULE_returnStatement = 14, 
-		RULE_ifStatement = 15, RULE_whileLoop = 16, RULE_breakStatement = 17, 
-		RULE_continueStatement = 18, RULE_expression = 19, RULE_disjunction = 20, 
-		RULE_conjunction = 21, RULE_equalityComparison = 22, RULE_comparison = 23, 
-		RULE_bitshiftExpression = 24, RULE_additiveExpression = 25, RULE_multiplicativeExpression = 26, 
-		RULE_prefixExpression = 27, RULE_postfixExpression = 28, RULE_atomicExpression = 29, 
-		RULE_assignmentOperation = 30, RULE_disjunctionOperation = 31, RULE_conjunctionOperation = 32, 
-		RULE_equalityOperation = 33, RULE_comparisonOperation = 34, RULE_bitshiftOperation = 35, 
-		RULE_additiveOperation = 36, RULE_multiplicativeOperation = 37, RULE_prefixOperation = 38, 
-		RULE_postfixOperation = 39, RULE_postfixCall = 40, RULE_memberAccess = 41, 
-		RULE_dotCall = 42, RULE_lambda = 43, RULE_ifExpression = 44, RULE_sizeof = 45, 
-		RULE_literal = 46, RULE_type = 47, RULE_ltype = 48, RULE_expressionList = 49, 
-		RULE_nameList = 50, RULE_typeList = 51, RULE_statementBlock = 52, RULE_block = 53, 
-		RULE_identifier = 54, RULE_inlineC = 55, RULE_varDeclarationType = 56, 
+		RULE_program = 0, RULE_declaration = 1, RULE_functionDeclaration = 2,
+		RULE_externFunctionDeclaration = 3, RULE_signatureDefinition = 4, RULE_fnArgument = 5,
+		RULE_fnArgumentList = 6, RULE_structDeclaration = 7, RULE_structMember = 8,
+		RULE_typealiasDeclaration = 9, RULE_importDeclaration = 10, RULE_packageList = 11,
+		RULE_statement = 12, RULE_varDeclaration = 13, RULE_returnStatement = 14,
+		RULE_ifStatement = 15, RULE_whileLoop = 16, RULE_breakStatement = 17,
+		RULE_continueStatement = 18, RULE_expression = 19, RULE_disjunction = 20,
+		RULE_conjunction = 21, RULE_equalityComparison = 22, RULE_comparison = 23,
+		RULE_bitshiftExpression = 24, RULE_additiveExpression = 25, RULE_multiplicativeExpression = 26,
+		RULE_prefixExpression = 27, RULE_postfixExpression = 28, RULE_atomicExpression = 29,
+		RULE_assignmentOperation = 30, RULE_disjunctionOperation = 31, RULE_conjunctionOperation = 32,
+		RULE_equalityOperation = 33, RULE_comparisonOperation = 34, RULE_bitshiftOperation = 35,
+		RULE_additiveOperation = 36, RULE_multiplicativeOperation = 37, RULE_prefixOperation = 38,
+		RULE_postfixOperation = 39, RULE_postfixCall = 40, RULE_memberAccess = 41,
+		RULE_dotCall = 42, RULE_lambda = 43, RULE_ifExpression = 44, RULE_sizeof = 45,
+		RULE_literal = 46, RULE_type = 47, RULE_ltype = 48, RULE_expressionList = 49,
+		RULE_nameList = 50, RULE_typeList = 51, RULE_statementBlock = 52, RULE_block = 53,
+		RULE_identifier = 54, RULE_inlineC = 55, RULE_varDeclarationType = 56,
 		RULE_semi = 57;
 	public static final String[] ruleNames = {
-		"program", "declaration", "functionDeclaration", "externFunctionDeclaration", 
-		"signatureDefinition", "fnArgument", "fnArgumentList", "structDeclaration", 
-		"structMember", "typealiasDeclaration", "importDeclaration", "packageList", 
-		"statement", "varDeclaration", "returnStatement", "ifStatement", "whileLoop", 
-		"breakStatement", "continueStatement", "expression", "disjunction", "conjunction", 
-		"equalityComparison", "comparison", "bitshiftExpression", "additiveExpression", 
-		"multiplicativeExpression", "prefixExpression", "postfixExpression", "atomicExpression", 
-		"assignmentOperation", "disjunctionOperation", "conjunctionOperation", 
-		"equalityOperation", "comparisonOperation", "bitshiftOperation", "additiveOperation", 
-		"multiplicativeOperation", "prefixOperation", "postfixOperation", "postfixCall", 
-		"memberAccess", "dotCall", "lambda", "ifExpression", "sizeof", "literal", 
-		"type", "ltype", "expressionList", "nameList", "typeList", "statementBlock", 
+		"program", "declaration", "functionDeclaration", "externFunctionDeclaration",
+		"signatureDefinition", "fnArgument", "fnArgumentList", "structDeclaration",
+		"structMember", "typealiasDeclaration", "importDeclaration", "packageList",
+		"statement", "varDeclaration", "returnStatement", "ifStatement", "whileLoop",
+		"breakStatement", "continueStatement", "expression", "disjunction", "conjunction",
+		"equalityComparison", "comparison", "bitshiftExpression", "additiveExpression",
+		"multiplicativeExpression", "prefixExpression", "postfixExpression", "atomicExpression",
+		"assignmentOperation", "disjunctionOperation", "conjunctionOperation",
+		"equalityOperation", "comparisonOperation", "bitshiftOperation", "additiveOperation",
+		"multiplicativeOperation", "prefixOperation", "postfixOperation", "postfixCall",
+		"memberAccess", "dotCall", "lambda", "ifExpression", "sizeof", "literal",
+		"type", "ltype", "expressionList", "nameList", "typeList", "statementBlock",
 		"block", "identifier", "inlineC", "varDeclarationType", "semi"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'fn'", "'('", "')'", "':'", "'extern'", "','", "'struct'", "'{'", 
-		"'}'", "'typealias'", "'='", "'import'", "'.'", "'return'", "'if'", "'else'", 
-		"'while'", "'break'", "'continue'", "'+='", "'-='", "'*='", "'/='", "'%='", 
-		"'&='", "'|='", "'^='", "'<'", "'>'", "'||'", "'|'", "'^'", "'&&'", "'&'", 
-		"'=='", "'!='", "'>='", "'<='", "'+'", "'-'", "'*'", "'/'", "'%'", "'++'", 
-		"'--'", "'!'", "'~'", "'->'", "'sizeof'", "'const'", "'...'", "'var'", 
+		null, "'fn'", "'('", "')'", "':'", "'extern'", "','", "'struct'", "'{'",
+		"'}'", "'typealias'", "'='", "'import'", "'.'", "'return'", "'if'", "'else'",
+		"'while'", "'break'", "'continue'", "'+='", "'-='", "'*='", "'/='", "'%='",
+		"'&='", "'|='", "'^='", "'<'", "'>'", "'||'", "'|'", "'^'", "'&&'", "'&'",
+		"'=='", "'!='", "'>='", "'<='", "'+'", "'-'", "'*'", "'/'", "'%'", "'++'",
+		"'--'", "'!'", "'~'", "'->'", "'sizeof'", "'const'", "'...'", "'var'",
 		"'val'", "';'", "'%%'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
@@ -2884,7 +2884,7 @@ public class QuartzParser extends Parser {
 					_localctx = new LtypeContext(_parentctx, _parentState);
 					pushNewRecursionContext(_localctx, _startState, RULE_ltype);
 					setState(483);
-					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+					if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
 					setState(484);
 					((LtypeContext)_localctx).ptr = match(T__40);
 					}
@@ -3366,7 +3366,7 @@ public class QuartzParser extends Parser {
 	private boolean ltype_sempred(LtypeContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 2);
+			return precpred(_ctx, 1);
 		}
 		return true;
 	}
@@ -3549,7 +3549,7 @@ public class QuartzParser extends Parser {
 		"\u01dc\u01e4\7?\2\2\u01dd\u01de\7\4\2\2\u01de\u01df\5h\65\2\u01df\u01e0"+
 		"\7\5\2\2\u01e0\u01e1\7\62\2\2\u01e1\u01e2\5`\61\2\u01e2\u01e4\3\2\2\2"+
 		"\u01e3\u01db\3\2\2\2\u01e3\u01dd\3\2\2\2\u01e4\u01e9\3\2\2\2\u01e5\u01e6"+
-		"\f\4\2\2\u01e6\u01e8\7+\2\2\u01e7\u01e5\3\2\2\2\u01e8\u01eb\3\2\2\2\u01e9"+
+		"\f\3\2\2\u01e6\u01e8\7+\2\2\u01e7\u01e5\3\2\2\2\u01e8\u01eb\3\2\2\2\u01e9"+
 		"\u01e7\3\2\2\2\u01e9\u01ea\3\2\2\2\u01eac\3\2\2\2\u01eb\u01e9\3\2\2\2"+
 		"\u01ec\u01ed\5(\25\2\u01ed\u01ee\7\b\2\2\u01ee\u01f0\3\2\2\2\u01ef\u01ec"+
 		"\3\2\2\2\u01f0\u01f3\3\2\2\2\u01f1\u01ef\3\2\2\2\u01f1\u01f2\3\2\2\2\u01f2"+
