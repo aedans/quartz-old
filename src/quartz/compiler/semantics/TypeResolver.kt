@@ -62,7 +62,6 @@ fun Type.resolveType(
         is PointerType -> this
         is NumberType -> this
         is VoidType -> this
-        is TemplateType -> this
         else -> throw QuartzException("Expected type, found $this")
     }
 }

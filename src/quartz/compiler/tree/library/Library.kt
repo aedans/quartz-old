@@ -31,7 +31,7 @@ sealed class Library(val name: String) {
         }
 
         override fun toString(depth: Int): String {
-            var s = ("|    " * depth) + name + "\n"
+            var s = ("\t" * depth) + name + "\n"
             subLibraries.forEach { _, value -> s += value.toString(depth + 1) }
             return s
         }
@@ -45,7 +45,7 @@ sealed class Library(val name: String) {
         }
 
         override fun toString(depth: Int): String {
-            return ("|    ") * depth + name + "\n"
+            return ("\t") * depth + name + "\n"
         }
     }
 

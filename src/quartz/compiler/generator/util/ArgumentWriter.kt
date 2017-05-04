@@ -19,7 +19,7 @@ fun ProgramOutputStream.args(args: List<Pair<String, Type?>>?) {
     string(")")
 }
 
-fun ProgramOutputStream.arg(arg: Pair<String, Type>) {
+fun ProgramOutputStream.arg(arg: Pair<String, Type?>) {
     type(arg.second)
     name(arg.first)
 }

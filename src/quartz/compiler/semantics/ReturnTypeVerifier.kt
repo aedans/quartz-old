@@ -25,7 +25,7 @@ private fun List<Type>.greatestCommonType(): Type {
         when {
             type.isInstance(it) -> type = it
             it.isInstance(type) -> { }
-            else -> throw QuartzException("Multiple return types: $this")
+            else -> throw QuartzException("Conflicting return types: $this")
         }
     }
     return type

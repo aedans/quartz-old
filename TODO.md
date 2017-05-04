@@ -1,14 +1,15 @@
 - Allow importing of functions, structs, etc.
+- Improve generator
 - Optimize parser
-- Add static vals
-- Add implicit return types for single expression functions
-- Improve operators
-- Add comma operator
-- Add casting
+- Add optimizer
+- Fix greatest common type
 - Add true/false
-- Add templates
+    - Add static vals
+- Improve operators
+    - Add , operator
+    - Add & operator
+    - Add operator overloading
 - Add collection literals, ranges, pairs, etc.
     - Improve standard library
-- Add for loops
-- Improve generator
-- Add optimizer
+    - Add templates
+    - Add for loops

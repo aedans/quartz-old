@@ -38,6 +38,5 @@ fun QuartzParser.DeclarationContext.toNode(): GlobalDeclaration {
         typealiasDeclaration() != null -> typealiasDeclaration().toNode()
         inlineC() != null -> inlineC().toNode()
         else -> throw QuartzException("Error translating $text")
-    }
-//            .also { println("Found $it\n") }
+    }.also { println("Found $it\n") }
 }

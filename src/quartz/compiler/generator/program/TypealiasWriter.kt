@@ -22,7 +22,9 @@ fun ProgramOutputStream.typedef(type: AliasedType) {
 }
 
 fun ProgramOutputStream.functionTypedef(type: FunctionType) {
-    type.function.args!!.forEach { declare(it!!) }
+    type.function.args!!.forEach {
+        declare(it!!)
+    }
     declare("typedef_${type.function}") {
         declare(type.function.returnType!!)
         name("typedef")

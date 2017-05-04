@@ -73,11 +73,10 @@ fun Type?.generate(symbolTable: SymbolTable): Type? {
                 string,
                 this.members.mapValues { StructMember(it.value.name, it.value.type.generate(symbolTable)!!, it.value.mutable) }
         )
-        is TemplateType -> this
         is UnresolvedType -> symbolTable.getType(string)
                 ?.mapTypes { it?.generate(symbolTable) }
                 ?.generate(symbolTable)
-                ?: TemplateType(string)
+                ?: throw QuartzException("Unrecognized type $this")
         else -> throw QuartzException("Expected type, found $this")
     }
 }

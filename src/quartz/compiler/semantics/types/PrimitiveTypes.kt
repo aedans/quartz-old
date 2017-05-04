@@ -39,6 +39,6 @@ class VoidType : Type("void") {
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type == this
+        return true
     }
 }

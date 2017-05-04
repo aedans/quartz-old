@@ -78,7 +78,7 @@ statement
     ;
 
 varDeclaration
-    : varDeclarationType identifier (':' type)? '=' expression
+    : varDeclarationType nameOptionalType '=' expression
     ;
 
 returnStatement
@@ -218,9 +218,14 @@ prefixOperation
 postfixOperation
     : '++'
     | '--'
+    | cast
     | postfixCall
     | memberAccess
     | dotCall
+    ;
+
+cast
+    : 'as' type
     ;
 
 postfixCall
@@ -239,7 +244,7 @@ dotCall
 
 lambda
     : 'fn' ('(' fnArgumentList ')')? (':' returnType=type)? block
-    | (nameList '->')? '{' statementBlock '}'
+    | ((fnArgumentList|nameList) '->')? '{' statementBlock '}'
     ;
 
 ifExpression
@@ -308,6 +313,10 @@ varDeclarationType
 
 semi
     : ';'+
+    ;
+
+nameOptionalType
+    : NAME (':' type)?
     ;
 
 // LEXER

@@ -63,6 +63,6 @@ data class Lambda(
     }
 
     override fun toString(i: Int): String {
-        return "${"|   " * i}\n${block.toString(i+1)}"
+        return "${"\t" * i}\n${block.toString(i+1)}"
     }
 }

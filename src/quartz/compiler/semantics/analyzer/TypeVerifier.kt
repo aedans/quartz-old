@@ -89,6 +89,7 @@ private fun Expression.verify(symbolTable: SymbolTable, expected: Type?): Expres
             is NumberLiteral -> verifyAs(expected)
             is StringLiteral -> verifyAs(expected)
             is Sizeof -> verifyAs(expected)
+            is Cast -> verify(symbolTable, expected)
             is Identifier -> verify(symbolTable, expected)
             is PrefixUnaryOperator -> verify(symbolTable, expected)
             is PostfixUnaryOperator -> verify(symbolTable, expected)
@@ -114,14 +115,20 @@ private fun Expression.verifyAs(type: Type?): Expression {
     }
 }
 
+private fun Cast.verify(symbolTable: SymbolTable, expected: Type?): Expression {
+    val newType = type.verifyAs(expected)
+    return expression.withType(newType).verify(symbolTable, newType)
+}
+
 private fun Identifier.verify(symbolTable: SymbolTable, expected: Type?): Expression {
     val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
     return Identifier(
             name,
             when {
                 type == null -> expectedType
-                !type.isInstance(expectedType) -> throw QuartzException("Expected $expectedType, found $type ($this)")
-                else -> type
+                type.isInstance(expectedType) -> type
+                expectedType.isInstance(type) -> expectedType
+                else ->  throw QuartzException("Expected $expectedType, found $type ($this)")
             }
     ).verifyAs(expected)
 }
@@ -226,6 +233,7 @@ private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression
         return copy(argNames = function.args.mapIndexed { i, _ -> "p$i"}).verify(symbolTable, expected)
 
     val localSymbolTable = localSymbolTable(symbolTable)
+
     val newBlock = block.verify(localSymbolTable)
     return Lambda(
             argNames,

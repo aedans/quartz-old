@@ -48,9 +48,9 @@ object Compiler {
                 }
     ) {
         var program = builder(parser(input))
-//        println('\n' + program.toString())
+        println('\n' + program.toString())
         program = analyzer(program)
-//        println(program.toString())
+        println(program.toString())
         generator(program, output)
     }
 }

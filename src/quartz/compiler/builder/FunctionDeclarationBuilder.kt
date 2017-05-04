@@ -53,9 +53,9 @@ fun QuartzParser.ReturnStatementContext.toNode(): ReturnStatement {
 
 fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
     return VariableDeclaration(
-            identifier().text,
+            nameOptionalType().NAME().text,
             expression().toNode(),
-            if (type() != null) type().toType() else null,
+            if (nameOptionalType()?.type() != null) nameOptionalType().type().toType() else null,
             varDeclarationType().text == "var"
     )
 }
@@ -162,6 +162,7 @@ fun QuartzParser.PostfixExpressionContext.toNode(operations: List<QuartzParser.P
 
 fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Expression {
     return when {
+        cast() != null -> cast().toNode(expression)
         memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
         dotCall() != null -> dotCall().toNode(expression)
@@ -180,6 +181,10 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
         literal() != null -> literal().toNode()
         else -> throw QuartzException("Unrecognized atomic expression $text")
     }
+}
+
+fun QuartzParser.CastContext.toNode(expression: Expression): Cast {
+    return Cast(expression, type().toType())
 }
 
 fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAccess {
@@ -206,14 +211,14 @@ fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
 
 fun QuartzParser.LambdaContext.toNode(): Lambda {
     return when {
-        block() != null -> Lambda(
+        fnArgumentList() != null -> Lambda(
                 fnArgumentList().fnArgument().map { it.NAME().text },
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
                         returnType?.toType(),
                         false
                 ),
-                block().toNode()
+                block()?.toNode() ?: Block(statementBlock().toNode())
         )
         else -> Lambda(
                 nameList()?.NAME()?.map { it.text },
