@@ -32,6 +32,6 @@ data class AliasedType(
     }
 
     override fun toString(): String {
-        return string
+        return if (!external) type.toString() else string
     }
 }

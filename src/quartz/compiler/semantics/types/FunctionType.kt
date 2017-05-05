@@ -16,10 +16,14 @@ data class FunctionType(val function: Function) : Type(function.description()) {
 
     override fun isInstance(type: Type): Boolean {
         return type is FunctionType
-                && type.function.returnType == function.returnType
                 && type.function.vararg == function.vararg
+                && type.function.returnType != null
+                && function.returnType != null
+                && type.function.returnType.isInstance(function.returnType)
                 && type.function.args?.size == function.args?.size
-                && type.function.args?.zip(function.args ?: emptyList())?.all { it.first == it.second } ?: true
+                && type.function.args
+                ?.zip(function.args ?: emptyList())
+                ?.all { it.first != null && it.second != null && it.first!!.isInstance(it.second!!) } ?: true
     }
 
     override fun toString(): String {

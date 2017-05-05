@@ -183,7 +183,8 @@ private fun FunctionCall.verify(symbolTable: SymbolTable, expected: Type?): Expr
         if (!expressionFunction.vararg && expressionFunction.args.size != args.size)
             throw QuartzException("Incorrect number of arguments for $this")
 
-        val expressions = args.zip(expressionFunction.args + arrayOfNulls<Type>(args.size - expressionFunction.args.size))
+        val expressions = args.zip(expressionFunction.args +
+                arrayOfNulls<Type>(args.size - expressionFunction.args.size))
                 .map { it.first.verify(symbolTable, it.second) }
 
         FunctionCall(
@@ -227,19 +228,22 @@ private fun IfExpression.verify(symbolTable: SymbolTable, expected: Type?): IfEx
 }
 
 private fun Lambda.verify(symbolTable: SymbolTable, expected: Type?): Expression {
-    if (function.args == null)
-        return copy(function = (expected as FunctionType).function).verify(symbolTable, expected)
-    if (argNames == null)
-        return copy(argNames = function.args.mapIndexed { i, _ -> "p$i"}).verify(symbolTable, expected)
+    return when {
+        expected is FunctionType && function != expected.function -> copy(function = expected.function).verify(symbolTable, expected)
+        function.args == null -> copy(function = function.copy(args = emptyList())).verify(symbolTable, expected)
+        function.returnType == null -> copy(function = function.copy(returnType = block.verifyReturnType(null))).verify(symbolTable, expected)
+        argNames == null -> copy(argNames = function.args.mapIndexed { i, _ -> "p$i"}).verify(symbolTable, expected)
+        else -> {
+            val localSymbolTable = localSymbolTable(symbolTable)
 
-    val localSymbolTable = localSymbolTable(symbolTable)
-
-    val newBlock = block.verify(localSymbolTable)
-    return Lambda(
-            argNames,
-            function.copy(returnType = newBlock.verifyReturnType(function.returnType)),
-            newBlock
-    ).verifyAs(expected)
+            val newBlock = block.verify(localSymbolTable)
+            return Lambda(
+                    argNames,
+                    function.copy(returnType = newBlock.verifyReturnType(function.returnType)),
+                    newBlock
+            ).verifyAs(expected)
+        }
+    }
 }
 
 private fun Type?.verifyAs(type: Type?): Type? {

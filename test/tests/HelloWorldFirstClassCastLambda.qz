@@ -1,0 +1,6 @@
+import std.c.stdio
+
+fn main(): int {
+   ({ return printf } as () -> (const char *, ...) -> int)()({ return "Hello, World!" }());
+   return 0;
+}

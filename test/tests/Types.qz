@@ -5,11 +5,11 @@ fn main(): int {
     val two: int = 2;
     val three: short = 3;
     val four: char = 4;
-    val result = addFour(one, two, three, four);
+    val result = addFour(one, two, three, four) as int;
     printf("10 = %d", result);
     return 0;
 }
 
-fn addFour(one: char, two: short, three: int, four: long): int {
+fn addFour(one: char, two: short, three: int, four: long): long {
     return one + four + three + two;
 }
