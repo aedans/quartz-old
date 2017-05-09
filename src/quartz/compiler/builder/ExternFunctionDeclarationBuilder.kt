@@ -1,7 +1,7 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.util.Function
 
@@ -14,7 +14,7 @@ fun QuartzParser.ExternFunctionDeclarationContext.toNode(): ExternFunctionDeclar
             signatureDefinition().NAME().text,
             Function(
                     signatureDefinition().typeList().type().map { it.toType() },
-                    signatureDefinition().returnType?.toType() ?: Primitives.void,
+                    signatureDefinition().returnType?.toType() ?: VoidType,
                     signatureDefinition().typeList().vararg != null
             )
     )

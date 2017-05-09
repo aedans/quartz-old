@@ -23,8 +23,7 @@ fun ProgramOutputStream.type(type: Type?) {
             name(type.string)
         }
         is FunctionType -> {
-            name("__${type.descriptiveString}")
-            string("_t ")
+            name("__${type.descriptiveString}_t ")
         }
         is AliasedType -> type(type.type)
         else -> name(type.string)

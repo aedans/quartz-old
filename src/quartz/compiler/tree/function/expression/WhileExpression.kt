@@ -1,14 +1,14 @@
-package quartz.compiler.tree.function.statement
+package quartz.compiler.tree.function.expression
 
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.Statement
+import quartz.compiler.tree.function.UnitExpression
 import quartz.compiler.util.times
 
 /**
  * Created by Aedan Smith.
  */
 
-class WhileLoop(val test: Expression, val block: Block) : Statement {
+data class WhileExpression(val test: Expression, val block: BlockExpression) : UnitExpression() {
     override fun toString(): String {
         return "while ($test)"
     }

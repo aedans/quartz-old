@@ -1,6 +1,9 @@
+@file:Suppress("UnusedImport")
+
 package quartz.compiler.semantics.analyzer.function.expression
 
 import quartz.compiler.semantics.analyzer.function.analyze
+import quartz.compiler.semantics.analyzer.function.expression.analyze
 import quartz.compiler.semantics.analyzer.type.verifyAs
 import quartz.compiler.semantics.types.Primitives
 import quartz.compiler.semantics.util.BlockBuilder
@@ -14,6 +17,15 @@ import quartz.compiler.util.Type
  */
 
 fun IfExpression.analyze(
+        blockBuilder: BlockBuilder,
+        program: Program,
+        programBuilder: ProgramBuilder,
+        expected: Type?
+): IfExpression {
+    return analyzeTypes(blockBuilder, program, programBuilder, expected)
+}
+
+fun IfExpression.analyzeTypes(
         blockBuilder: BlockBuilder,
         program: Program,
         programBuilder: ProgramBuilder,

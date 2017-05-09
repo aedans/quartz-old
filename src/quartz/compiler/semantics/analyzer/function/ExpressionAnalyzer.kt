@@ -10,7 +10,6 @@ import quartz.compiler.semantics.util.ProgramBuilder
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.function.statement.FunctionCall
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.util.Type
 
@@ -24,9 +23,10 @@ fun Expression.analyze(blockBuilder: BlockBuilder, program: Program, programBuil
             is InlineC -> this
             is NumberLiteral -> this
             is StringLiteral -> this
-            is Sizeof -> analyze(blockBuilder.symbolTable, program, programBuilder)
             is Identifier -> analyze(blockBuilder, program, programBuilder)
+            is Sizeof -> analyze(blockBuilder.symbolTable, program, programBuilder)
             is Cast -> analyze(blockBuilder, program, programBuilder)
+            is ReturnExpression -> analyze(blockBuilder, program, programBuilder)
             is PrefixUnaryOperator -> analyze(blockBuilder, program, programBuilder, expected)
             is PostfixUnaryOperator -> analyze(blockBuilder, program, programBuilder, expected)
             is BinaryOperator -> analyze(blockBuilder, program, programBuilder, expected)
@@ -34,7 +34,10 @@ fun Expression.analyze(blockBuilder: BlockBuilder, program: Program, programBuil
             is FunctionCall -> analyze(blockBuilder, program, programBuilder)
             is MemberAccess -> analyze(blockBuilder, program, programBuilder, expected)
             is IfExpression -> analyze(blockBuilder, program, programBuilder, expected)
-            is Lambda -> analyze(blockBuilder.symbolTable, program, programBuilder, expected)
+            is WhileExpression -> analyze(blockBuilder, program, programBuilder, expected)
+            is VariableDeclaration -> analyze(blockBuilder, program, programBuilder)
+            is BlockExpression -> analyze(blockBuilder, program, programBuilder, expected)
+            is Lambda -> analyze(blockBuilder, program, programBuilder, expected)
             else -> throw QuartzException("Expected expression, found $this")
         }.verifyAs(expected)
     }

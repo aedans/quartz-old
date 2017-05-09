@@ -29,6 +29,6 @@ data class GlobalSymbolTable(val program: Program) : SymbolTable {
     }
 
     override fun toString(): String {
-        return "SymbolTable($program)"
+        return "GlobalSymbolTable"
     }
 }

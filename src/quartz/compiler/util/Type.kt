@@ -12,4 +12,8 @@ abstract class Type(val descriptiveString: String) {
     open fun isEqualTo(type: Type): Boolean {
         return type.string == this.string
     }
+
+    override fun toString(): String {
+        return string
+    }
 }

@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class MemberAccess(val name: String, val expression: Expression, override val type: Type?): Expression {
+data class MemberAccess(val name: String, val expression: Expression, override val type: Type?): Expression {
     override val isLValue = true
 
     override fun withType(type: Type?): MemberAccess {

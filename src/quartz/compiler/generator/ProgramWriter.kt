@@ -15,6 +15,7 @@ import quartz.compiler.util.Type
 fun ProgramOutputStream.writeAll() {
     program.inlineCDeclarations.forEach { inlineC(it) }
 
+    program.externFunctionDeclarations.forEach { declare(FunctionType(it.value.function)) }
     program.functionDeclarations.forEach { declare(FunctionType(it.value.function)) }
     program.structDeclarations.forEach { declare(StructType(it.value)) }
     program.typealiasDeclarations.forEach { declare(AliasedType(it.value)) }

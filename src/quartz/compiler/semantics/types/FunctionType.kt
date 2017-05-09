@@ -31,15 +31,8 @@ data class FunctionType(val function: Function) : Type(function.description()) {
             val args = args ?: emptyList()
             var string = ""
             when {
-                args.isEmpty() && returnType == Primitives.void -> {
-                    string += "process"
-                }
-                args.isEmpty() && returnType != Primitives.void -> {
+                args.isEmpty() -> {
                     string += returnType?.descriptiveString + "_supplier"
-                }
-                returnType == Primitives.void -> {
-                    args.forEach { string += it?.descriptiveString + '_' }
-                    string += "consumer"
                 }
                 else -> {
                     args.forEach { string += it?.descriptiveString + '_' }

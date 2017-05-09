@@ -1,10 +1,11 @@
 - Allow importing of functions, structs, etc.
+- Migrate to Kobalt
 - Improve generator
 - Optimize parser
 - Add optimizer
 - Fix greatest common type
 - Fix var/val
-- Add true/false
+- Add true, false, unit
     - Add static vals
 - Improve operators
     - Add , operator

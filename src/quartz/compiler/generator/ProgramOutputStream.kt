@@ -10,7 +10,7 @@ import java.io.PrintStream
  */
 
 class ProgramOutputStream(val program: Program, outputStream: OutputStream) {
-    private val identifierChars = { c: Char -> c in 'a'..'z' || c in 'A'..'Z' || c == '_' || c in '0'..'9' }
+    private val identifierChars = { c: Char -> c in 'a'..'z' || c in 'A'..'Z' || c in '0'..'9'|| c == '_' }
     private val declared = HashSet<String>()
     private var lastChar = ' '
     private var indent = 0

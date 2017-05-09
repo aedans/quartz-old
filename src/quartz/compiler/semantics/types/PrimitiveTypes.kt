@@ -18,7 +18,6 @@ object Primitives {
     val ulong: Type = NumberType("unsigned long long")
     val float: Type = NumberType("float")
     val double: Type = NumberType("double")
-    val void: Type = VoidType()
 }
 
 class NumberType(override val string: String) : Type(string.replace(' ', '_')) {
@@ -31,7 +30,7 @@ class NumberType(override val string: String) : Type(string.replace(' ', '_')) {
     }
 }
 
-class VoidType : Type("void") {
+object VoidType : Type("void") {
     override val string = "void"
 
     override fun isInstance(type: Type): Boolean {

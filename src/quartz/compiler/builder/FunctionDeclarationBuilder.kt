@@ -4,11 +4,10 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.function.statement.*
 import quartz.compiler.util.Function
 
 /**
@@ -22,63 +21,12 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
                 fnArgumentList().fnArgument().map { it.NAME().text },
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
-                        returnType?.toType() ?: Primitives.void,
+                        returnType?.toType() ?: VoidType,
                         false
                 ),
-                block().toNode()
+                eBlock().toNode()
         )
     }
-}
-
-fun QuartzParser.StatementContext.toNode(): Statement {
-    return errorScope({ "statement $text" }) {
-        when {
-            inlineC() != null -> inlineC().toNode()
-            returnStatement() != null -> returnStatement().toNode()
-            varDeclaration() != null -> varDeclaration().toNode()
-            ifStatement() != null -> ifStatement().toNode()
-            whileLoop() != null -> whileLoop().toNode()
-            breakStatement() != null -> breakStatement().toNode()
-            continueStatement() != null -> continueStatement().toNode()
-            expression() != null -> expression().toNode()
-            else -> throw QuartzException("Error translating $text")
-        }
-    }
-}
-
-fun QuartzParser.ReturnStatementContext.toNode(): ReturnStatement {
-    return ReturnStatement(expression().toNode())
-}
-
-fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
-    return VariableDeclaration(
-            nameOptionalType().NAME().text,
-            expression().toNode(),
-            if (nameOptionalType()?.type() != null) nameOptionalType().type().toType() else null,
-            varDeclarationType().text == "var"
-    )
-}
-
-fun QuartzParser.IfStatementContext.toNode(): IfStatement {
-    return IfStatement(
-            expression().toNode(),
-            trueBlock?.toNode() ?: Block(emptyList()),
-            falseBlock?.toNode() ?: Block(emptyList())
-    )
-}
-
-fun QuartzParser.WhileLoopContext.toNode(): WhileLoop {
-    return WhileLoop(expression().toNode(), block()?.toNode() ?: Block(emptyList()))
-}
-
-@Suppress("unused")
-fun QuartzParser.BreakStatementContext.toNode(): Break {
-    return Break
-}
-
-@Suppress("unused")
-fun QuartzParser.ContinueStatementContext.toNode(): Continue {
-    return Continue
 }
 
 fun QuartzParser.ExpressionContext.toNode(): Expression {
@@ -172,13 +120,81 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Express
 fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
     return when {
         expression() != null -> expression().toNode()
-        lambda() != null -> lambda().toNode()
-        ifExpression() != null -> ifExpression().toNode()
-        sizeof() != null -> sizeof().toNode()
-        identifier() != null -> identifier().toNode()
         inlineC() != null -> inlineC().toNode()
         literal() != null -> literal().toNode()
+        sizeof() != null -> sizeof().toNode()
+        breakExpression() != null -> breakExpression().toNode()
+        continueExpression() != null -> continueExpression().toNode()
+        returnExpression() != null -> returnExpression().toNode()
+        identifier() != null -> identifier().toNode()
+        ifExpression() != null -> ifExpression().toNode()
+        whileExpression() != null -> whileExpression().toNode()
+        varDeclaration() != null -> varDeclaration().toNode()
+        lambda() != null -> lambda().toNode()
         else -> throw QuartzException("Unrecognized atomic expression $text")
+    }
+}
+
+fun QuartzParser.LiteralContext.toNode(): Expression {
+    return when {
+        CHAR() != null -> NumberLiteral(text, Primitives.char)
+        INT() != null -> NumberLiteral(text, Primitives.int)
+        DOUBLE() != null -> NumberLiteral(text, Primitives.double)
+        STRING() != null -> StringLiteral(text.substring(1, text.length-1))
+        else -> throw QuartzException("Error translating $this")
+    }
+}
+
+fun QuartzParser.SizeofContext.toNode(): Sizeof {
+    return Sizeof(type().toType())
+}
+
+@Suppress("unused")
+fun QuartzParser.BreakExpressionContext.toNode(): Break {
+    return Break
+}
+
+@Suppress("unused")
+fun QuartzParser.ContinueExpressionContext.toNode(): Continue {
+    return Continue
+}
+
+fun QuartzParser.ReturnExpressionContext.toNode(): ReturnExpression {
+    return ReturnExpression(expression().toNode())
+}
+
+fun QuartzParser.IdentifierContext.toNode(): Identifier {
+    return Identifier(NAME().text, null)
+}
+
+fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
+    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: BlockExpression(emptyList()), null)
+}
+
+fun QuartzParser.WhileExpressionContext.toNode(): WhileExpression {
+    return WhileExpression(test.toNode(), loop.toNode())
+}
+
+fun QuartzParser.LambdaContext.toNode(): Lambda {
+    return when {
+        fnArgumentList() != null -> Lambda(
+                fnArgumentList().fnArgument().map { it.NAME().text },
+                Function(
+                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        returnType?.toType(),
+                        false
+                ),
+                eBlock().toNode()
+        )
+        else -> Lambda(
+                nameList()?.NAME()?.map { it.text },
+                Function(
+                        null,
+                        returnType?.toType(),
+                        false
+                ),
+                eBlock().toNode()
+        )
     }
 }
 
@@ -208,49 +224,13 @@ fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
     )
 }
 
-fun QuartzParser.LambdaContext.toNode(): Lambda {
-    return when {
-        fnArgumentList() != null -> Lambda(
-                fnArgumentList().fnArgument().map { it.NAME().text },
-                Function(
-                        fnArgumentList().fnArgument().map { it.type().toType() },
-                        returnType?.toType(),
-                        false
-                ),
-                block()?.toNode() ?: Block(statementBlock().toNode())
-        )
-        else -> Lambda(
-                nameList()?.NAME()?.map { it.text },
-                Function(
-                        null,
-                        returnType?.toType(),
-                        false
-                ),
-                Block(statementBlock().toNode())
-        )
-    }
-}
-
-fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
-    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse.toNode(), null)
-}
-
-fun QuartzParser.SizeofContext.toNode(): Sizeof {
-    return Sizeof(type().toType())
-}
-
-fun QuartzParser.IdentifierContext.toNode(): Identifier {
-    return Identifier(NAME().text, null)
-}
-
-fun QuartzParser.LiteralContext.toNode(): Expression {
-    return when {
-        CHAR() != null -> NumberLiteral(text, Primitives.char)
-        INT() != null -> NumberLiteral(text, Primitives.int)
-        DOUBLE() != null -> NumberLiteral(text, Primitives.double)
-        STRING() != null -> StringLiteral(text.substring(1, text.length-1))
-        else -> throw QuartzException("Error translating $this")
-    }
+fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
+    return VariableDeclaration(
+            nameOptionalType().NAME().text,
+            expression()?.toNode(),
+            if (nameOptionalType()?.type() != null) nameOptionalType().type().toType() else null,
+            varDeclarationType().text == "var"
+    )
 }
 
 val QuartzParser.AssignmentOperationContext.ID: Assignment.ID

@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class Sizeof(val sizeType: Type) : Expression {
+data class Sizeof(val sizeType: Type) : Expression {
     override val isLValue = false
     override val type = Primitives.ulong
 

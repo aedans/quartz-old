@@ -3,6 +3,7 @@ package quartz.compiler.semantics.analyzer.type
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.ConstType
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.util.Type
 
 /**
@@ -11,8 +12,8 @@ import quartz.compiler.util.Type
 
 fun Type?.verifyAs(type: Type?): Type? {
     return when {
+        type == null || type == VoidType -> this
         this == null -> type
-        type == null -> this
         this.isEqualTo(type) -> this
         this.isInstance(type) -> type
         type is AliasedType -> this.verifyAs(type.type)

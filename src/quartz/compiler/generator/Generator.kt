@@ -1,6 +1,6 @@
 package quartz.compiler.generator
 
-import quartz.compiler.generator.semantics.simplify
+import quartz.compiler.generator.translator.simplify
 import quartz.compiler.tree.Program
 import java.io.OutputStream
 

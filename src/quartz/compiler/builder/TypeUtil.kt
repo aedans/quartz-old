@@ -16,7 +16,7 @@ fun QuartzParser.TypeContext.toType(): Type {
 }
 
 fun QuartzParser.LtypeContext.toType(): Type {
-    return errorScope({ "type $text" }) {
+    return errorScope({ "varType $text" }) {
         if (NAME() != null) {
             when (NAME().text) {
                 "bool" -> Primitives.bool
@@ -30,7 +30,7 @@ fun QuartzParser.LtypeContext.toType(): Type {
                 "ulong" -> Primitives.ulong
                 "float" -> Primitives.float
                 "double" -> Primitives.double
-                "void" -> Primitives.void
+                "void" -> VoidType
                 else -> UnresolvedType(NAME().text)
             }
         } else {

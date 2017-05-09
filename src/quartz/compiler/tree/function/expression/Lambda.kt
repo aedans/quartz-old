@@ -3,7 +3,6 @@ package quartz.compiler.tree.function.expression
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
 import quartz.compiler.util.times
@@ -15,7 +14,7 @@ import quartz.compiler.util.times
 data class Lambda(
         val argNames: List<String>?,
         val function: Function,
-        val block: Block
+        val block: BlockExpression
 ) : Expression {
     override val type = FunctionType(function)
     override val isLValue = false

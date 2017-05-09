@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME '(' fnArgumentList ')' (':' returnType=type)? block
+    : 'fn' NAME '(' fnArgumentList ')' (':' returnType=type)? eBlock
     ;
 
 externFunctionDeclaration
@@ -62,43 +62,6 @@ importDeclaration
 
 packageList
     : (NAME '.')* NAME
-    ;
-
-// STATEMENTS
-
-statement
-    : inlineC semi?
-    | returnStatement semi?
-    | varDeclaration semi?
-    | ifStatement semi?
-    | whileLoop semi?
-    | breakStatement semi?
-    | continueStatement semi?
-    | expression semi?
-    ;
-
-varDeclaration
-    : varDeclarationType nameOptionalType '=' expression
-    ;
-
-returnStatement
-    : 'return' expression
-    ;
-
-ifStatement
-    : 'if' '(' expression ')' trueBlock=block ('else' falseBlock=block)?
-    ;
-
-whileLoop
-    : 'while' '(' expression ')' block
-    ;
-
-breakStatement
-    : 'break'
-    ;
-
-continueStatement
-    : 'continue'
     ;
 
 // EXPRESSIONS
@@ -145,12 +108,57 @@ postfixExpression
 
 atomicExpression
     : '(' expression ')'
-    | lambda
-    | ifExpression
-    | sizeof
-    | identifier
     | inlineC
     | literal
+    | sizeof
+    | breakExpression
+    | continueExpression
+    | returnExpression
+    | ifExpression
+    | whileExpression
+    | varDeclaration
+    | lambda
+    | identifier
+    ;
+
+literal
+    : STRING
+    | CHAR
+    | INT
+    | DOUBLE
+    ;
+
+sizeof
+    : 'sizeof' '(' type ')'
+    ;
+
+breakExpression
+    : 'break'
+    ;
+
+continueExpression
+    : 'continue'
+    ;
+
+returnExpression
+    : 'return' expression
+    ;
+
+ifExpression
+    : 'if' '(' test=expression ')' ifTrue=sBlock ('else' ifFalse=block)?
+    ;
+
+whileExpression
+    : 'while' '(' test=expression ')' loop=block
+    ;
+
+varDeclaration
+    : varDeclarationType nameOptionalType ('=' expression)?
+    ;
+
+lambda
+    : 'lambda' ('(' fnArgumentList ')')? (':' returnType=type)? eBlock
+    | ((fnArgumentList|nameList) '->')? eBlock
     ;
 
 assignmentOperation
@@ -242,26 +250,6 @@ dotCall
     | lambda
     ;
 
-lambda
-    : 'fn' ('(' fnArgumentList ')')? (':' returnType=type)? block
-    | ((fnArgumentList|nameList) '->')? '{' statementBlock '}'
-    ;
-
-ifExpression
-    : 'if' '(' test=expression ')' ifTrue=expression 'else' ifFalse=expression
-    ;
-
-sizeof
-    : 'sizeof' '(' type ')'
-    ;
-
-literal
-    : STRING
-    | CHAR
-    | INT
-    | DOUBLE
-    ;
-
 // TYPES
 
 type
@@ -288,15 +276,20 @@ typeList
     : (type ',')* (vararg='...'|type)?
     ;
 
-statementBlock
-    : statement*
-    ;
-
 // UTIL
 
 block
-    : '{' statementBlock '}' semi?
-    | statement
+    : '{' (expression semi?)* expression? semi? '}' semi?
+    | expression
+    ;
+
+sBlock
+    : '{' (expression semi?)* expression? semi? '}'
+    | expression semi?
+    ;
+
+eBlock
+    : '{' (expression semi?)* expression? semi? '}' semi?
     ;
 
 identifier
@@ -312,7 +305,7 @@ varDeclarationType
     ;
 
 semi
-    : ';'+
+    : ';'
     ;
 
 nameOptionalType

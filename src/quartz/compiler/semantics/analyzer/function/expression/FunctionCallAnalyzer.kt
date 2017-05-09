@@ -7,9 +7,9 @@ import quartz.compiler.semantics.analyzer.type.asFunction
 import quartz.compiler.semantics.util.BlockBuilder
 import quartz.compiler.semantics.util.ProgramBuilder
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.expression.FunctionCall
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.expression.MemberAccess
-import quartz.compiler.tree.function.statement.FunctionCall
 import quartz.compiler.util.Type
 
 /**
@@ -29,6 +29,7 @@ fun FunctionCall.analyzeTypes(
         program: Program,
         programBuilder: ProgramBuilder
 ): FunctionCall {
+    // TODO Fix
     return try {
         val newExpression = expression.analyze(blockBuilder, program, programBuilder, null)
         val expressionFunction = newExpression.type.asFunction()?.function

@@ -6,9 +6,7 @@ import quartz.compiler.generator.util.args
 import quartz.compiler.generator.util.type
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.function.statement.*
 import quartz.compiler.tree.misc.InlineC
 
 /**
@@ -16,7 +14,7 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclaration) {
-    declare("fnPrototype_${functionDeclaration.name}") {
+    declare("functionPrototype_${functionDeclaration.name}") {
         type(functionDeclaration.function.returnType!!)
         name(functionDeclaration.name)
         args(functionDeclaration.argsWithNames)
@@ -27,71 +25,13 @@ fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclarati
 
 fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
     margin {
-        declare("fn_${functionDeclaration.name}") {
+        declare("function_${functionDeclaration.name}") {
             type(functionDeclaration.function.returnType!!)
             name(functionDeclaration.name)
             args(functionDeclaration.argsWithNames)
             block(functionDeclaration.block)
         }
     }
-}
-
-fun ProgramOutputStream.block(block: Block) {
-    braces {
-        block.statementList.forEach {
-            newline()
-            statement(it)
-            string(";")
-        }
-    }
-}
-
-fun ProgramOutputStream.statement(statement: Statement) {
-    errorScope({ "statement $statement" }) {
-        when (statement) {
-            is InlineC -> inlineC(statement)
-            is PrefixUnaryOperator -> prefixUnaryOperator(statement)
-            is PostfixUnaryOperator -> postfixUnaryOperator(statement)
-            is VariableDeclaration -> varDeclaration(statement)
-            is ReturnStatement -> returnStatement(statement)
-            is IfStatement -> ifStatement(statement)
-            is WhileLoop -> whileLoop(statement)
-            is FunctionCall -> fnCall(statement)
-            is Assignment -> varAssignment(statement)
-            is Block -> block(statement)
-            else -> throw Exception("Unrecognized statement $statement")
-        }
-    }
-}
-
-fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
-    type(variableDeclaration.type ?: throw Exception("Unknown type for $variableDeclaration"))
-    name(variableDeclaration.name)
-    variableDeclaration.expression?.apply {
-        string("=")
-        expression(this)
-    }
-}
-
-fun ProgramOutputStream.returnStatement(returnStatement: ReturnStatement) {
-    name("return")
-    expression(returnStatement.expression)
-}
-
-fun ProgramOutputStream.ifStatement(ifStatement: IfStatement) {
-    name("if")
-    parentheses { expression(ifStatement.test) }
-    block(ifStatement.trueBlock)
-    if (!ifStatement.falseBlock.statementList.isEmpty()) {
-        name("else")
-        block(ifStatement.falseBlock)
-    }
-}
-
-fun ProgramOutputStream.whileLoop(whileLoop: WhileLoop) {
-    name("while")
-    parentheses { expression(whileLoop.test) }
-    block(whileLoop.block)
 }
 
 fun ProgramOutputStream.expression(expression: Expression) {
@@ -101,14 +41,19 @@ fun ProgramOutputStream.expression(expression: Expression) {
             is NumberLiteral -> numberLiteral(expression)
             is StringLiteral -> stringLiteral(expression)
             is Identifier -> identifier(expression)
+            is Sizeof -> sizeof(expression)
             is Cast -> cast(expression)
+            is ReturnExpression -> returnExpression(expression)
             is PrefixUnaryOperator -> prefixUnaryOperator(expression)
             is PostfixUnaryOperator -> postfixUnaryOperator(expression)
             is BinaryOperator -> binaryOperator(expression)
             is Assignment -> assignment(expression)
             is MemberAccess -> memberAccess(expression)
-            is Sizeof -> sizeof(expression)
-            is FunctionCall -> fnCall(expression)
+            is FunctionCall -> functionCall(expression)
+            is IfExpression -> ifExpression(expression)
+            is WhileExpression -> whileExpression(expression)
+            is VariableDeclaration -> varDeclaration(expression)
+            is BlockExpression -> block(expression)
             else -> throw Exception("Unrecognized expression $expression")
         }
     }
@@ -126,9 +71,19 @@ fun ProgramOutputStream.identifier(identifier: Identifier) {
     name(identifier.name)
 }
 
+fun ProgramOutputStream.sizeof(sizeof: Sizeof) {
+    name("sizeof")
+    parentheses { type(sizeof.sizeType) }
+}
+
 fun ProgramOutputStream.cast(cast: Cast) {
     parentheses { type(cast.type) }
     parentheses { expression(cast.expression) }
+}
+
+fun ProgramOutputStream.returnExpression(returnExpression: ReturnExpression) {
+    name("return")
+    expression(returnExpression.expression)
 }
 
 fun ProgramOutputStream.prefixUnaryOperator(prefixUnaryOperator: PrefixUnaryOperator) {
@@ -159,25 +114,48 @@ fun ProgramOutputStream.memberAccess(memberAccess: MemberAccess) {
     name(memberAccess.name)
 }
 
-fun ProgramOutputStream.sizeof(sizeof: Sizeof) {
-    name("sizeof")
-    parentheses { type(sizeof.sizeType) }
-}
-
-fun ProgramOutputStream.fnCall(functionCall: FunctionCall) {
+fun ProgramOutputStream.functionCall(functionCall: FunctionCall) {
     expression(functionCall.expression)
     parentheses {
-        functionCall.args.dropLast(1).forEach {
-            expression(it)
-            string(", ")
-        }
-        if (!functionCall.args.isEmpty())
+        if (functionCall.args.isNotEmpty()) {
+            functionCall.args.dropLast(1).forEach {
+                expression(it)
+                string(",")
+            }
             expression(functionCall.args.last())
+        }
     }
 }
 
-fun ProgramOutputStream.varAssignment(assignment: Assignment) {
-    expression(assignment.lvalue)
-    string("=")
-    expression(assignment.expression)
+fun ProgramOutputStream.ifExpression(ifExpression: IfExpression) {
+    name("if")
+    parentheses { expression(ifExpression.test) }
+    expression(ifExpression.ifTrue)
+    name("else")
+    expression(ifExpression.ifFalse)
+}
+
+fun ProgramOutputStream.whileExpression(whileExpression: WhileExpression) {
+    name("while")
+    parentheses { expression(whileExpression.test) }
+    expression(whileExpression.block)
+}
+
+fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
+    type(variableDeclaration.varType ?: throw Exception("Unknown varType for $variableDeclaration"))
+    name(variableDeclaration.name)
+    variableDeclaration.expression?.apply {
+        string("=")
+        expression(this)
+    }
+}
+
+fun ProgramOutputStream.block(block: BlockExpression) {
+    braces {
+        block.expressionList.forEach {
+            newline()
+            expression(it)
+            string(";")
+        }
+    }
 }

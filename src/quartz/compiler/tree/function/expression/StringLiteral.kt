@@ -11,7 +11,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class StringLiteral(val string: String) : Expression {
+data class StringLiteral(val string: String) : Expression {
     override val isLValue = false
     override val type = ConstType(PointerType(Primitives.char))
 

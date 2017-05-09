@@ -1,4 +1,4 @@
-package quartz.compiler.tree.function.statement
+package quartz.compiler.tree.function.expression
 
 import quartz.compiler.tree.misc.InlineC
 

@@ -7,7 +7,12 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class IfExpression(val test: Expression, val ifTrue: Expression, val ifFalse: Expression, override val type: Type?) : Expression {
+data class IfExpression(
+        val test: Expression,
+        val ifTrue: BlockExpression,
+        val ifFalse: BlockExpression,
+        override val type: Type?
+) : Expression {
     override val isLValue = false
 
     override fun withType(type: Type?): IfExpression {

@@ -12,6 +12,10 @@ fun Program.symbolTable(): GlobalSymbolTable {
     return GlobalSymbolTable(this)
 }
 
+fun SymbolTable.localSymboltable(): LocalSymbolTable {
+    return LocalSymbolTable(emptyMap(), emptyMap(), this)
+}
+
 fun FunctionDeclaration.localSymbolTable(symbolTable: SymbolTable): SymbolTable {
     return LocalSymbolTable(
             argsWithNames?.map { it.first to it.second!! }?.toMap() ?: emptyMap(),

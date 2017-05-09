@@ -1,10 +1,11 @@
 package quartz.compiler.semantics.analyzer.function
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.semantics.analyzer.function.statement.analyze
+import quartz.compiler.semantics.analyzer.function.expression.analyze
 import quartz.compiler.semantics.analyzer.type.analyze
 import quartz.compiler.semantics.symboltable.localSymbolTable
 import quartz.compiler.semantics.symboltable.symbolTable
+import quartz.compiler.semantics.util.BlockBuilder
 import quartz.compiler.semantics.util.ProgramBuilder
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -28,6 +29,6 @@ fun FunctionDeclaration.analyzeTypes(program: Program, programBuilder: ProgramBu
 }
 
 fun FunctionDeclaration.analyzeBlock(program: Program, programBuilder: ProgramBuilder): FunctionDeclaration {
-    return copy(block = block.analyze(localSymbolTable(program.symbolTable()), program, programBuilder))
+    val blockBuilder = BlockBuilder(localSymbolTable(program.symbolTable()))
+    return copy(block = block.analyze(blockBuilder, program, programBuilder, function.returnType))
 }
-

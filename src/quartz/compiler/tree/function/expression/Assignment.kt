@@ -8,7 +8,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class Assignment(val lvalue: Expression, val expression: Expression, val id: ID, override val type: Type?) : Expression {
+data class Assignment(val lvalue: Expression, val expression: Expression, val id: ID, override val type: Type?) : Expression {
     override val isLValue = false
 
     init {

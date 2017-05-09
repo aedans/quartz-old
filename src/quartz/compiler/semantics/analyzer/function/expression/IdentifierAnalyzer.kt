@@ -22,7 +22,7 @@ fun Identifier.analyze(blockBuilder: BlockBuilder, program: Program, programBuil
 }
 
 fun Identifier.verify(symbolTable: SymbolTable): Identifier {
-    val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name")
+    val expectedType = symbolTable.getVar(name) ?: throw QuartzException("Could not find variable $name ${symbolTable}")
     val newType = when {
         type == null -> expectedType
         type.isInstance(expectedType) -> type

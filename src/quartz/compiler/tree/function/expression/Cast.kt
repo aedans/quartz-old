@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class Cast(val expression: Expression, override val type: Type) : Expression {
+data class Cast(val expression: Expression, override val type: Type) : Expression {
     override val isLValue = false
 
     override fun withType(type: Type?): Cast {
