@@ -8,29 +8,9 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-class VariableDeclaration(val name: String, val expression: Expression?, val type: Type?, val mutable: Boolean) : Statement {
-    override fun getExpressions(): List<Expression> {
-        return expression?.getExpressions() ?: emptyList()
-    }
-
-    override fun getStatements(): List<Statement> {
-        return expression?.getStatements() ?: emptyList()
-    }
-
-    override fun mapStatements(function: (Statement) -> Statement): Statement {
-        return this
-    }
-
-    override fun mapExpressions(function: (Expression) -> Expression): Statement {
-        return VariableDeclaration(name, expression?.mapExpressions(function)?.let(function), type, mutable)
-    }
-
-    override fun mapTypes(function: (Type?) -> Type?): Statement {
-        return VariableDeclaration(name, expression?.mapTypes(function), function(type?.mapTypes(function)), mutable)
-    }
-
+data class VariableDeclaration(val name: String, val expression: Expression?, val type: Type?, val mutable: Boolean) : Statement {
     override fun toString(): String {
-        return "${if (mutable) "var" else "val"} $name${if (type == null) "" else ": " + type.toString()}" +
+        return "${if (mutable) "var" else "val"} $name: $type" +
                 if (expression != null) " = $expression" else ""
     }
 }

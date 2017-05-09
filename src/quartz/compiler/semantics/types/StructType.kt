@@ -19,13 +19,7 @@ data class StructType(
         return type == this
     }
 
-    override fun mapTypes(function: (Type?) -> Type?): StructType {
-        return copy(
-                members = members.filterValues { it.type != this }.mapValues { it.value.mapTypes(function) }
-        )
-    }
-
     override fun toString(): String {
-        return string
+        return "Struct($string)"
     }
 }

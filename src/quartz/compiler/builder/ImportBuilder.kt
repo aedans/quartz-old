@@ -16,10 +16,12 @@ fun QuartzParser.ImportDeclarationContext.import(
         parser: (InputStream) -> QuartzParser.ProgramContext
 ): List<QuartzParser.DeclarationContext> {
     val path = packageList().NAME().map { it.text }.toMutableList()
-    val file = errorScope({ "${library.name}/" + path.joinToString(".") { it.toString() } }) { library.get(path) }
-    val programs = parse(file, parser)
-    return programs.map { it.declaration() }.flatten() +
-            programs.map { it.importDeclaration().map { it.import(library, parser) }.flatten() }.flatten()
+    return errorScope({ path.joinToString(".") }) {
+        val file = library.get(path)
+        val programs = parse(file, parser)
+        programs.map { it.declaration() }.flatten() +
+                programs.map { it.importDeclaration().map { it.import(library, parser) }.flatten() }.flatten()
+    }
 }
 
 fun parse(file: File, parser: (InputStream) -> QuartzParser.ProgramContext): List<QuartzParser.ProgramContext> {

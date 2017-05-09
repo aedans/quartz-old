@@ -13,11 +13,11 @@ import quartz.compiler.util.Type
  */
 
 fun ProgramOutputStream.writeAll() {
-    program.inlineCNodes.forEach { inlineC(it) }
+    program.inlineCDeclarations.forEach { inlineC(it) }
 
-    program.functionDeclarations.map { declare(FunctionType(it.value.function)) }
-    program.structDeclarations.map { declare(StructType(it.value)) }
-    program.typealiasDeclarationDeclarations.map { declare(AliasedType(it.value)) }
+    program.functionDeclarations.forEach { declare(FunctionType(it.value.function)) }
+    program.structDeclarations.forEach { declare(StructType(it.value)) }
+    program.typealiasDeclarations.forEach { declare(AliasedType(it.value)) }
 
     program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
     program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }

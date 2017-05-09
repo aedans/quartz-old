@@ -7,11 +7,7 @@ import quartz.compiler.util.Type
  */
 
 data class ConstType(val type: Type) : Type("const_${type.descriptiveString}") {
-    override val string = "const $type"
-
-    override fun mapTypes(function: (Type?) -> Type?): Type {
-        return ConstType(function(type.mapTypes(function))!!)
-    }
+    override val string = "const ${type.string}"
 
     override fun isInstance(type: Type): Boolean {
         return type.isInstance(this.type)
@@ -19,6 +15,6 @@ data class ConstType(val type: Type) : Type("const_${type.descriptiveString}") {
     }
 
     override fun toString(): String {
-        return string
+        return "Const($type)"
     }
 }

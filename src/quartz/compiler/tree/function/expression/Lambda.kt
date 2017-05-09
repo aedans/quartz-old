@@ -3,7 +3,6 @@ package quartz.compiler.tree.function.expression
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Function
 import quartz.compiler.util.Type
@@ -28,30 +27,6 @@ data class Lambda(
             argNames.size != function.args.size -> throw QuartzException("$argNames.size != ${function.args}.size")
             else -> argNames.zip(function.args)
         }
-    }
-
-    override fun getExpressions(): List<Expression> {
-        return block.getExpressions()
-    }
-
-    override fun getStatements(): List<Statement> {
-        return emptyList()
-    }
-
-    override fun mapExpressions(function: (Expression) -> Expression): Expression {
-        return Lambda(argNames, this.function, block.mapExpressions(function))
-    }
-
-    override fun mapStatements(function: (Statement) -> Statement): Expression {
-        return Lambda(argNames, this.function, block.mapStatements(function))
-    }
-
-    override fun mapTypes(function: (Type?) -> Type?): Expression {
-        return Lambda(
-                argNames,
-                this.function.mapTypes(function),
-                block.mapTypes(function)
-        )
     }
 
     override fun withType(type: Type?): Expression {

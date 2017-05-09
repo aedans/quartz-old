@@ -4,7 +4,6 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.statement.Block
 import quartz.compiler.util.Function
-import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
@@ -26,26 +25,5 @@ data class FunctionDeclaration(
 
     override fun toString(): String {
         return "$name$function {\n${block.toString(1)}}"
-    }
-
-    fun getStatements(): List<Statement> {
-        return block.getStatements()
-    }
-
-    fun mapStatements(function: (Statement) -> Statement): FunctionDeclaration {
-        return copy(block = block.mapStatements(function))
-    }
-
-    fun mapExpressions(function: (Expression) -> Expression): FunctionDeclaration {
-        return copy(block = block.mapExpressions(function))
-    }
-
-    fun mapTypes(function: (Type?) -> Type?): FunctionDeclaration {
-        return FunctionDeclaration(
-                name,
-                argNames,
-                this.function.mapTypes(function),
-                block.mapTypes(function)
-        )
     }
 }

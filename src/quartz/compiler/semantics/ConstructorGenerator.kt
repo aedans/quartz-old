@@ -19,14 +19,10 @@ import quartz.compiler.util.Function
 
 fun Program.generateConstructors(): Program {
     return errorScope({ "constructor generator" }) {
-        Program(
-                functionDeclarations + structDeclarations
+        copy(
+                functionDeclarations = functionDeclarations + structDeclarations
                         .filterValues { !it.external }
-                        .mapValues { it.value.defaultConstructor() },
-                externFunctionDeclarations,
-                structDeclarations,
-                typealiasDeclarationDeclarations,
-                inlineCNodes
+                        .mapValues { it.value.defaultConstructor() }
         )
     }
 }

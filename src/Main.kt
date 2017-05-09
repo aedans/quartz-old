@@ -1,4 +1,6 @@
+
 import quartz.compiler.Compiler
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.tree.library.Library
 import java.io.File
@@ -29,7 +31,7 @@ fun compile(inPath: String, outPath: String) {
     errorScope({ "file $inPath" }) {
         val inFile = File(inPath)
         val library = (inFile.parentFile?.let { Library.create(it) } ?: Library.LibraryPackage(".", File("."), emptyMap())) +
-                Library.create(File(System.getenv()["QUARTZ_LIBRARY"]))
+                Library.create(File(System.getenv()["QZ_LIB"] ?: throw QuartzException("Environment variable QZ_LIB is not set")))
         val input = FileInputStream(inFile)
         val output = FileOutputStream(File(outPath))
 

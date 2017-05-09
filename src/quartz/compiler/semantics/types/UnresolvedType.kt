@@ -7,15 +7,15 @@ import quartz.compiler.util.Type
  */
 
 data class UnresolvedType(override val string: String) : Type(string) {
-    override fun mapTypes(function: (Type?) -> Type?): Type {
-        return UnresolvedType(string)
-    }
-
     override fun isInstance(type: Type): Boolean {
         return type is UnresolvedType && type.string == this.string
     }
 
+    override fun isEqualTo(type: Type): Boolean {
+        return type is UnresolvedType && type.string == this.string
+    }
+
     override fun toString(): String {
-        return string
+        return "Unresolved($string)"
     }
 }

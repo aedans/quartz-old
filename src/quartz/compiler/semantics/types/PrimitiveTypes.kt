@@ -22,23 +22,23 @@ object Primitives {
 }
 
 class NumberType(override val string: String) : Type(string.replace(' ', '_')) {
-    override fun mapTypes(function: (Type?) -> Type?): Type {
-        return this
-    }
-
     override fun isInstance(type: Type): Boolean {
         return type is NumberType
+    }
+
+    override fun toString(): String {
+        return string
     }
 }
 
 class VoidType : Type("void") {
     override val string = "void"
 
-    override fun mapTypes(function: (Type?) -> Type?): Type {
-        return this
-    }
-
     override fun isInstance(type: Type): Boolean {
         return true
+    }
+
+    override fun toString(): String {
+        return string
     }
 }

@@ -1,56 +1,61 @@
 package quartz.compiler.tree
 
-import quartz.compiler.semantics.symboltable.generateSymbolTable
-import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.Statement
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.tree.misc.TypealiasDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
-import quartz.compiler.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
 data class Program(
+        val inlineCDeclarations: List<InlineC>,
         val functionDeclarations: Map<String, FunctionDeclaration>,
         val externFunctionDeclarations: Map<String, ExternFunctionDeclaration>,
         val structDeclarations: Map<String, StructDeclaration>,
-        val typealiasDeclarationDeclarations: Map<String, TypealiasDeclaration>,
-        val inlineCNodes: List<InlineC>
+        val typealiasDeclarations: Map<String, TypealiasDeclaration>
 ) {
-    val symbolTable by lazy(this::generateSymbolTable)
+    constructor() : this(emptyList(), emptyMap(), emptyMap(), emptyMap(), emptyMap())
 
-    fun mapFunctionDeclarations(function: (FunctionDeclaration) -> FunctionDeclaration): Program {
-        return copy(functionDeclarations = functionDeclarations.mapValues { function(it.value) })
+    operator fun plus(inlineC: InlineC): Program {
+        return copy(inlineCDeclarations = inlineCDeclarations + inlineC)
     }
 
-    fun mapStatements(function: (Statement) -> Statement): Program {
-        return copy(functionDeclarations = functionDeclarations
-                .mapValues { it.value.mapStatements { function(it.mapStatements(function)) } })
+    operator fun plus(functionDeclaration: FunctionDeclaration): Program {
+        return copy(functionDeclarations = functionDeclarations + (functionDeclaration.name to functionDeclaration))
     }
 
-    fun mapExpressions(function: (Expression) -> Expression): Program {
-        return copy(functionDeclarations = functionDeclarations.mapValues { it.value.mapExpressions(function) })
+    operator fun plus(externFunctionDeclaration: ExternFunctionDeclaration): Program {
+        return copy(externFunctionDeclarations = externFunctionDeclarations + (externFunctionDeclaration.name to externFunctionDeclaration))
     }
 
-    fun mapTypes(function: (Type?) -> Type?): Program {
-        return Program(
-                functionDeclarations.mapValues { it.value.mapTypes(function) },
-                externFunctionDeclarations.mapValues { it.value.mapTypes(function) },
-                structDeclarations.mapValues { it.value.mapTypes(function) },
-                typealiasDeclarationDeclarations.mapValues { it.value.mapTypes(function) },
-                inlineCNodes
+    operator fun plus(structDeclaration: StructDeclaration): Program {
+        return copy(structDeclarations = structDeclarations + (structDeclaration.name to structDeclaration))
+    }
+
+    operator fun plus(typealiasDeclaration: TypealiasDeclaration): Program {
+        return copy(typealiasDeclarations = typealiasDeclarations + (typealiasDeclaration.name to typealiasDeclaration))
+    }
+
+    operator fun plus(program: Program): Program {
+        return copy(
+                inlineCDeclarations + program.inlineCDeclarations,
+                functionDeclarations + program.functionDeclarations,
+                externFunctionDeclarations + program.externFunctionDeclarations,
+                structDeclarations + program.structDeclarations,
+                typealiasDeclarations + program.typealiasDeclarations
         )
     }
 
     override fun toString(): String {
         var s = ""
-        functionDeclarations.forEach { s += it.value.toString() + "\n\n" }
-        structDeclarations.forEach { s += it.value.toString() + "\n\n" }
-        typealiasDeclarationDeclarations.forEach { s += it.value.toString() + "\n\n" }
+        inlineCDeclarations.forEach { s += "%%${it.src}%%\n\n" }
+        functionDeclarations.forEach { s += "${it.value}\n\n" }
+        externFunctionDeclarations.forEach { s += "${it.value}\n\n" }
+        structDeclarations.forEach { s += "${it.value}\n\n" }
+        typealiasDeclarations.forEach { s += "${it.value}\n\n" }
         return s
     }
 }

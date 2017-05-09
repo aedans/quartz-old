@@ -1,6 +1,7 @@
 package quartz.compiler.generator.util
 
 import quartz.compiler.generator.ProgramOutputStream
+import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.StructType
@@ -25,6 +26,7 @@ fun ProgramOutputStream.type(type: Type?) {
             name("__${type.descriptiveString}")
             string("_t ")
         }
-        else -> name(type)
+        is AliasedType -> type(type.type)
+        else -> name(type.string)
     }
 }

@@ -7,17 +7,13 @@ import quartz.compiler.util.Type
  */
 
 data class PointerType(val type: Type) : Type("${type.descriptiveString}_ptr") {
-    override val string = "$type*"
-
-    override fun mapTypes(function: (Type?) -> Type?): Type {
-        return PointerType(function(type.mapTypes(function))!!)
-    }
+    override val string = "${type.string}*"
 
     override fun isInstance(type: Type): Boolean {
         return type is PointerType && (this.type.isEqualTo(type.type) || type.type == Primitives.void)
     }
 
     override fun toString(): String {
-        return string
+        return "Pointer($type)"
     }
 }

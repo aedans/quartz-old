@@ -1,3 +1,4 @@
+/*
 import std.c.stdio
 
 typealias string = const char *
@@ -6,4 +7,9 @@ typealias printf = (string, ...) -> int
 fn main(): int {
    ({ return printf } as () -> printf)()({ return "Hello, World!" }());
    return 0;
+}
+*/
+
+fn main(): int {
+    return 0;
 }

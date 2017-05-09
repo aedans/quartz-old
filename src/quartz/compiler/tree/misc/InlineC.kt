@@ -12,24 +12,12 @@ import quartz.compiler.util.Type
 open class InlineC(val src: String, override val type: Type? = null) : GlobalDeclaration, Statement, Expression {
     override val isLValue = true
 
-    override fun getExpressions(): List<Expression> {
+    fun getExpressions(): List<Expression> {
         return listOf(this)
     }
 
-    override fun getStatements(): List<Statement> {
+    fun getStatements(): List<Statement> {
         return listOf(this)
-    }
-
-    override fun mapExpressions(function: (Expression) -> Expression): Expression {
-        return this
-    }
-
-    override fun mapStatements(function: (Statement) -> Statement): Expression {
-        return this
-    }
-
-    override fun mapTypes(function: (Type?) -> Type?): Expression {
-        return InlineC(src, function(type))
     }
 
     override fun withType(type: Type?): Expression {

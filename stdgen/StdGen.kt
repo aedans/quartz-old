@@ -7,7 +7,6 @@ import java.io.File
  * Created by Aedan Smith.
  */
 
-
 fun main(args: Array<String>) {
     generate(File(args[0]))
 }

@@ -4,7 +4,6 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.Statement
@@ -16,7 +15,7 @@ import quartz.compiler.util.Function
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.FunctionDeclarationContext.toNode(): GlobalDeclaration {
+fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
     return errorScope({ "function ${NAME()?.text}" }) {
         FunctionDeclaration(
                 NAME().text,

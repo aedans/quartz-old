@@ -3,6 +3,7 @@
 - Optimize parser
 - Add optimizer
 - Fix greatest common type
+- Fix var/val
 - Add true/false
     - Add static vals
 - Improve operators

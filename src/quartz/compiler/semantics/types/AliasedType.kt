@@ -15,23 +15,20 @@ data class AliasedType(
     constructor(typealiasDeclaration: TypealiasDeclaration) :
             this(typealiasDeclaration.name, typealiasDeclaration.aliasedType, typealiasDeclaration.external)
 
-    override fun mapTypes(function: (Type?) -> Type?): Type {
-        return AliasedType(string, function(type.mapTypes(function))!!, external)
-    }
-
     override fun isEqualTo(type: Type): Boolean {
-        return super.isEqualTo(type) || type.isEqualTo(this.type)
+        return super.isEqualTo(type)
+                || this.type.isEqualTo(type)
+                || type is AliasedType && this.type.isEqualTo(type.type)
+                || type is AliasedType && type.string == this.string
     }
 
     override fun isInstance(type: Type): Boolean {
-        return type == this.type
+        return type.isEqualTo(this)
                 || this.type.isInstance(type)
-                || type.isInstance(this.type)
-                || type is AliasedType && type.string == this.string
                 || type is AliasedType && this.type.isInstance(type.type)
     }
 
     override fun toString(): String {
-        return if (!external) type.toString() else string
+        return "Aliased($string, $type)"
     }
 }

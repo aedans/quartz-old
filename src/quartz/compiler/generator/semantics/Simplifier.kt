@@ -16,7 +16,7 @@ import quartz.compiler.tree.misc.InlineC
 
 fun Program.simplify(): Program {
     return errorScope({ "simplifier" }) {
-        this.mapFunctionDeclarations(FunctionDeclaration::simplify)
+        copy(functionDeclarations = functionDeclarations.mapValues { it.value.simplify() })
     }
 }
 
