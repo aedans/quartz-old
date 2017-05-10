@@ -1,0 +1,18 @@
+import std.c.stdio
+
+fn main(): int {
+    val counter = countTo;
+    counter(10, print);
+    return 0;
+}
+
+fn countTo(i: int, printer: (int) -> void) {
+    val counter = countTo;
+    if (i > 0)
+        (i - 1).counter(printer);
+    printer(i);
+}
+
+fn print(i: int) {
+    printf("%d ", i);
+}

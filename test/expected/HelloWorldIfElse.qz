@@ -1,0 +1,14 @@
+import std.c.stdio
+
+fn main(): int {
+    (if (_false()) "Failed" else helloWorld()).printf();
+    return 0;
+}
+
+fn helloWorld(): const char* {
+    return "Hello, World!";
+}
+
+fn _false(): bool {
+    return 0;
+}

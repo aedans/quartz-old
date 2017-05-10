@@ -1,0 +1,17 @@
+import std.c.stdio
+
+typealias string = const char*
+
+fn main(): int {
+    val _greeter = greeter;
+    _greeter()().printf();
+    return 0;
+}
+
+fn greeter(): () -> string {
+    return helloWorld;
+}
+
+fn helloWorld(): string {
+    return "Hello, World!";
+}

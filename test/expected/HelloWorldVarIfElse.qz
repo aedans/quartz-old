@@ -1,0 +1,19 @@
+import std.c.stdio
+
+fn main(): int {
+    val l = if (_false()) "Failed" else helloWorld();
+    (if (_true()) l else "Failed").printf();
+    return 0;
+}
+
+fn helloWorld(): const char* {
+    return "Hello, World!";
+}
+
+fn _true(): int {
+    return 1;
+}
+
+fn _false(): int {
+    return 0;
+}

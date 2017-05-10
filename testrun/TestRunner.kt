@@ -28,13 +28,13 @@ fun File.runTest(src: File, exe: File, out: File, expected: File) {
     if (src.isDirectory) {
         src.listFiles().forEach { runTest(File(src, it.name), File(exe, it.name), File(out, it.name), File(expected, it.name)) }
     } else {
-        Thread { runGCC(src, File("$exe.exe"), File("$out.txt"), File("$expected.txt")) }.start()
+        runGCC(src, File("$exe.exe"), File("$out.txt"), File("$expected.txt"))
     }
 }
 
 fun File.runGCC(src: File, exe: File, out: File, expected: File) {
     runCommand(
-            "gcc ${src.absolutePath} -o ${exe.absolutePath} -Wall -Wextra -Wpedantic",
+            "gcc ${src.absolutePath} -o ${exe.absolutePath} -Wall -Wextra -Wpedantic -Wno-format-security",
             File(this, "${exe.nameWithoutExtension}.txt").outputStream()
     )
     runOutput(exe, out)
@@ -61,7 +61,7 @@ fun runOutput(exe: File, out: File) {
 fun verifyOutput(out: File, expected: File) {
     if (!expected.exists())
         System.err.println("Unable to verify output for $out")
-    else if (out.readText().trim() != expected.readText().trim())
+    else if (!expected.readText().contentEquals(out.readText()))
         System.err.println("Incorrect output for $out")
 }
 
@@ -77,7 +77,7 @@ fun runCommand(command: String, out: OutputStream, err: OutputStream = out) {
                 System.err.write(it)
             }
         } }.start()
-    }.waitFor()
+    }.also { it.waitFor() }.also { while (it.inputStream.available() > 0 || it.errorStream.available() > 0) {} }
 }
 
 fun File.empty(): File {

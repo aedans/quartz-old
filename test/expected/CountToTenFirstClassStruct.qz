@@ -1,0 +1,30 @@
+import std.c.stdio
+
+struct CountInfo {
+    val tester: (int) -> int
+    val modifier: (int) -> int
+    val printer: (int) -> void
+}
+
+fn main(): int {
+    10.countTo(CountInfo(greaterThan0, decrement, printInt));
+    return 0;
+}
+
+fn countTo(i: int, countInfo: CountInfo) {
+    if (countInfo.tester(i))
+        countInfo.modifier(i).countTo(countInfo);
+    countInfo.printer(i);
+}
+
+fn greaterThan0(i: int): int {
+    return i > 0;
+}
+
+fn decrement(i: int): int {
+    return i - 1;
+}
+
+fn printInt(i: int) {
+    printf("%d ", i);
+}

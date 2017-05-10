@@ -1,0 +1,10 @@
+import std.c.stdio
+
+fn main(): int {
+    helloWorld().printf();
+    return 0;
+}
+
+fn helloWorld(): const char* {
+    return "Hello, World!";
+}

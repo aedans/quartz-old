@@ -1,0 +1,8 @@
+import std.c.stdio
+
+fn main(): int {
+    var i = 0;
+    while (i <= 10)
+        "%d ".printf(i++);
+    return 0;
+}

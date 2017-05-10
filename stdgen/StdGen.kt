@@ -8,10 +8,13 @@ import java.io.File
  */
 
 fun main(args: Array<String>) {
-    generate(File(args[0]))
+    generate(File(args[0], "std"))
 }
 
 fun generate(file: File) {
+    file.mkdir()
+
+    File(file, "c").mkdir()
     file.assert()
     file.ctype()
     file.errno()

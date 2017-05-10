@@ -1,0 +1,11 @@
+import std.c.stdlib
+import std.c.stdio
+
+fn main(): int {
+    atexit(hello);
+    return 0;
+}
+
+fn hello() {
+    printf("Hello, World!");
+}

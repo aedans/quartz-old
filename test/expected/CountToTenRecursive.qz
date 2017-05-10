@@ -1,0 +1,16 @@
+import std.c.stdio
+
+fn main(): int {
+    10.countTo();
+    return 0;
+}
+
+fn countTo(i: int) {
+    if (i > 0)
+        (i - 1).countTo();
+    print(i);
+}
+
+fn print(i: int) {
+    printf("%d ", i);
+}
