@@ -1,3 +1,4 @@
+
 import java.io.File
 import java.io.OutputStream
 
@@ -60,7 +61,7 @@ fun runOutput(exe: File, out: File) {
 fun verifyOutput(out: File, expected: File) {
     if (!expected.exists())
         System.err.println("Unable to verify output for $out")
-    else if (out.readText() != expected.readText())
+    else if (out.readText().trim() != expected.readText().trim())
         System.err.println("Incorrect output for $out")
 }
 
@@ -71,7 +72,10 @@ fun runCommand(command: String, out: OutputStream, err: OutputStream = out) {
             it.inputStream.read().takeIf { it > 0 }?.also { out.write(it) }
         } }.start()
         Thread { while (it.isAlive || it.errorStream.available() > 0) {
-            it.errorStream.read().takeIf { it > 0 }?.also { err.write(it) }
+            it.errorStream.read().takeIf { it > 0 }?.also {
+                err.write(it)
+                System.err.write(it)
+            }
         } }.start()
     }.waitFor()
 }
