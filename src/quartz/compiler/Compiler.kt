@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // TODO Fix
+
 package quartz.compiler
 
 import org.antlr.v4.runtime.ANTLRInputStream
@@ -31,7 +33,7 @@ object Compiler {
                     }
                 },
                 builder: QuartzParser.ProgramContext.() -> Program = {
-                    errorScope({ "ast builder" }) { this.toNode(library, parser) }
+                    errorScope({ "ast builder" }) { toNode(library, parser) }
                 },
                 analyzer: Program.() -> Program = {
                     errorScope({ "semantic analyzer" }) { analyze() }

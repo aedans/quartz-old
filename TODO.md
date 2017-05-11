@@ -1,4 +1,7 @@
 - Allow importing of functions, structs, etc.
+- Add error tests
+- Remove semicolons
+- Improve semantic analyer
 - Improve generator
 - Optimize parser
 - Add optimizer
