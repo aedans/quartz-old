@@ -16,6 +16,6 @@
     - Add & operator
     - Add operator overloading
 - Add collection literals, ranges, pairs, etc.
-    - Improve standard library
     - Add templates
-    - Add for loops
+    - Improve standard library
+- Add for loops
