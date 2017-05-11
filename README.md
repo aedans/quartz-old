@@ -22,14 +22,5 @@ Note that the Quartz compiler requires the environment variable
 Supported tasks:
 
 - `assemble` - builds the project
-- `run-tests` - runs the tests
+- `test` - runs the tests
 - `clean` - cleans the project
-
-Supported subtasks:
-
-- `compile` - compiles the project - invoked by assemble
-- `gen-parser` - generates the parser - invoked by assemble
-- `gen-std` - generates the standard library - invoked by assemble
-- `clean-parser` - cleans the parser - invoked by clean
-- `clean-std` - cleans the standard library - invoked by clean
-- `clean-tests` - cleans the tests - invoked by clean

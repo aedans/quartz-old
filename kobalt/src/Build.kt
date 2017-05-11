@@ -41,12 +41,21 @@ val Quartz = project(QuartzParserGen) {
         compile("org.antlr:antlr4:jar:")
     }
 
+    dependenciesTest {
+        compile("junit:junit:")
+    }
+
     sourceDirectories {
         path("src")
     }
 
+    sourceDirectoriesTest {
+        path("test")
+    }
+
     assemble {
         jar {
+            name = "Quartz.jar"
             fatJar = true
             manifest {
                 attributes("Main-Class", "MainKt")
@@ -75,74 +84,38 @@ val QuartzLibGen = project(Quartz) {
     }
 }
 
-val QuartzTestRunner = project(Quartz, QuartzLibGen) {
-    name = "QuartzTestRunner"
-    group = "com.aedans"
-    artifactId = name
-    version = "0.1"
-
-    sourceDirectories {
-        path("testrun")
-    }
-
-    assemble {
-        jar {
-            fatJar = true
-            manifest {
-                attributes("Main-Class", "TestRunnerKt")
-            }
+@Task(
+        name = "post-assemble",
+        alwaysRunAfter = arrayOf("assemble"),
+        description = "Runs all post-assembly tasks"
+)
+fun postCompile(project: Project?): TaskResult {
+    when (project) {
+        QuartzParserGen -> {
+            runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar")
+        }
+        QuartzLibGen -> {
+            runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar .")
         }
     }
-}
-
-@Task(name = "gen-parser", alwaysRunAfter = arrayOf("assemble"), dependsOn = arrayOf("assemble"), description = "Generates the Quartz parser")
-fun genParser(project: Project?): TaskResult {
-    if (project == QuartzParserGen) {
-        runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar")
-    }
     return TaskResult(testResult = TestResult(true))
 }
 
-@Task(name = "clean-parser", alwaysRunAfter = arrayOf("clean"), description = "Cleans the Quartz parser")
-fun cleanParser(project: Project?): TaskResult {
-    if (project == QuartzParserGen) {
-        File("./src/quartz/compiler/parser").deleteRecursively()
-    }
-    return TaskResult(testResult = TestResult(true))
-}
-
-@Task(name = "gen-std", alwaysRunAfter = arrayOf("assemble"), dependsOn = arrayOf("assemble"), description = "Generates the standard library")
-fun genStd(project: Project?): TaskResult {
-    if (project == QuartzLibGen) {
-        runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar .")
-    }
-    return TaskResult(testResult = TestResult(true))
-}
-
-@Task(name = "clean-std", alwaysRunAfter = arrayOf("clean"), description = "Cleans the standard library")
-fun cleanStd(project: Project?): TaskResult {
-    if (project == QuartzLibGen) {
-        File("./std").deleteRecursively()
-    }
-    return TaskResult(testResult = TestResult(true))
-}
-
-@Task(name = "run-tests", alwaysRunAfter = arrayOf("test"), dependsOn = arrayOf("assemble"), description = "Compiles and runs all tests")
-fun runTests(project: Project?): TaskResult {
-    if (project == QuartzTestRunner) {
-        runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar" +
-                " test ./${project.buildDirectory}/libs/${Quartz.name}-${Quartz.version}.jar")
-    }
-    return TaskResult(testResult = TestResult(true))
-}
-
-@Task(name = "clean-tests", alwaysRunAfter = arrayOf("clean"), description = "Cleans all tests")
-fun cleanTests(project: Project?): TaskResult {
-    if (project == QuartzTestRunner) {
-        File("./test/debug").deleteRecursively()
-        File("./test/exe").deleteRecursively()
-        File("./test/out").deleteRecursively()
-        File("./test/src").deleteRecursively()
+@Task(name = "clean-gen", alwaysRunAfter = arrayOf("clean"), description = "Cleans all Quartz files")
+fun cleanGen(project: Project?): TaskResult {
+    when (project) {
+        QuartzParserGen -> {
+            File("./src/quartz/compiler/parser").deleteRecursively()
+        }
+        Quartz -> {
+            File("./test/debug").deleteRecursively()
+            File("./test/exe").deleteRecursively()
+            File("./test/out").deleteRecursively()
+            File("./test/src").deleteRecursively()
+        }
+        QuartzLibGen -> {
+            File("./std").deleteRecursively()
+        }
     }
     return TaskResult(testResult = TestResult(true))
 }
