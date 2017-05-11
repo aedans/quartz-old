@@ -51,7 +51,7 @@ structMember
 // TYPEALIAS DECLARATION
 
 typealiasDeclaration
-    : extern='extern'? 'typealias' NAME '=' type semi?
+    : 'typealias' NAME '=' type semi?
     ;
 
 // IMPORT DECLARATION
@@ -258,6 +258,7 @@ type
 
 ltype
     : NAME
+    | INLINE_C
     | '(' args=typeList ')' '->' returnType=type
     | ltype ptr='*'
     ;

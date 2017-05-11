@@ -21,8 +21,8 @@ fun File.stdio() {
         include("stdio.h")
         newline()
 
-        externTypealias(FPOS, ULONG)
-        externTypealias(FILE, VOID)
+        externTypealias(FPOS)
+        externTypealias(FILE)
 
         newline()
 

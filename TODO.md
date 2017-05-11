@@ -8,6 +8,7 @@
 - Add optimizer
 - Fix greatest common type
 - Fix var/val
+- Add warnings
 - Add true, false, unit
     - Add static vals
 - Improve operators

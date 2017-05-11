@@ -19,7 +19,7 @@ fun File.stdint() {
             comment("int$cat definitions")
 
             SIGNED_UNSIGNED.forEach { sign ->
-                externTypealias("${sign}int${cat}_t", ULONG)
+                externTypealias("${sign}int${cat}_t")
             }
 
             MIN_MAX.forEach { s ->
@@ -28,13 +28,13 @@ fun File.stdint() {
             externVal("UINT${cat.toUpperCase()}_MAX", "uint${cat}_t")
         }
 
-        SIGNED_INT_RANGE.forEach { (i, type) ->
+        SIGNED_INT_RANGE.forEach { (i, _) ->
             newline()
             comment("int$i definitions")
 
             SIGNED_UNSIGNED.forEach { sign ->
                 NORM_LEAST_FAST.forEach { itype ->
-                    externTypealias("${sign}int$itype${i}_t", "$sign$type")
+                    externTypealias("${sign}int$itype${i}_t")
                 }
             }
             MIN_MAX.forEach { s ->

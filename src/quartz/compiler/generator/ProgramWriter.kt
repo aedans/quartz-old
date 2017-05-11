@@ -2,7 +2,6 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.generator.program.*
-import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.StructType
 import quartz.compiler.semantics.types.UnresolvedType
@@ -18,7 +17,6 @@ fun ProgramOutputStream.writeAll() {
     program.externFunctionDeclarations.forEach { declare(FunctionType(it.value.function)) }
     program.functionDeclarations.forEach { declare(FunctionType(it.value.function)) }
     program.structDeclarations.forEach { declare(StructType(it.value)) }
-    program.typealiasDeclarations.forEach { declare(AliasedType(it.value)) }
 
     program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
     program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }

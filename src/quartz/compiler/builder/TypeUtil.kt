@@ -17,8 +17,8 @@ fun QuartzParser.TypeContext.toType(): Type {
 
 fun QuartzParser.LtypeContext.toType(): Type {
     return errorScope({ "varType $text" }) {
-        if (NAME() != null) {
-            when (NAME().text) {
+        when {
+            NAME() != null -> when (NAME().text) {
                 "bool" -> Primitives.bool
                 "char" -> Primitives.char
                 "short" -> Primitives.short
@@ -33,16 +33,13 @@ fun QuartzParser.LtypeContext.toType(): Type {
                 "void" -> VoidType
                 else -> UnresolvedType(NAME().text)
             }
-        } else {
-            if (ptr != null) {
-                PointerType(ltype().toType())
-            } else {
-                FunctionType(Function(
-                        args.type().map { it.toType() },
-                        returnType.toType(),
-                        args.vararg != null
-                ))
-            }
+            INLINE_C() != null -> InlineCType(INLINE_C().text.substring(2, INLINE_C().text.length-2))
+            ptr != null -> PointerType(ltype().toType())
+            else -> FunctionType(Function(
+                    args.type().map { it.toType() },
+                    returnType.toType(),
+                    args.vararg != null
+            ))
         }
     }
 }

@@ -10,6 +10,6 @@ import quartz.compiler.tree.misc.TypealiasDeclaration
 
 fun QuartzParser.TypealiasDeclarationContext.toNode(): TypealiasDeclaration {
     return errorScope({ "typealias ${NAME().text}" }) {
-        TypealiasDeclaration(NAME().text, type().toType(), extern != null)
+        TypealiasDeclaration(NAME().text, type().toType())
     }
 }

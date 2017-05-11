@@ -3,7 +3,7 @@ package quartz.compiler.semantics.analyzer.function.expression
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.analyzer.function.analyze
-import quartz.compiler.semantics.analyzer.type.asFunction
+import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.util.BlockBuilder
 import quartz.compiler.semantics.util.ProgramBuilder
 import quartz.compiler.tree.Program
@@ -32,7 +32,7 @@ fun FunctionCall.analyzeTypes(
     // TODO Fix
     return try {
         val newExpression = expression.analyze(blockBuilder, program, programBuilder, null)
-        val expressionFunction = newExpression.type.asFunction()?.function
+        val expressionFunction = (newExpression.type as? FunctionType)?.function
                 ?: throw QuartzException("Could not call ${newExpression.type}")
         expressionFunction.args!!
 

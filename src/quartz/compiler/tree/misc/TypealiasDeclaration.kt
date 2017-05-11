@@ -7,7 +7,7 @@ import quartz.compiler.util.Type
  * Created by Aedan Smith.
  */
 
-data class TypealiasDeclaration(val name: String, val aliasedType: Type, val external: Boolean) : GlobalDeclaration {
+data class TypealiasDeclaration(val name: String, val aliasedType: Type) : GlobalDeclaration {
     override fun toString(): String {
         return "typealias $name = $aliasedType"
     }

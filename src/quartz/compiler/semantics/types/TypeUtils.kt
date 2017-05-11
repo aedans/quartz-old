@@ -2,7 +2,6 @@ package quartz.compiler.semantics.types
 
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.tree.misc.TypealiasDeclaration
 import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.util.Function
 
@@ -24,8 +23,4 @@ fun Function.type(): FunctionType {
 
 fun StructDeclaration.type(): StructType {
     return StructType(this)
-}
-
-fun TypealiasDeclaration.type(): AliasedType {
-    return AliasedType(this)
 }

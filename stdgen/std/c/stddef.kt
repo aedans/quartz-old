@@ -19,9 +19,9 @@ fun File.stddef() {
         include("stddef.h")
         newline()
 
-        externTypealias(PTRDIFF, LONG)
-        externTypealias(SIZE, ULONG)
-        externTypealias(WCHAR, INT)
+        externTypealias(PTRDIFF)
+        externTypealias(SIZE)
+        externTypealias(WCHAR)
 
         newline()
 

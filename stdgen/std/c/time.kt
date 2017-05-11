@@ -34,8 +34,8 @@ fun File.time() {
         )
         newline()
 
-        externTypealias(CLOCK, ULONG)
-        externTypealias(TIME, ULONG)
+        externTypealias(CLOCK)
+        externTypealias(TIME)
         newline()
 
         externVal("CLOCKS_PER_SEC", ULONG)

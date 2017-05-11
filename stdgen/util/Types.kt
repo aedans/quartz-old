@@ -24,3 +24,7 @@ fun String.ptr(): String {
 fun String?.func(vararg args: String): String {
     return args.joinToString(prefix = "(", postfix = ")") + (if (this != null) " -> $this" else "")
 }
+
+fun String.inlineC(): String {
+    return "%%$this%%"
+}

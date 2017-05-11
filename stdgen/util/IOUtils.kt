@@ -24,8 +24,12 @@ fun PrintStream.struct(name: String, vararg members: Pair<Pair<Boolean, String>,
     println("}")
 }
 
-fun PrintStream.externTypealias(name: String, type: String) {
-    println("extern typealias $name = $type")
+fun PrintStream.externTypealias(name: String) {
+    _typealias(name, name.inlineC())
+}
+
+fun PrintStream._typealias(name: String, type: String) {
+    println("typealias $name = $type")
 }
 
 fun PrintStream.externFunction(name: String, ret: String?, vararg types: String) {

@@ -27,9 +27,9 @@ fun File.stdlib() {
         struct("__stdlib_ldiv_t", true to "quot" to LONG, true to "rem" to LONG)
         newline()
 
-        externTypealias("wchar_t", INT)
-        externTypealias(DIV, "__stdlib_div_t")
-        externTypealias(LDIV, "__stdlib_ldiv_t")
+        externTypealias("wchar_t")
+        _typealias(DIV, "__stdlib_div_t")
+        _typealias(LDIV, "__stdlib_ldiv_t")
 
         newline()
 

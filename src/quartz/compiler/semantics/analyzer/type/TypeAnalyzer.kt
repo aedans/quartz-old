@@ -22,7 +22,6 @@ fun Type.analyze(symbolTable: SymbolTable, program: Program, programBuilder: Pro
                 args = args?.map { it?.analyze(symbolTable, program, programBuilder) },
                 returnType = returnType?.analyze(symbolTable, program, programBuilder)
         ) })
-        is AliasedType -> analyze(symbolTable, program, programBuilder)
         is StructType -> analyze(symbolTable, program, programBuilder)
         is UnresolvedType -> {
             symbolTable.getType(string)?.analyze(symbolTable, program, programBuilder)
@@ -45,19 +44,4 @@ fun StructType.analyze(symbolTable: SymbolTable, program: Program, programBuilde
             ?: throw QuartzException("Unknown struct $this")
 
     return StructType(newStructDeclaration)
-}
-
-fun AliasedType.analyze(symbolTable: SymbolTable, program: Program, programBuilder: ProgramBuilder): AliasedType {
-    val typealiasDeclaration = program.typealiasDeclarations[string]
-            ?: throw QuartzException("Unknown typealias $this")
-
-    if (!programBuilder.program.typealiasDeclarations.contains(string)) {
-        programBuilder.program += typealiasDeclaration
-        programBuilder.program += typealiasDeclaration.analyze(symbolTable, program, programBuilder)
-    }
-
-    val newTypealiasDeclaration = programBuilder.program.typealiasDeclarations[string]
-            ?: throw QuartzException("Unknown typealias $this")
-
-    return AliasedType(newTypealiasDeclaration)
 }

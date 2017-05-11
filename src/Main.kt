@@ -15,6 +15,8 @@ import kotlin.system.measureTimeMillis
 fun main(args: Array<String>) {
     println("Compiled in " + measureTimeMillis {
         val inFile = File(args[0])
+        if (!inFile.exists())
+            throw QuartzException("Could not find file ${args[0]}")
         if (inFile.isFile){
             compile(args[0], args[1])
         } else {

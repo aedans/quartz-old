@@ -3,7 +3,6 @@ package quartz.compiler.semantics.analyzer.function
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.analyzer.function.expression.analyze
-import quartz.compiler.semantics.types.AliasedType
 import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.util.BlockBuilder
 import quartz.compiler.semantics.util.ProgramBuilder
@@ -48,7 +47,6 @@ fun Expression.verifyAs(type: Type?): Expression {
         this.type == null -> this.withType(type)
         type == null || this.type!!.isEqualTo(type) -> this
         this.type?.isInstance(type) ?: true -> Cast(this, type)
-        type is AliasedType -> this.verifyAs(type.type)
         type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
         else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
     }

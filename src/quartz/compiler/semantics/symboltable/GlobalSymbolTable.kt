@@ -21,7 +21,7 @@ data class GlobalSymbolTable(val program: Program) : SymbolTable {
 
     override fun getType(name: String): Type? {
         return program.structDeclarations[name]?.type()
-                ?: program.typealiasDeclarations[name]?.type()
+                ?: program.typealiasDeclarations[name]?.aliasedType
     }
 
     override fun globalSymbolTable(): GlobalSymbolTable {
