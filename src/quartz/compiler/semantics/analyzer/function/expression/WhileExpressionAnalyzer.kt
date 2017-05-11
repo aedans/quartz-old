@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.analyzer.function.expression
 
 import quartz.compiler.semantics.analyzer.function.analyze
-import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.IntType
 import quartz.compiler.semantics.util.BlockBuilder
 import quartz.compiler.semantics.util.ProgramBuilder
 import quartz.compiler.tree.Program
@@ -20,7 +20,7 @@ fun WhileExpression.analyze(
         expected: Type?
 ): WhileExpression {
     return WhileExpression(
-            test.analyze(blockBuilder, program, programBuilder, Primitives.int),
+            test.analyze(blockBuilder, program, programBuilder, IntType),
             block.analyze(blockBuilder, program, programBuilder, expected) as BlockExpression
     )
 }

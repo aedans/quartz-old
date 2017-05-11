@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function.expression
 
-import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.ULongType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.util.Type
 
@@ -10,7 +10,7 @@ import quartz.compiler.util.Type
 
 data class Sizeof(val sizeType: Type) : Expression {
     override val isLValue = false
-    override val type = Primitives.ulong
+    override val type = ULongType
 
     override fun withType(type: Type?): Expression {
         return this

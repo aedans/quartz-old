@@ -5,7 +5,7 @@ package quartz.compiler.semantics.analyzer.function.expression
 import quartz.compiler.semantics.analyzer.function.analyze
 import quartz.compiler.semantics.analyzer.function.expression.analyze
 import quartz.compiler.semantics.analyzer.type.verifyAs
-import quartz.compiler.semantics.types.Primitives
+import quartz.compiler.semantics.types.IntType
 import quartz.compiler.semantics.util.BlockBuilder
 import quartz.compiler.semantics.util.ProgramBuilder
 import quartz.compiler.tree.Program
@@ -31,7 +31,7 @@ fun IfExpression.analyzeTypes(
         programBuilder: ProgramBuilder,
         expected: Type?
 ): IfExpression {
-    val newTest = test.analyze(blockBuilder, program, programBuilder, Primitives.int)
+    val newTest = test.analyze(blockBuilder, program, programBuilder, IntType)
     val newIfTrue = ifTrue.analyze(blockBuilder, program, programBuilder, expected)
     val newIfFalse = ifFalse.analyze(blockBuilder, program, programBuilder, expected)
     val newType = newIfTrue.type.verifyAs(newIfFalse.type)

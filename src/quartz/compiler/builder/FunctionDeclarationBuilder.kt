@@ -3,8 +3,7 @@ package quartz.compiler.builder
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.Primitives
-import quartz.compiler.semantics.types.VoidType
+import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.*
@@ -137,9 +136,9 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
 
 fun QuartzParser.LiteralContext.toNode(): Expression {
     return when {
-        CHAR() != null -> NumberLiteral(text, Primitives.char)
-        INT() != null -> NumberLiteral(text, Primitives.int)
-        DOUBLE() != null -> NumberLiteral(text, Primitives.double)
+        CHAR() != null -> NumberLiteral(text, CharType)
+        INT() != null -> NumberLiteral(text, IntType)
+        DOUBLE() != null -> NumberLiteral(text, DoubleType)
         STRING() != null -> StringLiteral(text.substring(1, text.length-1))
         else -> throw QuartzException("Error translating $this")
     }

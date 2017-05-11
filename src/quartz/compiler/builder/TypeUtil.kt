@@ -19,17 +19,17 @@ fun QuartzParser.LtypeContext.toType(): Type {
     return errorScope({ "varType $text" }) {
         when {
             NAME() != null -> when (NAME().text) {
-                "bool" -> Primitives.bool
-                "char" -> Primitives.char
-                "short" -> Primitives.short
-                "int" -> Primitives.int
-                "long" -> Primitives.long
-                "uchar" -> Primitives.uchar
-                "ushort" -> Primitives.ushort
-                "uint" -> Primitives.uint
-                "ulong" -> Primitives.ulong
-                "float" -> Primitives.float
-                "double" -> Primitives.double
+                "bool" -> BoolType
+                "char" -> CharType
+                "short" -> ShortType
+                "int" -> IntType
+                "long" -> LongType
+                "uchar" -> UCharType
+                "ushort" -> UShortType
+                "uint" -> UIntType
+                "ulong" -> ULongType
+                "float" -> FloatType
+                "double" -> DoubleType
                 "void" -> VoidType
                 else -> UnresolvedType(NAME().text)
             }
