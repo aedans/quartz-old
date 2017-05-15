@@ -16,4 +16,14 @@ abstract class Type(val descriptiveString: String) {
     override fun toString(): String {
         return string
     }
+
+    companion object {
+        fun Type?.isInstance(type: Type?): Boolean {
+            return when {
+                this == null && type == null -> true
+                this == null || type == null -> false
+                else -> this.isInstance(type)
+            }
+        }
+    }
 }

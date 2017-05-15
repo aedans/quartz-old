@@ -1,6 +1,5 @@
 package quartz.compiler.tree.function
 
-import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.util.Function
 
@@ -17,7 +16,7 @@ data class FunctionDeclaration(
     val argsWithNames by lazy {
         when {
             function.args == null -> null
-            argNames.size != function.args.size -> throw QuartzException("$argNames.size != ${function.args}.size")
+            argNames.size != function.args.size -> throw Exception("$argNames.size != ${function.args}.size")
             else -> argNames.zip(function.args)
         }
     }

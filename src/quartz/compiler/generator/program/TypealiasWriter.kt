@@ -9,12 +9,13 @@ import quartz.compiler.semantics.types.FunctionType
  * Created by Aedan Smith.
  */
 
+// TODO migrate to visitor
 fun ProgramOutputStream.functionTypedef(type: FunctionType) {
-    type.function.args!!.forEach {
-        declare(it!!)
+    (type.function.args ?: throw Exception("Unknown argument types for $type")).forEach {
+        declare(it ?: throw Exception("Unknown argument type for $type"))
     }
     declare("typedef ${type.function}") {
-        declare(type.function.returnType!!)
+        declare(type.function.returnType ?: throw Exception("Unknown return type for $type"))
         name("typedef")
         type(type.function.returnType)
         parentheses {

@@ -63,13 +63,13 @@ object TypeAnalyzer : Visitor<TypeContext> {
             crossinline clone: (T, Type) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, scopeContext) = expressionContext.asExpression<T>()
+            val (expression, symbolContext) = expressionContext.asExpression<T>()
             val type = function(expression)
             type?.let {
-                val (newType, newProgramContext) = type.analyze(scopeContext)
+                val (newType, newProgramContext) = type.analyze(symbolContext)
                 expressionContext.copy(
                         expression = clone(expression, newType),
-                        symbolContext = scopeContext.copy(newProgramContext)
+                        symbolContext = symbolContext.copy(newProgramContext)
                 )
             } ?: expressionContext
         }

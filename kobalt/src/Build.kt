@@ -89,7 +89,7 @@ val QuartzLibGen = project(Quartz) {
         alwaysRunAfter = arrayOf("assemble"),
         description = "Runs all post-assembly tasks"
 )
-fun postCompile(project: Project?): TaskResult {
+fun postAssemble(project: Project?): TaskResult {
     when (project) {
         QuartzParserGen -> {
             runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar")

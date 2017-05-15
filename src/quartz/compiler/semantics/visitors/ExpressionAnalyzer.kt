@@ -50,11 +50,11 @@ object ExpressionAnalyzer : Visitor<ExpressionContext> by visitor(
             crossinline clone: (T, Expression) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, scopeContext) = expressionContext.asExpression<T>()
+            val (expression, symbolContext) = expressionContext.asExpression<T>()
             val sExpression = function(expression)
             sExpression?.let {
                 val (newExpression, newScopeContext, newType) =
-                        sExpression.analyze(scopeContext, expectedType(expressionContext, expression))
+                        sExpression.analyze(symbolContext, expectedType(expressionContext, expression))
                 ExpressionContext(
                         clone(expression, newExpression),
                         newScopeContext,
@@ -69,12 +69,12 @@ object ExpressionAnalyzer : Visitor<ExpressionContext> by visitor(
             crossinline clone: (T, Type) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, scopeContext) = expressionContext.asExpression<T>()
+            val (expression, symbolContext) = expressionContext.asExpression<T>()
             val type = function(expression)
             // TODO replace with highest bounded type
             ExpressionContext(
                     clone(expression, type ?: throw QuartzException("Could not infer type for $expression")),
-                    scopeContext,
+                    symbolContext,
                     type
             )
         }

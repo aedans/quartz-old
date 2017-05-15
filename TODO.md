@@ -1,5 +1,6 @@
 - Allow importing of functions, structs, etc.
 - Add error tests
+- Add more unit tests
 - Remove semicolons
 - Improve semantic analyer
 - Improve generator

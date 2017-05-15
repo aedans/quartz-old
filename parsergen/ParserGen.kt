@@ -11,8 +11,8 @@ fun main(args: Array<String>) {
     File(parserOutput)
             .also { it.deleteRecursively() }
             .also { it.mkdirs() }
-    Tool.main(("-o $parserOutput" +
-            " -package quartz.compiler.parser -no-listener" +
-            " -no-visitor -lib $grammar $grammar/Quartz.g4")
+    Tool.main(("-o $parserOutput " +
+            "-package quartz.compiler.parser -no-listener " +
+            "-no-visitor -lib $grammar $grammar/Quartz.g4")
                     .split(" ").toTypedArray())
 }
