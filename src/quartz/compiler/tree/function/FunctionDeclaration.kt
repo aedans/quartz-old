@@ -2,7 +2,6 @@ package quartz.compiler.tree.function
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.GlobalDeclaration
-import quartz.compiler.tree.function.expression.BlockExpression
 import quartz.compiler.util.Function
 
 /**
@@ -13,7 +12,7 @@ data class FunctionDeclaration(
         val name: String,
         val argNames: List<String>,
         val function: Function,
-        val block: BlockExpression
+        val block: Block
 ) : GlobalDeclaration {
     val argsWithNames by lazy {
         when {

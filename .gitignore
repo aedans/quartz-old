@@ -9,3 +9,6 @@
 /QuartzLibGen.iml
 /QuartzParserGen.iml
 /QuartzTestRunner.iml
+/*.qz
+/*.c
+/*.exe

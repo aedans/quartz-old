@@ -1,9 +1,11 @@
 package quartz.compiler.generator.program
 
+import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.generator.util.args
 import quartz.compiler.generator.util.type
+import quartz.compiler.tree.function.Block
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.*
@@ -14,7 +16,7 @@ import quartz.compiler.tree.misc.InlineC
  */
 
 fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclaration) {
-    declare("functionPrototype_${functionDeclaration.name}") {
+    declare("function prototype ${functionDeclaration.name}") {
         type(functionDeclaration.function.returnType!!)
         name(functionDeclaration.name)
         args(functionDeclaration.argsWithNames)
@@ -25,7 +27,7 @@ fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclarati
 
 fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
     margin {
-        declare("function_${functionDeclaration.name}") {
+        declare("function ${functionDeclaration.name}") {
             type(functionDeclaration.function.returnType!!)
             name(functionDeclaration.name)
             args(functionDeclaration.argsWithNames)
@@ -54,7 +56,7 @@ fun ProgramOutputStream.expression(expression: Expression) {
             is WhileExpression -> whileExpression(expression)
             is VariableDeclaration -> varDeclaration(expression)
             is BlockExpression -> block(expression)
-            else -> throw Exception("Unrecognized expression $expression")
+            else -> throw QuartzException("Unrecognized expression $expression")
         }
     }
 }
@@ -142,7 +144,7 @@ fun ProgramOutputStream.whileExpression(whileExpression: WhileExpression) {
 }
 
 fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
-    type(variableDeclaration.varType ?: throw Exception("Unknown varType for $variableDeclaration"))
+    type(variableDeclaration.varType ?: throw QuartzException("Unknown type for $variableDeclaration"))
     name(variableDeclaration.name)
     variableDeclaration.expression?.apply {
         string("=")
@@ -150,7 +152,7 @@ fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration)
     }
 }
 
-fun ProgramOutputStream.block(block: BlockExpression) {
+fun ProgramOutputStream.block(block: Block) {
     braces {
         block.expressionList.forEach {
             newline()

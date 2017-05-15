@@ -16,7 +16,7 @@ data class Assignment(val lvalue: Expression, val expression: Expression, val id
             throw QuartzException("$lvalue is not a valid lvalue")
     }
 
-    override fun withType(type: Type?): Expression {
+    override fun withType(type: Type?): Assignment {
         return Assignment(lvalue, expression, id, type)
     }
 

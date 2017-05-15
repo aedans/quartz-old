@@ -13,7 +13,7 @@ fun ProgramOutputStream.functionTypedef(type: FunctionType) {
     type.function.args!!.forEach {
         declare(it!!)
     }
-    declare("typedef_${type.function}") {
+    declare("typedef ${type.function}") {
         declare(type.function.returnType!!)
         name("typedef")
         type(type.function.returnType)

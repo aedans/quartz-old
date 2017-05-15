@@ -13,7 +13,7 @@ import quartz.compiler.tree.struct.StructMember
 fun ProgramOutputStream.struct(structDeclarationNode: StructDeclaration) {
     if (structDeclarationNode.external)
         return
-    declare("struct_${structDeclarationNode.name}") {
+    declare("struct ${structDeclarationNode.name}") {
         structDeclarationNode.members.forEach { declare(it.value.type) }
         margin {
             name("struct")
@@ -31,7 +31,7 @@ fun ProgramOutputStream.struct(structDeclarationNode: StructDeclaration) {
 }
 
 fun ProgramOutputStream.structPrototype(structDeclarationNode: StructDeclaration) {
-    declare("structPrototype_${structDeclarationNode.name}") {
+    declare("struct prototype ${structDeclarationNode.name}") {
         name("struct")
         name(structDeclarationNode.name)
         string(";")
