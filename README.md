@@ -17,7 +17,7 @@ Kobalt tasks can be executed using `./kobaltw [task]` on Linux and
 
 Note that the Quartz compiler requires the environment variable
 `QZ_LIB` to be set to the location of the standard library 
-(located at `./std/` after running `gen-std`).
+(located at `./std/` after running `assemble`).
 
 Supported tasks:
 
