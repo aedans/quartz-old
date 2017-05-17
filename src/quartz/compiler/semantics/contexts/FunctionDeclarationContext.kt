@@ -2,7 +2,7 @@ package quartz.compiler.semantics.contexts
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

@@ -2,7 +2,7 @@ package quartz.compiler.tree.misc
 
 import quartz.compiler.tree.GlobalDeclaration
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

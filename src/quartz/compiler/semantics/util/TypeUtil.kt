@@ -6,7 +6,7 @@ import quartz.compiler.semantics.contexts.TypeContext
 import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.semantics.visitors.TypeAnalyzer
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

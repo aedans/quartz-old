@@ -1,7 +1,7 @@
 package quartz.compiler.generator.util
 
 import quartz.compiler.generator.ProgramOutputStream
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

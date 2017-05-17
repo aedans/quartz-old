@@ -1,7 +1,7 @@
 package quartz.compiler.tree.misc
 
 import quartz.compiler.tree.GlobalDeclaration
-import quartz.compiler.util.Function
+import quartz.compiler.tree.util.Function
 
 /**
  * Created by Aedan Smith.

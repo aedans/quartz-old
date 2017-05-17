@@ -7,7 +7,7 @@ import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.visitors.ExpressionAnalyzer
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.Cast
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

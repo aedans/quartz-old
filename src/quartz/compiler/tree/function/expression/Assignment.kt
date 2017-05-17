@@ -2,7 +2,7 @@ package quartz.compiler.tree.function.expression
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

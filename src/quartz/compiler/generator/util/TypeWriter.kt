@@ -4,7 +4,7 @@ import quartz.compiler.generator.ProgramOutputStream
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.semantics.types.StructType
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

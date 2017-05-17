@@ -3,8 +3,8 @@ package quartz.compiler.builder
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.*
-import quartz.compiler.util.Function
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Function
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

@@ -8,8 +8,8 @@ import quartz.compiler.semantics.contexts.TypeContext
 import quartz.compiler.semantics.types.*
 import quartz.compiler.semantics.util.analyze
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.util.Function
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Function
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 
 /**

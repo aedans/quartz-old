@@ -24,6 +24,6 @@ fun QuartzParser.StructDeclarationContext.toNode(): StructDeclaration {
 
 fun QuartzParser.StructMemberContext.toNode(): StructMember {
     return errorScope({ "struct member ${NAME().text}" }) {
-        StructMember(NAME().text, type().toType(), type().text == "var")
+        StructMember(NAME().text, type().toType())
     }
 }

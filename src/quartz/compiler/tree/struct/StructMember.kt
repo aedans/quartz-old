@@ -1,13 +1,13 @@
 package quartz.compiler.tree.struct
 
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-data class StructMember(val name: String, val type: Type, val mutable: Boolean) {
+data class StructMember(val name: String, val type: Type) {
     override fun toString(): String {
-        return "${if (mutable) "var" else "val"} $name: $type"
+        return "$name: $type"
     }
 }

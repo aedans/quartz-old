@@ -2,7 +2,7 @@ package quartz.compiler.tree.function
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.VoidType
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

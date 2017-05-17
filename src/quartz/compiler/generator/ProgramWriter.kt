@@ -5,7 +5,7 @@ import quartz.compiler.generator.program.*
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.StructType
 import quartz.compiler.semantics.types.UnresolvedType
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

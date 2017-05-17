@@ -10,7 +10,7 @@ import quartz.compiler.tree.function.expression.ReturnExpression
 import quartz.compiler.tree.function.expression.VariableDeclaration
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.tree.struct.StructDeclaration
-import quartz.compiler.util.Function
+import quartz.compiler.tree.util.Function
 
 /**
  * Created by Aedan Smith.

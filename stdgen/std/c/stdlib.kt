@@ -21,10 +21,10 @@ fun File.stdlib() {
         include("stdlib.h")
         newline()
 
-        struct("__stdlib_div_t", true to "quot" to INT, true to "rem" to INT)
+        struct("__stdlib_div_t", "quot" to INT, "rem" to INT)
         newline()
 
-        struct("__stdlib_ldiv_t", true to "quot" to LONG, true to "rem" to LONG)
+        struct("__stdlib_ldiv_t", "quot" to LONG, "rem" to LONG)
         newline()
 
         externTypealias("wchar_t")

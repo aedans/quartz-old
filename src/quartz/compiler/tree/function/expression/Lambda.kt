@@ -4,8 +4,8 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.Block
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.util.Function
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Function
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.times
 
 /**

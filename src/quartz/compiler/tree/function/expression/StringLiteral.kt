@@ -5,7 +5,7 @@ import quartz.compiler.semantics.types.CharType
 import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.tree.function.Expression
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

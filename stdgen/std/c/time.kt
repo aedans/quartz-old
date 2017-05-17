@@ -23,14 +23,14 @@ fun File.time() {
         newline()
 
         struct("tm",
-                true to "tm_sec" to INT,
-                true to "tm_min" to INT,
-                true to "tm_hour" to INT,
-                true to "tm_mday" to INT,
-                true to "tm_mon" to INT,
-                true to "tm_year" to INT,
-                true to "tm_wday" to INT,
-                true to "tm_isds" to INT
+                "tm_sec" to INT,
+                "tm_min" to INT,
+                "tm_hour" to INT,
+                "tm_mday" to INT,
+                "tm_mon" to INT,
+                "tm_year" to INT,
+                "tm_wday" to INT,
+                "tm_isds" to INT
         )
         newline()
 

@@ -1,9 +1,9 @@
 import std.c.stdio
 
 struct CountInfo {
-    val tester: (int) -> int
-    val modifier: (int) -> int
-    val printer: (int) -> void
+    tester: (int) -> int
+    modifier: (int) -> int
+    printer: (int) -> void
 }
 
 fn main(): int {

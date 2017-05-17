@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.
@@ -27,15 +27,3 @@ object UIntType : NumberType("unsigned int")
 object ULongType : NumberType("unsigned long long")
 object FloatType : NumberType("float")
 object DoubleType : NumberType("double")
-
-object VoidType : Type("void") {
-    override val string = "void"
-
-    override fun isInstance(type: Type): Boolean {
-        return true
-    }
-
-    override fun toString(): String {
-        return string
-    }
-}

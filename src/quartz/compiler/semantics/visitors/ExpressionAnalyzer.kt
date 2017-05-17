@@ -10,7 +10,7 @@ import quartz.compiler.semantics.visitors.expression.*
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.misc.InlineC
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 
 /**

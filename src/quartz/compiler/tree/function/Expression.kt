@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function
 
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.times
 
 /**

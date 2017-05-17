@@ -3,7 +3,7 @@ package quartz.compiler.builder
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.util.Function
+import quartz.compiler.tree.util.Function
 
 /**
  * Created by Aedan Smith.

@@ -7,7 +7,7 @@ import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.*
-import quartz.compiler.util.Function
+import quartz.compiler.tree.util.Function
 
 /**
  * Created by Aedan Smith.

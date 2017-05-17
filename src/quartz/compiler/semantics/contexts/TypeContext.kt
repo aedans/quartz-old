@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.contexts
 
-import quartz.compiler.util.Type
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.

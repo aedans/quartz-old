@@ -45,7 +45,7 @@ structDeclaration
     ;
 
 structMember
-    : varDeclarationType NAME ':' type semi?
+    : NAME ':' type semi?
     ;
 
 // TYPEALIAS DECLARATION

@@ -16,10 +16,10 @@ fun File.write(string: String, func: PrintStream.() -> Unit) {
     func(printStream)
 }
 
-fun PrintStream.struct(name: String, vararg members: Pair<Pair<Boolean, String>, String>) {
+fun PrintStream.struct(name: String, vararg members: Pair<String, String>) {
     println("struct $name {")
     members.forEach {
-        println("    ${if (it.first.first) "var" else "val"} ${it.first.second}: ${it.second}")
+        println("    ${it.first}: ${it.second}")
     }
     println("}")
 }

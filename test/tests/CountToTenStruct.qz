@@ -1,7 +1,7 @@
 import std.c.stdio
 
 struct Int {
-    val value: int
+    value: int
 }
 
 fn main(): int {
