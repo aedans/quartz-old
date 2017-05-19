@@ -24,5 +24,5 @@ fun Type?.verifyAs(type: Type?): Type? {
 }
 
 fun Type.analyze(symbolContext: SymbolContext): TypeContext {
-    return TypeAnalyzer(TypeContext(this, symbolContext.programContext))
+    return TypeAnalyzer(TypeContext(this, symbolContext))
 }

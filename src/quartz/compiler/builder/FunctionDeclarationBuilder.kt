@@ -3,7 +3,10 @@ package quartz.compiler.builder
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.*
+import quartz.compiler.semantics.types.CharType
+import quartz.compiler.semantics.types.DoubleType
+import quartz.compiler.semantics.types.IntType
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.*

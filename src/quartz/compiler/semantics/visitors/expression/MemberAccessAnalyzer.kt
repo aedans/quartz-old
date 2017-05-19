@@ -19,14 +19,14 @@ object MemberAccessAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
             val (memberAccess, symbolContext) = expressionContext.asExpression<MemberAccess>()
 
-            val (newType, newProgramContext) =
+            val (newType, newSymbolContext) =
                     (memberAccess.expression.type as? StructType
                             ?: throw QuartzException("${memberAccess.expression.type} is not a struct"))
                             .analyze(symbolContext)
 
             expressionContext.copy(
                     expression = memberAccess.copy(expression = memberAccess.expression.withType(newType)),
-                    symbolContext = symbolContext.copy(newProgramContext)
+                    symbolContext = newSymbolContext
             )
         },
         { expressionContext ->

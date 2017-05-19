@@ -9,12 +9,12 @@ import quartz.compiler.util.Visitor
 
 object ExternFunctionDeclarationAnalyzer : Visitor<ExternFunctionDeclarationContext> {
     override fun invoke(externFunctionDeclarationContext: ExternFunctionDeclarationContext): ExternFunctionDeclarationContext {
-        val (externFunctionDeclaration, programContext) = externFunctionDeclarationContext
-        val (newFunction, newProgramContext) = TypeAnalyzer.analyze(
+        val (externFunctionDeclaration, symbolContext) = externFunctionDeclarationContext
+        val (newFunction, newSymbolContext) = TypeAnalyzer.analyze(
                 externFunctionDeclaration.function,
-                programContext
+                symbolContext
         )
 
-        return ExternFunctionDeclarationContext(externFunctionDeclaration.copy(function = newFunction), newProgramContext)
+        return ExternFunctionDeclarationContext(externFunctionDeclaration.copy(function = newFunction), newSymbolContext)
     }
 }

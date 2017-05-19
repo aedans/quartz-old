@@ -8,9 +8,5 @@ import quartz.compiler.tree.util.Type
 
 data class TypeContext(
         val type: Type,
-        val programContext: ProgramContext
-) {
-    fun getType(name: String): Type? {
-        return programContext.getType(name)
-    }
-}
+        val symbolContext: SymbolContext
+)

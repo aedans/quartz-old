@@ -14,6 +14,6 @@ data class ExpressionContext(
 ) {
     inline fun <reified T : Expression> asExpression(): Triple<T, SymbolContext, Type?> {
         return Triple(expression as? T ?:
-                throw Exception("Expected ${T::class.simpleName}, found ${expression::class.simpleName}"), symbolContext, expectedType)
+                throw Exception("Expected ${T::class}, found ${expression::class}"), symbolContext, expectedType)
     }
 }

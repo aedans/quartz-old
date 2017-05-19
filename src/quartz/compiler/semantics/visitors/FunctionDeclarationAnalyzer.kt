@@ -11,13 +11,13 @@ import quartz.compiler.util.Visitor
 
 object FunctionDeclarationAnalyzer : Visitor<FunctionDeclarationContext> by visitor(
         {
-            val (newFunction, newProgramContext) = TypeAnalyzer.analyze(
+            val (newFunction, newSymbolContext) = TypeAnalyzer.analyze(
                     it.functionDeclaration.function,
-                    it.programContext
+                    it.symbolContext
             )
             it.copy(
                     functionDeclaration = it.functionDeclaration.copy(function = newFunction),
-                    programContext = newProgramContext
+                    symbolContext = newSymbolContext
             )
         },
         BlockAnalyzer.functionDeclarationVisitor()

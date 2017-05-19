@@ -12,20 +12,31 @@ data class ProgramContext(
         val program: Program,
         val context: Program,
         val tempIndex: Int
-) {
-    fun getType(name: String): Type? {
+) : SymbolContext {
+    override val programContext
+        get() = this
+
+    override fun getVar(name: String): Type? {
+        return program.functionDeclarations[name]?.type()
+                ?: program.externFunctionDeclarations[name]?.type()
+                // TODO remove
+                ?: context.functionDeclarations[name]?.type()
+                ?: context.externFunctionDeclarations[name]?.type()
+    }
+
+    override fun addVar(name: String, type: Type): SymbolContext {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getType(name: String): Type? {
         return program.structDeclarations[name]?.type()
                 ?: program.typealiasDeclarations[name]?.aliasedType
-        // TODO remove
+                // TODO remove
                 ?: context.structDeclarations[name]?.type()
                 ?: context.typealiasDeclarations[name]?.aliasedType
     }
 
-    fun getVar(name: String): Type? {
-        return program.functionDeclarations[name]?.type()
-                ?: program.externFunctionDeclarations[name]?.type()
-        // TODO remove
-                ?: context.functionDeclarations[name]?.type()
-                ?: context.externFunctionDeclarations[name]?.type()
+    override fun copy(programContext: ProgramContext): SymbolContext {
+        return programContext
     }
 }

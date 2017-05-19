@@ -8,5 +8,5 @@ import quartz.compiler.tree.struct.StructDeclaration
 
 data class StructDeclarationContext(
         val structDeclaration: StructDeclaration,
-        val programContext: ProgramContext
+        val symbolContext: SymbolContext
 )

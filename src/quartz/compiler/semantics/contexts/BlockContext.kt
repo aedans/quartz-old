@@ -23,6 +23,10 @@ data class BlockContext(
         return copy(vars = vars + (name to type))
     }
 
+    override fun getType(name: String): Type? {
+        return symbolContext.getType(name)
+    }
+
     override fun copy(programContext: ProgramContext): SymbolContext {
         return copy(
                 symbolContext = symbolContext.copy(

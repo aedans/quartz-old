@@ -21,16 +21,19 @@ object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
 
             if (!symbolContext.programContext.program.functionDeclarations.contains(identifier.name)) {
                 symbolContext.programContext.context.functionDeclarations[identifier.name]?.let {
-                    val (newFunction, newProgramContext) = FunctionDeclarationAnalyzer(FunctionDeclarationContext(
+                    val (newFunction, newSymbolContext) = FunctionDeclarationAnalyzer(FunctionDeclarationContext(
                             it,
-                            symbolContext.programContext.copy(program = symbolContext.programContext.program + it)
+                            symbolContext.copy(programContext = symbolContext.programContext.copy(
+                                    program = symbolContext.programContext.program + it))
                     ))
 
                     val newType = FunctionType(newFunction.function)
                     expressionContext.copy(
                             expression = Identifier(newFunction.name, newType),
-                            symbolContext = symbolContext.copy(
-                                    programContext = newProgramContext.copy(program = newProgramContext.program + newFunction)
+                            symbolContext = newSymbolContext.copy(
+                                    programContext = newSymbolContext.programContext.copy(
+                                            program = newSymbolContext.programContext.program + newFunction
+                                    )
                             )
                     )
                 } ?: expressionContext
@@ -41,16 +44,19 @@ object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
 
             if (!symbolContext.programContext.program.externFunctionDeclarations.contains(identifier.name)) {
                 symbolContext.programContext.context.externFunctionDeclarations[identifier.name]?.let {
-                    val (newFunction, newProgramContext) = ExternFunctionDeclarationAnalyzer(ExternFunctionDeclarationContext(
+                    val (newFunction, newSymbolContext) = ExternFunctionDeclarationAnalyzer(ExternFunctionDeclarationContext(
                             it,
-                            symbolContext.programContext.copy(program = symbolContext.programContext.program + it)
+                            symbolContext.copy(programContext = symbolContext.programContext.copy(
+                                    program = symbolContext.programContext.program + it))
                     ))
 
                     val newType = FunctionType(newFunction.function)
                     expressionContext.copy(
                             expression = Identifier(newFunction.name, newType),
-                            symbolContext = symbolContext.copy(
-                                    programContext = newProgramContext.copy(program = newProgramContext.program + newFunction)
+                            symbolContext = newSymbolContext.copy(
+                                    programContext = newSymbolContext.programContext.copy(
+                                            program = newSymbolContext.programContext.program + newFunction
+                                    )
                             )
                     )
                 } ?: expressionContext

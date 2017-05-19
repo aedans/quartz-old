@@ -11,6 +11,7 @@ interface SymbolContext {
 
     fun getVar(name: String): Type?
     fun addVar(name: String, type: Type): SymbolContext
+    fun getType(name: String): Type?
 
     fun copy(programContext: ProgramContext = this.programContext): SymbolContext
 }

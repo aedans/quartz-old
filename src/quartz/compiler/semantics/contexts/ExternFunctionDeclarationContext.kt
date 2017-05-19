@@ -8,5 +8,5 @@ import quartz.compiler.tree.misc.ExternFunctionDeclaration
 
 data class ExternFunctionDeclarationContext(
         val externFunctionDeclaration: ExternFunctionDeclaration,
-        val programContext: ProgramContext
+        val symbolContext: SymbolContext
 )

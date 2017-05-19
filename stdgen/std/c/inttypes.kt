@@ -18,7 +18,7 @@ fun File.inttypes() {
 
         DIOUXX.forEach { type ->
             newline()
-            comment("printf $type externVal definitions")
+            comment("printf $type extern val definitions")
 
             SIGNED_INT_RANGE.forEach { (i, _) ->
                 NORM_LEAST_FAST.forEach { cat ->
@@ -33,7 +33,7 @@ fun File.inttypes() {
 
         DIOUX.forEach { type ->
             newline()
-            comment("scanf $type externVal definitions")
+            comment("scanf $type extern val definitions")
 
             SIGNED_INT_RANGE.forEach { (i, _) ->
                 NORM_LEAST_FAST.forEach { cat ->

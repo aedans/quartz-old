@@ -10,8 +10,11 @@ import quartz.compiler.tree.util.Type
 
 data class FunctionDeclarationContext(
         val functionDeclaration: FunctionDeclaration,
-        override val programContext: ProgramContext
+        val symbolContext: SymbolContext
 ) : SymbolContext {
+    override val programContext
+        get() = symbolContext.programContext
+
     override fun getVar(name: String): Type? {
         return functionDeclaration.argsWithNames?.firstOrNull { it.first == name }?.second
                 ?: programContext.getVar(name)
@@ -21,7 +24,11 @@ data class FunctionDeclarationContext(
         throw QuartzException("Could not add variable to function declaration")
     }
 
+    override fun getType(name: String): Type? {
+        return programContext.getType(name)
+    }
+
     override fun copy(programContext: ProgramContext): SymbolContext {
-        return copy(functionDeclaration, programContext = programContext)
+        return copy(functionDeclaration, symbolContext.copy(programContext = programContext))
     }
 }

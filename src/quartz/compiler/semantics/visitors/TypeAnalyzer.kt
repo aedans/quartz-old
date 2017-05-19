@@ -2,8 +2,8 @@ package quartz.compiler.semantics.visitors
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.contexts.ExpressionContext
-import quartz.compiler.semantics.contexts.ProgramContext
 import quartz.compiler.semantics.contexts.StructDeclarationContext
+import quartz.compiler.semantics.contexts.SymbolContext
 import quartz.compiler.semantics.contexts.TypeContext
 import quartz.compiler.semantics.types.*
 import quartz.compiler.semantics.util.analyze
@@ -18,44 +18,43 @@ import quartz.compiler.util.Visitor
 
 object TypeAnalyzer : Visitor<TypeContext> {
     override fun invoke(typeContext: TypeContext): TypeContext {
-        val (type, programContext) = typeContext
+        val (type, symbolContext) = typeContext
         return when (type) {
             is VoidType -> typeContext
             is NumberType -> typeContext
             is ConstType -> this(typeContext.copy(type = type.type)).let { it.copy(type = ConstType(it.type)) }
             is PointerType -> this(typeContext.copy(type = type.type)).let { it.copy(type = PointerType(it.type)) }
-            is FunctionType -> analyze(type.function, programContext).let { (function, programContext) ->
-                TypeContext(FunctionType(function), programContext)
+            is FunctionType -> analyze(type.function, symbolContext).let { (function, newSymbolContext) ->
+                TypeContext(FunctionType(function), newSymbolContext)
             }
             is StructType -> {
-                val structDeclaration = programContext.context.structDeclarations[type.string]
+                val structDeclaration = symbolContext.programContext.context.structDeclarations[type.string]
                         ?: throw QuartzException("Unknown struct $this")
 
-                val (newStructDeclaration, newProgramContext) = StructDeclarationAnalyzer(
-                        StructDeclarationContext(structDeclaration, programContext)
+                val (newStructDeclaration, newSymbolContext) = StructDeclarationAnalyzer(
+                        StructDeclarationContext(structDeclaration, symbolContext)
                 )
 
-                TypeContext(StructType(newStructDeclaration), newProgramContext)
+                TypeContext(StructType(newStructDeclaration), newSymbolContext)
             }
             is UnresolvedType -> {
-                this(typeContext.copy(type = typeContext.getType(type.string)
+                this(typeContext.copy(type = symbolContext.getType(type.string)
                         ?: throw QuartzException("Unable to resolve type $type")))
             }
             else -> throw QuartzException("Expected type, found $this")
         }
     }
 
-    fun analyze(function: Function, programContext: ProgramContext): Pair<Function, ProgramContext> {
-        var mutableProgramContext = programContext
-        fun Type.visit(): Type = TypeAnalyzer(TypeContext(this, mutableProgramContext)).let {
-            val (type, newProgramContext) = it
-            mutableProgramContext = newProgramContext
+    fun analyze(function: Function, symbolContext: SymbolContext): Pair<Function, SymbolContext> {
+        var mutablySymbolContext = symbolContext
+        fun Type.visit(): Type = TypeAnalyzer(TypeContext(this, symbolContext)).let { (type, newSymbolContext) ->
+            mutablySymbolContext = newSymbolContext
             type
         }
         return Pair(function.copy(
                 args = function.args?.map { it?.visit() },
                 returnType = function.returnType?.visit()
-        ), mutableProgramContext)
+        ), mutablySymbolContext)
     }
 
     inline fun <reified T : Expression> analyzerVisitor(
@@ -66,10 +65,10 @@ object TypeAnalyzer : Visitor<TypeContext> {
             val (expression, symbolContext) = expressionContext.asExpression<T>()
             val type = function(expression)
             type?.let {
-                val (newType, newProgramContext) = type.analyze(symbolContext)
+                val (newType, newSymbolContext) = type.analyze(symbolContext)
                 expressionContext.copy(
                         expression = clone(expression, newType),
-                        symbolContext = symbolContext.copy(newProgramContext)
+                        symbolContext = newSymbolContext
                 )
             } ?: expressionContext
         }

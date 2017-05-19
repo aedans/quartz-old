@@ -2,7 +2,6 @@ package quartz.compiler.semantics.visitors
 
 import quartz.compiler.semantics.contexts.StructDeclarationContext
 import quartz.compiler.semantics.contexts.TypeContext
-import quartz.compiler.semantics.types.type
 import quartz.compiler.util.Visitor
 
 /**
@@ -11,22 +10,24 @@ import quartz.compiler.util.Visitor
 
 object StructDeclarationAnalyzer : Visitor<StructDeclarationContext> {
     override fun invoke(structDeclarationContext: StructDeclarationContext): StructDeclarationContext {
-        var programContext = structDeclarationContext.programContext
+        var symbolContext = structDeclarationContext.symbolContext
         val structDeclaration = structDeclarationContext.structDeclaration
 
         val newStructDeclaration = structDeclaration.copy(
                 members = structDeclaration.members.mapValues {
-                    val (type, newProgramContext) = TypeAnalyzer(TypeContext(
+                    val (type, newSymbolContext) = TypeAnalyzer(TypeContext(
                             it.value.type,
-                            programContext
+                            symbolContext
                     ))
-                    programContext = newProgramContext
+                    symbolContext = newSymbolContext
                     it.value.copy(type = type)
                 }
         )
 
-        programContext = programContext.copy(program = programContext.program + newStructDeclaration)
+        symbolContext = symbolContext.copy(programContext = symbolContext.programContext.copy(
+                program = symbolContext.programContext.program + newStructDeclaration
+        ))
 
-        return StructDeclarationContext(newStructDeclaration, programContext)
+        return StructDeclarationContext(newStructDeclaration, symbolContext)
     }
 }
