@@ -18,7 +18,7 @@ object VariableDeclarationAnalyzer : Visitor<ExpressionContext> by visitor(
         ExpressionAnalyzer.typeAnalyzerVisitor<VariableDeclaration>({ it.varType }) {
             e, type -> e.copy(expression = e.expression?.withType(type)) },
         { expressionContext ->
-            val (variableDeclaration, symbolContext) = expressionContext.asExpression<VariableDeclaration>()
+            val (variableDeclaration, symbolContext) = expressionContext.destructureAs<VariableDeclaration>()
             expressionContext.copy(
                     symbolContext = symbolContext.addVar(variableDeclaration.name, variableDeclaration.varType!!)
             )

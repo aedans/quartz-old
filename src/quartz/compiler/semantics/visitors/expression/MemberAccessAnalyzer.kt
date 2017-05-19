@@ -17,7 +17,7 @@ object MemberAccessAnalyzer : Visitor<ExpressionContext> by visitor(
         ExpressionAnalyzer.analyzerVisitor<MemberAccess>({ it.expression }, { _, _ -> null }) {
             e, expression -> e.copy(expression = expression) },
         { expressionContext ->
-            val (memberAccess, symbolContext) = expressionContext.asExpression<MemberAccess>()
+            val (memberAccess, symbolContext) = expressionContext.destructureAs<MemberAccess>()
 
             val (newType, newSymbolContext) =
                     (memberAccess.expression.type as? StructType
@@ -30,7 +30,7 @@ object MemberAccessAnalyzer : Visitor<ExpressionContext> by visitor(
             )
         },
         { expressionContext ->
-            val (memberAccess) = expressionContext.asExpression<MemberAccess>()
+            val (memberAccess) = expressionContext.destructureAs<MemberAccess>()
 
             val memberType = (memberAccess.expression.type as StructType)
                     .members[memberAccess.name]?.type

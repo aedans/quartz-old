@@ -19,7 +19,7 @@ import quartz.compiler.util.Visitor
 
 object FunctionCallAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
-            val (functionCall, symbolContext) = expressionContext.asExpression<FunctionCall>()
+            val (functionCall, symbolContext) = expressionContext.destructureAs<FunctionCall>()
             try {
                 val (newExpression, newSymbolContext) = functionCall.expression.analyze(symbolContext, null)
 
@@ -53,7 +53,7 @@ object FunctionCallAnalyzer : Visitor<ExpressionContext> by visitor(
             }
         },
         { expressionContext ->
-            val (functionCall, symbolContext) = expressionContext.asExpression<FunctionCall>()
+            val (functionCall, symbolContext) = expressionContext.destructureAs<FunctionCall>()
             val function = (functionCall.expression.type as? FunctionType)?.function
                     ?: throw QuartzException("Could not call ${functionCall.expression.type}")
             function.args!!

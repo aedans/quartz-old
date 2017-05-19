@@ -19,7 +19,7 @@ fun Type?.verifyAs(type: Type?): Type? {
         this.isEqualTo(type) -> this
         this.isInstance(type) -> type
         type is ConstType && type.type.isInstance(this) -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this to $type")
+        else -> throw QuartzException("Could not destructureAs $this to $type")
     }
 }
 

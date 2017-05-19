@@ -4,7 +4,7 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.contexts.ExpressionContext
 import quartz.compiler.semantics.contexts.ExternFunctionDeclarationContext
 import quartz.compiler.semantics.contexts.FunctionDeclarationContext
-import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.type
 import quartz.compiler.semantics.util.visitor
 import quartz.compiler.semantics.visitors.ExternFunctionDeclarationAnalyzer
 import quartz.compiler.semantics.visitors.FunctionDeclarationAnalyzer
@@ -17,53 +17,42 @@ import quartz.compiler.util.Visitor
 
 object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
-            val (identifier, symbolContext) = expressionContext.asExpression<Identifier>()
+            val (identifier, symbolContext) = expressionContext.destructureAs<Identifier>()
 
             if (!symbolContext.programContext.program.functionDeclarations.contains(identifier.name)) {
                 symbolContext.programContext.context.functionDeclarations[identifier.name]?.let {
                     val (newFunction, newSymbolContext) = FunctionDeclarationAnalyzer(FunctionDeclarationContext(
                             it,
-                            symbolContext.copy(programContext = symbolContext.programContext.copy(
-                                    program = symbolContext.programContext.program + it))
+                            symbolContext
                     ))
 
-                    val newType = FunctionType(newFunction.function)
                     expressionContext.copy(
-                            expression = Identifier(newFunction.name, newType),
-                            symbolContext = newSymbolContext.copy(
-                                    programContext = newSymbolContext.programContext.copy(
-                                            program = newSymbolContext.programContext.program + newFunction
-                                    )
-                            )
+                            expression = Identifier(newFunction.name, newFunction.type()),
+                            symbolContext = newSymbolContext
                     )
                 } ?: expressionContext
             } else expressionContext
         },
         { expressionContext ->
-            val (identifier, symbolContext) = expressionContext.asExpression<Identifier>()
+            val (identifier, symbolContext) = expressionContext.destructureAs<Identifier>()
 
             if (!symbolContext.programContext.program.externFunctionDeclarations.contains(identifier.name)) {
                 symbolContext.programContext.context.externFunctionDeclarations[identifier.name]?.let {
                     val (newFunction, newSymbolContext) = ExternFunctionDeclarationAnalyzer(ExternFunctionDeclarationContext(
-                            it,
-                            symbolContext.copy(programContext = symbolContext.programContext.copy(
-                                    program = symbolContext.programContext.program + it))
+                            it, symbolContext
                     ))
 
-                    val newType = FunctionType(newFunction.function)
                     expressionContext.copy(
-                            expression = Identifier(newFunction.name, newType),
-                            symbolContext = newSymbolContext.copy(
-                                    programContext = newSymbolContext.programContext.copy(
-                                            program = newSymbolContext.programContext.program + newFunction
-                                    )
-                            )
+                            expression = Identifier(newFunction.name, newFunction.type()),
+                            symbolContext = newSymbolContext
                     )
                 } ?: expressionContext
-            } else expressionContext
+            } else {
+                expressionContext
+            }
         },
         { expressionContext ->
-            val (identifier, symbolContext) = expressionContext.asExpression<Identifier>()
+            val (identifier, symbolContext) = expressionContext.destructureAs<Identifier>()
             val newIdentifier = identifier.run {
                 val expectedType = symbolContext.getVar(name)
                         ?: throw QuartzException("Could not find variable $name")

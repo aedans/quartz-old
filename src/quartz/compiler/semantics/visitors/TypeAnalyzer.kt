@@ -62,7 +62,7 @@ object TypeAnalyzer : Visitor<TypeContext> {
             crossinline clone: (T, Type) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, symbolContext) = expressionContext.asExpression<T>()
+            val (expression, symbolContext) = expressionContext.destructureAs<T>()
             val type = function(expression)
             type?.let {
                 val (newType, newSymbolContext) = type.analyze(symbolContext)

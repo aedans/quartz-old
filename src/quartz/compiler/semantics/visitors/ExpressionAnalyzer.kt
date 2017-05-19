@@ -50,7 +50,7 @@ object ExpressionAnalyzer : Visitor<ExpressionContext> by visitor(
             crossinline clone: (T, Expression) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, symbolContext) = expressionContext.asExpression<T>()
+            val (expression, symbolContext) = expressionContext.destructureAs<T>()
             val sExpression = function(expression)
             sExpression?.let {
                 val (newExpression, newScopeContext, newType) =
@@ -69,7 +69,7 @@ object ExpressionAnalyzer : Visitor<ExpressionContext> by visitor(
             crossinline clone: (T, Type) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, symbolContext) = expressionContext.asExpression<T>()
+            val (expression, symbolContext) = expressionContext.destructureAs<T>()
             val type = function(expression)
             // TODO replace with highest bounded type
             ExpressionContext(

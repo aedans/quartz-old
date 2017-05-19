@@ -23,6 +23,6 @@ fun Expression.verifyAs(type: Type?): Expression {
         type == null || this.type!!.isEqualTo(type) -> this
         this.type?.isInstance(type) ?: true -> Cast(this, type)
         type is ConstType && type.type.isInstance(this.type!!) -> this.verifyAs(type.type)
-        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
+        else -> throw QuartzException("Could not destructureAs $this (${this.type}) to $type")
     }
 }

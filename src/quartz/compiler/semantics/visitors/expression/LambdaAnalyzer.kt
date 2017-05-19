@@ -14,7 +14,7 @@ import quartz.compiler.util.Visitor
 
 object LambdaAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
-            val (lambda) = expressionContext.asExpression<Lambda>()
+            val (lambda) = expressionContext.destructureAs<Lambda>()
 
             if (expressionContext.expectedType is FunctionType && lambda.function != expressionContext.expectedType.function) {
                 expressionContext.copy(expression = lambda.copy(function = expressionContext.expectedType.function))
@@ -23,7 +23,7 @@ object LambdaAnalyzer : Visitor<ExpressionContext> by visitor(
             }
         },
         { expressionContext ->
-            val (lambda) = expressionContext.asExpression<Lambda>()
+            val (lambda) = expressionContext.destructureAs<Lambda>()
 
             if (lambda.function.args == null) {
                 expressionContext.copy(expression = lambda.copy(function = lambda.function.copy(args = emptyList())))
@@ -32,7 +32,7 @@ object LambdaAnalyzer : Visitor<ExpressionContext> by visitor(
             }
         },
         { expressionContext ->
-            val (lambda) = expressionContext.asExpression<Lambda>()
+            val (lambda) = expressionContext.destructureAs<Lambda>()
 
             if (lambda.argNames == null) {
                 expressionContext.copy(expression = lambda.copy(argNames = lambda.function.args?.mapIndexed { i, _ -> "p$i" }))
@@ -41,7 +41,7 @@ object LambdaAnalyzer : Visitor<ExpressionContext> by visitor(
             }
         },
         { expressionContext ->
-            val (lambda, symbolContext) = expressionContext.asExpression<Lambda>()
+            val (lambda, symbolContext) = expressionContext.destructureAs<Lambda>()
 
             val name = "__lambda_${symbolContext.programContext.tempIndex}"
             val functionDeclaration = FunctionDeclaration(

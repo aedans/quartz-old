@@ -15,7 +15,7 @@ import quartz.compiler.util.Visitor
 
 object ReturnAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
-            val (returnExpression, symbolContext) = expressionContext.asExpression<ReturnExpression>()
+            val (returnExpression, symbolContext) = expressionContext.destructureAs<ReturnExpression>()
             symbolContext as? BlockContext ?: throw QuartzException("Cannot return from non-function context")
             symbolContext.symbolContext as? FunctionDeclarationContext ?: throw QuartzException("Cannot return from non-function context")
 
@@ -30,7 +30,7 @@ object ReturnAnalyzer : Visitor<ExpressionContext> by visitor(
             )
         },
         { expressionContext ->
-            val (returnExpression, symbolContext) = expressionContext.asExpression<ReturnExpression>()
+            val (returnExpression, symbolContext) = expressionContext.destructureAs<ReturnExpression>()
             symbolContext as? BlockContext ?: throw QuartzException("Cannot return from non-function context")
             symbolContext.symbolContext as? FunctionDeclarationContext ?: throw QuartzException("Cannot return from non-function context")
 

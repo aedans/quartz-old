@@ -1,6 +1,7 @@
-- Allow importing of functions, structs, etc.
-- Add error tests
 - Add more unit tests
+- Add error tests
+- Migrate objects to vals
+- Allow importing of functions, structs, etc.
 - Remove semicolons
 - Improve semantic analyer
 - Improve generator
@@ -10,7 +11,7 @@
 - Fix var/val
 - Add warnings
 - Add true, false, unit
-    - Add static vals
+- Add static vals
 - Improve operators
     - Add , operator
     - Add & operator

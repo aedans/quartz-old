@@ -15,7 +15,7 @@ import quartz.compiler.util.Visitor
 
 object BlockExpressionAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
-            val (blockExpression, symbolContext) = expressionContext.asExpression<BlockExpression>()
+            val (blockExpression, symbolContext) = expressionContext.destructureAs<BlockExpression>()
 
             var mutableSymbolContext: SymbolContext = BlockContext(
                     blockExpression,
@@ -42,7 +42,7 @@ object BlockExpressionAnalyzer : Visitor<ExpressionContext> by visitor(
             crossinline clone: (T, BlockExpression) -> T
     ): Visitor<ExpressionContext> {
         return { expressionContext ->
-            val (expression, scopeContext) = expressionContext.asExpression<T>()
+            val (expression, scopeContext) = expressionContext.destructureAs<T>()
             val blockExpression = function(expression)
             val (newBlockExpression, newScopeContext, newType) = BlockExpressionAnalyzer(ExpressionContext(
                     blockExpression, scopeContext, expressionContext.expectedType))

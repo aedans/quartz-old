@@ -12,8 +12,8 @@ data class ExpressionContext(
         val symbolContext: SymbolContext,
         val expectedType: Type?
 ) {
-    inline fun <reified T : Expression> asExpression(): Triple<T, SymbolContext, Type?> {
+    inline fun <reified T : Expression> destructureAs(): Triple<T, SymbolContext, Type?> {
         return Triple(expression as? T ?:
-                throw Exception("Expected ${T::class}, found ${expression::class}"), symbolContext, expectedType)
+                throw ClassCastException("Expected ${T::class}, found ${expression::class}"), symbolContext, expectedType)
     }
 }
