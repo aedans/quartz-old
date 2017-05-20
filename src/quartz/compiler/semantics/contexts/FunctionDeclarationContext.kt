@@ -10,10 +10,17 @@ import quartz.compiler.tree.util.Type
 
 data class FunctionDeclarationContext(
         val functionDeclaration: FunctionDeclaration,
-        val symbolContext: SymbolContext
+        val symbolContext: SymbolContext,
+        val genericArguments: List<Type>
 ) : SymbolContext {
     override val programContext
         get() = symbolContext.programContext
+
+    val genericArgumentMap =
+        if (functionDeclaration.generics.size != genericArguments.size)
+            throw QuartzException("Incorrect number of generic arguments for ${functionDeclaration.name}")
+        else
+            functionDeclaration.generics.zip(genericArguments).toMap()
 
     override fun getVar(name: String): Type? {
         return functionDeclaration.argsWithNames?.firstOrNull { it.first == name }?.second
@@ -25,10 +32,14 @@ data class FunctionDeclarationContext(
     }
 
     override fun getType(name: String): Type? {
-        return programContext.getType(name)
+        return genericArgumentMap[name] ?: programContext.getType(name)
+    }
+
+    override fun getFunctionDeclaration(name: String): FunctionDeclaration? {
+        return if (name == functionDeclaration.name) functionDeclaration else symbolContext.getFunctionDeclaration(name)
     }
 
     override fun copy(programContext: ProgramContext): SymbolContext {
-        return copy(functionDeclaration, symbolContext.copy(programContext = programContext))
+        return copy(symbolContext = symbolContext.copy(programContext = programContext))
     }
 }

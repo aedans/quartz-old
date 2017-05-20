@@ -13,7 +13,7 @@ fun Visitor<FunctionDeclarationContext>.programVisitor(): Visitor<ProgramContext
     val functionVisitor = this
     return { programContext ->
         (programContext.context.functionDeclarations["main"] ?: throw QuartzException("Could not find function main"))
-                .let { functionVisitor(FunctionDeclarationContext(it, programContext)) }
+                .let { functionVisitor(FunctionDeclarationContext(it, programContext, emptyList())) }
                 .let { it.programContext.copy(program = it.programContext.program + it.functionDeclaration) }
     }
 }

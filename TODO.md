@@ -1,5 +1,6 @@
 - Add more unit tests
 - Add error tests
+- Fix ProgramContext
 - Migrate objects to vals
 - Allow importing of functions, structs, etc.
 - Remove semicolons

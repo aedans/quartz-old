@@ -47,15 +47,15 @@ object TypeAnalyzer : Visitor<TypeContext> {
     }
 
     fun analyze(function: Function, symbolContext: SymbolContext): Pair<Function, SymbolContext> {
-        var mutablySymbolContext = symbolContext
+        var mutableSymbolContext = symbolContext
         fun Type.visit(): Type = TypeAnalyzer(TypeContext(this, symbolContext)).let { (type, newSymbolContext) ->
-            mutablySymbolContext = newSymbolContext
+            mutableSymbolContext = newSymbolContext
             type
         }
         return Pair(function.copy(
                 args = function.args?.map { it?.visit() },
                 returnType = function.returnType?.visit()
-        ), mutablySymbolContext)
+        ), mutableSymbolContext)
     }
 
     inline fun <reified T : Expression> analyzerVisitor(

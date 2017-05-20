@@ -13,6 +13,7 @@ fun Visitor<BlockContext>.functionDeclarationVisitor(): Visitor<FunctionDeclarat
     val blockVisitor = this
     return { functionDeclarationContext ->
         errorScope({ "function ${functionDeclarationContext.functionDeclaration.name}"}) {
+
             val (newBlock, newFunctionDeclarationContext) = blockVisitor(BlockContext(
                     functionDeclarationContext.functionDeclaration.block,
                     functionDeclarationContext,

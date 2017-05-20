@@ -2,6 +2,7 @@ package quartz.compiler.semantics.contexts
 
 import quartz.compiler.semantics.types.type
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.util.Type
 
 /**
@@ -34,6 +35,10 @@ data class ProgramContext(
                 // TODO remove
                 ?: context.structDeclarations[name]?.type()
                 ?: context.typealiasDeclarations[name]?.aliasedType
+    }
+
+    override fun getFunctionDeclaration(name: String): FunctionDeclaration? {
+        return program.functionDeclarations[name]
     }
 
     override fun copy(programContext: ProgramContext): SymbolContext {

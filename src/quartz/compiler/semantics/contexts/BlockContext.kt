@@ -1,6 +1,7 @@
 package quartz.compiler.semantics.contexts
 
 import quartz.compiler.tree.function.Block
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.util.Type
 
 /**
@@ -25,6 +26,10 @@ data class BlockContext(
 
     override fun getType(name: String): Type? {
         return symbolContext.getType(name)
+    }
+
+    override fun getFunctionDeclaration(name: String): FunctionDeclaration? {
+        return symbolContext.getFunctionDeclaration(name)
     }
 
     override fun copy(programContext: ProgramContext): SymbolContext {

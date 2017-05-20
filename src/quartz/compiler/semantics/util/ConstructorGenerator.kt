@@ -24,13 +24,13 @@ fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
 
         val declarationNode = VariableDeclaration("instance", null, newType, true)
         val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
-        val returnNode = ReturnExpression(Identifier("instance", newType))
+        val returnNode = ReturnExpression(Identifier("instance", emptyList(), newType))
 
         val expressions = mutableListOf<Expression>()
         expressions.add(declarationNode)
         expressions.addAll(assignmentNodes)
         expressions.add(returnNode)
 
-        FunctionDeclaration(name, argsNames, Function(argTypes, newType, false), BlockExpression(expressions))
+        FunctionDeclaration(name, argsNames, emptyList(), Function(argTypes, newType, false), BlockExpression(expressions))
     }
 }

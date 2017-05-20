@@ -35,7 +35,7 @@ object FunctionCallAnalyzer : Visitor<ExpressionContext> by visitor(
                     errorScope({ "$functionCall" }) {
                         val expression = functionCall.expression
 
-                        val (identifier, newScopeContext) = Identifier(expression.name, null)
+                        val (identifier, newScopeContext) = Identifier(expression.name, emptyList(), null)
                                 .analyze(symbolContext, functionCall.type)
 
                         val newFunctionCall = FunctionCall(

@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME '(' fnArgumentList ')' (':' returnType=type)? eBlock
+    : 'fn' NAME ('<' genericArgumentList '>')? '(' fnArgumentList ')' (':' returnType=type)? eBlock
     ;
 
 externFunctionDeclaration
@@ -36,6 +36,14 @@ fnArgument
 
 fnArgumentList
     : (fnArgument ',')* fnArgument?
+    ;
+
+genericArgument
+    : NAME
+    ;
+
+genericArgumentList
+    : (genericArgument ',')* genericArgument?
     ;
 
 // STRUCT DECLARATION
@@ -294,7 +302,7 @@ eBlock
     ;
 
 identifier
-    : NAME
+    : NAME ('<' typeList '>')?
     ;
 
 inlineC

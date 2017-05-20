@@ -19,15 +19,16 @@ object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
         { expressionContext ->
             val (identifier, symbolContext) = expressionContext.destructureAs<Identifier>()
 
-            if (!symbolContext.programContext.program.functionDeclarations.contains(identifier.name)) {
+            if (symbolContext.getFunctionDeclaration(identifier.name) == null) {
                 symbolContext.programContext.context.functionDeclarations[identifier.name]?.let {
                     val (newFunction, newSymbolContext) = FunctionDeclarationAnalyzer(FunctionDeclarationContext(
                             it,
-                            symbolContext
+                            symbolContext,
+                            identifier.genericArguments
                     ))
 
                     expressionContext.copy(
-                            expression = Identifier(newFunction.name, newFunction.type()),
+                            expression = Identifier(newFunction.name, emptyList(), newFunction.type()),
                             symbolContext = newSymbolContext
                     )
                 } ?: expressionContext
@@ -43,7 +44,7 @@ object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
                     ))
 
                     expressionContext.copy(
-                            expression = Identifier(newFunction.name, newFunction.type()),
+                            expression = Identifier(newFunction.name, emptyList(), newFunction.type()),
                             symbolContext = newSymbolContext
                     )
                 } ?: expressionContext
@@ -63,7 +64,7 @@ object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
                     else -> throw QuartzException("Expected $expectedType, found $this ($type)")
                 }
 
-                Identifier(name, newType)
+                Identifier(name, emptyList(), newType)
             }
 
             expressionContext.copy(expression = newIdentifier)

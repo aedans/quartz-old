@@ -21,6 +21,7 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
         FunctionDeclaration(
                 NAME().text,
                 fnArgumentList().fnArgument().map { it.NAME().text },
+                genericArgumentList()?.genericArgument()?.map { it.NAME().text } ?: emptyList(),
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
                         returnType?.toType() ?: VoidType,
@@ -166,7 +167,7 @@ fun QuartzParser.ReturnExpressionContext.toNode(): ReturnExpression {
 }
 
 fun QuartzParser.IdentifierContext.toNode(): Identifier {
-    return Identifier(NAME().text, null)
+    return Identifier(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
 }
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpression {

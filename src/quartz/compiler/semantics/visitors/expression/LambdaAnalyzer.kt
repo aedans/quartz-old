@@ -47,10 +47,11 @@ object LambdaAnalyzer : Visitor<ExpressionContext> by visitor(
             val functionDeclaration = FunctionDeclaration(
                     name,
                     lambda.argNames!!,
+                    emptyList(),
                     lambda.type.function,
                     lambda.block
             )
-            val identifier = Identifier(name, FunctionType(functionDeclaration.function))
+            val identifier = Identifier(name, emptyList(), FunctionType(functionDeclaration.function))
 
             expressionContext.copy(
                     expression = identifier,
