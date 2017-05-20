@@ -22,6 +22,7 @@ object TypeAnalyzer : Visitor<TypeContext> {
         return when (type) {
             is VoidType -> typeContext
             is NumberType -> typeContext
+            is InlineCType -> typeContext
             is ConstType -> this(typeContext.copy(type = type.type)).let { it.copy(type = ConstType(it.type)) }
             is PointerType -> this(typeContext.copy(type = type.type)).let { it.copy(type = PointerType(it.type)) }
             is FunctionType -> analyze(type.function, symbolContext).let { (function, newSymbolContext) ->
@@ -41,7 +42,7 @@ object TypeAnalyzer : Visitor<TypeContext> {
                 this(typeContext.copy(type = symbolContext.getType(type.string)
                         ?: throw QuartzException("Unable to resolve type $type")))
             }
-            else -> throw QuartzException("Expected type, found $this")
+            else -> throw QuartzException("Expected type, found $type")
         }
     }
 

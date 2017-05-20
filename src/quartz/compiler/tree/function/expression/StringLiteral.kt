@@ -19,7 +19,7 @@ data class StringLiteral(val string: String) : Expression {
         if (type == this.type)
             return this
         else
-            throw QuartzException("Could not destructureAs $this to $type")
+            throw QuartzException("Could not cast $this to $type")
     }
 
     override fun toString(): String {
