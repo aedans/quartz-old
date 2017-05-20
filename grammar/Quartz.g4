@@ -38,18 +38,10 @@ fnArgumentList
     : (fnArgument ',')* fnArgument?
     ;
 
-genericArgument
-    : NAME
-    ;
-
-genericArgumentList
-    : (genericArgument ',')* genericArgument?
-    ;
-
 // STRUCT DECLARATION
 
 structDeclaration
-    : extern='extern'? 'struct' NAME '{' structMember* '}' semi?
+    : extern='extern'? 'struct' NAME ('<' genericArgumentList '>')? '{' structMember* '}' semi?
     ;
 
 structMember
@@ -285,7 +277,15 @@ typeList
     : (type ',')* (vararg='...'|type)?
     ;
 
+genericArgumentList
+    : (genericArgument ',')* genericArgument?
+    ;
+
 // UTIL
+
+genericArgument
+    : NAME
+    ;
 
 block
     : '{' (expression semi?)* expression? semi? '}' semi?

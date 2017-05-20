@@ -17,6 +17,7 @@ fun QuartzParser.StructDeclarationContext.toNode(): StructDeclaration {
                     val node = it.toNode()
                     node.name to node
                 }.toMap(),
+                genericArgumentList()?.genericArgument()?.map { it.text } ?: emptyList(),
                 extern != null
         )
     }

@@ -31,9 +31,16 @@ object TypeAnalyzer : Visitor<TypeContext> {
             is StructType -> {
                 val structDeclaration = symbolContext.programContext.context.structDeclarations[type.string]
                         ?: throw QuartzException("Unknown struct $this")
+                var mutableSymbolContext = symbolContext
+
+                val genericArguments = type.genericArguments.map {
+                    val (newType, newSymbolContext) = it.analyze(mutableSymbolContext)
+                    mutableSymbolContext = newSymbolContext
+                    newType
+                }
 
                 val (newStructDeclaration, newSymbolContext) = StructDeclarationAnalyzer(
-                        StructDeclarationContext(structDeclaration, symbolContext)
+                        StructDeclarationContext(structDeclaration, mutableSymbolContext, genericArguments)
                 )
 
                 TypeContext(StructType(newStructDeclaration), newSymbolContext)

@@ -17,10 +17,10 @@ data class FunctionDeclarationContext(
         get() = symbolContext.programContext
 
     val genericArgumentMap =
-        if (functionDeclaration.generics.size != genericArguments.size)
-            throw QuartzException("Incorrect number of generic arguments for ${functionDeclaration.name}")
-        else
-            functionDeclaration.generics.zip(genericArguments).toMap()
+            if (functionDeclaration.generics.size != genericArguments.size)
+                throw QuartzException("Incorrect number of generic arguments for ${functionDeclaration.name}")
+            else
+                functionDeclaration.generics.zip(genericArguments).toMap()
 
     override fun getVar(name: String): Type? {
         return functionDeclaration.argsWithNames?.firstOrNull { it.first == name }?.second

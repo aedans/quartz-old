@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.util
 
 import quartz.compiler.errors.errorScope
-import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.type
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.BlockExpression
@@ -20,7 +20,7 @@ fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
     return errorScope({ "$name default constructor" }) {
         val argsNames = members.map { it.key }
         val argTypes = members.map { it.value.type }
-        val newType = StructType(this)
+        val newType = type()
 
         val declarationNode = VariableDeclaration("instance", null, newType, true)
         val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
@@ -31,6 +31,6 @@ fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
         expressions.addAll(assignmentNodes)
         expressions.add(returnNode)
 
-        FunctionDeclaration(name, argsNames, emptyList(), Function(argTypes, newType, false), BlockExpression(expressions))
+        FunctionDeclaration(name, argsNames, generics, Function(argTypes, newType, false), BlockExpression(expressions))
     }
 }

@@ -15,6 +15,6 @@ data class Identifier(val name: String, val genericArguments: List<Type>, overri
     }
 
     override fun toString(): String {
-        return name
+        return name + if (genericArguments.isEmpty()) "" else genericArguments.joinToString(prefix = "<", postfix = ">")
     }
 }

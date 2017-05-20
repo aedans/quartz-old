@@ -9,9 +9,12 @@ import quartz.compiler.tree.GlobalDeclaration
 data class StructDeclaration(
         val name: String,
         val members: Map<String, StructMember>,
+        val generics: List<String>,
         val external: Boolean
 ) : GlobalDeclaration {
     override fun toString(): String {
-        return "struct $name" + members.values.joinToString(prefix = "{\n\t", postfix = "\n}", separator = "\n\t")
+        return "struct $name" +
+                generics.joinToString(prefix = "<", postfix = ">") +
+                members.values.joinToString(prefix = "{\n\t", postfix = "\n}", separator = "\n\t")
     }
 }

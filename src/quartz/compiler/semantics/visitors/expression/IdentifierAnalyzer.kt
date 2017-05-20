@@ -57,14 +57,8 @@ object IdentifierAnalyzer : Visitor<ExpressionContext> by visitor(
             val newIdentifier = identifier.run {
                 val expectedType = symbolContext.getVar(name)
                         ?: throw QuartzException("Could not find variable $name")
-                val newType = when {
-                    type == null -> expectedType
-                    type.isInstance(expectedType) -> type
-                    expectedType.isInstance(type) -> expectedType
-                    else -> throw QuartzException("Expected $expectedType, found $this ($type)")
-                }
 
-                Identifier(name, emptyList(), newType)
+                Identifier(name, emptyList(), expectedType)
             }
 
             expressionContext.copy(expression = newIdentifier)

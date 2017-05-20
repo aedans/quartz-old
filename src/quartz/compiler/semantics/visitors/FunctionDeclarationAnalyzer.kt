@@ -26,10 +26,14 @@ object FunctionDeclarationAnalyzer : Visitor<FunctionDeclarationContext> by visi
         },
         BlockAnalyzer.functionDeclarationVisitor(),
         {
-            it.copy(functionDeclaration = it.functionDeclaration.copy(
-                    name = it.functionDeclaration.name +
-                            it.genericArguments.joinToString(separator = "") { "_${it.descriptiveString}" }
-            ))
+            it.copy(
+                    functionDeclaration = it.functionDeclaration.copy(
+                            name = it.functionDeclaration.name +
+                                    it.genericArguments.joinToString(separator = "") { "_${it.descriptiveString}" },
+                            generics = emptyList()
+                    ),
+                    genericArguments = emptyList()
+            )
         },
         {
             it.copy(symbolContext = it.symbolContext.copy(
