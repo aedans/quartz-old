@@ -253,14 +253,18 @@ dotCall
 // TYPES
 
 type
-    : isConst='const'? ltype
+    : isConst='const'? unqualifiedType
     ;
 
-ltype
+unqualifiedType
     : NAME
     | INLINE_C
-    | '(' args=typeList ')' '->' returnType=type
-    | ltype ptr='*'
+    | functionType
+    | unqualifiedType ptr='*'
+    ;
+
+functionType
+    : '(' args=typeList ')' '->' returnType=type
     ;
 
 // LISTS

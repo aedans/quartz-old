@@ -45,7 +45,7 @@ object TypeAnalyzer : Visitor<TypeContext> {
 
                 TypeContext(StructType(newStructDeclaration), newSymbolContext)
             }
-            is UnresolvedType -> {
+            is NamedType -> {
                 this(typeContext.copy(type = symbolContext.getType(type.string)
                         ?: throw QuartzException("Unable to resolve type $type")))
             }

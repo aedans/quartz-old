@@ -249,7 +249,7 @@ val QuartzParser.AssignmentOperationContext.ID: Assignment.ID
         "^=" -> Assignment.ID.BXOR_EQ
         "<<=" -> Assignment.ID.SHL_EQ
         ">>=" -> Assignment.ID.SHR_EQ
-        else -> throw QuartzException("Unrecognized assignment operation $text")
+        else -> throw Exception("Unrecognized assignment operation $text")
     }
 
 val QuartzParser.DisjunctionOperationContext.ID: BinaryOperator.ID
@@ -257,21 +257,21 @@ val QuartzParser.DisjunctionOperationContext.ID: BinaryOperator.ID
         "||" -> BinaryOperator.ID.OR
         "|" -> BinaryOperator.ID.BOR
         "^" -> BinaryOperator.ID.BXOR
-        else -> throw QuartzException("Unrecognized disjunction $text")
+        else -> throw Exception("Unrecognized disjunction $text")
     }
 
 val QuartzParser.ConjunctionOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         "&&" -> BinaryOperator.ID.AND
         "&" -> BinaryOperator.ID.BAND
-        else -> throw QuartzException("Unrecognized conjunction $text")
+        else -> throw Exception("Unrecognized conjunction $text")
     }
 
 val QuartzParser.EqualityOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         "==" -> BinaryOperator.ID.EQ
         "!=" -> BinaryOperator.ID.NEQ
-        else -> throw QuartzException("Unrecognized equality operation $text")
+        else -> throw Exception("Unrecognized equality operation $text")
     }
 
 val QuartzParser.ComparisonOperationContext.ID: BinaryOperator.ID
@@ -280,21 +280,21 @@ val QuartzParser.ComparisonOperationContext.ID: BinaryOperator.ID
         "<" -> BinaryOperator.ID.LT
         ">=" -> BinaryOperator.ID.GEQ
         "<=" -> BinaryOperator.ID.LEQ
-        else -> throw QuartzException("Unrecognized comparison operation $text")
+        else -> throw Exception("Unrecognized comparison operation $text")
     }
 
 val QuartzParser.BitshiftOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         ">>" -> BinaryOperator.ID.SHR
         "<<" -> BinaryOperator.ID.SHL
-        else -> throw QuartzException("Unrecognized bitshift operation $text")
+        else -> throw Exception("Unrecognized bitshift operation $text")
     }
 
 val QuartzParser.AdditiveOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
         "+" -> BinaryOperator.ID.ADD
         "-" -> BinaryOperator.ID.SUBT
-        else -> throw QuartzException("Unrecognized additive operation $text")
+        else -> throw Exception("Unrecognized additive operation $text")
     }
 
 val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
@@ -302,7 +302,7 @@ val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
         "*" -> BinaryOperator.ID.MULT
         "/" -> BinaryOperator.ID.DIV
         "%" -> BinaryOperator.ID.MOD
-        else -> throw QuartzException("Unrecognized multiplicative operation $text")
+        else -> throw Exception("Unrecognized multiplicative operation $text")
     }
 
 val QuartzParser.PrefixOperationContext.ID: PrefixUnaryOperator.ID
@@ -313,12 +313,12 @@ val QuartzParser.PrefixOperationContext.ID: PrefixUnaryOperator.ID
         "-" -> PrefixUnaryOperator.ID.MINUS
         "!" -> PrefixUnaryOperator.ID.NOT
         "~" -> PrefixUnaryOperator.ID.BNOT
-        else -> throw QuartzException("Unrecognized prefix operation $text")
+        else -> throw Exception("Unrecognized prefix operation $text")
     }
 
 val QuartzParser.PostfixOperationContext.ID: PostfixUnaryOperator.ID
     get() = when (text) {
         "++" -> PostfixUnaryOperator.ID.INCREMENT
         "--" -> PostfixUnaryOperator.ID.DECREMENT
-        else -> throw QuartzException("Unrecognized postfix operation $text")
+        else -> throw Exception("Unrecognized postfix operation $text")
     }

@@ -14,7 +14,7 @@ data class StructType(
         val genericArguments: List<Type>
 ) : Type(string) {
     constructor(structDeclaration: StructDeclaration) :
-            this(structDeclaration.name, structDeclaration.members, structDeclaration.generics.map { UnresolvedType(it) })
+            this(structDeclaration.name, structDeclaration.members, structDeclaration.generics.map { NamedType(it) })
 
     override fun isInstance(type: Type): Boolean {
         return type == this

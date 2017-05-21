@@ -11,11 +11,14 @@ import quartz.compiler.tree.util.Type
  */
 
 fun QuartzParser.TypeContext.toType(): Type {
-    val type = ltype().toType()
-    return if (isConst != null) ConstType(type) else type
+    val type = unqualifiedType().toType()
+    return when {
+        isConst != null -> ConstType(type)
+        else -> type
+    }
 }
 
-fun QuartzParser.LtypeContext.toType(): Type {
+fun QuartzParser.UnqualifiedTypeContext.toType(): Type {
     return errorScope({ "varType $text" }) {
         when {
             NAME() != null -> when (NAME().text) {
@@ -31,15 +34,20 @@ fun QuartzParser.LtypeContext.toType(): Type {
                 "float" -> FloatType
                 "double" -> DoubleType
                 "void" -> VoidType
-                else -> UnresolvedType(NAME().text)
+                else -> NamedType(NAME().text)
             }
             INLINE_C() != null -> InlineCType(INLINE_C().text.substring(2, INLINE_C().text.length-2))
-            ptr != null -> PointerType(ltype().toType())
-            else -> FunctionType(Function(
-                    args.type().map { it.toType() },
-                    returnType.toType(),
-                    args.vararg != null
-            ))
+            functionType() != null -> functionType().toType()
+            ptr != null -> PointerType(unqualifiedType().toType())
+            else -> throw Exception("Unknown type $text")
         }
     }
+}
+
+fun QuartzParser.FunctionTypeContext.toType(): FunctionType {
+    return FunctionType(Function(
+            args.type().map { it.toType() },
+            returnType.toType(),
+            args.vararg != null
+    ))
 }

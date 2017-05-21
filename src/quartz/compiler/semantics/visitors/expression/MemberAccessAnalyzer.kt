@@ -34,7 +34,7 @@ object MemberAccessAnalyzer : Visitor<ExpressionContext> by visitor(
 
             val memberType = (memberAccess.expression.type as StructType)
                     .members[memberAccess.name]?.type
-                    ?: throw QuartzException("Unknown member ${memberAccess.type?.string}.${memberAccess.name}")
+                    ?: throw QuartzException("Unknown member ${memberAccess.type}.${memberAccess.name}")
 
             expressionContext.copy(
                     expression = memberAccess.copy(type = memberType)

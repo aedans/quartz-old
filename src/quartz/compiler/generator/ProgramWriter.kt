@@ -4,7 +4,7 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.generator.program.*
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.StructType
-import quartz.compiler.semantics.types.UnresolvedType
+import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.tree.util.Type
 
 /**
@@ -30,6 +30,6 @@ fun ProgramOutputStream.declare(type: Type) {
         is StructType -> struct(program.structDeclarations[type.string]
                     ?: throw QuartzException("Unknown struct ${type.string}"))
         is FunctionType -> functionTypedef(type)
-        is UnresolvedType -> throw QuartzException("Unresolved type $type")
+        is NamedType -> throw QuartzException("Unresolved type $type")
     }
 }

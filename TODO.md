@@ -1,23 +1,26 @@
-- Add more unit tests
-- Add error tests
-- Fix ProgramContext
-- Migrate objects to vals
-- Allow importing of functions, structs, etc.
-- Remove semicolons
-- Improve semantic analyer
-- Improve generator
-- Optimize parser
-- Add optimizer
-- Fix greatest common type
-- Fix var/val
-- Add warnings
-- Add true, false, unit
-- Add static vals
-- Improve operators
-    - Add , operator
-    - Add & operator
-    - Add operator overloading
-- Add collection literals, ranges, pairs, etc.
-    - Add templates
-    - Improve standard library
-- Add for loops
+- Code maintenance
+    - Make visitors more readable and modular
+    - Rewrite ProgramContext
+    - Rewrite generator
+    - Optimize parser
+    - Add more unit tests
+    - Add error tests
+- Bug fixes
+    - Fix greatest common type
+    - Implement var/val
+- Features
+    - Add template inferencer
+    - Add extension functions
+    - Add true, false, unit
+        - Add static vals
+    - Improve operators
+        - Add , operator
+        - Add & operator
+        - Add operator overloading
+    - Add collection literals, ranges, pairs, etc.
+        - Improve standard library
+    - Add for loops
+    - Allow importing of functions, structs, etc.
+    - Add optimizer
+    - Add warnings
+    - Remove semicolons
