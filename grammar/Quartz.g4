@@ -197,8 +197,8 @@ equalityOperation
 comparisonOperation
     : '>'
     | '<'
-    | '>='
-    | '<='
+    | '>' '='
+    | '<' '='
     ;
 
 bitshiftOperation

@@ -70,8 +70,8 @@ fun IfExpression.simplify(newExpressions: MutableList<Expression>, intIterator: 
         newExpressions.add(VariableDeclaration(name, null, type, true))
         newExpressions.add(IfExpression(
                 test.simplify(newExpressions, intIterator),
-                ifTrue.setLast(Assignment(identifier, ifTrue.expressionList.last(), Assignment.ID.EQ, type)).simplify(intIterator),
-                ifFalse.setLast(Assignment(identifier, ifFalse.expressionList.last(), Assignment.ID.EQ, type)).simplify(intIterator),
+                ifTrue.setLast(Assignment(identifier, ifTrue.expressionList.last(), type)).simplify(intIterator),
+                ifFalse.setLast(Assignment(identifier, ifFalse.expressionList.last(), type)).simplify(intIterator),
                 type
         ))
         return identifier

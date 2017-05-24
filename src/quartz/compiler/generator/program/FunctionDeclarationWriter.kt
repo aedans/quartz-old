@@ -46,7 +46,7 @@ fun ProgramOutputStream.expression(expression: Expression) {
             is Sizeof -> sizeof(expression)
             is Cast -> cast(expression)
             is ReturnExpression -> returnExpression(expression)
-            is UnaryOperator -> unaryOperator(expression)
+            is UnaryOperator -> prefixUnaryOperator(expression)
             is BinaryOperator -> binaryOperator(expression)
             is Assignment -> assignment(expression)
             is MemberAccess -> memberAccess(expression)
@@ -87,7 +87,7 @@ fun ProgramOutputStream.returnExpression(returnExpression: ReturnExpression) {
     expression(returnExpression.expression)
 }
 
-fun ProgramOutputStream.unaryOperator(unaryOperator: UnaryOperator) {
+fun ProgramOutputStream.prefixUnaryOperator(unaryOperator: UnaryOperator) {
     string(unaryOperator.id)
     parentheses { expression(unaryOperator.expression) }
 }
@@ -100,7 +100,7 @@ fun ProgramOutputStream.binaryOperator(binaryOperator: BinaryOperator) {
 
 fun ProgramOutputStream.assignment(assignment: Assignment) {
     expression(assignment.lvalue)
-    string(assignment.id)
+    string("=")
     expression(assignment.expression)
 }
 

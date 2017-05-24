@@ -56,7 +56,19 @@ fun QuartzParser.WhileExpressionContext.toNode(): WhileExpression {
 fun QuartzParser.AssignmentExpressionContext.toNode(): Expression {
     return when {
         assignmentExpression() == null -> disjunction().toNode()
-        else -> Assignment(disjunction().toNode(), assignmentExpression().toNode(), assignmentOperation().ID, null)
+        else -> when (assignmentOperation().text) {
+            "=" -> Assignment(disjunction().toNode(), assignmentExpression().toNode(), null)
+            else -> Assignment(
+                    disjunction().toNode(),
+                    BinaryOperator(
+                            disjunction().toNode(),
+                            assignmentExpression().toNode(),
+                            assignmentOperation().ID,
+                            null
+                    ),
+                    null
+            )
+        }
     }
 }
 
@@ -234,19 +246,18 @@ fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
     )
 }
 
-val QuartzParser.AssignmentOperationContext.ID: Assignment.ID
+val QuartzParser.AssignmentOperationContext.ID: BinaryOperator.ID
     get() = when (text) {
-        "=" -> Assignment.ID.EQ
-        "+=" -> Assignment.ID.PLUS_EQ
-        "-=" -> Assignment.ID.MINUS_EQ
-        "*=" -> Assignment.ID.TIMES_EQ
-        "/=" -> Assignment.ID.DIV_EQ
-        "%=" -> Assignment.ID.MOD_EQ
-        "&=" -> Assignment.ID.BAND_EQ
-        "|=" -> Assignment.ID.BOR_EQ
-        "^=" -> Assignment.ID.BXOR_EQ
-        "<<=" -> Assignment.ID.SHL_EQ
-        ">>=" -> Assignment.ID.SHR_EQ
+        "+=" -> BinaryOperator.ID.ADD
+        "-=" -> BinaryOperator.ID.SUBT
+        "*=" -> BinaryOperator.ID.MULT
+        "/=" -> BinaryOperator.ID.DIV
+        "%=" -> BinaryOperator.ID.MOD
+        "&=" -> BinaryOperator.ID.BAND
+        "|=" -> BinaryOperator.ID.BOR
+        "^=" -> BinaryOperator.ID.BXOR
+        "<<=" -> BinaryOperator.ID.SHL
+        ">>=" -> BinaryOperator.ID.SHR
         else -> throw Exception("Unrecognized assignment operation $text")
     }
 
