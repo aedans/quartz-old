@@ -19,7 +19,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME ('<' genericArgumentList '>')? '(' fnArgumentList ')' (':' returnType=type)? eBlock
+    : 'fn' NAME ('<' genericArgumentList '>')? '(' fnArgumentList ')' (':' returnType=type)? atomicBlock
     ;
 
 externFunctionDeclaration
@@ -27,7 +27,7 @@ externFunctionDeclaration
     ;
 
 signatureDefinition
-    : 'fn' NAME '(' typeList ')' (':' returnType=type)? semi?
+    : 'fn' NAME '(' typeList ')' (':' returnType=type)?
     ;
 
 fnArgument
@@ -41,23 +41,23 @@ fnArgumentList
 // STRUCT DECLARATION
 
 structDeclaration
-    : extern='extern'? 'struct' NAME ('<' genericArgumentList '>')? '{' structMember* '}' semi?
+    : extern='extern'? 'struct' NAME ('<' genericArgumentList '>')? '{' structMember* '}'
     ;
 
 structMember
-    : NAME ':' type semi?
+    : NAME ':' type
     ;
 
 // TYPEALIAS DECLARATION
 
 typealiasDeclaration
-    : 'typealias' NAME '=' type semi?
+    : 'typealias' NAME '=' type
     ;
 
 // IMPORT DECLARATION
 
 importDeclaration
-    : 'import' packageList semi?
+    : 'import' packageList ';'?
     ;
 
 packageList
@@ -67,7 +67,31 @@ packageList
 // EXPRESSIONS
 
 expression
-    : disjunction (assignmentOperation expression)?
+    : varDeclaration
+    | returnExpression
+    | ifExpression
+    | whileExpression
+    | assignmentExpression
+    ;
+
+varDeclaration
+    : varDeclarationType NAME (':' type)? '=' expression
+    ;
+
+returnExpression
+    : 'return' expression
+    ;
+
+ifExpression
+    : 'if' '(' test=expression ')' ifTrue=block ('else' ifFalse=block)?
+    ;
+
+whileExpression
+    : 'while' '(' test=expression ')' block
+    ;
+
+assignmentExpression
+    : disjunction (assignmentOperation assignmentExpression)?
     ;
 
 disjunction
@@ -95,15 +119,13 @@ additiveExpression
     ;
 
 multiplicativeExpression
-    : prefixExpression (multiplicativeOperation multiplicativeExpression)?
+    : operableExpression (multiplicativeOperation multiplicativeExpression)?
     ;
 
-prefixExpression
-    : prefixOperation* postfixExpression
-    ;
-
-postfixExpression
-    : atomicExpression postfixOperation*
+operableExpression
+    : prefixOperation operableExpression
+    | operableExpression postfixOperation
+    | atomicExpression
     ;
 
 atomicExpression
@@ -113,10 +135,6 @@ atomicExpression
     | sizeof
     | breakExpression
     | continueExpression
-    | returnExpression
-    | ifExpression
-    | whileExpression
-    | varDeclaration
     | lambda
     | identifier
     ;
@@ -140,25 +158,10 @@ continueExpression
     : 'continue'
     ;
 
-returnExpression
-    : 'return' expression
-    ;
-
-ifExpression
-    : 'if' '(' test=expression ')' ifTrue=sBlock ('else' ifFalse=block)?
-    ;
-
-whileExpression
-    : 'while' '(' test=expression ')' loop=block
-    ;
-
-varDeclaration
-    : varDeclarationType nameOptionalType ('=' expression)?
-    ;
-
 lambda
-    : 'lambda' ('(' fnArgumentList ')')? (':' returnType=type)? eBlock
-    | ((fnArgumentList|nameList) '->')? eBlock
+    : 'lambda' ('(' fnArgumentList ')')? (':' returnType=type)? atomicBlock
+    | ((fnArgumentList|nameList) '->') atomicBlock
+    | atomicBlock
     ;
 
 assignmentOperation
@@ -237,8 +240,7 @@ cast
     ;
 
 postfixCall
-    : '(' expressionList ')' lambda?
-    | lambda
+    : '(' expressionList ')'
     ;
 
 memberAccess
@@ -246,8 +248,7 @@ memberAccess
     ;
 
 dotCall
-    : '.' identifier '(' expressionList ')' lambda?
-    | lambda
+    : '.' identifier '(' expressionList ')'
     ;
 
 // TYPES
@@ -292,17 +293,12 @@ genericArgument
     ;
 
 block
-    : '{' (expression semi?)* expression? semi? '}' semi?
+    : atomicBlock
     | expression
     ;
 
-sBlock
-    : '{' (expression semi?)* expression? semi? '}'
-    | expression semi?
-    ;
-
-eBlock
-    : '{' (expression semi?)* expression? semi? '}' semi?
+atomicBlock
+    : '{' (expression ';'?)* '}'
     ;
 
 identifier
@@ -315,14 +311,6 @@ inlineC
 
 varDeclarationType
     : 'var'|'val'
-    ;
-
-semi
-    : ';'
-    ;
-
-nameOptionalType
-    : NAME (':' type)?
     ;
 
 // LEXER

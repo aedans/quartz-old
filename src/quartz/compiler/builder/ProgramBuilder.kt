@@ -21,12 +21,16 @@ fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: 
 }
 
 private fun List<QuartzParser.DeclarationContext>.program(): Program {
-    return if (isEmpty()) Program() else when {
-        first().inlineC() != null -> drop(1).program() + first().inlineC().toNode()
-        first().functionDeclaration() != null -> drop(1).program() + first().functionDeclaration().toNode()
-        first().externFunctionDeclaration() != null -> drop(1).program() + first().externFunctionDeclaration().toNode()
-        first().structDeclaration() != null -> drop(1).program() + first().structDeclaration().toNode()
-        first().typealiasDeclaration() != null -> drop(1).program() + first().typealiasDeclaration().toNode()
-        else -> throw QuartzException("Error translating ${first().text}")
+    var program = Program()
+    forEach {
+        when {
+            it.inlineC() != null -> program += it.inlineC().toNode()
+            it.functionDeclaration() != null -> program += it.functionDeclaration().toNode()
+            it.externFunctionDeclaration() != null -> program += it.externFunctionDeclaration().toNode()
+            it.structDeclaration() != null -> program += it.structDeclaration().toNode()
+            it.typealiasDeclaration() != null -> program += it.typealiasDeclaration().toNode()
+            else -> throw QuartzException("Error translating ${it.text}")
+        }
     }
+    return program
 }

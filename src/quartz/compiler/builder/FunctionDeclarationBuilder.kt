@@ -27,7 +27,7 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
                         returnType?.toType() ?: VoidType,
                         false
                 ),
-                eBlock().toNode()
+                atomicBlock().toNode()
         )
     }
 }
@@ -35,9 +35,28 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
 fun QuartzParser.ExpressionContext.toNode(): Expression {
     return errorScope({ "expression $text" }) {
         when {
-            expression() == null -> disjunction().toNode()
-            else -> Assignment(disjunction().toNode(), expression().toNode(), assignmentOperation().ID, null)
+            varDeclaration() != null -> varDeclaration().toNode()
+            returnExpression() != null -> returnExpression().toNode()
+            ifExpression() != null -> ifExpression().toNode()
+            whileExpression() != null -> whileExpression().toNode()
+            assignmentExpression() != null -> assignmentExpression().toNode()
+            else -> throw Exception("Unrecognized expression $text")
         }
+    }
+}
+
+fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
+    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: BlockExpression(emptyList()), null)
+}
+
+fun QuartzParser.WhileExpressionContext.toNode(): WhileExpression {
+    return WhileExpression(test.toNode(), block().toNode())
+}
+
+fun QuartzParser.AssignmentExpressionContext.toNode(): Expression {
+    return when {
+        assignmentExpression() == null -> disjunction().toNode()
+        else -> Assignment(disjunction().toNode(), assignmentExpression().toNode(), assignmentOperation().ID, null)
     }
 }
 
@@ -85,29 +104,22 @@ fun QuartzParser.AdditiveExpressionContext.toNode(): Expression {
 
 fun QuartzParser.MultiplicativeExpressionContext.toNode(): Expression {
     return when {
-        multiplicativeExpression() == null -> prefixExpression().toNode()
-        else -> BinaryOperator(prefixExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
+        multiplicativeExpression() == null -> operableExpression().toNode()
+        else -> BinaryOperator(operableExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
     }
 }
 
-fun QuartzParser.PrefixExpressionContext.toNode(operations: List<QuartzParser.PrefixOperationContext>? = prefixOperation()): Expression {
+fun QuartzParser.OperableExpressionContext.toNode(): Expression {
     return when {
-        operations == null || operations.isEmpty() -> postfixExpression().toNode()
-        operations.size == 1 -> operations[0].toNode(postfixExpression().toNode())
-        else -> operations.last().toNode(toNode(operations.dropLast(1)))
+        prefixOperation() != null -> prefixOperation().toNode(operableExpression().toNode())
+        postfixOperation() != null -> postfixOperation().toNode(operableExpression().toNode())
+        atomicExpression() != null -> atomicExpression().toNode()
+        else -> throw Exception("Unrecognized expression $text")
     }
 }
 
 fun QuartzParser.PrefixOperationContext.toNode(expression: Expression): Expression {
     return PrefixUnaryOperator(expression, ID, null)
-}
-
-fun QuartzParser.PostfixExpressionContext.toNode(operations: List<QuartzParser.PostfixOperationContext>? = postfixOperation()): Expression {
-    return when {
-        operations == null || operations.isEmpty() -> atomicExpression().toNode()
-        operations.size == 1 -> operations[0].toNode(atomicExpression().toNode())
-        else -> operations.last().toNode(toNode(operations.dropLast(1)))
-    }
 }
 
 fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Expression {
@@ -128,13 +140,9 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
         sizeof() != null -> sizeof().toNode()
         breakExpression() != null -> breakExpression().toNode()
         continueExpression() != null -> continueExpression().toNode()
-        returnExpression() != null -> returnExpression().toNode()
         identifier() != null -> identifier().toNode()
-        ifExpression() != null -> ifExpression().toNode()
-        whileExpression() != null -> whileExpression().toNode()
-        varDeclaration() != null -> varDeclaration().toNode()
         lambda() != null -> lambda().toNode()
-        else -> throw QuartzException("Unrecognized atomic expression $text")
+        else -> throw Exception("Unrecognized atomic expression $text")
     }
 }
 
@@ -170,14 +178,6 @@ fun QuartzParser.IdentifierContext.toNode(): Identifier {
     return Identifier(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
 }
 
-fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
-    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: BlockExpression(emptyList()), null)
-}
-
-fun QuartzParser.WhileExpressionContext.toNode(): WhileExpression {
-    return WhileExpression(test.toNode(), loop.toNode())
-}
-
 fun QuartzParser.LambdaContext.toNode(): Lambda {
     return when {
         fnArgumentList() != null -> Lambda(
@@ -187,7 +187,7 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
                         returnType?.toType(),
                         false
                 ),
-                eBlock().toNode()
+                atomicBlock().toNode()
         )
         else -> Lambda(
                 nameList()?.NAME()?.map { it.text },
@@ -196,7 +196,7 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
                         returnType?.toType(),
                         false
                 ),
-                eBlock().toNode()
+                atomicBlock().toNode()
         )
     }
 }
@@ -212,8 +212,7 @@ fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAcces
 fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
-            expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>()
-                    .let { if (lambda() != null) it + lambda().toNode() else it },
+            expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>(),
             null
     )
 }
@@ -221,17 +220,16 @@ fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall
 fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
     return FunctionCall(
             identifier().toNode(),
-            (listOf(expression) + (expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>()))
-                    .let { if (lambda() != null) it + lambda().toNode() else it },
+            listOf(expression) + (expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>()),
             null
     )
 }
 
 fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
     return VariableDeclaration(
-            nameOptionalType().NAME().text,
+            NAME().text,
             expression()?.toNode(),
-            if (nameOptionalType()?.type() != null) nameOptionalType().type().toType() else null,
+            if (type() != null) type().toType() else null,
             varDeclarationType().text == "var"
     )
 }

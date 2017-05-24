@@ -18,7 +18,7 @@ class ErrorListener : ANTLRErrorListener {
     }
 
     override fun reportAmbiguity(p0: Parser?, p1: DFA?, p2: Int, p3: Int, p4: Boolean, p5: BitSet?, p6: ATNConfigSet?) {
-
+//        System.out.println("Ambiguity!")
     }
 
     override fun reportAttemptingFullContext(p0: Parser?, p1: DFA?, p2: Int, p3: Int, p4: BitSet?, p5: ATNConfigSet?) {

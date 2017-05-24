@@ -8,13 +8,12 @@ import quartz.compiler.tree.function.expression.BlockExpression
  */
 
 fun QuartzParser.BlockContext.toNode(): BlockExpression {
-    return BlockExpression(expression().map { it.toNode() })
+    return when {
+        expression() != null -> BlockExpression(listOf(expression().toNode()))
+        else -> atomicBlock().toNode()
+    }
 }
 
-fun QuartzParser.SBlockContext.toNode(): BlockExpression {
-    return BlockExpression(expression().map { it.toNode() })
-}
-
-fun QuartzParser.EBlockContext.toNode(): BlockExpression {
+fun QuartzParser.AtomicBlockContext.toNode(): BlockExpression {
     return BlockExpression(expression().map { it.toNode() })
 }
