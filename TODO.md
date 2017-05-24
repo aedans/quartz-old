@@ -14,7 +14,6 @@
     - Add true, false, unit
         - Add static vals
     - Improve operators
-        - Add , operator
         - Add & operator
         - Add operator overloading
     - Add collection literals, ranges, pairs, etc.

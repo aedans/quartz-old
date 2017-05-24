@@ -7,11 +7,11 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class PrefixUnaryOperator(val expression: Expression, val id: ID, override val type: Type?) : Expression {
+data class UnaryOperator(val expression: Expression, val id: ID, override val type: Type?) : Expression {
     override val isLValue = false
 
-    override fun withType(type: Type?): PrefixUnaryOperator {
-        return PrefixUnaryOperator(expression, id, type)
+    override fun withType(type: Type?): UnaryOperator {
+        return UnaryOperator(expression, id, type)
     }
 
     override fun toString(): String {
@@ -19,8 +19,6 @@ data class PrefixUnaryOperator(val expression: Expression, val id: ID, override 
     }
 
     enum class ID(val string: String) {
-        INCREMENT("++"),
-        DECREMENT("--"),
         NOT("!"),
         BNOT("~"),
         PLUS("+"),

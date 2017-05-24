@@ -218,18 +218,14 @@ multiplicativeOperation
     ;
 
 prefixOperation
-    : '++'
-    | '--'
-    | '+'
+    : '+'
     | '-'
     | '!'
     | '~'
     ;
 
 postfixOperation
-    : '++'
-    | '--'
-    | cast
+    : cast
     | postfixCall
     | memberAccess
     | dotCall

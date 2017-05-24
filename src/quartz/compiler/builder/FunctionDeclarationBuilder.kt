@@ -119,7 +119,7 @@ fun QuartzParser.OperableExpressionContext.toNode(): Expression {
 }
 
 fun QuartzParser.PrefixOperationContext.toNode(expression: Expression): Expression {
-    return PrefixUnaryOperator(expression, ID, null)
+    return UnaryOperator(expression, ID, null)
 }
 
 fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Expression {
@@ -128,7 +128,7 @@ fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Express
         memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
         dotCall() != null -> dotCall().toNode(expression)
-        else -> PostfixUnaryOperator(expression, ID, null)
+        else -> throw Exception("Unrecognized postfix operation $text")
     }
 }
 
@@ -303,20 +303,11 @@ val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
         else -> throw Exception("Unrecognized multiplicative operation $text")
     }
 
-val QuartzParser.PrefixOperationContext.ID: PrefixUnaryOperator.ID
+val QuartzParser.PrefixOperationContext.ID: UnaryOperator.ID
     get() = when (text) {
-        "++" -> PrefixUnaryOperator.ID.INCREMENT
-        "--" -> PrefixUnaryOperator.ID.DECREMENT
-        "+" -> PrefixUnaryOperator.ID.PLUS
-        "-" -> PrefixUnaryOperator.ID.MINUS
-        "!" -> PrefixUnaryOperator.ID.NOT
-        "~" -> PrefixUnaryOperator.ID.BNOT
+        "+" -> UnaryOperator.ID.PLUS
+        "-" -> UnaryOperator.ID.MINUS
+        "!" -> UnaryOperator.ID.NOT
+        "~" -> UnaryOperator.ID.BNOT
         else -> throw Exception("Unrecognized prefix operation $text")
-    }
-
-val QuartzParser.PostfixOperationContext.ID: PostfixUnaryOperator.ID
-    get() = when (text) {
-        "++" -> PostfixUnaryOperator.ID.INCREMENT
-        "--" -> PostfixUnaryOperator.ID.DECREMENT
-        else -> throw Exception("Unrecognized postfix operation $text")
     }

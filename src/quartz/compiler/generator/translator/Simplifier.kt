@@ -36,8 +36,7 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
         is Sizeof -> this
         is Cast -> copy(expression = expression.simplify(newExpressions, intIterator))
         is ReturnExpression -> copy(expression = expression.simplify(newExpressions, intIterator))
-        is PrefixUnaryOperator -> copy(expression = expression.simplify(newExpressions, intIterator))
-        is PostfixUnaryOperator -> copy(expression = expression.simplify(newExpressions, intIterator))
+        is UnaryOperator -> copy(expression = expression.simplify(newExpressions, intIterator))
         is BinaryOperator -> copy(
                 expr1 = expr1.simplify(newExpressions, intIterator),
                 expr2 = expr2.simplify(newExpressions, intIterator)
