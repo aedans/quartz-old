@@ -75,7 +75,8 @@ expression
     ;
 
 varDeclaration
-    : varDeclarationType NAME (':' type)? '=' expression
+    : varDeclarationType NAME ':' type
+    | varDeclarationType NAME (':' type)? '=' expression
     ;
 
 returnExpression

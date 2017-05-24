@@ -1,13 +1,13 @@
 package quartz.compiler.semantics.visitors
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.semantics.contexts.ExpressionContext
 import quartz.compiler.semantics.contexts.StructDeclarationContext
 import quartz.compiler.semantics.contexts.SymbolContext
 import quartz.compiler.semantics.contexts.TypeContext
-import quartz.compiler.semantics.types.*
-import quartz.compiler.semantics.util.analyze
-import quartz.compiler.tree.function.Expression
+import quartz.compiler.semantics.types.ConstType
+import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.PointerType
+import quartz.compiler.semantics.types.StructType
 import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
@@ -16,69 +16,69 @@ import quartz.compiler.util.Visitor
  * Created by Aedan Smith.
  */
 
-object TypeAnalyzer : Visitor<TypeContext> {
-    override fun invoke(typeContext: TypeContext): TypeContext {
-        val (type, symbolContext) = typeContext
-        return when (type) {
-            is VoidType -> typeContext
-            is NumberType -> typeContext
-            is InlineCType -> typeContext
-            is ConstType -> this(typeContext.copy(type = type.type)).let { it.copy(type = ConstType(it.type)) }
-            is PointerType -> this(typeContext.copy(type = type.type)).let { it.copy(type = PointerType(it.type)) }
-            is FunctionType -> analyze(type.function, symbolContext).let { (function, newSymbolContext) ->
-                TypeContext(FunctionType(function), newSymbolContext)
-            }
-            is StructType -> {
-                val structDeclaration = symbolContext.programContext.context.structDeclarations[type.string]
-                        ?: throw QuartzException("Unknown struct $this")
-                var mutableSymbolContext = symbolContext
-
-                val genericArguments = type.genericArguments.map {
-                    val (newType, newSymbolContext) = it.analyze(mutableSymbolContext)
-                    mutableSymbolContext = newSymbolContext
-                    newType
-                }
-
-                val (newStructDeclaration, newSymbolContext) = StructDeclarationAnalyzer(
-                        StructDeclarationContext(structDeclaration, mutableSymbolContext, genericArguments)
-                )
-
-                TypeContext(StructType(newStructDeclaration), newSymbolContext)
-            }
-            is NamedType -> {
-                this(typeContext.copy(type = symbolContext.getType(type.string)
-                        ?: throw QuartzException("Unable to resolve type $type")))
-            }
-            else -> throw QuartzException("Expected type, found $type")
-        }
+object TypeAnalyzer {
+    inline fun analyzeConstType(typeAnalyzer: Visitor<TypeContext>, context: TypeContext): TypeContext {
+        context.type as ConstType
+        return typeAnalyzer(context.copy(type = context.type.type)).let { it.copy(type = ConstType(it.type)) }
     }
 
-    fun analyze(function: Function, symbolContext: SymbolContext): Pair<Function, SymbolContext> {
+    inline fun analyzePointerType(typeAnalyzer: Visitor<TypeContext>, context: TypeContext): TypeContext {
+        context.type as PointerType
+        return typeAnalyzer(context.copy(type = context.type.type)).let { it.copy(type = PointerType(it.type)) }
+    }
+
+    inline fun analyzeFunctionType(
+            crossinline typeAnalyzer: Visitor<TypeContext>,
+            context: TypeContext
+    ): TypeContext {
+        context.type as FunctionType
+        return analyze(typeAnalyzer, context.type.function, context.symbolContext)
+                .let { (function, newSymbolContext) ->
+                    TypeContext(FunctionType(function), newSymbolContext)
+                }
+    }
+
+    inline fun analyzeStructType(
+            typeAnalyzer: Visitor<TypeContext>,
+            structDeclarationAnalyzer: Visitor<StructDeclarationContext>,
+            context: TypeContext
+    ): TypeContext {
+        context.type as StructType
+        val structDeclaration = context.symbolContext.programContext.context.structDeclarations[context.type.string]
+                ?: throw QuartzException("Unknown struct $this")
+        var mutableSymbolContext = context.symbolContext
+
+        val genericArguments = context.type.genericArguments.map {
+            val (newType, newSymbolContext) = typeAnalyzer(TypeContext(it, mutableSymbolContext))
+            mutableSymbolContext = newSymbolContext
+            newType
+        }
+
+        val (newStructDeclaration, newSymbolContext) = structDeclarationAnalyzer(
+                StructDeclarationContext(structDeclaration, mutableSymbolContext, genericArguments)
+        )
+
+        return TypeContext(StructType(newStructDeclaration), newSymbolContext)
+    }
+
+    inline fun analyzeNamedType(typeAnalyzer: Visitor<TypeContext>, context: TypeContext): TypeContext {
+        return typeAnalyzer(context.copy(type = context.symbolContext.getType(context.type.string)
+                ?: throw QuartzException("Unable to resolve type ${context.type}")))
+    }
+
+    inline fun analyze(
+            crossinline typeAnalyzer: Visitor<TypeContext>,
+            function: Function, symbolContext: SymbolContext
+    ): Pair<Function, SymbolContext> {
         var mutableSymbolContext = symbolContext
-        fun Type.visit(): Type = TypeAnalyzer(TypeContext(this, symbolContext)).let { (type, newSymbolContext) ->
+        val visit = { type: Type -> typeAnalyzer(TypeContext(type, symbolContext)).let { (type, newSymbolContext) ->
             mutableSymbolContext = newSymbolContext
             type
-        }
+        } }
         return Pair(function.copy(
-                args = function.args?.map { it?.visit() },
-                returnType = function.returnType?.visit()
+                args = function.args?.map { it?.let(visit) },
+                returnType = function.returnType?.let(visit)
         ), mutableSymbolContext)
     }
-
-    inline fun <reified T : Expression> analyzerVisitor(
-            crossinline function: (T) -> Type?,
-            crossinline clone: (T, Type) -> T
-    ): Visitor<ExpressionContext> {
-        return { expressionContext ->
-            val (expression, symbolContext) = expressionContext.destructureAs<T>()
-            val type = function(expression)
-            type?.let {
-                val (newType, newSymbolContext) = type.analyze(symbolContext)
-                expressionContext.copy(
-                        expression = clone(expression, newType),
-                        symbolContext = newSymbolContext
-                )
-            } ?: expressionContext
-        }
-    }
 }
+

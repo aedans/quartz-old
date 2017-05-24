@@ -8,7 +8,7 @@ import quartz.compiler.tree.util.Type
  */
 
 data class IfExpression(
-        val test: Expression,
+        val condition: Expression,
         val ifTrue: BlockExpression,
         val ifFalse: BlockExpression,
         override val type: Type?
@@ -16,10 +16,10 @@ data class IfExpression(
     override val isLValue = false
 
     override fun withType(type: Type?): IfExpression {
-        return IfExpression(test, ifTrue, ifFalse, type)
+        return IfExpression(condition, ifTrue, ifFalse, type)
     }
 
     override fun toString(): String {
-        return "if ($test) $ifTrue else $ifFalse"
+        return "if ($condition) $ifTrue else $ifFalse"
     }
 }

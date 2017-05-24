@@ -1,9 +1,9 @@
 package quartz.compiler.semantics.visitors.expression
 
 import quartz.compiler.semantics.contexts.ExpressionContext
-import quartz.compiler.semantics.util.visitor
-import quartz.compiler.semantics.visitors.ExpressionAnalyzer
-import quartz.compiler.semantics.visitors.TypeAnalyzer
+import quartz.compiler.semantics.contexts.TypeContext
+import quartz.compiler.semantics.visitors.util.analyzeExpression
+import quartz.compiler.semantics.visitors.util.analyzeType
 import quartz.compiler.tree.function.expression.VariableDeclaration
 import quartz.compiler.util.Visitor
 
@@ -11,16 +11,38 @@ import quartz.compiler.util.Visitor
  * Created by Aedan Smith.
  */
 
-object VariableDeclarationAnalyzer : Visitor<ExpressionContext> by visitor(
-        TypeAnalyzer.analyzerVisitor<VariableDeclaration>({ it.varType }) { e, varType -> e.copy(varType = varType) },
-        ExpressionAnalyzer.analyzerVisitor<VariableDeclaration>({ it.expression }, { _, e -> e.varType }) {
-            e, expression -> e.copy(expression = expression, varType = expression.type) },
-        ExpressionAnalyzer.typeAnalyzerVisitor<VariableDeclaration>({ it.varType }) {
-            e, type -> e.copy(expression = e.expression?.withType(type)) },
-        { expressionContext ->
-            val (variableDeclaration, symbolContext) = expressionContext.destructureAs<VariableDeclaration>()
-            expressionContext.copy(
-                    symbolContext = symbolContext.addVar(variableDeclaration.name, variableDeclaration.varType!!)
-            )
-        }
-)
+object VariableDeclarationAnalyzer {
+    inline fun analyzeVariableType(
+            crossinline typeAnalyzer: Visitor<TypeContext>,
+            context: ExpressionContext
+    ): ExpressionContext {
+        return context.analyzeType<VariableDeclaration>(
+                typeAnalyzer,
+                { it.variableType },
+                { e, variableType -> e.copy(variableType = variableType) }
+        )
+    }
+
+    inline fun analyzeExpression(
+            crossinline expressionAnalyzer: Visitor<ExpressionContext>,
+            context: ExpressionContext
+    ): ExpressionContext {
+        return context.analyzeExpression<VariableDeclaration>(
+                expressionAnalyzer,
+                { it.expression },
+                { _, e -> e.variableType },
+                { e, expression -> e.copy(expression = expression, variableType = expression.type) }
+        )
+    }
+
+//    fun inferExpressionTypeFromType(context: ExpressionContext): ExpressionContext {
+//        TODO
+//    }
+
+    fun addToSymbolTable(context: ExpressionContext): ExpressionContext {
+        val (variableDeclaration, symbolContext) = context.destructureAs<VariableDeclaration>()
+        return context.copy(
+                symbolContext = symbolContext.addVar(variableDeclaration.name, variableDeclaration.variableType!!)
+        )
+    }
+}

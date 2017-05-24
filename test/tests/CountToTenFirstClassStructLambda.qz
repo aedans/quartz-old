@@ -7,7 +7,11 @@ struct CountInfo {
 }
 
 fn main(): int {
-    10.countTo(CountInfo(i: int -> { return i > 0 }, i -> { return i - 1 }, { printf("%d ", p0) }));
+    10.countTo(CountInfo(
+        i: int -> { return i > 0; },
+        i -> { return i - 1; },
+        { printf("%d ", p0); }
+    ));
     return 0;
 }
 

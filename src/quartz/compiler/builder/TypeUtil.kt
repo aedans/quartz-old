@@ -19,7 +19,7 @@ fun QuartzParser.TypeContext.toType(): Type {
 }
 
 fun QuartzParser.UnqualifiedTypeContext.toType(): Type {
-    return errorScope({ "varType $text" }) {
+    return errorScope({ "variableType $text" }) {
         when {
             NAME() != null -> when (NAME().text) {
                 "bool" -> BoolType

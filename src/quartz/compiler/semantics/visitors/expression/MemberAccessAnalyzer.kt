@@ -2,10 +2,9 @@ package quartz.compiler.semantics.visitors.expression
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.contexts.ExpressionContext
+import quartz.compiler.semantics.contexts.TypeContext
 import quartz.compiler.semantics.types.StructType
-import quartz.compiler.semantics.util.analyze
-import quartz.compiler.semantics.util.visitor
-import quartz.compiler.semantics.visitors.ExpressionAnalyzer
+import quartz.compiler.semantics.visitors.util.analyzeExpression
 import quartz.compiler.tree.function.expression.MemberAccess
 import quartz.compiler.util.Visitor
 
@@ -13,31 +12,46 @@ import quartz.compiler.util.Visitor
  * Created by Aedan Smith.
  */
 
-object MemberAccessAnalyzer : Visitor<ExpressionContext> by visitor(
-        ExpressionAnalyzer.analyzerVisitor<MemberAccess>({ it.expression }, { _, _ -> null }) {
-            e, expression -> e.copy(expression = expression) },
-        { expressionContext ->
-            val (memberAccess, symbolContext) = expressionContext.destructureAs<MemberAccess>()
+object MemberAccessAnalyzer {
+    inline fun analyzeExpression(
+            crossinline expressionAnalyzer: Visitor<ExpressionContext>,
+            context: ExpressionContext
+    ): ExpressionContext {
+        return context.analyzeExpression<MemberAccess>(
+                expressionAnalyzer,
+                { it.expression },
+                { _, _ -> null },
+                { e, expression -> e.copy(expression = expression) }
+        )
+    }
 
-            val (newType, newSymbolContext) =
-                    (memberAccess.expression.type as? StructType
-                            ?: throw QuartzException("${memberAccess.expression.type} is not a struct"))
-                            .analyze(symbolContext)
+    inline fun analyzeExpressionType(
+            crossinline typeAnalyzer: Visitor<TypeContext>,
+            context: ExpressionContext
+    ): ExpressionContext {
+        val (memberAccess, symbolContext) = context.destructureAs<MemberAccess>()
 
-            expressionContext.copy(
-                    expression = memberAccess.copy(expression = memberAccess.expression.withType(newType)),
-                    symbolContext = newSymbolContext
-            )
-        },
-        { expressionContext ->
-            val (memberAccess) = expressionContext.destructureAs<MemberAccess>()
+        val (newType, newSymbolContext) = typeAnalyzer(TypeContext(
+                (memberAccess.expression.type as? StructType
+                        ?: throw QuartzException("${memberAccess.expression.type} is not a struct")),
+                symbolContext
+        ))
 
-            val memberType = (memberAccess.expression.type as StructType)
-                    .members[memberAccess.name]?.type
-                    ?: throw QuartzException("Unknown member ${memberAccess.type}.${memberAccess.name}")
+        return context.copy(
+                expression = memberAccess.copy(expression = memberAccess.expression.withType(newType)),
+                symbolContext = newSymbolContext
+        )
+    }
 
-            expressionContext.copy(
-                    expression = memberAccess.copy(type = memberType)
-            )
-        }
-)
+    fun analyzeMember(context: ExpressionContext): ExpressionContext {
+        val (memberAccess) = context.destructureAs<MemberAccess>()
+
+        val memberType = (memberAccess.expression.type as StructType)
+                .members[memberAccess.name]?.type
+                ?: throw QuartzException("Unknown member ${memberAccess.type}.${memberAccess.name}")
+
+        return context.copy(
+                expression = memberAccess.copy(type = memberType)
+        )
+    }
+}

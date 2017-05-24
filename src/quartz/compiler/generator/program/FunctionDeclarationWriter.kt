@@ -125,7 +125,7 @@ fun ProgramOutputStream.functionCall(functionCall: FunctionCall) {
 
 fun ProgramOutputStream.ifExpression(ifExpression: IfExpression) {
     name("if")
-    parentheses { expression(ifExpression.test) }
+    parentheses { expression(ifExpression.condition) }
     expression(ifExpression.ifTrue)
     name("else")
     expression(ifExpression.ifFalse)
@@ -133,12 +133,12 @@ fun ProgramOutputStream.ifExpression(ifExpression: IfExpression) {
 
 fun ProgramOutputStream.whileExpression(whileExpression: WhileExpression) {
     name("while")
-    parentheses { expression(whileExpression.test) }
-    expression(whileExpression.block)
+    parentheses { expression(whileExpression.condition) }
+    block(whileExpression.block)
 }
 
 fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
-    type(variableDeclaration.varType ?: throw QuartzException("Unknown type for $variableDeclaration"))
+    type(variableDeclaration.variableType ?: throw QuartzException("Unknown type for $variableDeclaration"))
     name(variableDeclaration.name)
     variableDeclaration.expression?.apply {
         string("=")

@@ -1,7 +1,7 @@
 - Code maintenance
-    - Make visitors more readable and modular
     - Rewrite ProgramContext
     - Rewrite generator
+    - Migrate simplifier to visitor
     - Optimize parser
     - Add more unit tests
     - Add error tests

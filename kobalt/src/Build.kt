@@ -39,6 +39,7 @@ val Quartz = project(QuartzParserGen) {
 
     dependencies {
         compile("org.antlr:antlr4:jar:")
+        compile("org.jetbrains.kotlin:kotlin-reflect:")
     }
 
     dependenciesTest {

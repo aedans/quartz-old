@@ -8,9 +8,9 @@ import quartz.compiler.util.times
  * Created by Aedan Smith.
  */
 
-data class WhileExpression(val test: Expression, val block: BlockExpression) : UnitExpression() {
+data class WhileExpression(val condition: Expression, val block: BlockExpression) : UnitExpression() {
     override fun toString(): String {
-        return "while ($test)"
+        return "while ($condition)"
     }
 
     override fun toString(i: Int): String {

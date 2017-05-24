@@ -52,7 +52,7 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
         is MemberAccess -> copy(expression = expression.simplify(newExpressions, intIterator))
         is IfExpression -> simplify(newExpressions, intIterator, isTop)
         is WhileExpression -> copy(
-                test = test.simplify(newExpressions, intIterator),
+                condition = condition.simplify(newExpressions, intIterator),
                 block = block.simplify(intIterator)
         )
         is VariableDeclaration -> copy(
@@ -69,7 +69,7 @@ fun IfExpression.simplify(newExpressions: MutableList<Expression>, intIterator: 
         val identifier = Identifier(name, emptyList(), type)
         newExpressions.add(VariableDeclaration(name, null, type, true))
         newExpressions.add(IfExpression(
-                test.simplify(newExpressions, intIterator),
+                condition.simplify(newExpressions, intIterator),
                 ifTrue.setLast(Assignment(identifier, ifTrue.expressionList.last(), type)).simplify(intIterator),
                 ifFalse.setLast(Assignment(identifier, ifFalse.expressionList.last(), type)).simplify(intIterator),
                 type
