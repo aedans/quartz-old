@@ -21,26 +21,31 @@ fun QuartzParser.TypeContext.toType(): Type {
 fun QuartzParser.UnqualifiedTypeContext.toType(): Type {
     return errorScope({ "variableType $text" }) {
         when {
-            NAME() != null -> when (NAME().text) {
-                "bool" -> BoolType
-                "char" -> CharType
-                "short" -> ShortType
-                "int" -> IntType
-                "long" -> LongType
-                "uchar" -> UCharType
-                "ushort" -> UShortType
-                "uint" -> UIntType
-                "ulong" -> ULongType
-                "float" -> FloatType
-                "double" -> DoubleType
-                "void" -> VoidType
-                else -> NamedType(NAME().text)
-            }
+            NAME() != null -> NamedType(NAME().text)
             INLINE_C() != null -> InlineCType(INLINE_C().text.substring(2, INLINE_C().text.length-2))
+            primitiveType() != null -> primitiveType().toType()
             functionType() != null -> functionType().toType()
             ptr != null -> PointerType(unqualifiedType().toType())
             else -> throw Exception("Unknown type $text")
         }
+    }
+}
+
+fun QuartzParser.PrimitiveTypeContext.toType(): Type {
+    return when {
+        boolType != null -> BoolType
+        charType != null -> CharType
+        shortType != null -> ShortType
+        intType != null -> IntType
+        longType != null -> LongType
+        ucharType != null -> UCharType
+        ushortType != null -> UShortType
+        uintType != null -> UIntType
+        ulongType != null -> ULongType
+        floatType != null -> FloatType
+        doubleType != null -> DoubleType
+        voidType != null -> VoidType
+        else -> throw Exception("Unknown primitive type $text")
     }
 }
 

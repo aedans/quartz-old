@@ -257,8 +257,24 @@ type
 unqualifiedType
     : NAME
     | INLINE_C
+    | primitiveType
     | functionType
     | unqualifiedType ptr='*'
+    ;
+
+primitiveType
+    : boolType='bool'
+    | charType='char'
+    | shortType='short'
+    | intType='int'
+    | longType='long'
+    | ucharType='uchar'
+    | ushortType='ushort'
+    | uintType='uint'
+    | ulongType='ulong'
+    | floatType='float'
+    | doubleType='double'
+    | voidType='void'
     ;
 
 functionType
