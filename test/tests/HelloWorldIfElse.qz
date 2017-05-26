@@ -1,11 +1,11 @@
 import std.c.stdio
 
 fn main(): int {
-    (if (_false()) "Failed" else helloWorld()).printf();
+    (if _false() then "Failed" else helloWorld()).printf();
     return 0;
 }
 
-fn helloWorld(): const char* {
+fn helloWorld(): *char {
     return "Hello, World!";
 }
 

@@ -18,7 +18,7 @@ fun String.const(): String {
 }
 
 fun String.ptr(): String {
-    return "$this*"
+    return "*$this"
 }
 
 fun String?.func(vararg args: String): String {

@@ -57,7 +57,7 @@ typealiasDeclaration
 // IMPORT DECLARATION
 
 importDeclaration
-    : 'import' packageList ';'?
+    : 'import' packageList
     ;
 
 packageList
@@ -70,25 +70,7 @@ expression
     : varDeclaration
     | returnExpression
     | ifExpression
-    | whileExpression
     | assignmentExpression
-    ;
-
-varDeclaration
-    : varDeclarationType NAME ':' type
-    | varDeclarationType NAME (':' type)? '=' expression
-    ;
-
-returnExpression
-    : 'return' expression
-    ;
-
-ifExpression
-    : 'if' '(' test=expression ')' ifTrue=block ('else' ifFalse=block)?
-    ;
-
-whileExpression
-    : 'while' '(' test=expression ')' block
     ;
 
 assignmentExpression
@@ -134,10 +116,21 @@ atomicExpression
     | inlineC
     | literal
     | sizeof
-    | breakExpression
-    | continueExpression
     | lambda
     | identifier
+    ;
+
+varDeclaration
+    : 'let' NAME ':' type
+    | 'let' NAME (':' type)? '=' expression
+    ;
+
+returnExpression
+    : 'return' expression
+    ;
+
+ifExpression
+    : 'if' test=expression 'then' ifTrue=block ('else' ifFalse=block)?
     ;
 
 literal
@@ -151,17 +144,8 @@ sizeof
     : 'sizeof' '(' type ')'
     ;
 
-breakExpression
-    : 'break'
-    ;
-
-continueExpression
-    : 'continue'
-    ;
-
 lambda
-    : 'lambda' ('(' fnArgumentList ')')? (':' returnType=type)? atomicBlock
-    | ((fnArgumentList|nameList) '->') atomicBlock
+    : ((fnArgumentList|nameList) '->' type?) atomicBlock
     | atomicBlock
     ;
 
@@ -251,15 +235,20 @@ dotCall
 // TYPES
 
 type
-    : isConst='const'? unqualifiedType
-    ;
-
-unqualifiedType
     : NAME
     | INLINE_C
     | primitiveType
     | functionType
-    | unqualifiedType ptr='*'
+    | pointerType
+    | constType
+    ;
+
+pointerType
+    : '*' type
+    ;
+
+constType
+    : 'const' type
     ;
 
 primitiveType
@@ -311,7 +300,7 @@ block
     ;
 
 atomicBlock
-    : '{' (expression ';'?)* '}'
+    : '{' (expression ';')* '}'
     ;
 
 identifier
@@ -320,10 +309,6 @@ identifier
 
 inlineC
     : INLINE_C
-    ;
-
-varDeclarationType
-    : 'var'|'val'
     ;
 
 // LEXER

@@ -6,18 +6,14 @@ fn main(): int {
 }
 
 fn fibBelow(i: int) {
-    if (i > 0)
-        (i - 1).fibBelow();
+    if i > 0 then (i - 1).fibBelow();
     i.fib().printInt();
 }
 
 fn fib(i: int): int {
-    return if (i == 0)
-        0
-    else if (i == 1)
-        1
-    else
-        (i - 1).fib() + (i - 2).fib()
+    return if i == 0 then 0
+        else if i == 1 then 1
+        else (i - 1).fib() + (i - 2).fib();
 }
 
 fn printInt(i: int) {

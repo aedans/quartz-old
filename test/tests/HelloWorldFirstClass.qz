@@ -1,15 +1,15 @@
 import std.c.stdio
 
 fn main(): int {
-    val _greeter = greeter;
+    let _greeter = greeter;
     _greeter()().printf();
     return 0;
 }
 
-fn greeter(): () -> const char* {
+fn greeter(): () -> *char {
     return helloWorld;
 }
 
-fn helloWorld(): const char* {
+fn helloWorld(): *char {
     return "Hello, World!";
 }

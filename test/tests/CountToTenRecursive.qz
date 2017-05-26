@@ -6,8 +6,7 @@ fn main(): int {
 }
 
 fn countTo(i: int) {
-    if (i > 0)
-        (i - 1).countTo();
+    if i > 0 then (i - 1).countTo();
     print(i);
 }
 

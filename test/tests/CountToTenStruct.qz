@@ -10,8 +10,7 @@ fn main(): int {
 }
 
 fn countTo(i: Int) {
-    if (i.value > 0)
-        i.dec().countTo();
+    if i.value > 0 then i.dec().countTo();
     print(i);
 }
 

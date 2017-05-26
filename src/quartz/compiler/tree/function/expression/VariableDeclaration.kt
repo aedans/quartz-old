@@ -11,11 +11,10 @@ import quartz.compiler.tree.util.Type
 data class VariableDeclaration(
         val name: String,
         val expression: Expression?,
-        val variableType: Type?,
-        val mutable: Boolean
+        val variableType: Type?
 ): UnitExpression() {
     override fun toString(): String {
-        return "${if (mutable) "var" else "val"} $name: $variableType" +
+        return "let $name: $variableType" +
                 if (expression != null) " = $expression" else ""
     }
 }

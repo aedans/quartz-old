@@ -1,9 +1,9 @@
 import std.c.stdio
 
-typealias string = const char*
+typealias string = *char
 
 fn main(): int {
-    val _greeter = greeter;
+    let _greeter = greeter;
     _greeter()().printf();
     return 0;
 }

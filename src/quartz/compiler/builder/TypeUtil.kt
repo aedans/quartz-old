@@ -11,21 +11,14 @@ import quartz.compiler.tree.util.Type
  */
 
 fun QuartzParser.TypeContext.toType(): Type {
-    val type = unqualifiedType().toType()
-    return when {
-        isConst != null -> ConstType(type)
-        else -> type
-    }
-}
-
-fun QuartzParser.UnqualifiedTypeContext.toType(): Type {
     return errorScope({ "variableType $text" }) {
         when {
             NAME() != null -> NamedType(NAME().text)
             INLINE_C() != null -> InlineCType(INLINE_C().text.substring(2, INLINE_C().text.length-2))
             primitiveType() != null -> primitiveType().toType()
             functionType() != null -> functionType().toType()
-            ptr != null -> PointerType(unqualifiedType().toType())
+            pointerType() != null -> pointerType().toType()
+            constType() != null -> constType().toType()
             else -> throw Exception("Unknown type $text")
         }
     }
@@ -55,4 +48,12 @@ fun QuartzParser.FunctionTypeContext.toType(): FunctionType {
             returnType.toType(),
             args.vararg != null
     ))
+}
+
+fun QuartzParser.PointerTypeContext.toType(): Type {
+    return PointerType(type().toType())
+}
+
+fun QuartzParser.ConstTypeContext.toType(): Type {
+    return ConstType(type().toType())
 }

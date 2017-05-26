@@ -12,8 +12,7 @@ fn main(): int {
 }
 
 fn countTo(i: int, countInfo: CountInfo) {
-    if (countInfo.tester(i))
-        countInfo.modifier(i).countTo(countInfo);
+    if countInfo.tester(i) then countInfo.modifier(i).countTo(countInfo);
     countInfo.printer(i);
 }
 

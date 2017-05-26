@@ -1,12 +1,12 @@
 import std.c.stdio
 
 fn main(): int {
-    val l = if (_false()) "Failed" else helloWorld();
-    (if (_true()) l else "Failed").printf();
+    let l = if _false() then "Failed" else helloWorld();
+    (if _true() then l else "Failed").printf();
     return 0;
 }
 
-fn helloWorld(): const char* {
+fn helloWorld(): *char {
     return "Hello, World!";
 }
 

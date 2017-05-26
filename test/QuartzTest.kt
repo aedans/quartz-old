@@ -52,7 +52,7 @@ class QuartzTest {
     fun File.runGCC(src: File, exe: File, out: File, expected: File) {
         if (src.exists()) {
             runCommand(
-                    "gcc ${src.absolutePath} -o ${exe.absolutePath} -Wall -Wextra -Wpedantic -Wno-format-security",
+                    "gcc ${src.absolutePath} -o ${exe.absolutePath} -Wall -Wextra -Wno-ignored-qualifiers -Wno-discarded-qualifiers -Wno-format-security",
                     File(this, "${exe.nameWithoutExtension}.txt").outputStream()
             )
             runOutput(exe, out)

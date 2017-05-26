@@ -7,7 +7,7 @@
     - Add error tests
 - Bug fixes
     - Fix greatest common type
-    - Implement var/val
+    - Implement immutability
 - Features
     - Add template inferencer
     - Add extension functions
@@ -22,4 +22,3 @@
     - Allow importing of functions, structs, etc.
     - Add optimizer
     - Add warnings
-    - Remove semicolons

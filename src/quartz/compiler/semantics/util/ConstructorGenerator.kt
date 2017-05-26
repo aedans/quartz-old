@@ -22,7 +22,7 @@ fun StructDeclaration.defaultConstructor(): FunctionDeclaration {
         val argTypes = members.map { it.value.type }
         val newType = type()
 
-        val declarationNode = VariableDeclaration("instance", null, newType, true)
+        val declarationNode = VariableDeclaration("instance", null, newType)
         val assignmentNodes = members.map { InlineC("instance.${it.key} = ${it.value.name}") }
         val returnNode = ReturnExpression(Identifier("instance", emptyList(), newType))
 

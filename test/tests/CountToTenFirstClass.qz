@@ -1,15 +1,14 @@
 import std.c.stdio
 
 fn main(): int {
-    val counter = countTo;
+    let counter = countTo;
     counter(10, print);
     return 0;
 }
 
 fn countTo(i: int, printer: (int) -> void) {
-    val counter = countTo;
-    if (i > 0)
-        (i - 1).counter(printer);
+    let counter = countTo;
+    if i > 0 then (i - 1).counter(printer);
     printer(i);
 }
 

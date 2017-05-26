@@ -38,7 +38,6 @@ fun QuartzParser.ExpressionContext.toNode(): Expression {
             varDeclaration() != null -> varDeclaration().toNode()
             returnExpression() != null -> returnExpression().toNode()
             ifExpression() != null -> ifExpression().toNode()
-            whileExpression() != null -> whileExpression().toNode()
             assignmentExpression() != null -> assignmentExpression().toNode()
             else -> throw Exception("Unrecognized expression $text")
         }
@@ -47,10 +46,6 @@ fun QuartzParser.ExpressionContext.toNode(): Expression {
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
     return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: BlockExpression(emptyList()), null)
-}
-
-fun QuartzParser.WhileExpressionContext.toNode(): WhileExpression {
-    return WhileExpression(test.toNode(), block().toNode())
 }
 
 fun QuartzParser.AssignmentExpressionContext.toNode(): Expression {
@@ -150,8 +145,6 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
         inlineC() != null -> inlineC().toNode()
         literal() != null -> literal().toNode()
         sizeof() != null -> sizeof().toNode()
-        breakExpression() != null -> breakExpression().toNode()
-        continueExpression() != null -> continueExpression().toNode()
         identifier() != null -> identifier().toNode()
         lambda() != null -> lambda().toNode()
         else -> throw Exception("Unrecognized atomic expression $text")
@@ -172,16 +165,6 @@ fun QuartzParser.SizeofContext.toNode(): Sizeof {
     return Sizeof(type().toType())
 }
 
-@Suppress("unused")
-fun QuartzParser.BreakExpressionContext.toNode(): Break {
-    return Break
-}
-
-@Suppress("unused")
-fun QuartzParser.ContinueExpressionContext.toNode(): Continue {
-    return Continue
-}
-
 fun QuartzParser.ReturnExpressionContext.toNode(): ReturnExpression {
     return ReturnExpression(expression().toNode())
 }
@@ -196,7 +179,7 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
                 fnArgumentList().fnArgument().map { it.NAME().text },
                 Function(
                         fnArgumentList().fnArgument().map { it.type().toType() },
-                        returnType?.toType(),
+                        type()?.toType(),
                         false
                 ),
                 atomicBlock().toNode()
@@ -205,7 +188,7 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
                 nameList()?.NAME()?.map { it.text },
                 Function(
                         null,
-                        returnType?.toType(),
+                        type()?.toType(),
                         false
                 ),
                 atomicBlock().toNode()
@@ -241,8 +224,7 @@ fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
     return VariableDeclaration(
             NAME().text,
             expression()?.toNode(),
-            if (type() != null) type().toType() else null,
-            varDeclarationType().text == "var"
+            if (type() != null) type().toType() else null
     )
 }
 

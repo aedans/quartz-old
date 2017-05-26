@@ -1,16 +1,12 @@
 import std.c.stdio
 
 fn main(): int {
-    if (_true()) {
-        helloWorld().printf();
-    }
-    if (_false()) {
-        "Failed".printf();
-    }
+    if _true() then helloWorld().printf();
+    if _false() then "Failed".printf();
     return 0;
 }
 
-fn helloWorld(): const char* {
+fn helloWorld(): *char {
     return "Hello, World!";
 }
 

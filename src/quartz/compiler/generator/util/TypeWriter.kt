@@ -1,9 +1,7 @@
 package quartz.compiler.generator.util
 
 import quartz.compiler.generator.ProgramOutputStream
-import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.PointerType
-import quartz.compiler.semantics.types.StructType
+import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.util.Type
 
 /**
@@ -24,6 +22,16 @@ fun ProgramOutputStream.type(type: Type?) {
         is FunctionType -> {
             name("__${type.descriptiveString}_t ")
         }
-        else -> name(type.string)
+        is ConstType -> {
+            name("const")
+            type(type.type)
+        }
+        is NumberType -> {
+            name(type.string)
+        }
+        is VoidType -> {
+            name("void")
+        }
+        else -> throw Exception("Expected type, found $type")
     }
 }

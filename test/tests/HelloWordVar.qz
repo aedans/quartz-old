@@ -1,7 +1,7 @@
 import std.c.stdio
 
 fn main(): int {
-    val helloWorld = "Hello, World!";
+    let helloWorld = "Hello, World!";
     helloWorld.printf();
     return 0;
 }
