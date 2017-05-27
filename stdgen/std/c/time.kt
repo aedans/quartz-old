@@ -22,16 +22,17 @@ fun File.time() {
         include("time.h")
         newline()
 
-        struct("tm",
-                "tm_sec" to INT,
-                "tm_min" to INT,
-                "tm_hour" to INT,
-                "tm_mday" to INT,
-                "tm_mon" to INT,
-                "tm_year" to INT,
-                "tm_wday" to INT,
-                "tm_isds" to INT
-        )
+//        struct("tm",
+//                "tm_sec" to INT,
+//                "tm_min" to INT,
+//                "tm_hour" to INT,
+//                "tm_mday" to INT,
+//                "tm_mon" to INT,
+//                "tm_year" to INT,
+//                "tm_wday" to INT,
+//                "tm_isds" to INT
+//        )
+        todo("struct tm")
         newline()
 
         externTypealias(CLOCK)

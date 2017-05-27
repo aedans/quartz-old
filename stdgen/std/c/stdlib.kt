@@ -21,17 +21,19 @@ fun File.stdlib() {
         include("stdlib.h")
         newline()
 
-        struct("__stdlib_div_t", "quot" to INT, "rem" to INT)
+        todo("struct div_t")
+//        struct("__stdlib_div_t", "quot" to INT, "rem" to INT)
         newline()
 
-        struct("__stdlib_ldiv_t", "quot" to LONG, "rem" to LONG)
+        todo("struct ldiv_t")
+//        struct("__stdlib_ldiv_t", "quot" to LONG, "rem" to LONG)
         newline()
 
         externTypealias("wchar_t")
-        _typealias(DIV, "__stdlib_div_t")
-        _typealias(LDIV, "__stdlib_ldiv_t")
-
-        newline()
+//        _typealias(DIV, "__stdlib_div_t")
+//        _typealias(LDIV, "__stdlib_ldiv_t")
+//
+//        newline()
 
         externVal("EXIT_FAILURE", INT)
         externVal("EXIT_SUCCESS", INT)
