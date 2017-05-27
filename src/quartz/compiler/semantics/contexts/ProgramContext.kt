@@ -11,8 +11,7 @@ import quartz.compiler.tree.util.Type
 
 data class ProgramContext(
         val program: Program,
-        val context: Program,
-        val tempIndex: Int
+        val context: Program
 ) :  SymbolContext {
     override val programContext
         get() = this

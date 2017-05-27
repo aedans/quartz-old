@@ -19,7 +19,7 @@ import quartz.compiler.util.curry
  */
 
 fun Program.analyze(): Program {
-    return analyzeProgram(ProgramContext(Program(), this, 0)).program
+    return analyzeProgram(ProgramContext(Program(), this)).program
 }
 
 private val programAnalyzer = ::analyzeFunctionDeclaration.programVisitor()

@@ -2,6 +2,7 @@ package quartz.compiler.semantics.visitors.expression
 
 import quartz.compiler.semantics.contexts.ExpressionContext
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.expression.Lambda
@@ -44,7 +45,7 @@ object LambdaAnalyzer {
     fun uninline(context: ExpressionContext): ExpressionContext {
         val (lambda, symbolContext) = context.destructureAs<Lambda>()
 
-        val name = "__lambda_${symbolContext.programContext.tempIndex}"
+        val name = lambdaName(symbolContext.programContext.context, lambda)
         val functionDeclaration = FunctionDeclaration(
                 name,
                 lambda.argNames!!,
@@ -57,9 +58,16 @@ object LambdaAnalyzer {
         return context.copy(
                 expression = identifier,
                 symbolContext = symbolContext.copy(programContext = symbolContext.programContext.copy(
-                        context = symbolContext.programContext.context + functionDeclaration,
-                        tempIndex = symbolContext.programContext.tempIndex + 1
+                        context = symbolContext.programContext.context + functionDeclaration
                 ))
         )
+    }
+
+    private fun lambdaName(program: Program, lambda: Lambda, int: Int = lambda.hashCode()): String {
+        val name = "__lambda_${Math.abs(int)}"
+        return if (program.functionDeclarations.contains(name))
+            lambdaName(program, lambda, int + 1)
+        else
+            name
     }
 }
