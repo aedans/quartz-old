@@ -25,17 +25,8 @@ fun Program.analyze(): Program {
 private val programAnalyzer = ::analyzeFunctionDeclaration.programVisitor()
 private fun analyzeProgram(context: ProgramContext): ProgramContext {
     return context
-            .let(ProgramAnalyzer::generateDefaultConstructors)
             .let(programAnalyzer)
             .let(ProgramAnalyzer::migrateInlineC)
-}
-
-private val structDeclarationTypeAnalyzer = StructDeclarationAnalyzer::analyzeTypes.curry(::analyzeType)
-private fun analyzeStructDeclaration(context: StructDeclarationContext): StructDeclarationContext {
-    return context
-            .let(structDeclarationTypeAnalyzer)
-            .let(StructDeclarationAnalyzer::resolveGenerics)
-            .let(StructDeclarationAnalyzer::addToProgram)
 }
 
 private val analyzeExternFunctionDeclarationTypes = ExternFunctionDeclarationAnalyzer::analyzeTypes.curry(::analyzeType)
@@ -82,7 +73,6 @@ private val expressionAnalyzer = contextVisitor(
         BinaryOperator::class to ::analyzeBinaryOperator,
         Assignment::class to ::analyzeAssignment,
         FunctionCall::class to ::analyzeFunctionCall,
-        MemberAccess::class to ::analyzeMemberAccess,
         IfExpression::class to ::analyzeIfExpression,
         WhileExpression::class to ::analyzeWhileExpression,
         VariableDeclaration::class to ::analyzeVariableDeclaration,
@@ -157,15 +147,6 @@ private fun analyzeFunctionCall(context: ExpressionContext): ExpressionContext {
             .let(analyzeFunctionCallArguments)
 }
 
-private val analyzeMemberAccessExpression = MemberAccessAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private val analyzeMemberAccessExpressionType = MemberAccessAnalyzer::analyzeExpressionType.curry(::analyzeType)
-private fun analyzeMemberAccess(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeMemberAccessExpression)
-            .let(analyzeMemberAccessExpressionType)
-            .let(MemberAccessAnalyzer::analyzeMember)
-}
-
 private val analyzeIfExpressionCondition = IfExpressionAnalyzer::analyzeCondition.curry(::analyzeExpression)
 private val analyzeIfExpressionIfTrue = IfExpressionAnalyzer::analyzeIfTrue.curry(::analyzeBlockExpression)
 private val analyzeIfExpressionIfFalse = IfExpressionAnalyzer::analyzeIfFalse.curry(::analyzeBlockExpression)
@@ -223,6 +204,5 @@ private val typeAnalyzer = contextVisitor(
         ConstType::class to TypeAnalyzer::analyzeConstType.curry(::analyzeType),
         PointerType::class to TypeAnalyzer::analyzePointerType.curry(::analyzeType),
         FunctionType::class to TypeAnalyzer::analyzeFunctionType.curry(::analyzeType),
-        StructType::class to TypeAnalyzer::analyzeStructType.curry(::analyzeType).curry(::analyzeStructDeclaration),
         NamedType::class to TypeAnalyzer::analyzeNamedType.curry(::analyzeType)
 )

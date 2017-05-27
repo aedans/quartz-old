@@ -9,6 +9,7 @@
     - Fix greatest common type
     - Implement immutability
 - Features
+    - Add structs
     - Add template inferencer
     - Add extension functions
     - Add true, false, unit

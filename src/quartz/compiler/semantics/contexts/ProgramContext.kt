@@ -29,10 +29,8 @@ data class ProgramContext(
     }
 
     override fun getType(name: String): Type? {
-        return program.structDeclarations[name]?.type()
-                ?: program.typealiasDeclarations[name]?.aliasedType
+        return program.typealiasDeclarations[name]?.aliasedType
                 // TODO remove
-                ?: context.structDeclarations[name]?.type()
                 ?: context.typealiasDeclarations[name]?.aliasedType
     }
 

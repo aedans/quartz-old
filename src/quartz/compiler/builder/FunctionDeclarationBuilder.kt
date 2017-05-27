@@ -132,7 +132,6 @@ fun QuartzParser.PrefixOperationContext.toNode(expression: Expression): Expressi
 fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Expression {
     return when {
         cast() != null -> cast().toNode(expression)
-        memberAccess() != null -> memberAccess().toNode(expression)
         postfixCall() != null -> postfixCall().toNode(expression)
         dotCall() != null -> dotCall().toNode(expression)
         else -> throw Exception("Unrecognized postfix operation $text")
@@ -198,10 +197,6 @@ fun QuartzParser.LambdaContext.toNode(): Lambda {
 
 fun QuartzParser.CastContext.toNode(expression: Expression): Cast {
     return Cast(expression, type().toType())
-}
-
-fun QuartzParser.MemberAccessContext.toNode(expression: Expression): MemberAccess {
-    return MemberAccess(NAME().text, expression, null)
 }
 
 fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {

@@ -15,10 +15,6 @@ fun ProgramOutputStream.type(type: Type?) {
             type(type.type)
             string("*")
         }
-        is StructType -> {
-            name("struct")
-            name(type.string)
-        }
         is FunctionType -> {
             name("__${type.descriptiveString}_t ")
         }

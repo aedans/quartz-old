@@ -1,12 +1,9 @@
 package quartz.compiler.semantics.visitors.expression
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.contexts.ExpressionContext
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.expression.FunctionCall
-import quartz.compiler.tree.function.expression.Identifier
-import quartz.compiler.tree.function.expression.MemberAccess
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 
@@ -17,41 +14,15 @@ import quartz.compiler.util.Visitor
 object FunctionCallAnalyzer {
     inline fun analyzeExpression(expressionAnalyzer: Visitor<ExpressionContext>, context: ExpressionContext): ExpressionContext {
         val (functionCall, symbolContext) = context.destructureAs<FunctionCall>()
-        return try {
-            val (newExpression, newSymbolContext) = expressionAnalyzer(ExpressionContext(
-                    functionCall.expression, symbolContext, null
-            ))
 
-            context.copy(
-                    expression = functionCall.copy(expression = newExpression),
-                    symbolContext = newSymbolContext
-            )
-        } catch (e: QuartzException) {
-            if (functionCall.expression !is MemberAccess)
-                throw e
+        val (newExpression, newSymbolContext) = expressionAnalyzer(ExpressionContext(
+                functionCall.expression, symbolContext, null
+        ))
 
-            errorScope({ "dot notation resolver" }) {
-                errorScope({ "$functionCall" }) {
-                    val expression = functionCall.expression
-
-                    val (identifier, newScopeContext) = expressionAnalyzer(ExpressionContext(
-                            Identifier(expression.name, emptyList(), null),
-                            symbolContext, functionCall.type
-                    ))
-
-                    val newFunctionCall = FunctionCall(
-                            identifier,
-                            listOf(expression.expression) + functionCall.args,
-                            functionCall.type
-                    )
-
-                    context.copy(
-                            expression = newFunctionCall,
-                            symbolContext = newScopeContext
-                    )
-                }
-            }
-        }
+        return context.copy(
+                expression = functionCall.copy(expression = newExpression),
+                symbolContext = newSymbolContext
+        )
     }
 
     inline fun analyzeArguments(expressionAnalyzer: Visitor<ExpressionContext>, context: ExpressionContext): ExpressionContext {

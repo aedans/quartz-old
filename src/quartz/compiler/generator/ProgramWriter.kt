@@ -1,9 +1,11 @@
 package quartz.compiler.generator
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.generator.program.*
+import quartz.compiler.generator.program.function
+import quartz.compiler.generator.program.functionPrototype
+import quartz.compiler.generator.program.functionTypedef
+import quartz.compiler.generator.program.inlineC
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.StructType
 import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.tree.util.Type
 
@@ -16,10 +18,7 @@ fun ProgramOutputStream.writeAll() {
 
     program.externFunctionDeclarations.forEach { declare(FunctionType(it.value.function)) }
     program.functionDeclarations.forEach { declare(FunctionType(it.value.function)) }
-    program.structDeclarations.forEach { declare(StructType(it.value)) }
 
-    program.structDeclarations.filterValues { !it.external }.forEach { structPrototype(it.value) }
-    program.structDeclarations.filterValues { !it.external }.forEach { struct(it.value) }
 
     program.functionDeclarations.forEach { functionPrototype(it.value) }
     program.functionDeclarations.forEach { function(it.value) }
@@ -27,8 +26,6 @@ fun ProgramOutputStream.writeAll() {
 
 fun ProgramOutputStream.declare(type: Type) {
     when (type) {
-        is StructType -> struct(program.structDeclarations[type.string]
-                    ?: throw QuartzException("Unknown struct ${type.string}"))
         is FunctionType -> functionTypedef(type)
         is NamedType -> throw QuartzException("Unresolved type $type")
     }

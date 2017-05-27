@@ -49,7 +49,6 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
                 expression = expression.simplify(newExpressions, intIterator),
                 args = args.map { it.simplify(newExpressions, intIterator) }
         )
-        is MemberAccess -> copy(expression = expression.simplify(newExpressions, intIterator))
         is IfExpression -> simplify(newExpressions, intIterator, isTop)
         is WhileExpression -> copy(
                 condition = condition.simplify(newExpressions, intIterator),

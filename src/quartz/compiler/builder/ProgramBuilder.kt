@@ -27,7 +27,6 @@ private fun List<QuartzParser.DeclarationContext>.program(): Program {
             it.inlineC() != null -> program += it.inlineC().toNode()
             it.functionDeclaration() != null -> program += it.functionDeclaration().toNode()
             it.externFunctionDeclaration() != null -> program += it.externFunctionDeclaration().toNode()
-            it.structDeclaration() != null -> program += it.structDeclaration().toNode()
             it.typealiasDeclaration() != null -> program += it.typealiasDeclaration().toNode()
             else -> throw QuartzException("Error translating ${it.text}")
         }

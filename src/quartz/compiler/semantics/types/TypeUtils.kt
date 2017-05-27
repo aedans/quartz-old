@@ -2,7 +2,6 @@ package quartz.compiler.semantics.types
 
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.tree.struct.StructDeclaration
 import quartz.compiler.tree.util.Function
 
 /**
@@ -19,8 +18,4 @@ fun ExternFunctionDeclaration.type(): FunctionType {
 
 fun Function.type(): FunctionType {
     return FunctionType(this)
-}
-
-fun StructDeclaration.type(): StructType {
-    return StructType(this)
 }

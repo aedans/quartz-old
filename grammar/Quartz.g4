@@ -11,7 +11,6 @@ program
 declaration
     : functionDeclaration
     | externFunctionDeclaration
-    | structDeclaration
     | typealiasDeclaration
     | inlineC
     ;
@@ -36,16 +35,6 @@ fnArgument
 
 fnArgumentList
     : (fnArgument ',')* fnArgument?
-    ;
-
-// STRUCT DECLARATION
-
-structDeclaration
-    : extern='extern'? 'struct' NAME ('<' genericArgumentList '>')? '{' structMember* '}'
-    ;
-
-structMember
-    : NAME ':' type
     ;
 
 // TYPEALIAS DECLARATION
@@ -212,7 +201,6 @@ prefixOperation
 postfixOperation
     : cast
     | postfixCall
-    | memberAccess
     | dotCall
     ;
 
@@ -222,10 +210,6 @@ cast
 
 postfixCall
     : '(' expressionList ')'
-    ;
-
-memberAccess
-    : '.' NAME
     ;
 
 dotCall

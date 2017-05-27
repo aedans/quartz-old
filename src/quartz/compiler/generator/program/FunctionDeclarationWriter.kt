@@ -49,7 +49,6 @@ fun ProgramOutputStream.expression(expression: Expression) {
             is UnaryOperator -> prefixUnaryOperator(expression)
             is BinaryOperator -> binaryOperator(expression)
             is Assignment -> assignment(expression)
-            is MemberAccess -> memberAccess(expression)
             is FunctionCall -> functionCall(expression)
             is IfExpression -> ifExpression(expression)
             is WhileExpression -> whileExpression(expression)
@@ -102,12 +101,6 @@ fun ProgramOutputStream.assignment(assignment: Assignment) {
     expression(assignment.lvalue)
     string("=")
     expression(assignment.expression)
-}
-
-fun ProgramOutputStream.memberAccess(memberAccess: MemberAccess) {
-    expression(memberAccess.expression)
-    string(".")
-    name(memberAccess.name)
 }
 
 fun ProgramOutputStream.functionCall(functionCall: FunctionCall) {
