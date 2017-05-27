@@ -3,7 +3,6 @@ package quartz.compiler.semantics.contexts
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.Context
 
 /**
  * Created by Aedan Smith.
@@ -13,9 +12,7 @@ data class FunctionDeclarationContext(
         val functionDeclaration: FunctionDeclaration,
         val symbolContext: SymbolContext,
         val genericArguments: List<Type>
-) : Context<FunctionDeclaration>, SymbolContext {
-    override val t
-        get() = functionDeclaration
+) : SymbolContext {
     override val programContext
         get() = symbolContext.programContext
 

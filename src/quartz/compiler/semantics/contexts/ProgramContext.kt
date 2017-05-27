@@ -4,7 +4,6 @@ import quartz.compiler.semantics.types.type
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.Context
 
 /**
  * Created by Aedan Smith.
@@ -14,9 +13,7 @@ data class ProgramContext(
         val program: Program,
         val context: Program,
         val tempIndex: Int
-) :  Context<Program>, SymbolContext {
-    override val t
-        get() = program
+) :  SymbolContext {
     override val programContext
         get() = this
 

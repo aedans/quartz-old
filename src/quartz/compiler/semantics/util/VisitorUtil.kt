@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.util
 
-import quartz.compiler.util.Context
 import quartz.compiler.util.Visitor
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
@@ -17,11 +16,14 @@ fun <T> visitor(vararg visitors: Visitor<T>): Visitor<T> {
     }
 }
 
-fun <T : Any, C : Context<T>> contextVisitor(vararg visitorMap: Pair<KClass<*>, Visitor<C>>): Visitor<C> {
+inline fun <reified T : Any, C> contextVisitor(
+        crossinline function: (C) -> T,
+        vararg visitorMap: Pair<KClass<*>, Visitor<C>>
+): Visitor<C> {
     return { tContext: C ->
-        val kclass = tContext.t::class
+        val kclass = function(tContext)::class
         (visitorMap.firstOrNull { kclass.isSubclassOf(it.first) }
-                ?: throw Exception("Expected ${kclass.simpleName}, found ${tContext.t}"))
+                ?: throw Exception("Expected ${T::class.simpleName}, found ${function(tContext)}"))
                 .second(tContext)
     }
 }

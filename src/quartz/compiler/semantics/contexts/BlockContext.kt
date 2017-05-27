@@ -3,7 +3,6 @@ package quartz.compiler.semantics.contexts
 import quartz.compiler.tree.function.Block
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.Context
 
 /**
  * Created by Aedan Smith.
@@ -13,9 +12,7 @@ data class BlockContext(
         val block: Block,
         val symbolContext: SymbolContext,
         val vars: Map<String, Type>
-) : Context<Block>, SymbolContext {
-    override val t
-        get() = block
+) : SymbolContext {
     override val programContext: ProgramContext
         get() = symbolContext.programContext
 

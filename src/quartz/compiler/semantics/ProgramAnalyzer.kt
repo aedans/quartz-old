@@ -70,6 +70,7 @@ private fun analyzeExpression(context: ExpressionContext): ExpressionContext {
 }
 
 private val expressionAnalyzer = contextVisitor(
+        { it.expression },
         InlineC::class to identityVisitor(),
         NumberLiteral::class to identityVisitor(),
         StringLiteral::class to identityVisitor(),
@@ -215,6 +216,7 @@ private fun analyzeType(context: TypeContext): TypeContext {
 }
 
 private val typeAnalyzer = contextVisitor(
+        { it.type },
         VoidType::class to identityVisitor(),
         NumberType::class to identityVisitor(),
         InlineCType::class to identityVisitor(),
