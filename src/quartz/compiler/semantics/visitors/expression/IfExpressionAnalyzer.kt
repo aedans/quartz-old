@@ -8,7 +8,7 @@ import quartz.compiler.tree.function.expression.BlockExpression
 import quartz.compiler.tree.function.expression.IfExpression
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -29,15 +29,15 @@ object IfExpressionAnalyzer {
 
     inline fun analyzeCondition(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression): IfExpression {
         // TODO BoolType
-        return visitCondition(expressionAnalyzer.curried(IntType), ifExpression)
+        return visitCondition(expressionAnalyzer.partial(IntType), ifExpression)
     }
 
     inline fun analyzeIfTrue(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
-        return visitIfTrue(expressionAnalyzer.curried(expectedType), ifExpression)
+        return visitIfTrue(expressionAnalyzer.partial(expectedType), ifExpression)
     }
 
     inline fun analyzeIfFalse(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
-        return visitIfFalse(expressionAnalyzer.curried(expectedType), ifExpression)
+        return visitIfFalse(expressionAnalyzer.partial(expectedType), ifExpression)
     }
 
     fun inferTypeFromIfTrue(ifExpression: IfExpression): IfExpression {

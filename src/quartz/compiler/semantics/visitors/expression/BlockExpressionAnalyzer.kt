@@ -4,7 +4,7 @@ import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.BlockExpression
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -16,6 +16,6 @@ object BlockExpressionAnalyzer {
     }
 
     inline fun analyzeExpressions(expressionAnalyzer: ExpressionAnalyzer, blockExpression: BlockExpression): BlockExpression {
-        return visitExpressions(expressionAnalyzer.curried(null), blockExpression)
+        return visitExpressions(expressionAnalyzer.partial(null), blockExpression)
     }
 }

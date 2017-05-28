@@ -7,7 +7,7 @@ import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.FunctionCall
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -19,7 +19,7 @@ object FunctionCallAnalyzer {
     }
 
     inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
-        return visitExpression(expressionAnalyzer.curried(null), functionCall)
+        return visitExpression(expressionAnalyzer.partial(null), functionCall)
     }
 
     inline fun analyzeArguments(expressionAnalyzer: ExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {

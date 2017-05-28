@@ -6,7 +6,7 @@ import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.BinaryOperator
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -22,11 +22,11 @@ object BinaryOperatorAnalyzer {
     }
 
     inline fun analyzeExpr1(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
-        return visitExpr1(expressionAnalyzer.curried(expectedType), binaryOperator)
+        return visitExpr1(expressionAnalyzer.partial(expectedType), binaryOperator)
     }
 
     inline fun analyzeExpr2(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
-        return visitExpr2(expressionAnalyzer.curried(expectedType), binaryOperator)
+        return visitExpr2(expressionAnalyzer.partial(expectedType), binaryOperator)
     }
 
     fun inferTypeFromExpr1(binaryOperator: BinaryOperator): BinaryOperator {

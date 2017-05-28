@@ -5,7 +5,7 @@ import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.Cast
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -21,6 +21,6 @@ object CastAnalyzer {
     }
 
     inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, cast: Cast, expectedType: Type?): Cast {
-        return visitExpression(expressionAnalyzer.curried(expectedType), cast)
+        return visitExpression(expressionAnalyzer.partial(expectedType), cast)
     }
 }

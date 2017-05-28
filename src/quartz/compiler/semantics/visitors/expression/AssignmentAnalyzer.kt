@@ -6,7 +6,7 @@ import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.Assignment
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -22,11 +22,11 @@ object AssignmentAnalyzer {
     }
 
     inline fun analyzeLValue(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment): Assignment {
-        return visitLValue(expressionAnalyzer.curried(null), assignment)
+        return visitLValue(expressionAnalyzer.partial(null), assignment)
     }
 
     inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment, expectedType: Type?): Assignment {
-        return visitExpression(expressionAnalyzer.curried(expectedType), assignment)
+        return visitExpression(expressionAnalyzer.partial(expectedType), assignment)
     }
 
     fun inferTypeFromLValue(assignment: Assignment): Assignment {

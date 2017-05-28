@@ -6,7 +6,7 @@ import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.UnaryOperator
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -18,7 +18,7 @@ object UnaryOperatorAnalyzer {
     }
 
     inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, unaryOperator: UnaryOperator, expectedType: Type?): UnaryOperator {
-        return visitExpression(expressionAnalyzer.curried(expectedType), unaryOperator)
+        return visitExpression(expressionAnalyzer.partial(expectedType), unaryOperator)
     }
 
     fun inferTypeFromExpression(unaryOperator: UnaryOperator): UnaryOperator {

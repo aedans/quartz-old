@@ -5,7 +5,7 @@ import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.VariableDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -21,7 +21,7 @@ object VariableDeclarationAnalyzer {
     }
 
     inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, variableDeclaration: VariableDeclaration): VariableDeclaration {
-        return visitExpression(expressionAnalyzer.curried(variableDeclaration.variableType), variableDeclaration)
+        return visitExpression(expressionAnalyzer.partial(variableDeclaration.variableType), variableDeclaration)
     }
 
     fun inferVariableTypeFromExpression(variableDeclaration: VariableDeclaration): VariableDeclaration {

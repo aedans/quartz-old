@@ -17,7 +17,7 @@ import quartz.compiler.tree.function.expression.*
 import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.InlineC
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.curried
+import quartz.compiler.util.partial
 
 /**
  * Created by Aedan Smith.
@@ -63,7 +63,7 @@ private fun analyzeExternFunctionDeclaration(
         declaration: ExternFunctionDeclaration
 ): ExternFunctionDeclaration {
     return declaration
-            .let { ExternFunctionDeclarationAnalyzer.analyzeTypes(::analyzeType.curried(symbolTable), it) }
+            .let { ExternFunctionDeclarationAnalyzer.analyzeTypes(::analyzeType.partial(symbolTable), it) }
 }
 
 private fun analyzeFunctionDeclaration(
@@ -73,8 +73,8 @@ private fun analyzeFunctionDeclaration(
 ): FunctionDeclaration {
     val localSymbolTable = FunctionDeclarationAnalyzer.localSymbolTable(symbolTable, declaration)
     return declaration
-            .let { FunctionDeclarationAnalyzer.visitTypes(::analyzeType.curried(localSymbolTable), it) }
-            .let(::analyzeBlock.curried(globalDeclarationConsumer).curried(localSymbolTable).functionDeclarationVisitor())
+            .let { FunctionDeclarationAnalyzer.visitTypes(::analyzeType.partial(localSymbolTable), it) }
+            .let(::analyzeBlock.partial(globalDeclarationConsumer).partial(localSymbolTable).functionDeclarationVisitor())
 //            .let { FunctionDeclarationAnalyzer.resolveGenerics(genericArguments, it) }
 }
 
@@ -84,7 +84,7 @@ private fun analyzeBlock(
         block: Block
 ): Block {
     return block
-            .let(::analyzeExpression.curried(globalDeclarationConsumer).blockVisitor(symbolTable))
+            .let(::analyzeExpression.partial(globalDeclarationConsumer).blockVisitor(symbolTable))
 }
 
 private fun analyzeExpression(
@@ -93,8 +93,8 @@ private fun analyzeExpression(
         expectedType: Type?,
         expression: Expression
 ): Expression {
-    val expressionAnalyzer = ::analyzeExpression.curried(globalDeclarationConsumer).curried(symbolTable)
-    val typeAnalyzer = ::analyzeType.curried(symbolTable)
+    val expressionAnalyzer = ::analyzeExpression.partial(globalDeclarationConsumer).partial(symbolTable)
+    val typeAnalyzer = ::analyzeType.partial(symbolTable)
     return expression.let {
         when (it) {
             is InlineC -> it
@@ -195,9 +195,9 @@ private fun analyzeType(
             is VoidType -> it
             is NumberType -> it
             is InlineCType -> it
-            is ConstType -> TypeAnalyzer.analyzeConstType(::analyzeType.curried(typeTable), it)
-            is PointerType -> TypeAnalyzer.analyzePointerType(::analyzeType.curried(typeTable), it)
-            is FunctionType -> TypeAnalyzer.analyzeFunctionType(::analyzeType.curried(typeTable), it)
+            is ConstType -> TypeAnalyzer.analyzeConstType(::analyzeType.partial(typeTable), it)
+            is PointerType -> TypeAnalyzer.analyzePointerType(::analyzeType.partial(typeTable), it)
+            is FunctionType -> TypeAnalyzer.analyzeFunctionType(::analyzeType.partial(typeTable), it)
             is NamedType -> TypeAnalyzer.analyzeNamedType(typeTable::getType, it)
             else -> throw Exception("Expected type, found $it")
         }
