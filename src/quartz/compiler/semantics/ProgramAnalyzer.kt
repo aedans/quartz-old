@@ -1,208 +1,205 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.semantics.contexts.*
+import quartz.compiler.errors.QuartzException
+import quartz.compiler.semantics.consumers.GlobalDeclarationConsumer
+import quartz.compiler.semantics.symbols.SymbolTable
+import quartz.compiler.semantics.symbols.TypeTable
 import quartz.compiler.semantics.types.*
-import quartz.compiler.semantics.util.contextVisitor
-import quartz.compiler.semantics.util.identityVisitor
 import quartz.compiler.semantics.util.visitors.blockVisitor
 import quartz.compiler.semantics.util.visitors.functionDeclarationVisitor
-import quartz.compiler.semantics.util.visitors.programVisitor
 import quartz.compiler.semantics.visitors.*
 import quartz.compiler.semantics.visitors.expression.*
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.function.Block
+import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.*
+import quartz.compiler.tree.misc.ExternFunctionDeclaration
 import quartz.compiler.tree.misc.InlineC
-import quartz.compiler.util.curry
+import quartz.compiler.tree.util.Type
+import quartz.compiler.util.curried
 
 /**
  * Created by Aedan Smith.
  */
 
 fun Program.analyze(): Program {
-    return analyzeProgram(ProgramContext(Program(), this)).program
+    val symbolTable = ProgramAnalyzer.symbolTable(this)
+    var newProgram = Program()
+    analyzeProgram(
+            object : GlobalDeclarationConsumer {
+                override fun eat(externFunctionDeclaration: ExternFunctionDeclaration) {
+                    if (!newProgram.externFunctionDeclarations.contains(externFunctionDeclaration.name)) {
+                        newProgram += externFunctionDeclaration
+                        val new = analyzeExternFunctionDeclaration(symbolTable, externFunctionDeclaration)
+                        newProgram += new
+                    }
+                }
+
+                override fun eat(functionDeclaration: FunctionDeclaration) {
+                    if (!newProgram.functionDeclarations.contains(functionDeclaration.name)) {
+                        newProgram += functionDeclaration
+                        val new = analyzeFunctionDeclaration(this, symbolTable, functionDeclaration)
+                        newProgram += new
+                    }
+                }
+            },
+            this
+    )
+    inlineCDeclarations.forEach { newProgram += it }
+    return newProgram
 }
 
-private val programAnalyzer = ::analyzeFunctionDeclaration.programVisitor()
-private fun analyzeProgram(context: ProgramContext): ProgramContext {
-    return context
-            .let(programAnalyzer)
-            .let(ProgramAnalyzer::migrateInlineC)
+private fun analyzeProgram(
+        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        program: Program
+) {
+    return (program.functionDeclarations["main"] ?: throw QuartzException("Could not find function main"))
+            .let { globalDeclarationConsumer.eat(it) }
 }
 
-private val analyzeExternFunctionDeclarationTypes = ExternFunctionDeclarationAnalyzer::analyzeTypes.curry(::analyzeType)
-private fun analyzeExternFunctionDeclaration(context: ExternFunctionDeclarationContext): ExternFunctionDeclarationContext {
-    return context
-            .let(analyzeExternFunctionDeclarationTypes)
-            .let(ExternFunctionDeclarationAnalyzer::addToProgram)
+private fun analyzeExternFunctionDeclaration(
+        symbolTable: SymbolTable,
+        declaration: ExternFunctionDeclaration
+): ExternFunctionDeclaration {
+    return declaration
+            .let { ExternFunctionDeclarationAnalyzer.analyzeTypes(::analyzeType.curried(symbolTable), it) }
 }
 
-private val analyzeFunctionDeclarationTypes = FunctionDeclarationAnalyzer::analyzeTypes.curry(::analyzeType)
-private val functionDeclarationAnalyzer = ::analyzeBlock.functionDeclarationVisitor()
-private fun analyzeFunctionDeclaration(context: FunctionDeclarationContext): FunctionDeclarationContext {
-    return context
-            .let(analyzeFunctionDeclarationTypes)
-            .let(functionDeclarationAnalyzer)
-            .let(FunctionDeclarationAnalyzer::resolveGenerics)
-            .let(FunctionDeclarationAnalyzer::addToProgram)
+private fun analyzeFunctionDeclaration(
+        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        symbolTable: SymbolTable,
+        declaration: FunctionDeclaration
+): FunctionDeclaration {
+    val localSymbolTable = FunctionDeclarationAnalyzer.localSymbolTable(symbolTable, declaration)
+    return declaration
+            .let { FunctionDeclarationAnalyzer.visitTypes(::analyzeType.curried(localSymbolTable), it) }
+            .let(::analyzeBlock.curried(globalDeclarationConsumer).curried(localSymbolTable).functionDeclarationVisitor())
+//            .let { FunctionDeclarationAnalyzer.resolveGenerics(genericArguments, it) }
 }
 
-private val blockAnalyzer = ::analyzeExpression.blockVisitor()
-private fun analyzeBlock(context: BlockContext): BlockContext {
-    return context
-            .let(blockAnalyzer)
+private fun analyzeBlock(
+        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        symbolTable: SymbolTable,
+        block: Block
+): Block {
+    return block
+            .let(::analyzeExpression.curried(globalDeclarationConsumer).blockVisitor(symbolTable))
 }
 
-private val analyzeExpressionExpectedType = ExpressionAnalyzer::analyzeExpectedType.curry(::analyzeType)
-private fun analyzeExpression(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeExpressionExpectedType)
-            .let(expressionAnalyzer)
-            .let(ExpressionAnalyzer::verifyType)
+private fun analyzeExpression(
+        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        symbolTable: SymbolTable,
+        expectedType: Type?,
+        expression: Expression
+): Expression {
+    val expressionAnalyzer = ::analyzeExpression.curried(globalDeclarationConsumer).curried(symbolTable)
+    val typeAnalyzer = ::analyzeType.curried(symbolTable)
+    return expression.let {
+        when (it) {
+            is InlineC -> it
+            is NumberLiteral -> it
+            is StringLiteral -> it
+            is Identifier -> {
+                it
+                        .let { IdentifierAnalyzer.analyzeType(symbolTable, it) }
+                        .also {
+                            IdentifierAnalyzer.visitGlobalDeclaration(
+                                    globalDeclarationConsumer,
+                                    symbolTable::getGlobalDeclaration,
+                                    it
+                            )
+                        }
+            }
+            is Sizeof -> {
+                it
+                        .let { SizeofAnalyzer.visitSizeofType(typeAnalyzer, it) }
+            }
+            is Cast -> {
+                it
+                        .let { CastAnalyzer.visitType(typeAnalyzer, it) }
+                        .let { CastAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
+            }
+            is ReturnExpression -> {
+                it
+                        .let { ReturnExpressionAnalyzer.analyzeExpression(expressionAnalyzer, it) }
+            }
+            is UnaryOperator -> {
+                it
+                        .let { UnaryOperatorAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
+                        .let(UnaryOperatorAnalyzer::inferTypeFromExpression)
+            }
+            is BinaryOperator -> {
+                it
+                        .let { BinaryOperatorAnalyzer.analyzeExpr1(expressionAnalyzer, it, expectedType) }
+                        .let { BinaryOperatorAnalyzer.analyzeExpr2(expressionAnalyzer, it, expectedType) }
+                        .let(BinaryOperatorAnalyzer::inferTypeFromExpr1)
+                        .let(BinaryOperatorAnalyzer::inferTypeFromExpr2)
+            }
+            is Assignment -> {
+                it
+                        .let { AssignmentAnalyzer.analyzeLValue(expressionAnalyzer, it) }
+                        .let { AssignmentAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
+                        .let(AssignmentAnalyzer::inferTypeFromLValue)
+                        .let(AssignmentAnalyzer::inferTypeFromExpression)
+            }
+            is FunctionCall -> {
+                it
+                        .let { FunctionCallAnalyzer.analyzeExpression(expressionAnalyzer, it) }
+                        .let { FunctionCallAnalyzer.analyzeArguments(expressionAnalyzer, it) }
+            }
+            is IfExpression -> {
+                it
+                        .let { IfExpressionAnalyzer.analyzeCondition(expressionAnalyzer, it) }
+                        .let { IfExpressionAnalyzer.analyzeIfTrue(expressionAnalyzer, it, expectedType) }
+                        .let { IfExpressionAnalyzer.analyzeIfFalse(expressionAnalyzer, it, expectedType) }
+                        .let(IfExpressionAnalyzer::inferTypeFromIfTrue)
+                        .let(IfExpressionAnalyzer::inferTypeFromIfFalse)
+            }
+            is VariableDeclaration -> {
+                it
+                        .let { VariableDeclarationAnalyzer.analyzeExpression(expressionAnalyzer, it) }
+                        .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
+                        .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }
+            }
+            is BlockExpression -> {
+                it
+                        .let { BlockExpressionAnalyzer.analyzeExpressions(expressionAnalyzer, it) }
+            }
+            is Lambda -> {
+                it
+                        .let { LambdaAnalyzer.inferFunctionType(it, expectedType) }
+                        .let(LambdaAnalyzer::inferFunctionArgs)
+                        .let(LambdaAnalyzer::inferArgumentNames)
+                        .let {
+                            LambdaAnalyzer.uninline(
+                                    { symbolTable.getGlobalDeclaration(it) != null },
+                                    it,
+                                    globalDeclarationConsumer
+                            )
+                        }
+                        .let { expressionAnalyzer(expectedType, it) }
+            }
+            else -> throw Exception("Expected expression, found $it")
+        }
+    }
+            .let { ExpressionAnalyzer.verifyType(expectedType, it) }
 }
 
-private val expressionAnalyzer = contextVisitor(
-        { it.expression },
-        InlineC::class to identityVisitor(),
-        NumberLiteral::class to identityVisitor(),
-        StringLiteral::class to identityVisitor(),
-        Identifier::class to ::analyzeIdentifier,
-        Sizeof::class to ::analyzeSizeof,
-        Cast::class to ::analyzeCast,
-        ReturnExpression::class to ::analyzeReturnExpression,
-        UnaryOperator::class to ::analyzeUnaryOperator,
-        BinaryOperator::class to ::analyzeBinaryOperator,
-        Assignment::class to ::analyzeAssignment,
-        FunctionCall::class to ::analyzeFunctionCall,
-        IfExpression::class to ::analyzeIfExpression,
-        WhileExpression::class to ::analyzeWhileExpression,
-        VariableDeclaration::class to ::analyzeVariableDeclaration,
-        BlockExpression::class to ::analyzeBlockExpression,
-        Lambda::class to ::analyzeLambda
-)
-
-private val analyzeIdentifierFunctionDeclaration =
-        IdentifierAnalyzer::analyzeFunctionDeclaration.curry(::analyzeFunctionDeclaration)
-private val analyzeIdentifierExternFunctionDeclaration =
-        IdentifierAnalyzer::analyzeExternFunctionDeclaration.curry(::analyzeExternFunctionDeclaration)
-private fun analyzeIdentifier(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeIdentifierFunctionDeclaration)
-            .let(analyzeIdentifierExternFunctionDeclaration)
-            .let(IdentifierAnalyzer::analyzeType)
+private fun analyzeType(
+        typeTable: TypeTable,
+        type: Type
+): Type {
+    return type.let {
+        when (it) {
+            is VoidType -> it
+            is NumberType -> it
+            is InlineCType -> it
+            is ConstType -> TypeAnalyzer.analyzeConstType(::analyzeType.curried(typeTable), it)
+            is PointerType -> TypeAnalyzer.analyzePointerType(::analyzeType.curried(typeTable), it)
+            is FunctionType -> TypeAnalyzer.analyzeFunctionType(::analyzeType.curried(typeTable), it)
+            is NamedType -> TypeAnalyzer.analyzeNamedType(typeTable::getType, it)
+            else -> throw Exception("Expected type, found $it")
+        }
+    }
 }
-
-private val analyzeSizeofSizeType = SizeofAnalyzer::analyzeSizeType.curry(::analyzeType)
-private fun analyzeSizeof(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeSizeofSizeType)
-}
-
-private val analyzeCastType = CastAnalyzer::analyzeType.curry(::analyzeType)
-private val analyzeCastExpression = CastAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private fun analyzeCast(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeCastType)
-            .let(analyzeCastExpression)
-}
-
-private val analyzeReturnExpressionExpression = ReturnExpressionAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private fun analyzeReturnExpression(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeReturnExpressionExpression)
-            .let(ReturnExpressionAnalyzer::verifyReturnType)
-}
-
-private val analyzeUnaryOperatorExpression = UnaryOperatorAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private fun analyzeUnaryOperator(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeUnaryOperatorExpression)
-            .let(UnaryOperatorAnalyzer::inferTypeFromExpression)
-}
-
-private val analyzeBinaryOperatorExpr1 = BinaryOperatorAnalyzer::analyzeExpr1.curry(::analyzeExpression)
-private val analyzeBinaryOperatorExpr2 = BinaryOperatorAnalyzer::analyzeExpr2.curry(::analyzeExpression)
-private fun analyzeBinaryOperator(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeBinaryOperatorExpr1)
-            .let(analyzeBinaryOperatorExpr2)
-            .let(BinaryOperatorAnalyzer::inferTypeFromExpr1)
-            .let(BinaryOperatorAnalyzer::inferTypeFromExpr2)
-}
-
-private val analyzeAssignmentLValue = AssignmentAnalyzer::analyzeLValue.curry(::analyzeExpression)
-private val analyzeAssignmentExpression = AssignmentAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private fun analyzeAssignment(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeAssignmentLValue)
-            .let(analyzeAssignmentExpression)
-            .let(AssignmentAnalyzer::inferTypeFromLValue)
-            .let(AssignmentAnalyzer::inferTypeFromExpression)
-}
-
-private val analyzeFunctionCallExpression = FunctionCallAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private val analyzeFunctionCallArguments = FunctionCallAnalyzer::analyzeArguments.curry(::analyzeExpression)
-private fun analyzeFunctionCall(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeFunctionCallExpression)
-            .let(analyzeFunctionCallArguments)
-}
-
-private val analyzeIfExpressionCondition = IfExpressionAnalyzer::analyzeCondition.curry(::analyzeExpression)
-private val analyzeIfExpressionIfTrue = IfExpressionAnalyzer::analyzeIfTrue.curry(::analyzeBlockExpression)
-private val analyzeIfExpressionIfFalse = IfExpressionAnalyzer::analyzeIfFalse.curry(::analyzeBlockExpression)
-private fun analyzeIfExpression(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeIfExpressionCondition)
-            .let(analyzeIfExpressionIfTrue)
-            .let(analyzeIfExpressionIfFalse)
-            .let(IfExpressionAnalyzer::inferTypeFromIfTrue)
-            .let(IfExpressionAnalyzer::inferTypeFromIfFalse)
-}
-
-private val analyzeWhileExpressionCondition = WhileExpressionAnalyzer::analyzeCondition.curry(::analyzeExpression)
-private val analyzeWhileExpressionBlock = WhileExpressionAnalyzer::analyzeBlock.curry(::analyzeBlockExpression)
-private fun analyzeWhileExpression(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeWhileExpressionCondition)
-            .let(analyzeWhileExpressionBlock)
-}
-
-private val analyzeVariableDeclarationExpression = VariableDeclarationAnalyzer::analyzeExpression.curry(::analyzeExpression)
-private val analyzeVariableDeclarationType = VariableDeclarationAnalyzer::analyzeVariableType.curry(::analyzeType)
-private fun analyzeVariableDeclaration(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeVariableDeclarationExpression)
-            .let(analyzeVariableDeclarationType)
-            .let(VariableDeclarationAnalyzer::addToSymbolTable)
-}
-
-private val analyzeBlockExpressionExpressions = BlockExpressionAnalyzer::analyzeExpressions.curry(::analyzeExpression)
-private fun analyzeBlockExpression(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(analyzeBlockExpressionExpressions)
-}
-
-private fun analyzeLambda(context: ExpressionContext): ExpressionContext {
-    return context
-            .let(LambdaAnalyzer::inferFunctionType)
-            .let(LambdaAnalyzer::inferFunctionArgs)
-            .let(LambdaAnalyzer::inferArgumentNames)
-            .let(LambdaAnalyzer::uninline)
-            .let(::analyzeIdentifier)
-}
-
-private fun analyzeType(context: TypeContext): TypeContext {
-    return context
-            .let(typeAnalyzer)
-}
-
-private val typeAnalyzer = contextVisitor(
-        { it.type },
-        VoidType::class to identityVisitor(),
-        NumberType::class to identityVisitor(),
-        InlineCType::class to identityVisitor(),
-        ConstType::class to TypeAnalyzer::analyzeConstType.curry(::analyzeType),
-        PointerType::class to TypeAnalyzer::analyzePointerType.curry(::analyzeType),
-        FunctionType::class to TypeAnalyzer::analyzeFunctionType.curry(::analyzeType),
-        NamedType::class to TypeAnalyzer::analyzeNamedType.curry(::analyzeType)
-)

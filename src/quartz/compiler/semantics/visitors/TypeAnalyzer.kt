@@ -1,10 +1,9 @@
 package quartz.compiler.semantics.visitors
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.semantics.contexts.SymbolContext
-import quartz.compiler.semantics.contexts.TypeContext
 import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.semantics.types.PointerType
 import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
@@ -15,45 +14,28 @@ import quartz.compiler.util.Visitor
  */
 
 object TypeAnalyzer {
-    inline fun analyzeConstType(typeAnalyzer: Visitor<TypeContext>, context: TypeContext): TypeContext {
-        context.type as ConstType
-        return typeAnalyzer(context.copy(type = context.type.type)).let { it.copy(type = ConstType(it.type)) }
+    inline fun analyzeConstType(typeAnalyzer: Visitor<Type>, type: ConstType): ConstType {
+        return ConstType(typeAnalyzer(type.type))
     }
 
-    inline fun analyzePointerType(typeAnalyzer: Visitor<TypeContext>, context: TypeContext): TypeContext {
-        context.type as PointerType
-        return typeAnalyzer(context.copy(type = context.type.type)).let { it.copy(type = PointerType(it.type)) }
+    inline fun analyzePointerType(typeAnalyzer: Visitor<Type>, type: PointerType): PointerType {
+        return PointerType(typeAnalyzer(type.type))
     }
 
-    inline fun analyzeFunctionType(
-            crossinline typeAnalyzer: Visitor<TypeContext>,
-            context: TypeContext
-    ): TypeContext {
-        context.type as FunctionType
-        return analyze(typeAnalyzer, context.type.function, context.symbolContext)
-                .let { (function, newSymbolContext) ->
-                    TypeContext(FunctionType(function), newSymbolContext)
-                }
+    inline fun analyzeFunctionType(typeAnalyzer: Visitor<Type>, type: FunctionType): FunctionType {
+        return FunctionType(analyzeFunctionTypes(typeAnalyzer, type.function))
     }
 
-    inline fun analyzeNamedType(typeAnalyzer: Visitor<TypeContext>, context: TypeContext): TypeContext {
-        return typeAnalyzer(context.copy(type = context.symbolContext.getType(context.type.string)
-                ?: throw QuartzException("Unable to resolve type ${context.type}")))
+    inline fun analyzeNamedType(typeProvider: (String) -> Type?, type: NamedType): Type {
+        return typeProvider(type.string) ?: throw QuartzException("Unknown type $type")
     }
 
-    inline fun analyze(
-            crossinline typeAnalyzer: Visitor<TypeContext>,
-            function: Function, symbolContext: SymbolContext
-    ): Pair<Function, SymbolContext> {
-        var mutableSymbolContext = symbolContext
-        val visit = { type: Type -> typeAnalyzer(TypeContext(type, symbolContext)).let { (type, newSymbolContext) ->
-            mutableSymbolContext = newSymbolContext
-            type
-        } }
-        return Pair(function.copy(
-                args = function.args?.map { it?.let(visit) },
-                returnType = function.returnType?.let(visit)
-        ), mutableSymbolContext)
+    inline fun analyzeFunctionTypes(typeAnalyzer: Visitor<Type>, function: Function): Function {
+        return Function(
+                function.args?.map { it?.let(typeAnalyzer) },
+                function.returnType?.let(typeAnalyzer),
+                function.vararg
+        )
     }
 }
 

@@ -50,10 +50,6 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
                 args = args.map { it.simplify(newExpressions, intIterator) }
         )
         is IfExpression -> simplify(newExpressions, intIterator, isTop)
-        is WhileExpression -> copy(
-                condition = condition.simplify(newExpressions, intIterator),
-                block = block.simplify(intIterator)
-        )
         is VariableDeclaration -> copy(
                 expression = expression?.simplify(newExpressions, intIterator)
         )

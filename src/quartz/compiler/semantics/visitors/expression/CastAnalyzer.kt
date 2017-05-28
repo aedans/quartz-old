@@ -1,33 +1,26 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.contexts.ExpressionContext
-import quartz.compiler.semantics.contexts.TypeContext
-import quartz.compiler.semantics.visitors.util.analyzeExpression
-import quartz.compiler.semantics.visitors.util.analyzeType
+import quartz.compiler.semantics.util.ExpressionAnalyzer
+import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.Cast
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
+import quartz.compiler.util.curried
 
 /**
  * Created by Aedan Smith.
  */
 
 object CastAnalyzer {
-    inline fun analyzeType(
-            crossinline typeVisitor: Visitor<TypeContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeType<Cast>(typeVisitor, { it.type }, { e, type -> e.copy(type = type) })
+    inline fun visitType(typeVisitor: Visitor<Type>, cast: Cast): Cast {
+        return cast.copy(type = typeVisitor(cast.type))
     }
 
-    inline fun analyzeExpression(
-            crossinline expressionVisitor: Visitor<ExpressionContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeExpression<Cast>(
-                expressionVisitor,
-                { it.expression },
-                { e, _ -> e.expectedType },
-                { e, expression -> e.copy(expression = expression) }
-        )
+    inline fun visitExpression(expressionVisitor: Visitor<Expression>, cast: Cast): Cast {
+        return cast.copy(expression = expressionVisitor(cast.expression))
+    }
+
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, cast: Cast, expectedType: Type?): Cast {
+        return visitExpression(expressionAnalyzer.curried(expectedType), cast)
     }
 }

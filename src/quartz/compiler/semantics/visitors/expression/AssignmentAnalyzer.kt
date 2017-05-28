@@ -1,45 +1,39 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.contexts.ExpressionContext
-import quartz.compiler.semantics.visitors.util.analyzeExpression
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.semantics.visitors.util.inferType
+import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.Assignment
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
+import quartz.compiler.util.curried
 
 /**
  * Created by Aedan Smith.
  */
 
 object AssignmentAnalyzer {
-    inline fun analyzeLValue(
-            crossinline expressionVisitor: Visitor<ExpressionContext>,
-            expressionContext: ExpressionContext
-    ): ExpressionContext {
-        return expressionContext.analyzeExpression<Assignment>(
-                expressionVisitor,
-                { it.lvalue },
-                { e, _ -> e.expectedType },
-                { e, lvalue -> e.copy(lvalue = lvalue) }
-        )
+    inline fun visitLValue(expressionVisitor: Visitor<Expression>, assignment: Assignment): Assignment {
+        return assignment.copy(lvalue = expressionVisitor(assignment.lvalue))
     }
 
-    inline fun analyzeExpression(
-            crossinline expressionVisitor: Visitor<ExpressionContext>,
-            expressionContext: ExpressionContext
-    ): ExpressionContext {
-        return expressionContext.analyzeExpression<Assignment>(
-                expressionVisitor,
-                { it.expression },
-                { e, _ -> e.expectedType },
-                { e, expression -> e.copy(expression = expression) }
-        )
+    inline fun visitExpression(expressionVisitor: Visitor<Expression>, assignment: Assignment): Assignment {
+        return assignment.copy(expression = expressionVisitor(assignment.expression))
     }
 
-    fun inferTypeFromLValue(expressionContext: ExpressionContext): ExpressionContext {
-        return expressionContext.inferType<Assignment> { it.lvalue.type }
+    inline fun analyzeLValue(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment): Assignment {
+        return visitLValue(expressionAnalyzer.curried(null), assignment)
     }
 
-    fun inferTypeFromExpression(expressionContext: ExpressionContext): ExpressionContext {
-        return expressionContext.inferType<Assignment> { it.expression.type }
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment, expectedType: Type?): Assignment {
+        return visitExpression(expressionAnalyzer.curried(expectedType), assignment)
+    }
+
+    fun inferTypeFromLValue(assignment: Assignment): Assignment {
+        return assignment.inferType { it.lvalue.type }
+    }
+
+    fun inferTypeFromExpression(assignment: Assignment): Assignment {
+        return assignment.inferType { it.expression.type }
     }
 }

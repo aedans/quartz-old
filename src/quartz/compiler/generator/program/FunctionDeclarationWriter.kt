@@ -51,7 +51,6 @@ fun ProgramOutputStream.expression(expression: Expression) {
             is Assignment -> assignment(expression)
             is FunctionCall -> functionCall(expression)
             is IfExpression -> ifExpression(expression)
-            is WhileExpression -> whileExpression(expression)
             is VariableDeclaration -> varDeclaration(expression)
             is BlockExpression -> block(expression)
             else -> throw QuartzException("Unrecognized expression $expression")
@@ -122,12 +121,6 @@ fun ProgramOutputStream.ifExpression(ifExpression: IfExpression) {
     expression(ifExpression.ifTrue)
     name("else")
     expression(ifExpression.ifFalse)
-}
-
-fun ProgramOutputStream.whileExpression(whileExpression: WhileExpression) {
-    name("while")
-    parentheses { expression(whileExpression.condition) }
-    block(whileExpression.block)
 }
 
 fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {

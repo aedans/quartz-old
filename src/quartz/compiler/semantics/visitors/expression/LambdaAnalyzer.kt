@@ -1,51 +1,43 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.contexts.ExpressionContext
+import quartz.compiler.semantics.consumers.FunctionDeclarationConsumer
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Identifier
 import quartz.compiler.tree.function.expression.Lambda
+import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
 object LambdaAnalyzer {
-    fun inferFunctionType(context: ExpressionContext): ExpressionContext {
-        val (lambda) = context.destructureAs<Lambda>()
-
-        return if (context.expectedType is FunctionType && lambda.function != context.expectedType.function) {
-            context.copy(expression = lambda.copy(function = context.expectedType.function))
+    fun inferFunctionType(lambda: Lambda, expectedType: Type?): Lambda {
+        return if (expectedType is FunctionType && lambda.function != expectedType.function) {
+            lambda.copy(function = expectedType.function)
         } else {
-            context
+            lambda
         }
     }
 
-    fun inferFunctionArgs(context: ExpressionContext): ExpressionContext {
-        val (lambda) = context.destructureAs<Lambda>()
-
+    fun inferFunctionArgs(lambda: Lambda): Lambda {
         return if (lambda.function.args == null) {
-            context.copy(expression = lambda.copy(function = lambda.function.copy(args = emptyList())))
+            lambda.copy(function = lambda.function.copy(args = emptyList()))
         } else {
-            context
+            lambda
         }
     }
 
-    fun inferArgumentNames(context: ExpressionContext): ExpressionContext {
-        val (lambda) = context.destructureAs<Lambda>()
-
+    fun inferArgumentNames(lambda: Lambda): Lambda {
         return if (lambda.argNames == null) {
-            context.copy(expression = lambda.copy(argNames = lambda.function.args?.mapIndexed { i, _ -> "p$i" }))
+            lambda.copy(argNames = lambda.function.args?.mapIndexed { i, _ -> "p$i" })
         } else {
-            context
+            lambda
         }
     }
 
-    fun uninline(context: ExpressionContext): ExpressionContext {
-        val (lambda, symbolContext) = context.destructureAs<Lambda>()
-
-        val name = lambdaName(symbolContext.programContext.context, lambda)
+    fun toIdentifier(nameTester: (String) -> Boolean, lambda: Lambda): Pair<Identifier, FunctionDeclaration> {
+        val name = lambdaName(nameTester, lambda)
         val functionDeclaration = FunctionDeclaration(
                 name,
                 lambda.argNames!!,
@@ -53,21 +45,17 @@ object LambdaAnalyzer {
                 lambda.type.function,
                 lambda.block
         )
-        val identifier = Identifier(name, emptyList(), FunctionType(functionDeclaration.function))
-
-        return context.copy(
-                expression = identifier,
-                symbolContext = symbolContext.copy(programContext = symbolContext.programContext.copy(
-                        context = symbolContext.programContext.context + functionDeclaration
-                ))
-        )
+        return Identifier(name, emptyList(), FunctionType(functionDeclaration.function)) to functionDeclaration
     }
 
-    private fun lambdaName(program: Program, lambda: Lambda, int: Int = lambda.hashCode()): String {
+    private tailrec fun lambdaName(nameTester: (String) -> Boolean, lambda: Lambda, int: Int = lambda.hashCode()): String {
         val name = "__lambda_${Math.abs(int)}"
-        return if (program.functionDeclarations.contains(name))
-            lambdaName(program, lambda, int + 1)
-        else
-            name
+        return if (!nameTester(name)) name else lambdaName(nameTester, lambda, int + 1)
+    }
+
+    fun uninline(nameTester: (String) -> Boolean, lambda: Lambda, consumer: FunctionDeclarationConsumer): Identifier {
+        val (identifier, functionDeclaration) = toIdentifier(nameTester, lambda)
+        consumer.eat(functionDeclaration)
+        return identifier
     }
 }

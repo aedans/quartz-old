@@ -1,45 +1,39 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.contexts.ExpressionContext
-import quartz.compiler.semantics.visitors.util.analyzeExpression
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.semantics.visitors.util.inferType
+import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.expression.BinaryOperator
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
+import quartz.compiler.util.curried
 
 /**
  * Created by Aedan Smith.
  */
 
 object BinaryOperatorAnalyzer {
-    inline fun analyzeExpr1(
-            crossinline expressionVisitor: Visitor<ExpressionContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeExpression<BinaryOperator>(
-                expressionVisitor,
-                { it.expr1 },
-                { e, _ -> e.expectedType },
-                { e, expr1 -> e.copy(expr1 = expr1) }
-        )
+    inline fun visitExpr1(expressionVisitor: Visitor<Expression>, binaryOperator: BinaryOperator): BinaryOperator {
+        return binaryOperator.copy(expr1 = expressionVisitor(binaryOperator.expr1))
     }
 
-    inline fun analyzeExpr2(
-            crossinline expressionVisitor: Visitor<ExpressionContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeExpression<BinaryOperator>(
-                expressionVisitor,
-                { it.expr2 },
-                { e, _ -> e.expectedType },
-                { e, expr2 -> e.copy(expr2 = expr2) }
-        )
+    inline fun visitExpr2(expressionVisitor: Visitor<Expression>, binaryOperator: BinaryOperator): BinaryOperator {
+        return binaryOperator.copy(expr2 = expressionVisitor(binaryOperator.expr2))
     }
 
-    fun inferTypeFromExpr1(context: ExpressionContext): ExpressionContext {
-        return context.inferType<BinaryOperator> { it.expr1.type }
+    inline fun analyzeExpr1(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
+        return visitExpr1(expressionAnalyzer.curried(expectedType), binaryOperator)
     }
 
-    fun inferTypeFromExpr2(context: ExpressionContext): ExpressionContext {
-        return context.inferType<BinaryOperator> { it.expr2.type }
+    inline fun analyzeExpr2(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
+        return visitExpr2(expressionAnalyzer.curried(expectedType), binaryOperator)
+    }
+
+    fun inferTypeFromExpr1(binaryOperator: BinaryOperator): BinaryOperator {
+        return binaryOperator.inferType { it.expr1.type }
+    }
+
+    fun inferTypeFromExpr2(binaryOperator: BinaryOperator): BinaryOperator {
+        return binaryOperator.inferType { it.expr2.type }
     }
 }

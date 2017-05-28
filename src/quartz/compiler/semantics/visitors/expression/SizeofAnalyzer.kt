@@ -1,9 +1,7 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.contexts.ExpressionContext
-import quartz.compiler.semantics.contexts.TypeContext
-import quartz.compiler.semantics.visitors.util.analyzeType
 import quartz.compiler.tree.function.expression.Sizeof
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 
 /**
@@ -11,10 +9,7 @@ import quartz.compiler.util.Visitor
  */
 
 object SizeofAnalyzer {
-    inline fun analyzeSizeType(
-            crossinline typeAnalyzer: Visitor<TypeContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeType<Sizeof>(typeAnalyzer, { it.sizeType }, { e, type -> e.copy(sizeType = type) })
+    inline fun visitSizeofType(typeVisitor: Visitor<Type>, sizeof: Sizeof): Sizeof {
+        return sizeof.copy(sizeType = typeVisitor(sizeof.sizeType))
     }
 }

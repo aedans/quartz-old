@@ -1,7 +1,8 @@
 package quartz.compiler.semantics.visitors
 
-import quartz.compiler.semantics.contexts.FunctionDeclarationContext
-import quartz.compiler.semantics.contexts.TypeContext
+import quartz.compiler.semantics.symbols.SymbolTable
+import quartz.compiler.tree.function.FunctionDeclaration
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 
 /**
@@ -9,41 +10,22 @@ import quartz.compiler.util.Visitor
  */
 
 object FunctionDeclarationAnalyzer {
-    inline fun analyzeTypes(
-            crossinline typeAnalyzer: Visitor<TypeContext>,
-            context: FunctionDeclarationContext
-    ): FunctionDeclarationContext {
-        val (newFunction, newFunctionDeclarationContext) = TypeAnalyzer.analyze(
-                typeAnalyzer,
-                context.functionDeclaration.function,
-                context
-        )
-
-        newFunctionDeclarationContext as FunctionDeclarationContext
-
-        return newFunctionDeclarationContext.copy(
-                functionDeclaration = newFunctionDeclarationContext.functionDeclaration.copy(
-                        function = newFunction
-                )
+    inline fun visitTypes(typeVisitor: Visitor<Type>, functionDeclaration: FunctionDeclaration): FunctionDeclaration {
+        return FunctionDeclaration(
+                functionDeclaration.name,
+                functionDeclaration.argNames,
+                functionDeclaration.generics,
+                TypeAnalyzer.analyzeFunctionTypes(typeVisitor, functionDeclaration.function),
+                functionDeclaration.block
         )
     }
 
-    fun resolveGenerics(context: FunctionDeclarationContext): FunctionDeclarationContext {
-        return context.copy(
-                functionDeclaration = context.functionDeclaration.copy(
-                        name = context.functionDeclaration.name +
-                                context.genericArguments.joinToString(separator = "") { "_${it.descriptiveString}" },
-                        generics = emptyList()
-                ),
-                genericArguments = emptyList()
-        )
-    }
-
-    fun addToProgram(context: FunctionDeclarationContext): FunctionDeclarationContext {
-        return context.copy(symbolContext = context.symbolContext.copy(
-                programContext = context.symbolContext.programContext.programContext.copy(
-                        program = context.symbolContext.programContext.program + context.functionDeclaration
-                )
-        ))
+    fun localSymbolTable(symbolTable: SymbolTable, functionDeclaration: FunctionDeclaration): SymbolTable {
+        return object : SymbolTable by symbolTable {
+            override fun getVar(name: String): Type? {
+                return functionDeclaration.argsWithNames?.firstOrNull { it.first == name }?.second
+                        ?: symbolTable.getVar(name)
+            }
+        }
     }
 }

@@ -1,57 +1,50 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.contexts.ExpressionContext
 import quartz.compiler.semantics.types.IntType
-import quartz.compiler.semantics.visitors.util.analyzeBlock
-import quartz.compiler.semantics.visitors.util.analyzeExpression
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.semantics.visitors.util.inferType
+import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.expression.BlockExpression
 import quartz.compiler.tree.function.expression.IfExpression
+import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
+import quartz.compiler.util.curried
 
 /**
  * Created by Aedan Smith.
  */
 
 object IfExpressionAnalyzer {
-    inline fun analyzeCondition(
-            crossinline expressionVisitor: Visitor<ExpressionContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeExpression<IfExpression>(
-                expressionVisitor,
-                { it.condition },
-                { _, _ -> IntType },
-                { e, condition -> e.copy(condition = condition) }
-        )
+    inline fun visitCondition(expressionVisitor: Visitor<Expression>, ifExpression: IfExpression): IfExpression {
+        return ifExpression.copy(condition = expressionVisitor(ifExpression.condition))
     }
 
-    inline fun analyzeIfTrue(
-            crossinline blockVisitor: Visitor<ExpressionContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeBlock<IfExpression>(
-                blockVisitor,
-                { it.ifTrue },
-                { e, block -> e.copy(ifTrue = block) }
-        )
+    inline fun visitIfTrue(expressionVisitor: Visitor<Expression>, ifExpression: IfExpression): IfExpression {
+        return ifExpression.copy(ifTrue = expressionVisitor(ifExpression.ifTrue) as BlockExpression)
     }
 
-    inline fun analyzeIfFalse(
-            crossinline blockVisitor: Visitor<ExpressionContext>,
-            context: ExpressionContext
-    ): ExpressionContext {
-        return context.analyzeBlock<IfExpression>(
-                blockVisitor,
-                { it.ifFalse },
-                { e, block -> e.copy(ifFalse = block) }
-        )
+    inline fun visitIfFalse(expressionVisitor: Visitor<Expression>, ifExpression: IfExpression): IfExpression {
+        return ifExpression.copy(ifFalse = expressionVisitor(ifExpression.ifFalse) as BlockExpression)
     }
 
-    fun inferTypeFromIfTrue(context: ExpressionContext): ExpressionContext {
-        return context.inferType<IfExpression> { it.ifTrue.type }
+    inline fun analyzeCondition(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression): IfExpression {
+        // TODO BoolType
+        return visitCondition(expressionAnalyzer.curried(IntType), ifExpression)
     }
 
-    fun inferTypeFromIfFalse(context: ExpressionContext): ExpressionContext {
-        return context.inferType<IfExpression> { it.ifFalse.type }
+    inline fun analyzeIfTrue(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
+        return visitIfTrue(expressionAnalyzer.curried(expectedType), ifExpression)
+    }
+
+    inline fun analyzeIfFalse(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
+        return visitIfFalse(expressionAnalyzer.curried(expectedType), ifExpression)
+    }
+
+    fun inferTypeFromIfTrue(ifExpression: IfExpression): IfExpression {
+        return ifExpression.inferType { it.ifTrue.type }
+    }
+
+    fun inferTypeFromIfFalse(ifExpression: IfExpression): IfExpression {
+        return ifExpression.inferType { it.ifFalse.type }
     }
 }
