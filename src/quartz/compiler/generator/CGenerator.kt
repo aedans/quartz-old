@@ -112,7 +112,7 @@ data class CGenerator(
     }
 
     fun ProgramOutputStream.identifier(identifier: Identifier) {
-        name(identifier.name)
+        name(identifier.name + identifier.genericArguments.joinToString { "_${it.descriptiveString}" })
     }
 
     fun ProgramOutputStream.sizeof(sizeof: Sizeof) {

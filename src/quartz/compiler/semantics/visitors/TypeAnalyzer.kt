@@ -27,7 +27,8 @@ object TypeAnalyzer {
     }
 
     inline fun analyzeNamedType(typeProvider: (String) -> Type?, type: NamedType): Type {
-        return typeProvider(type.string) ?: throw QuartzException("Unknown type $type")
+        return typeProvider(type.string)
+                ?: throw QuartzException("Unknown type ${type.string}")
     }
 
     inline fun analyzeFunctionTypes(typeAnalyzer: Visitor<Type>, function: Function): Function {

@@ -42,7 +42,7 @@ private fun analyzeProgram(
     return (program.functionDeclarations["main"] ?: throw QuartzException("Could not find function main"))
             .let {
                 generator.declare(it)
-                generator.generate(analyzeFunctionDeclaration(generator, symbolTable, it))
+                generator.generate(analyzeFunctionDeclaration(generator, emptyList(), symbolTable, it))
             }
 }
 
@@ -56,14 +56,15 @@ private fun analyzeExternFunctionDeclaration(
 
 private fun analyzeFunctionDeclaration(
         generator: Generator,
+        genericArguments: List<Type>,
         symbolTable: SymbolTable,
         declaration: FunctionDeclaration
 ): FunctionDeclaration {
-    val localSymbolTable = FunctionDeclarationAnalyzer.localSymbolTable(symbolTable, declaration)
+    val localSymbolTable = declaration.symbolTable(symbolTable, genericArguments)
     return declaration
             .let { FunctionDeclarationAnalyzer.visitTypes(::analyzeType.partial(localSymbolTable), it) }
             .let(::analyzeBlock.partial(generator).partial(localSymbolTable).functionDeclarationVisitor())
-//            .let { FunctionDeclarationAnalyzer.resolveGenerics(genericArguments, it) }
+            .let { FunctionDeclarationAnalyzer.resolveGenerics(genericArguments, it) }
 }
 
 private fun analyzeBlock(
@@ -89,32 +90,14 @@ private fun analyzeExpression(
             is NumberLiteral -> it
             is StringLiteral -> it
             is Identifier -> {
+                val globalDeclaration = IdentifierAnalyzer.getGlobalDeclaration(symbolTable, it)
+                val localSymbolTable = if (globalDeclaration is FunctionDeclaration) it.symbolTable(symbolTable, globalDeclaration.generics) else symbolTable
                 it
-                        .let { IdentifierAnalyzer.analyzeType(symbolTable, it) }
-                        .also {
-                            IdentifierAnalyzer.consumeFunctionDeclaration(
-                                    {
-                                        if (!generator.isDeclared(it)) {
-                                            generator.declare(it)
-                                            generator.generate(analyzeFunctionDeclaration(generator, symbolTable, it))
-                                        }
-                                    },
-                                    { symbolTable.getGlobalDeclaration(it) as? FunctionDeclaration },
-                                    it
-                            )
-                        }
-                        .also {
-                            IdentifierAnalyzer.consumeExternFunctionDeclaration(
-                                    {
-                                        if (!generator.isDeclared(it)) {
-                                            generator.declare(it)
-                                            generator.generate(analyzeExternFunctionDeclaration(symbolTable, it))
-                                        }
-                                    },
-                                    { symbolTable.getGlobalDeclaration(it) as? ExternFunctionDeclaration },
-                                    it
-                            )
-                        }
+                        .also { IdentifierAnalyzer.analyzeFunctionDeclaration(
+                                generator, globalDeclaration, ::analyzeFunctionDeclaration, localSymbolTable, it) }
+                        .also { IdentifierAnalyzer.analyzeExternFunctionDeclaration(
+                                generator, globalDeclaration, ::analyzeExternFunctionDeclaration, localSymbolTable) }
+                        .let { IdentifierAnalyzer.analyzeType(::analyzeType.partial(localSymbolTable), localSymbolTable, it) }
             }
             is Sizeof -> {
                 it

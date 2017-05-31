@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.visitors
 
-import quartz.compiler.semantics.symbols.SymbolTable
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
@@ -20,12 +19,13 @@ object FunctionDeclarationAnalyzer {
         )
     }
 
-    fun localSymbolTable(symbolTable: SymbolTable, functionDeclaration: FunctionDeclaration): SymbolTable {
-        return object : SymbolTable by symbolTable {
-            override fun getVar(name: String): Type? {
-                return functionDeclaration.argsWithNames?.firstOrNull { it.first == name }?.second
-                        ?: symbolTable.getVar(name)
-            }
-        }
+    fun resolveGenerics(genericArguments: List<Type>, declaration: FunctionDeclaration): FunctionDeclaration {
+        return FunctionDeclaration(
+                declaration.name + genericArguments.joinToString("") { "_${it.descriptiveString}" },
+                declaration.argNames,
+                emptyList(),
+                declaration.function,
+                declaration.block
+        )
     }
 }
