@@ -7,7 +7,7 @@ import quartz.compiler.tree.util.Type
  */
 
 sealed class NumberType(override val string: String) : Type(string.replace(' ', '_')) {
-    override fun isInstance(type: Type): Boolean {
+    override fun isSupertype(type: Type): Boolean {
         return type is NumberType
     }
 

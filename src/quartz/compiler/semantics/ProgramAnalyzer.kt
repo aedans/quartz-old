@@ -163,6 +163,7 @@ private fun analyzeExpression(
             }
             is VariableDeclaration -> {
                 it
+                        .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }
                         .let { VariableDeclarationAnalyzer.analyzeExpression(expressionAnalyzer, it) }
                         .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
                         .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }

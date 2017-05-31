@@ -9,9 +9,9 @@ import quartz.compiler.tree.util.Type
 data class ConstType(val type: Type) : Type("const_${type.descriptiveString}") {
     override val string = "const ${type.string}"
 
-    override fun isInstance(type: Type): Boolean {
-        return type.isInstance(this.type)
-                || type is ConstType && this.type.isInstance(type.type)
+    override fun isSupertype(type: Type): Boolean {
+        return type.isSupertype(this.type)
+                || type is ConstType && this.type.isSupertype(type.type)
     }
 
     override fun toString(): String {

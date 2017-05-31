@@ -10,14 +10,14 @@ import quartz.compiler.tree.util.Type
 data class FunctionType(val function: Function) : Type(function.description()) {
     override val string = function.toString()
 
-    override fun isInstance(type: Type): Boolean {
+    override fun isSupertype(type: Type): Boolean {
         return type is FunctionType
                 && type.function.vararg == function.vararg
-                && type.function.returnType.isInstance(function.returnType)
+                && type.function.returnType.isSupertype(function.returnType)
                 && type.function.args?.size == function.args?.size
                 && type.function.args
                 ?.zip(function.args ?: emptyList())
-                ?.all { it.first.isInstance(it.second) } ?: true
+                ?.all { it.first.isSupertype(it.second) } ?: true
     }
 
     override fun toString(): String {
