@@ -1,13 +1,17 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.semantics.consumers.GlobalDeclarationConsumer
+import quartz.compiler.generator.Generator
 import quartz.compiler.semantics.symbols.SymbolTable
 import quartz.compiler.semantics.symbols.TypeTable
 import quartz.compiler.semantics.types.*
+import quartz.compiler.semantics.util.symbolTable
 import quartz.compiler.semantics.util.visitors.blockVisitor
 import quartz.compiler.semantics.util.visitors.functionDeclarationVisitor
-import quartz.compiler.semantics.visitors.*
+import quartz.compiler.semantics.visitors.ExpressionAnalyzer
+import quartz.compiler.semantics.visitors.ExternFunctionDeclarationAnalyzer
+import quartz.compiler.semantics.visitors.FunctionDeclarationAnalyzer
+import quartz.compiler.semantics.visitors.TypeAnalyzer
 import quartz.compiler.semantics.visitors.expression.*
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Block
@@ -23,39 +27,23 @@ import quartz.compiler.util.partial
  * Created by Aedan Smith.
  */
 
-fun Program.analyze(): Program {
-    val symbolTable = ProgramAnalyzer.symbolTable(this)
-    var newProgram = Program()
-    analyzeProgram(
-            object : GlobalDeclarationConsumer {
-                override fun eat(externFunctionDeclaration: ExternFunctionDeclaration) {
-                    if (!newProgram.externFunctionDeclarations.contains(externFunctionDeclaration.name)) {
-                        newProgram += externFunctionDeclaration
-                        val new = analyzeExternFunctionDeclaration(symbolTable, externFunctionDeclaration)
-                        newProgram += new
-                    }
-                }
-
-                override fun eat(functionDeclaration: FunctionDeclaration) {
-                    if (!newProgram.functionDeclarations.contains(functionDeclaration.name)) {
-                        newProgram += functionDeclaration
-                        val new = analyzeFunctionDeclaration(this, symbolTable, functionDeclaration)
-                        newProgram += new
-                    }
-                }
-            },
-            this
-    )
-    inlineCDeclarations.forEach { newProgram += it }
-    return newProgram
+fun Program.analyze(consumer: Generator) {
+    inlineCDeclarations.forEach {
+        consumer.generate(it)
+    }
+    analyzeProgram(consumer, this)
 }
 
 private fun analyzeProgram(
-        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        generator: Generator,
         program: Program
 ) {
+    val symbolTable = program.symbolTable()
     return (program.functionDeclarations["main"] ?: throw QuartzException("Could not find function main"))
-            .let { globalDeclarationConsumer.eat(it) }
+            .let {
+                generator.declare(it)
+                generator.generate(analyzeFunctionDeclaration(generator, symbolTable, it))
+            }
 }
 
 private fun analyzeExternFunctionDeclaration(
@@ -67,33 +55,33 @@ private fun analyzeExternFunctionDeclaration(
 }
 
 private fun analyzeFunctionDeclaration(
-        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        generator: Generator,
         symbolTable: SymbolTable,
         declaration: FunctionDeclaration
 ): FunctionDeclaration {
     val localSymbolTable = FunctionDeclarationAnalyzer.localSymbolTable(symbolTable, declaration)
     return declaration
             .let { FunctionDeclarationAnalyzer.visitTypes(::analyzeType.partial(localSymbolTable), it) }
-            .let(::analyzeBlock.partial(globalDeclarationConsumer).partial(localSymbolTable).functionDeclarationVisitor())
+            .let(::analyzeBlock.partial(generator).partial(localSymbolTable).functionDeclarationVisitor())
 //            .let { FunctionDeclarationAnalyzer.resolveGenerics(genericArguments, it) }
 }
 
 private fun analyzeBlock(
-        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        generator: Generator,
         symbolTable: SymbolTable,
         block: Block
 ): Block {
     return block
-            .let(::analyzeExpression.partial(globalDeclarationConsumer).blockVisitor(symbolTable))
+            .let(::analyzeExpression.partial(generator).blockVisitor(symbolTable))
 }
 
 private fun analyzeExpression(
-        globalDeclarationConsumer: GlobalDeclarationConsumer,
+        generator: Generator,
         symbolTable: SymbolTable,
         expectedType: Type?,
         expression: Expression
 ): Expression {
-    val expressionAnalyzer = ::analyzeExpression.partial(globalDeclarationConsumer).partial(symbolTable)
+    val expressionAnalyzer = ::analyzeExpression.partial(generator).partial(symbolTable)
     val typeAnalyzer = ::analyzeType.partial(symbolTable)
     return expression.let {
         when (it) {
@@ -104,9 +92,26 @@ private fun analyzeExpression(
                 it
                         .let { IdentifierAnalyzer.analyzeType(symbolTable, it) }
                         .also {
-                            IdentifierAnalyzer.visitGlobalDeclaration(
-                                    globalDeclarationConsumer,
-                                    symbolTable::getGlobalDeclaration,
+                            IdentifierAnalyzer.consumeFunctionDeclaration(
+                                    {
+                                        if (!generator.isDeclared(it)) {
+                                            generator.declare(it)
+                                            generator.generate(analyzeFunctionDeclaration(generator, symbolTable, it))
+                                        }
+                                    },
+                                    { symbolTable.getGlobalDeclaration(it) as? FunctionDeclaration },
+                                    it
+                            )
+                        }
+                        .also {
+                            IdentifierAnalyzer.consumeExternFunctionDeclaration(
+                                    {
+                                        if (!generator.isDeclared(it)) {
+                                            generator.declare(it)
+                                            generator.generate(analyzeExternFunctionDeclaration(symbolTable, it))
+                                        }
+                                    },
+                                    { symbolTable.getGlobalDeclaration(it) as? ExternFunctionDeclaration },
                                     it
                             )
                         }
@@ -175,7 +180,7 @@ private fun analyzeExpression(
                             LambdaAnalyzer.uninline(
                                     { symbolTable.getGlobalDeclaration(it) != null },
                                     it,
-                                    globalDeclarationConsumer
+                                    generator
                             )
                         }
                         .let { expressionAnalyzer(expectedType, it) }

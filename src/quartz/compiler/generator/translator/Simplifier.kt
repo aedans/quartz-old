@@ -1,7 +1,6 @@
 package quartz.compiler.generator.translator
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.tree.Program
 import quartz.compiler.tree.function.Block
 import quartz.compiler.tree.function.Expression
 import quartz.compiler.tree.function.FunctionDeclaration
@@ -11,11 +10,6 @@ import quartz.compiler.tree.misc.InlineC
 /**
  * Created by Aedan Smith.
  */
-
-// TODO migrate to visitor
-fun Program.simplify(): Program {
-    return copy(functionDeclarations = functionDeclarations.mapValues { it.value.simplify() })
-}
 
 fun FunctionDeclaration.simplify(): FunctionDeclaration {
     return copy(block = block.simplify((0..Integer.MAX_VALUE).iterator()))

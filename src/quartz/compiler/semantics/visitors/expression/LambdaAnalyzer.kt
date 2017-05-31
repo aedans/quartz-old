@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.visitors.expression
 
-import quartz.compiler.semantics.consumers.FunctionDeclarationConsumer
+import quartz.compiler.generator.Generator
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.function.FunctionDeclaration
 import quartz.compiler.tree.function.expression.Identifier
@@ -53,9 +53,9 @@ object LambdaAnalyzer {
         return if (!nameTester(name)) name else lambdaName(nameTester, lambda, int + 1)
     }
 
-    fun uninline(nameTester: (String) -> Boolean, lambda: Lambda, consumer: FunctionDeclarationConsumer): Identifier {
+    fun uninline(nameTester: (String) -> Boolean, lambda: Lambda, generator: Generator): Identifier {
         val (identifier, functionDeclaration) = toIdentifier(nameTester, lambda)
-        consumer.eat(functionDeclaration)
+        generator.generate(functionDeclaration)
         return identifier
     }
 }

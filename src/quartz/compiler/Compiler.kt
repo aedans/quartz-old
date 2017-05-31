@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.CommonTokenStream
 import quartz.compiler.builder.toNode
 import quartz.compiler.errors.ErrorListener
 import quartz.compiler.errors.errorScope
+import quartz.compiler.generator.CGenerator
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
@@ -35,13 +36,13 @@ object Compiler {
                 builder: QuartzParser.ProgramContext.() -> Program = {
                     errorScope({ "ast builder" }) { toNode(library, parser) }
                 },
-                analyzer: Program.() -> Program = {
-                    errorScope({ "semantic analyzer" }) { analyze() }
+                analyzer: Program.(Generator) -> Unit = {
+                    errorScope({ "semantic analyzer" }) { analyze(it) }
                 },
-                generator: Program.(OutputStream) -> Unit = { outputStream ->
-                    errorScope({ "generator" }) { Generator.write(this, outputStream) }
+                generator: OutputStream.() -> Generator = {
+                    CGenerator(this)
                 }
     ) {
-        input.parser().builder().analyzer().generator(output)
+        input.parser().builder().analyzer(output.generator())
     }
 }
