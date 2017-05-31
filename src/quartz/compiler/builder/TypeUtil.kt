@@ -44,9 +44,9 @@ fun QuartzParser.PrimitiveTypeContext.toType(): Type {
 
 fun QuartzParser.FunctionTypeContext.toType(): FunctionType {
     return FunctionType(Function(
-            args.type().map { it.toType() },
+            args?.type()?.map { it.toType() } ?: emptyList(),
             returnType.toType(),
-            args.vararg != null
+            args?.vararg != null
     ))
 }
 

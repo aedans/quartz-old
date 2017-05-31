@@ -18,23 +18,11 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME ('<' genericArgumentList '>')? '(' fnArgumentList ')' (':' returnType=type)? atomicBlock
+    : 'fn' NAME ('<' genericArgumentList '>')? '(' nameTypeList? ')' (':' returnType=type)? atomicBlock
     ;
 
 externFunctionDeclaration
-    : 'extern' signatureDefinition
-    ;
-
-signatureDefinition
-    : 'fn' NAME '(' typeList ')' (':' returnType=type)?
-    ;
-
-fnArgument
-    : (NAME ':' type)
-    ;
-
-fnArgumentList
-    : (fnArgument ',')* fnArgument?
+    : 'extern' 'fn' NAME '(' typeList? ')' (':' returnType=type)?
     ;
 
 // TYPEALIAS DECLARATION
@@ -110,8 +98,8 @@ atomicExpression
     ;
 
 varDeclaration
-    : 'let' NAME ':' type
-    | 'let' NAME (':' type)? '=' expression
+    : 'let' nameType
+    | 'let' nameOptionalType '=' expression
     ;
 
 returnExpression
@@ -134,7 +122,7 @@ sizeof
     ;
 
 lambda
-    : ((fnArgumentList|nameList) '->' type?) atomicBlock
+    : ((nameTypeList?|nameList?) '->' type?) atomicBlock
     | atomicBlock
     ;
 
@@ -209,11 +197,11 @@ cast
     ;
 
 postfixCall
-    : '(' expressionList ')'
+    : '(' expressionList? ')'
     ;
 
 dotCall
-    : '.' identifier '(' expressionList ')'
+    : '.' identifier '(' expressionList? ')'
     ;
 
 // TYPES
@@ -251,28 +239,44 @@ primitiveType
     ;
 
 functionType
-    : '(' args=typeList ')' '->' returnType=type
+    : '(' args=typeList? ')' '->' returnType=type
     ;
 
 // LISTS
 
+nameTypeList
+    : (nameType ',')* nameType
+    ;
+
+nameOptionalTypeList
+    : (nameOptionalType ',')* nameOptionalType
+    ;
+
 expressionList
-    : (expression ',')* expression?
+    : (expression ',')* expression
     ;
 
 nameList
-    : (NAME ',')* NAME?
+    : (NAME ',')* NAME
     ;
 
 typeList
-    : (type ',')* (vararg='...'|type)?
+    : (type ',')* (vararg='...'|type)
     ;
 
 genericArgumentList
-    : (genericArgument ',')* genericArgument?
+    : (genericArgument ',')* genericArgument
     ;
 
 // UTIL
+
+nameType
+    : NAME ':' type
+    ;
+
+nameOptionalType
+    : NAME (':' type)?
+    ;
 
 genericArgument
     : NAME

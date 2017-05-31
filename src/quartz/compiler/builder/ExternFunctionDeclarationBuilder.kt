@@ -11,11 +11,11 @@ import quartz.compiler.tree.util.Function
 
 fun QuartzParser.ExternFunctionDeclarationContext.toNode(): ExternFunctionDeclaration {
     return ExternFunctionDeclaration(
-            signatureDefinition().NAME().text,
+            NAME().text,
             Function(
-                    signatureDefinition().typeList().type().map { it.toType() },
-                    signatureDefinition().returnType?.toType() ?: VoidType,
-                    signatureDefinition().typeList().vararg != null
+                    typeList()?.type()?.map { it.toType() } ?: emptyList(),
+                    returnType?.toType() ?: VoidType,
+                    typeList()?.vararg != null
             )
     )
 }

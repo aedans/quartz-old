@@ -20,10 +20,10 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
     return errorScope({ "function ${NAME()?.text}" }) {
         FunctionDeclaration(
                 NAME().text,
-                fnArgumentList().fnArgument().map { it.NAME().text },
+                nameTypeList()?.nameType()?.map { it.NAME().text } ?: emptyList(),
                 genericArgumentList()?.genericArgument()?.map { it.NAME().text } ?: emptyList(),
                 Function(
-                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        nameTypeList()?.nameType()?.map { it.type().toType() } ?: emptyList(),
                         returnType?.toType() ?: VoidType,
                         false
                 ),
@@ -174,10 +174,10 @@ fun QuartzParser.IdentifierContext.toNode(): Identifier {
 
 fun QuartzParser.LambdaContext.toNode(): Lambda {
     return when {
-        fnArgumentList() != null -> Lambda(
-                fnArgumentList().fnArgument().map { it.NAME().text },
+        nameTypeList() != null -> Lambda(
+                nameTypeList().nameType().map { it.NAME().text },
                 Function(
-                        fnArgumentList().fnArgument().map { it.type().toType() },
+                        nameTypeList().nameType().map { it.type().toType() },
                         type()?.toType(),
                         false
                 ),
@@ -216,11 +216,18 @@ fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
 }
 
 fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
-    return VariableDeclaration(
-            NAME().text,
-            expression()?.toNode(),
-            if (type() != null) type().toType() else null
-    )
+    return when {
+        nameType() != null -> VariableDeclaration(
+                nameType().NAME().text,
+                expression()?.toNode(),
+                nameType().type().toType()
+        )
+        else -> VariableDeclaration(
+                nameOptionalType().NAME().text,
+                expression().toNode(),
+                nameOptionalType()?.type()?.toType()
+        )
+    }
 }
 
 val QuartzParser.AssignmentOperationContext.ID: BinaryOperator.ID
