@@ -39,11 +39,11 @@ fun File.stdint() {
             }
             MIN_MAX.forEach { s ->
                 NORM_LEAST_FAST.forEach { itype ->
-                    externVal("INT_${itype.toUpperCase()}${i}_$s", "int${i}_t")
+                    externVal("INT_${itype.toUpperCase()}${i}_$s", "int${i}${itype}_t")
                 }
             }
             NORM_LEAST_FAST.forEach { itype ->
-                externVal("UINT_${itype.toUpperCase()}${i}_MAX", "uint${i}_t")
+                externVal("UINT_${itype.toUpperCase()}${i}_MAX", "uint${i}${itype}_t")
             }
         }
     }
