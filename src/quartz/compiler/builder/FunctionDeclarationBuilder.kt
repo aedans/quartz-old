@@ -21,7 +21,6 @@ fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
         FunctionDeclaration(
                 NAME().text,
                 nameTypeList()?.nameType()?.map { it.NAME().text } ?: emptyList(),
-                genericArgumentList()?.genericArgument()?.map { it.NAME().text } ?: emptyList(),
                 Function(
                         nameTypeList()?.nameType()?.map { it.type().toType() } ?: emptyList(),
                         returnType?.toType() ?: VoidType,
@@ -145,7 +144,6 @@ fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
         literal() != null -> literal().toNode()
         sizeof() != null -> sizeof().toNode()
         identifier() != null -> identifier().toNode()
-        lambda() != null -> lambda().toNode()
         else -> throw Exception("Unrecognized atomic expression $text")
     }
 }
@@ -169,30 +167,7 @@ fun QuartzParser.ReturnExpressionContext.toNode(): ReturnExpression {
 }
 
 fun QuartzParser.IdentifierContext.toNode(): Identifier {
-    return Identifier(NAME().text, typeList()?.type()?.map { it.toType() } ?: emptyList(), null)
-}
-
-fun QuartzParser.LambdaContext.toNode(): Lambda {
-    return when {
-        nameTypeList() != null -> Lambda(
-                nameTypeList().nameType().map { it.NAME().text },
-                Function(
-                        nameTypeList().nameType().map { it.type().toType() },
-                        type()?.toType(),
-                        false
-                ),
-                atomicBlock().toNode()
-        )
-        else -> Lambda(
-                nameList()?.NAME()?.map { it.text },
-                Function(
-                        null,
-                        type()?.toType(),
-                        false
-                ),
-                atomicBlock().toNode()
-        )
-    }
+    return Identifier(NAME().text, null)
 }
 
 fun QuartzParser.CastContext.toNode(expression: Expression): Cast {

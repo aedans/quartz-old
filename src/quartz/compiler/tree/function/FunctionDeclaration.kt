@@ -1,6 +1,6 @@
 package quartz.compiler.tree.function
 
-import quartz.compiler.tree.GlobalDeclaration
+import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.util.Function
 
 /**
@@ -8,19 +8,12 @@ import quartz.compiler.tree.util.Function
  */
 
 data class FunctionDeclaration(
-        val name: String,
+        override val name: String,
         val argNames: List<String>,
-        val generics: List<String>,
         val function: Function,
         val block: Block
-) : GlobalDeclaration {
-    val argsWithNames = when {
-        function.args == null -> null
-        argNames.size != function.args.size -> throw Exception("$argNames.size != ${function.args}.size")
-        else -> argNames.zip(function.args)
-    }
-
+) : Declaration {
     override fun toString(): String {
-        return "$name${generics.joinToString(prefix = "<", postfix = ">")}$function {\n${block.toString(1)}}"
+        return "$name$function {\n${block.toString(1)}}"
     }
 }

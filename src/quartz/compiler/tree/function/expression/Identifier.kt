@@ -7,14 +7,14 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class Identifier(val name: String, val genericArguments: List<Type>, override val type: Type?) : Expression {
+data class Identifier(val name: String, override val type: Type?) : Expression {
     override val isLValue = true
 
     override fun withType(type: Type?): Identifier {
-        return Identifier(name, genericArguments, type)
+        return Identifier(name, type)
     }
 
     override fun toString(): String {
-        return name + if (genericArguments.isEmpty()) "" else genericArguments.joinToString(prefix = "<", postfix = ">")
+        return name
     }
 }

@@ -1,0 +1,39 @@
+package quartz.compiler.semantics.analyzers.expression
+
+import quartz.compiler.semantics.analyzers.util.inferType
+import quartz.compiler.semantics.util.TypedExpressionAnalyzer
+import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.function.expression.Assignment
+import quartz.compiler.tree.util.Type
+import quartz.compiler.util.Visitor
+import quartz.compiler.util.partial
+
+/**
+ * Created by Aedan Smith.
+ */
+
+object AssignmentAnalyzer {
+    inline fun visitLValue(expressionVisitor: Visitor<Expression>, assignment: Assignment): Assignment {
+        return assignment.copy(lvalue = expressionVisitor(assignment.lvalue))
+    }
+
+    inline fun visitExpression(expressionVisitor: Visitor<Expression>, assignment: Assignment): Assignment {
+        return assignment.copy(expression = expressionVisitor(assignment.expression))
+    }
+
+    inline fun analyzeLValue(expressionAnalyzer: TypedExpressionAnalyzer, assignment: Assignment): Assignment {
+        return visitLValue(expressionAnalyzer.partial(null), assignment)
+    }
+
+    inline fun analyzeExpression(expressionAnalyzer: TypedExpressionAnalyzer, assignment: Assignment, expectedType: Type?): Assignment {
+        return visitExpression(expressionAnalyzer.partial(expectedType), assignment)
+    }
+
+    fun inferTypeFromLValue(assignment: Assignment): Assignment {
+        return assignment.inferType { it.lvalue.type }
+    }
+
+    fun inferTypeFromExpression(assignment: Assignment): Assignment {
+        return assignment.inferType { it.expression.type }
+    }
+}

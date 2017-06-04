@@ -18,7 +18,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME ('<' genericArgumentList '>')? '(' nameTypeList? ')' (':' returnType=type)? atomicBlock
+    : 'fn' NAME '(' nameTypeList? ')' (':' returnType=type)? atomicBlock
     ;
 
 externFunctionDeclaration
@@ -292,7 +292,7 @@ atomicBlock
     ;
 
 identifier
-    : NAME ('<' typeList '>')?
+    : NAME
     ;
 
 inlineC
