@@ -98,8 +98,8 @@ atomicExpression
     ;
 
 varDeclaration
-    : 'let' nameType
-    | 'let' nameOptionalType '=' expression
+    : 'val' nameType
+    | 'val' nameOptionalType '=' expression
     ;
 
 returnExpression

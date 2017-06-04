@@ -3,7 +3,7 @@ import std.c.stdio
 typealias string = *char
 
 fn main(): int {
-    let _greeter = greeter;
+    val _greeter = greeter;
     _greeter()().printf();
     return 0;
 }

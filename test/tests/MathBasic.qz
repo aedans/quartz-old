@@ -1,10 +1,10 @@
 import std.c.stdio
 
 fn main(): int {
-    let added = 1 + 2;
-    let subtracted = 2 - 1;
-    let multiplied = added * subtracted;
-    let divided = subtracted / added;
+    val added = 1 + 2;
+    val subtracted = 2 - 1;
+    val multiplied = added * subtracted;
+    val divided = subtracted / added;
     printf("7 = %d", added + subtracted + multiplied + divided);
     return 0;
 }

@@ -1,7 +1,7 @@
 import std.c.stdio
 
 fn main(): int {
-    let l = if _false() then "Failed" else helloWorld();
+    val l = if _false() then "Failed" else helloWorld();
     (if _true() then l else "Failed").printf();
     return 0;
 }
