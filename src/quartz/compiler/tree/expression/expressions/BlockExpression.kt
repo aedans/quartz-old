@@ -1,8 +1,8 @@
-package quartz.compiler.tree.function.expression
+package quartz.compiler.tree.expression.expressions
 
 import quartz.compiler.semantics.types.VoidType
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.expression.Block
+import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
 
 /**

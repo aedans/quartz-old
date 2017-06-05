@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.analyzers.expression
 
-import quartz.compiler.tree.function.expression.Sizeof
+import quartz.compiler.tree.expression.expressions.Sizeof
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 

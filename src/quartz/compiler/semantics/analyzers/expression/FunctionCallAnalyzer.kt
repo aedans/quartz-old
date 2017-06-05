@@ -3,8 +3,8 @@ package quartz.compiler.semantics.analyzers.expression
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.util.TypedExpressionAnalyzer
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.expression.FunctionCall
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.FunctionCall
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 import quartz.compiler.util.partial

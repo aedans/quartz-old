@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.contexts
 
 import quartz.compiler.tree.Declaration
-import quartz.compiler.tree.function.FunctionDeclaration
+import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.nullableZip
 

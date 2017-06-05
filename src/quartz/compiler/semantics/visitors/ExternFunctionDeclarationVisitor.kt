@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.visitors
 
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
+import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 

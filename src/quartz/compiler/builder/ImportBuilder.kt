@@ -2,7 +2,7 @@ package quartz.compiler.builder
 
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.library.Library
+import quartz.compiler.tree.Library
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

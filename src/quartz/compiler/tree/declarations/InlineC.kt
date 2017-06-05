@@ -1,7 +1,7 @@
-package quartz.compiler.tree.misc
+package quartz.compiler.tree.declarations
 
 import quartz.compiler.tree.Declaration
-import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
 
 /**

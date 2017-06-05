@@ -3,9 +3,9 @@ package quartz.compiler.semantics.analyzers.expression
 import quartz.compiler.semantics.analyzers.util.inferType
 import quartz.compiler.semantics.types.IntType
 import quartz.compiler.semantics.util.TypedExpressionAnalyzer
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.expression.BlockExpression
-import quartz.compiler.tree.function.expression.IfExpression
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.BlockExpression
+import quartz.compiler.tree.expression.expressions.IfExpression
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 import quartz.compiler.util.partial

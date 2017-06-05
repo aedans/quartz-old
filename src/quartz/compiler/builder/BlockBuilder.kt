@@ -1,7 +1,7 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.function.expression.BlockExpression
+import quartz.compiler.tree.expression.expressions.BlockExpression
 
 /**
  * Created by Aedan Smith.

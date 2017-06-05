@@ -14,13 +14,13 @@ import quartz.compiler.semantics.visitors.FunctionDeclarationVisitor
 import quartz.compiler.semantics.visitors.TypeVisitor
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.tree.misc.InlineC
-import quartz.compiler.tree.misc.TypealiasDeclaration
+import quartz.compiler.tree.expression.Block
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.tree.declarations.ExternFunctionDeclaration
+import quartz.compiler.tree.declarations.InlineC
+import quartz.compiler.tree.declarations.TypealiasDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.partial
 
@@ -81,66 +81,44 @@ private fun analyzeExpression(
             is InlineC -> it
             is NumberLiteral -> it
             is StringLiteral -> it
-            is Identifier -> {
-                it
-                        .let { IdentifierAnalyzer.analyzeType(::analyzeType, symbolContext, it) }
-            }
-            is Sizeof -> {
-                it
-                        .let { SizeofAnalyzer.visitSizeofType(typeAnalyzer, it) }
-            }
-            is Cast -> {
-                it
-                        .let { CastAnalyzer.visitType(typeAnalyzer, it) }
-                        .let { CastAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-            }
-            is ReturnExpression -> {
-                it
-                        .let { ReturnExpressionAnalyzer.analyzeExpression(expressionAnalyzer, it) }
-            }
-            is UnaryOperator -> {
-                it
-                        .let { UnaryOperatorAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-                        .let(UnaryOperatorAnalyzer::inferTypeFromExpression)
-            }
-            is BinaryOperator -> {
-                it
-                        .let { BinaryOperatorAnalyzer.analyzeExpr1(expressionAnalyzer, it, expectedType) }
-                        .let { BinaryOperatorAnalyzer.analyzeExpr2(expressionAnalyzer, it, expectedType) }
-                        .let(BinaryOperatorAnalyzer::inferTypeFromExpr1)
-                        .let(BinaryOperatorAnalyzer::inferTypeFromExpr2)
-            }
-            is Assignment -> {
-                it
-                        .let { AssignmentAnalyzer.analyzeLValue(expressionAnalyzer, it) }
-                        .let { AssignmentAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-                        .let(AssignmentAnalyzer::inferTypeFromLValue)
-                        .let(AssignmentAnalyzer::inferTypeFromExpression)
-            }
-            is FunctionCall -> {
-                it
-                        .let { FunctionCallAnalyzer.analyzeExpression(expressionAnalyzer, it) }
-                        .let { FunctionCallAnalyzer.analyzeArguments(expressionAnalyzer, it) }
-            }
-            is IfExpression -> {
-                it
-                        .let { IfExpressionAnalyzer.analyzeCondition(expressionAnalyzer, it) }
-                        .let { IfExpressionAnalyzer.analyzeIfTrue(expressionAnalyzer, it, expectedType) }
-                        .let { IfExpressionAnalyzer.analyzeIfFalse(expressionAnalyzer, it, expectedType) }
-                        .let(IfExpressionAnalyzer::inferTypeFromIfTrue)
-                        .let(IfExpressionAnalyzer::inferTypeFromIfFalse)
-            }
-            is VariableDeclaration -> {
-                it
-                        .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }
-                        .let { VariableDeclarationAnalyzer.analyzeExpression(expressionAnalyzer, it) }
-                        .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
-                        .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }
-            }
-            is BlockExpression -> {
-                it
-                        .let { BlockExpressionAnalyzer.analyzeExpressions(expressionAnalyzer, it) }
-            }
+            is Identifier -> it
+                    .let { IdentifierAnalyzer.analyzeType(::analyzeType, symbolContext, it) }
+            is Sizeof -> it
+                    .let { SizeofAnalyzer.visitSizeofType(typeAnalyzer, it) }
+            is Cast -> it
+                    .let { CastAnalyzer.visitType(typeAnalyzer, it) }
+                    .let { CastAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
+            is ReturnExpression -> it
+                    .let { ReturnExpressionAnalyzer.analyzeExpression(expressionAnalyzer, it) }
+            is UnaryOperator -> it
+                    .let { UnaryOperatorAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
+                    .let(UnaryOperatorAnalyzer::inferTypeFromExpression)
+            is BinaryOperator -> it
+                    .let { BinaryOperatorAnalyzer.analyzeExpr1(expressionAnalyzer, it, expectedType) }
+                    .let { BinaryOperatorAnalyzer.analyzeExpr2(expressionAnalyzer, it, expectedType) }
+                    .let(BinaryOperatorAnalyzer::inferTypeFromExpr1)
+                    .let(BinaryOperatorAnalyzer::inferTypeFromExpr2)
+            is Assignment -> it
+                    .let { AssignmentAnalyzer.analyzeLValue(expressionAnalyzer, it) }
+                    .let { AssignmentAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
+                    .let(AssignmentAnalyzer::inferTypeFromLValue)
+                    .let(AssignmentAnalyzer::inferTypeFromExpression)
+            is FunctionCall -> it
+                    .let { FunctionCallAnalyzer.analyzeExpression(expressionAnalyzer, it) }
+                    .let { FunctionCallAnalyzer.analyzeArguments(expressionAnalyzer, it) }
+            is IfExpression -> it
+                    .let { IfExpressionAnalyzer.analyzeCondition(expressionAnalyzer, it) }
+                    .let { IfExpressionAnalyzer.analyzeIfTrue(expressionAnalyzer, it, expectedType) }
+                    .let { IfExpressionAnalyzer.analyzeIfFalse(expressionAnalyzer, it, expectedType) }
+                    .let(IfExpressionAnalyzer::inferTypeFromIfTrue)
+                    .let(IfExpressionAnalyzer::inferTypeFromIfFalse)
+            is VariableDeclaration -> it
+                    .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }
+                    .let { VariableDeclarationAnalyzer.analyzeExpression(expressionAnalyzer, it) }
+                    .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
+                    .let { VariableDeclarationAnalyzer.visitVariableType(typeAnalyzer, it) }
+            is BlockExpression -> it
+                    .let { BlockExpressionAnalyzer.analyzeExpressions(expressionAnalyzer, it) }
             else -> throw Exception("Expected expression, found $it")
         }
     }

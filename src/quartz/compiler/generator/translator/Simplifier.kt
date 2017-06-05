@@ -1,11 +1,11 @@
 package quartz.compiler.generator.translator
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.misc.InlineC
+import quartz.compiler.tree.expression.Block
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.tree.declarations.InlineC
 
 /**
  * Created by Aedan Smith.

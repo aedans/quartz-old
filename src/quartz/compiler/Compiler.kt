@@ -12,8 +12,8 @@ import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.analyze
 import quartz.compiler.semantics.resolve
+import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.library.Library
 import java.io.InputStream
 import java.io.OutputStream
 

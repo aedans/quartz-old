@@ -1,8 +1,8 @@
 package quartz.compiler.semantics.util.visitors
 
 import quartz.compiler.errors.errorScope
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.FunctionDeclaration
+import quartz.compiler.tree.expression.Block
+import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.util.Visitor
 
 /**

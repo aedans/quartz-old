@@ -1,10 +1,10 @@
-package quartz.compiler.tree.function.expression
+package quartz.compiler.tree.expression.expressions
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.CharType
 import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.types.PointerType
-import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
 
 /**

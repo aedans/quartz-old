@@ -2,7 +2,7 @@ package quartz.compiler.builder
 
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.misc.TypealiasDeclaration
+import quartz.compiler.tree.declarations.TypealiasDeclaration
 
 /**
  * Created by Aedan Smith.

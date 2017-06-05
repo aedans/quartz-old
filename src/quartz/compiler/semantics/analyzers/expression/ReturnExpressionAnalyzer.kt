@@ -1,8 +1,8 @@
 package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.semantics.util.TypedExpressionAnalyzer
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.expression.ReturnExpression
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.ReturnExpression
 import quartz.compiler.util.Visitor
 import quartz.compiler.util.partial
 

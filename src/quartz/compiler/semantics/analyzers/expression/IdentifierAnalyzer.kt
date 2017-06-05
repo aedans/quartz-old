@@ -2,7 +2,7 @@ package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.contexts.SymbolContext
-import quartz.compiler.tree.function.expression.Identifier
+import quartz.compiler.tree.expression.expressions.Identifier
 import quartz.compiler.tree.util.Type
 
 /**

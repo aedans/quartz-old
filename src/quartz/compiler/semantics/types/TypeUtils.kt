@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.util.Function
 
 /**

@@ -2,9 +2,9 @@ package quartz.compiler.semantics.util.visitors
 
 import quartz.compiler.semantics.contexts.SymbolContext
 import quartz.compiler.semantics.util.withVar
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.expression.VariableDeclaration
+import quartz.compiler.tree.expression.Block
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.VariableDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 

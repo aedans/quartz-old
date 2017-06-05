@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.analyzers
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.tree.function.Expression
+import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
 
 /**

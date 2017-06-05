@@ -7,13 +7,13 @@ import quartz.compiler.semantics.types.*
 import quartz.compiler.semantics.util.without
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.tree.misc.InlineC
-import quartz.compiler.tree.misc.TypealiasDeclaration
+import quartz.compiler.tree.declarations.ExternFunctionDeclaration
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.declarations.InlineC
+import quartz.compiler.tree.declarations.TypealiasDeclaration
+import quartz.compiler.tree.expression.Block
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.prepend
@@ -22,7 +22,7 @@ import quartz.compiler.util.prepend
  * Created by Aedan Smith.
  */
 
-val noDeclarations = emptyList<Declaration>()
+private val noDeclarations = emptyList<Declaration>()
 
 fun Program.resolve(): Program {
     return ProgramContext(this).resolve()

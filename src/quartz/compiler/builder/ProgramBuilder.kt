@@ -4,8 +4,8 @@ import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.Declaration
+import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.library.Library
 import java.io.InputStream
 
 /**

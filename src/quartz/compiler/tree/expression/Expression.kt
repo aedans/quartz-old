@@ -1,4 +1,4 @@
-package quartz.compiler.tree.function
+package quartz.compiler.tree.expression
 
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.times

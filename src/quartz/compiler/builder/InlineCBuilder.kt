@@ -1,7 +1,7 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.misc.InlineC
+import quartz.compiler.tree.declarations.InlineC
 
 /**
  * Created by Aedan Smith.

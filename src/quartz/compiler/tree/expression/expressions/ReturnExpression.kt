@@ -1,7 +1,7 @@
-package quartz.compiler.tree.function.expression
+package quartz.compiler.tree.expression.expressions
 
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.UnitExpression
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.UnitExpression
 
 /**
  * Created by Aedan Smith.

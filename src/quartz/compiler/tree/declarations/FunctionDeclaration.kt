@@ -1,6 +1,7 @@
-package quartz.compiler.tree.function
+package quartz.compiler.tree.declarations
 
 import quartz.compiler.tree.Declaration
+import quartz.compiler.tree.expression.Block
 import quartz.compiler.tree.util.Function
 
 /**

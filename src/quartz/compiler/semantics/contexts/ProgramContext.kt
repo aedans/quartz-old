@@ -3,10 +3,10 @@ package quartz.compiler.semantics.contexts
 import quartz.compiler.semantics.types.type
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.misc.ExternFunctionDeclaration
-import quartz.compiler.tree.misc.InlineC
-import quartz.compiler.tree.misc.TypealiasDeclaration
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.declarations.ExternFunctionDeclaration
+import quartz.compiler.tree.declarations.InlineC
+import quartz.compiler.tree.declarations.TypealiasDeclaration
 import quartz.compiler.tree.util.Type
 import quartz.compiler.tree.util.toMap
 

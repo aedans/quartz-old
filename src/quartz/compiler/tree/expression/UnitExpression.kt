@@ -1,4 +1,4 @@
-package quartz.compiler.tree.function
+package quartz.compiler.tree.expression
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.VoidType
