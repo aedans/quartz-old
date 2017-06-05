@@ -1,8 +1,6 @@
-@file:Suppress("DEPRECATION") // TODO Fix
-
 package quartz.compiler
 
-import org.antlr.v4.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import quartz.compiler.builder.toNode
 import quartz.compiler.errors.ErrorListener
@@ -28,7 +26,7 @@ object Compiler {
                 parser: InputStream.() -> QuartzParser.ProgramContext = {
                     errorScope({ "parser" }) {
                         val errorListener = ErrorListener()
-                        val qlexer = QuartzLexer(ANTLRInputStream(this)).apply { addErrorListener(errorListener) }
+                        val qlexer = QuartzLexer(CharStreams.fromReader(reader())).apply { addErrorListener(errorListener) }
                         val qparser = QuartzParser(CommonTokenStream(qlexer)).apply { addErrorListener(errorListener) }
                         qparser.program()
                     }
