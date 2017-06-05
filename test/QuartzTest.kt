@@ -1,8 +1,7 @@
 import org.junit.Assert
 import org.junit.Test
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.OutputStream
+import java.io.FileOutputStream
 import java.io.PrintStream
 import java.nio.file.Files
 
@@ -25,14 +24,15 @@ fun libFile(path: String): File {
     return File("./kobaltBuild/libs/$path")
 }
 
-fun runCommand(command: String, out: OutputStream, err: String.() -> Unit) {
+fun File.write(string: String) {
+    PrintStream(FileOutputStream(this)).println(string)
+}
+
+fun runCommand(command: String, out: String.() -> Unit, err: String.() -> Unit) {
     Runtime.getRuntime().exec(command).also {
-        PrintStream(out).println(it.inputStream.reader().readText())
+        it.inputStream.reader().readText().out()
         it.errorStream.reader().readText().err()
-    }.also { it.waitFor() }.also {
-        while (it.inputStream.available() > 0 || it.errorStream.available() > 0) {
-        }
-    }
+    }.also { it.waitFor() }
 }
 
 fun String.withFile(name: String = "temp.txt", function: File.() -> Unit) {
@@ -64,7 +64,7 @@ object QuartzCompilerRunner : CompilerRunner {
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
                 "java -jar $qc ${input.absolutePath} ${output.absolutePath}",
-                file.subFile("debug/qz$count.txt").outputStream(),
+                { file.subFile("debug/qz$count.txt").write(this) },
                 err
         )
         count++
@@ -79,7 +79,7 @@ object GccCompilerRunner : CompilerRunner {
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
                 "gcc ${input.absolutePath} -o ${output.absolutePath} $flags",
-                file.subFile("debug/gcc$count.txt").outputStream(),
+                { file.subFile("debug/gcc$count.txt").write(this) },
                 err
         )
         count++
@@ -95,7 +95,7 @@ object NvccCompilerRunner : CompilerRunner {
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
                 "nvcc ${input.absolutePath} -o ${output.absolutePath} $flags",
-                file.subFile("debug/nvcc$count.txt").outputStream(),
+                { file.subFile("debug/nvcc$count.txt").write(this) },
                 err
         )
         count++
@@ -121,13 +121,11 @@ infix fun Boolean.compile(string: String) {
 
 infix fun String.isOutputOf(string: String) {
     withoutErrors compile string
-    val outputStream = ByteArrayOutputStream()
     runCommand(
             testFile("temp/temp.exe").absolutePath,
-            outputStream,
+            { Assert.assertEquals(this@isOutputOf.trim(), this.trim()) },
             assertNoErrors
     )
-    Assert.assertEquals(outputStream.toString().trim(), this.trim())
 }
 
 class QuartzTest {
