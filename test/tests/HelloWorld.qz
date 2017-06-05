@@ -1,6 +1,0 @@
-import std.c.stdio
-
-fn main(): int {
-    "Hello, World!".printf();
-    return 0;
-}

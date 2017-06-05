@@ -1,9 +1,0 @@
-import std.c.stdio
-
-typealias string = *const char
-
-fn main(): int {
-    val helloWorld: string = "Hello, World!";
-    printf(helloWorld);
-    return 0;
-}

@@ -1,15 +1,14 @@
 - Code maintenance
-    - Rewrite ProgramContext
     - Rewrite generator
     - Migrate simplifier to visitor
     - Optimize parser
     - Add more unit tests
-    - Add error tests
 - Bug fixes
     - Fix greatest common type
     - Implement immutability
 - Features
     - Add structs
+    - Add templates
     - Add template inferencer
     - Add extension functions
     - Add true, false, unit

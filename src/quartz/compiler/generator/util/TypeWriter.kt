@@ -28,6 +28,9 @@ fun ProgramOutputStream.type(type: Type?) {
         is VoidType -> {
             name("void")
         }
+        is InlineCType -> {
+            name(type.string)
+        }
         else -> throw Exception("Expected type, found $type")
     }
 }

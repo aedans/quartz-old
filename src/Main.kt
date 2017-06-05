@@ -1,4 +1,3 @@
-
 import quartz.compiler.Compiler
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
