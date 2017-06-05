@@ -27,9 +27,7 @@ fun libFile(path: String): File {
 
 fun runCommand(command: String, out: OutputStream, err: String.() -> Unit) {
     Runtime.getRuntime().exec(command).also {
-        Thread {
-            PrintStream(out).println(it.inputStream.reader().readText())
-        }.start()
+        PrintStream(out).println(it.inputStream.reader().readText())
         it.errorStream.reader().readText().err()
     }.also { it.waitFor() }.also {
         while (it.inputStream.available() > 0 || it.errorStream.available() > 0) {
