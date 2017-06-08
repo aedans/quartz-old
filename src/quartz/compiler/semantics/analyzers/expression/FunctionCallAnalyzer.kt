@@ -2,7 +2,7 @@ package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.util.TypedExpressionAnalyzer
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.FunctionCall
 import quartz.compiler.tree.util.Type
@@ -22,11 +22,11 @@ object FunctionCallAnalyzer {
         return functionCall.copy(args = functionCall.args.map(expressionVisitor))
     }
 
-    inline fun analyzeExpression(expressionAnalyzer: TypedExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
         return visitExpression(expressionAnalyzer.partial(null), functionCall)
     }
 
-    inline fun analyzeArguments(expressionAnalyzer: TypedExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
+    inline fun analyzeArguments(expressionAnalyzer: ExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
         val function = (functionCall.expression.type as? FunctionType)?.function
                 ?: throw QuartzException("Could not call ${functionCall.expression.type}")
         function.args!!

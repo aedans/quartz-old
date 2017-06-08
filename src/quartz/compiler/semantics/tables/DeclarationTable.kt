@@ -1,4 +1,4 @@
-package quartz.compiler.semantics.contexts
+package quartz.compiler.semantics.tables
 
 import quartz.compiler.tree.Declaration
 
@@ -6,6 +6,6 @@ import quartz.compiler.tree.Declaration
  * Created by Aedan Smith.
  */
 
-interface DeclarationContext {
+interface DeclarationTable {
     fun getDeclaration(name: String): Declaration?
 }

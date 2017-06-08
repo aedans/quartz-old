@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.semantics.analyzers.util.inferType
-import quartz.compiler.semantics.util.TypedExpressionAnalyzer
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.Assignment
 import quartz.compiler.tree.util.Type
@@ -21,11 +21,11 @@ object AssignmentAnalyzer {
         return assignment.copy(expression = expressionVisitor(assignment.expression))
     }
 
-    inline fun analyzeLValue(expressionAnalyzer: TypedExpressionAnalyzer, assignment: Assignment): Assignment {
+    inline fun analyzeLValue(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment): Assignment {
         return visitLValue(expressionAnalyzer.partial(null), assignment)
     }
 
-    inline fun analyzeExpression(expressionAnalyzer: TypedExpressionAnalyzer, assignment: Assignment, expectedType: Type?): Assignment {
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment, expectedType: Type?): Assignment {
         return visitExpression(expressionAnalyzer.partial(expectedType), assignment)
     }
 

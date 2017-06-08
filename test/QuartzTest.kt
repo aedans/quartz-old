@@ -80,7 +80,11 @@ object GccCompilerRunner : CompilerRunner {
         runCommand(
                 "gcc ${input.absolutePath} -o ${output.absolutePath} $flags",
                 { file.subFile("debug/gcc$count.txt").write(this) },
-                err
+                {
+                    if (isNotEmpty())
+                        input.copyTo(file.subFile("debug/gcc$count.c"))
+                    err()
+                }
         )
         count++
     }
@@ -288,6 +292,20 @@ fn main1() {
 fn main2() {
     main1();
     main2();
+}
+"""
+
+    @Test
+    fun depth() = withoutErrors compile
+"""
+fn main(): int {
+    return _0();
+}
+
+${(0..99).map { "fn _$it(): int { return _${it + 1}(); }" }.joinToString(prefix = "", postfix = "", separator = "\n")}
+
+fn _100(): int {
+    return 0;
 }
 """
 

@@ -9,7 +9,6 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.analyze
-import quartz.compiler.semantics.resolve
 import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
 import java.io.InputStream
@@ -35,7 +34,7 @@ object Compiler {
                     errorScope({ "ast builder" }) { toNode(library, parser) }
                 },
                 analyzer: Program.() -> Program = {
-                    errorScope({ "semantic analyzer" }) { resolve().analyze() }
+                    errorScope({ "semantic analyzer" }) { analyze() }
                 },
                 generator: Program.(OutputStream) -> Unit = {
                     Generator.generate(it, this)

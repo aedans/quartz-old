@@ -1,4 +1,4 @@
-package quartz.compiler.semantics.contexts
+package quartz.compiler.semantics.tables
 
 import quartz.compiler.tree.util.Type
 
@@ -6,6 +6,6 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-interface TypeContext {
+interface TypeTable {
     fun getType(name: String): Type?
 }

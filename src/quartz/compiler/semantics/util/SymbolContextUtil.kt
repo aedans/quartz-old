@@ -1,14 +1,14 @@
 package quartz.compiler.semantics.util
 
-import quartz.compiler.semantics.contexts.SymbolContext
+import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-fun SymbolContext.withVar(varName: String, type: Type): SymbolContext {
-    return object : SymbolContext by this {
+fun SymbolTable.withVar(varName: String, type: Type): SymbolTable {
+    return object : SymbolTable by this {
         override fun getVar(name: String): Type? {
             return if (varName == name) type else this@withVar.getVar(name)
         }

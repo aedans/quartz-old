@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.analyzers.expression
 
-import quartz.compiler.semantics.util.TypedExpressionAnalyzer
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.ReturnExpression
 import quartz.compiler.util.Visitor
@@ -15,7 +15,7 @@ object ReturnExpressionAnalyzer {
         return returnExpression.copy(expression = expressionVisitor(returnExpression.expression))
     }
 
-    inline fun analyzeExpression(expressionAnalyzer: TypedExpressionAnalyzer, returnExpression: ReturnExpression): ReturnExpression {
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, returnExpression: ReturnExpression): ReturnExpression {
         return visitExpression(expressionAnalyzer.partial(null), returnExpression)
     }
 }

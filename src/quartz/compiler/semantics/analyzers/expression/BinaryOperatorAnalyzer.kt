@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.semantics.analyzers.util.inferType
-import quartz.compiler.semantics.util.TypedExpressionAnalyzer
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.BinaryOperator
 import quartz.compiler.tree.util.Type
@@ -21,11 +21,11 @@ object BinaryOperatorAnalyzer {
         return binaryOperator.copy(expr2 = expressionVisitor(binaryOperator.expr2))
     }
 
-    inline fun analyzeExpr1(expressionAnalyzer: TypedExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
+    inline fun analyzeExpr1(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
         return visitExpr1(expressionAnalyzer.partial(expectedType), binaryOperator)
     }
 
-    inline fun analyzeExpr2(expressionAnalyzer: TypedExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
+    inline fun analyzeExpr2(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
         return visitExpr2(expressionAnalyzer.partial(expectedType), binaryOperator)
     }
 

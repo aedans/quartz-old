@@ -2,7 +2,7 @@ package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.semantics.analyzers.util.inferType
 import quartz.compiler.semantics.types.IntType
-import quartz.compiler.semantics.util.TypedExpressionAnalyzer
+import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.BlockExpression
 import quartz.compiler.tree.expression.expressions.IfExpression
@@ -27,16 +27,16 @@ object IfExpressionAnalyzer {
         return ifExpression.copy(ifFalse = expressionVisitor(ifExpression.ifFalse) as BlockExpression)
     }
 
-    inline fun analyzeCondition(expressionAnalyzer: TypedExpressionAnalyzer, ifExpression: IfExpression): IfExpression {
+    inline fun analyzeCondition(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression): IfExpression {
         // TODO BoolType
         return visitCondition(expressionAnalyzer.partial(IntType), ifExpression)
     }
 
-    inline fun analyzeIfTrue(expressionAnalyzer: TypedExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
+    inline fun analyzeIfTrue(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
         return visitIfTrue(expressionAnalyzer.partial(expectedType), ifExpression)
     }
 
-    inline fun analyzeIfFalse(expressionAnalyzer: TypedExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
+    inline fun analyzeIfFalse(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
         return visitIfFalse(expressionAnalyzer.partial(expectedType), ifExpression)
     }
 
