@@ -133,6 +133,11 @@ infix fun String.isOutputOf(string: String) {
 }
 
 class QuartzTest {
+    init {
+        testFile("debug").deleteRecursively()
+        testFile("temp").deleteRecursively()
+    }
+
     @Test
     fun empty() = withErrors compile
 """
