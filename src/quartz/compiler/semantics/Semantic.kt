@@ -61,7 +61,7 @@ private fun Analyzer.analyzeFunctionDeclarationImpl(
     val symbolTable = FunctionDeclarationSymbolTable(table, declaration)
     return declaration
             .let { FunctionDeclarationVisitor.visitTypes(analyzeType.bind(this).partial(symbolTable), it) }
-            .let { FunctionDeclarationAnalyzer.block(analyzeExpression.bind(this).partial(symbolTable), it) }
+            .let { FunctionDeclarationAnalyzer.analyzeBlock(analyzeExpression.bind(this).partial(symbolTable), it) }
 }
 
 private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type?, expression: Expression): Expression {
@@ -79,8 +79,6 @@ private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Typ
             is Cast -> it
                     .let { CastAnalyzer.visitType(typeVisitor, it) }
                     .let { CastAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-            is ReturnExpression -> it
-                    .let { ReturnExpressionAnalyzer.analyzeExpression(expressionAnalyzer, it) }
             is UnaryOperator -> it
                     .let { UnaryOperatorAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
                     .let(UnaryOperatorAnalyzer::inferTypeFromExpression)
@@ -130,7 +128,7 @@ fun Analyzer.analyzeTypeImpl(
                     is ConstType -> TypeVisitor.visitConstType(typeAnalyzer, it)
                     is PointerType -> TypeVisitor.visitPointerType(typeAnalyzer, it)
                     is FunctionType -> TypeVisitor.visitFunctionType(typeAnalyzer, it)
-                    is NamedType -> TypeVisitor.visitNamedType(table::getType, it)
+                    is NamedType -> TypeVisitor.visitNamedType(table::getType, typeAnalyzer, it)
                     else -> throw Exception("Expected type, found $it")
                 }
             }

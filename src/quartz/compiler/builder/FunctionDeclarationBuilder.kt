@@ -36,7 +36,6 @@ fun QuartzParser.ExpressionContext.toExpr(): Expression {
     return errorScope({ "expression $text" }) {
         when {
             varDeclaration() != null -> varDeclaration().toExpr()
-            returnExpression() != null -> returnExpression().toExpr()
             ifExpression() != null -> ifExpression().toExpr()
             assignmentExpression() != null -> assignmentExpression().toExpr()
             else -> throw Exception("Unrecognized expression $text")
@@ -161,10 +160,6 @@ fun QuartzParser.LiteralContext.toExpr(): Expression {
 
 fun QuartzParser.SizeofContext.toExpr(): Sizeof {
     return Sizeof(type().toType())
-}
-
-fun QuartzParser.ReturnExpressionContext.toExpr(): ReturnExpression {
-    return ReturnExpression(expression().toExpr())
 }
 
 fun QuartzParser.IdentifierContext.toExpr(): Identifier {

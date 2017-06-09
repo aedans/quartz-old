@@ -1,5 +1,6 @@
 package quartz.compiler.semantics.analyzers
 
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.expression.expressions.Block
@@ -9,11 +10,11 @@ import quartz.compiler.tree.expression.expressions.Block
  */
 
 object FunctionDeclarationAnalyzer {
-    inline fun block(
+    inline fun analyzeBlock(
             expressionAnalyzer: ExpressionAnalyzer,
             functionDeclaration: FunctionDeclaration
     ): FunctionDeclaration {
-        return functionDeclaration.copy(block = expressionAnalyzer(
-                functionDeclaration.function.returnType, functionDeclaration.block) as Block)
+        val expected = if (functionDeclaration.function.returnType == VoidType) null else functionDeclaration.function.returnType
+        return functionDeclaration.copy(block = expressionAnalyzer(expected, functionDeclaration.block) as Block)
     }
 }

@@ -45,7 +45,6 @@ packageList
 
 expression
     : varDeclaration
-    | returnExpression
     | ifExpression
     | assignmentExpression
     ;
@@ -100,10 +99,6 @@ atomicExpression
 varDeclaration
     : 'val' nameType
     | 'val' nameOptionalType '=' expression
-    ;
-
-returnExpression
-    : 'return' expression
     ;
 
 ifExpression

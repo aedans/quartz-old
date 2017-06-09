@@ -20,8 +20,7 @@ object BlockAnalyzer {
     ): Block {
         return when (block.size) {
             0 -> Block(emptyList())
-            // TODO expected type
-            1 -> Block(listOf(analyzer(table, null, block.first())))
+            1 -> Block(listOf(analyzer(table, expectedType, block.first())))
             else -> {
                 val analyzed = analyzer(table, null, block.first())
                 val newTable = if (analyzed is VariableDeclaration) table.withVar(analyzed.name, analyzed.variableType!!) else table

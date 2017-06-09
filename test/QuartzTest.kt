@@ -147,15 +147,15 @@ class QuartzTest {
     fun simpleMain() = withoutErrors compile
 """
 fn main(): int {
-    return 0;
+    0;
 }
 """
 
-//    @Test
+    @Test
     fun invalidCast() = withErrors compile
 """
 fn main(): int {
-    return 0 as *const char;
+    0 as *const char;
 }
 """
 
@@ -164,15 +164,15 @@ fn main(): int {
 """
 fn main(): int {
     val hello: *const char = 0;
-    return 0;
+    0;
 }
 """
 
-//    @Test
+    @Test
     fun invalidReturn() = withErrors compile
 """
 fn main(): int {
-    return "Hello, world!";
+    "Hello, world!";
 }
 """
 
@@ -190,7 +190,7 @@ fn main(): int {
     val h: ulong = 0;
     val i: float = 0;
     val j: double = 0;
-    return 0.0;
+    0.0;
 }
 """
 
@@ -202,7 +202,7 @@ typealias i8 = %%int%%
 fn main(): i8 {
     val a = 0 as i8;
     val b: i8 = 0;
-    return a + b;
+    a + b;
 }
 """
 
@@ -238,7 +238,7 @@ fn main(): int {
     h ^= 0;
     i <<= 0;
     j >>= 0;
-    return 0;
+    0;
 }
 """
 
@@ -250,22 +250,20 @@ typealias i = int
 fn main(): int {
     val a = 0 as i;
     val b: i = 0;
-    return a + b;
+    a + b;
 }
 """
 
-//    @Test
+    @Test
     fun typealias2() = withoutErrors compile
 """
 typealias i0 = int
-typealias i1 = i0
-typealias i2 = i1
-typealias i3 = i2
+${(1..100).map { "typealias i$it = i${it - 1}" }.joinToString(prefix = "", postfix = "", separator = "\n")}
 
 fn main(): int {
-    val a = 0 as i0 as i1 as i2 as i3;
-    val b: i3 = 0;
-    return a + b;
+    val a = 0 ${(0..99).map { "as i$it" }.joinToString(prefix = "", postfix = "", separator = " ")};
+    val b: i100 = 0;
+    a + b;
 }
 """
 
@@ -273,21 +271,21 @@ fn main(): int {
     fun recursive1() = withoutErrors compile
 """
 fn main(): int {
-    return 0.identity();
+    0.identity();
 }
 
 fn identity(i: int): int {
-    return i.identity();
+    i.identity();
 }
 """
 
-//    @Test
+    @Test
     fun recursive2() = withoutErrors compile
 """
 fn main(): int {
     main1();
     main2();
-    return 0;
+    0;
 }
 
 fn main1() {
@@ -305,13 +303,13 @@ fn main2() {
     fun depth() = withoutErrors compile
 """
 fn main(): int {
-    return _0();
+    _0();
 }
 
-${(0..99).map { "fn _$it(): int { return _${it + 1}(); }" }.joinToString(prefix = "", postfix = "", separator = "\n")}
+${(0..99).map { "fn _$it(): int { _${it + 1}(); }" }.joinToString(prefix = "", postfix = "", separator = "\n")}
 
 fn _100(): int {
-    return 0;
+    0;
 }
 """
 
@@ -321,7 +319,7 @@ fn _100(): int {
 import std
 
 fn main(): int {
-    return 0;
+    0;
 }
 """
 
@@ -332,7 +330,7 @@ import std.c.stdio
 
 fn main(): int {
     printf("Hello, world!");
-    return 0;
+    0;
 }
 """
 
@@ -346,15 +344,15 @@ typealias string = *char
 fn main(): int {
     val _greeter = greeter;
     _greeter()().printf();
-    return 0;
+    0;
 }
 
 fn greeter(): () -> string {
-    return helloWorld;
+    helloWorld;
 }
 
 fn helloWorld(): string {
-    return "Hello, world!";
+    "Hello, world!";
 }
 """
 
@@ -366,19 +364,19 @@ import std.c.stdio
 fn main(): int {
     val l = if _false() then "Failed" else helloWorld();
     (if _true() then l else "Failed").printf();
-    return 0;
+    0;
 }
 
 fn helloWorld(): *char {
-    return "Hello, world!";
+    "Hello, world!";
 }
 
 fn _true(): int {
-    return 1;
+    1;
 }
 
 fn _false(): int {
-    return 0;
+    0;
 }
 """
 
@@ -390,7 +388,7 @@ import std.c.stdio
 fn main(): int {
     val counter = countTo;
     counter(10, print);
-    return 0;
+    0;
 }
 
 fn countTo(i: int, printer: (int) -> void) {
@@ -411,7 +409,7 @@ import std.c.stdio
 
 fn main(): int {
     10.fibBelow();
-    return 0;
+    0;
 }
 
 fn fibBelow(i: int) {
@@ -420,7 +418,7 @@ fn fibBelow(i: int) {
 }
 
 fn fib(i: int): int {
-    return if i == 0 then 0
+    if i == 0 then 0
         else if i == 1 then 1
         else (i - 1).fib() + (i - 2).fib();
 }
@@ -437,7 +435,7 @@ import std.c.stdio
 
 fn main(): int {
     15.fizzBuzz();
-    return 0;
+    0;
 }
 
 fn fizzBuzz(i: int) {

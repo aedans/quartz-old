@@ -1,6 +1,7 @@
 package quartz.compiler.generator.translator
 
 import quartz.compiler.errors.QuartzException
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.expression.Expression
@@ -12,7 +13,9 @@ import quartz.compiler.util.withLast
  */
 
 fun FunctionDeclaration.simplify(): FunctionDeclaration {
-    return copy(block = block.simplify((0..Integer.MAX_VALUE).iterator()))
+    return copy(block = (
+                if (function.returnType == VoidType) block else Block(block.withLast(ReturnExpression(block.last())))
+            ).simplify((0..Integer.MAX_VALUE).iterator()))
 }
 
 fun Block.simplify(intIterator: IntIterator): Block {

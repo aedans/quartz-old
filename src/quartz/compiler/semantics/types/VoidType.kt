@@ -10,7 +10,7 @@ object VoidType : Type("void") {
     override val string = "void"
 
     override fun isSupertype(type: Type): Boolean {
-        return true
+        return type == this
     }
 
     override fun toString(): String {

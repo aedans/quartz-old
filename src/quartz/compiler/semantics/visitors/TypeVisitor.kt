@@ -26,9 +26,9 @@ object TypeVisitor {
         return FunctionType(visitFunctionTypes(typeVisitor, type.function))
     }
 
-    inline fun visitNamedType(typeProvider: (String) -> Type?, type: NamedType): Type {
-        return typeProvider(type.string)
-                ?: throw QuartzException("Unknown type ${type.string}")
+    inline fun visitNamedType(typeProvider: (String) -> Type?, typeVisitor: Visitor<Type>, type: NamedType): Type {
+        return typeVisitor(typeProvider(type.string)
+                ?: throw QuartzException("Unknown type ${type.string}"))
     }
 
     inline fun visitFunctionTypes(typeVisitor: Visitor<Type>, function: Function): Function {
