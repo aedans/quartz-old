@@ -12,14 +12,6 @@ class Block(expressionList: List<Expression>): Expression, List<Expression> by e
     override val type = if (isEmpty()) VoidType else last().type
     override val isLValue = false
 
-    operator fun plus(expression: Expression): Block {
-        return Block(this + expression)
-    }
-
-    fun setLast(expression: Expression): Block {
-        return Block(dropLast(1) + expression)
-    }
-
     override fun withType(type: Type?): Block {
         return if (isEmpty()) this else Block(dropLast(1) + last().withType(type))
     }

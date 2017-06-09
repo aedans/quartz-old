@@ -5,6 +5,7 @@ import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.util.withLast
 
 /**
  * Created by Aedan Smith.
@@ -59,8 +60,8 @@ fun IfExpression.simplify(newExpressions: MutableList<Expression>, intIterator: 
         newExpressions.add(VariableDeclaration(name, null, type))
         newExpressions.add(IfExpression(
                 condition.simplify(newExpressions, intIterator),
-                ifTrue.setLast(Assignment(identifier, ifTrue.last(), type)).simplify(intIterator),
-                ifFalse.setLast(Assignment(identifier, ifFalse.last(), type)).simplify(intIterator),
+                Block(ifTrue.withLast(Assignment(identifier, ifTrue.last(), type))).simplify(intIterator),
+                Block(ifFalse.withLast(Assignment(identifier, ifFalse.last(), type))).simplify(intIterator),
                 type
         ))
         return identifier
