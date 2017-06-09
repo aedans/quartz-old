@@ -109,7 +109,7 @@ private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Typ
                     .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
                     .let { VariableDeclarationAnalyzer.visitVariableType(typeVisitor, it) }
             is Block -> it
-                    .let { BlockAnalyzer.analyzeBlock(analyzeExpression.bind(this), table, it) }
+                    .let { BlockAnalyzer.analyzeExpressions(analyzeExpression.bind(this), table, expectedType, it) }
             else -> throw Exception("Expected expression, found $it")
         }
     }

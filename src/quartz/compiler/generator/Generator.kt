@@ -182,7 +182,7 @@ object Generator {
 
     fun ProgramOutputStream.block(block: Block) {
         braces {
-            block.expressionList.forEach {
+            block.forEach {
                 newline()
                 expression(it)
                 string(";")

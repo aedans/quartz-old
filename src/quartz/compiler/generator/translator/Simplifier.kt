@@ -16,7 +16,7 @@ fun FunctionDeclaration.simplify(): FunctionDeclaration {
 
 fun Block.simplify(intIterator: IntIterator): Block {
     val newExpressions = mutableListOf<Expression>()
-    expressionList.forEach { newExpressions.add(it.simplify(newExpressions, intIterator, true)) }
+    forEach { newExpressions.add(it.simplify(newExpressions, intIterator, true)) }
     return Block(newExpressions)
 }
 
@@ -59,8 +59,8 @@ fun IfExpression.simplify(newExpressions: MutableList<Expression>, intIterator: 
         newExpressions.add(VariableDeclaration(name, null, type))
         newExpressions.add(IfExpression(
                 condition.simplify(newExpressions, intIterator),
-                ifTrue.setLast(Assignment(identifier, ifTrue.expressionList.last(), type)).simplify(intIterator),
-                ifFalse.setLast(Assignment(identifier, ifFalse.expressionList.last(), type)).simplify(intIterator),
+                ifTrue.setLast(Assignment(identifier, ifTrue.last(), type)).simplify(intIterator),
+                ifFalse.setLast(Assignment(identifier, ifFalse.last(), type)).simplify(intIterator),
                 type
         ))
         return identifier

@@ -6,30 +6,27 @@ import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.Block
 import quartz.compiler.tree.expression.expressions.VariableDeclaration
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.Visitor
 
 /**
  * Created by Aedan Smith.
  */
 
 object BlockAnalyzer {
-    inline fun visitExpressions(expressionVisitor: Visitor<Expression>, block: Block): Block {
-        return Block(block.expressionList.map(expressionVisitor))
-    }
-
-    inline fun analyzeBlock(
+    fun analyzeExpressions(
             analyzer: ((SymbolTable, Type?, Expression) -> Expression),
-            symbolTable: SymbolTable,
-            block: Block
+            table: SymbolTable,
+            expectedType: Type?,
+            block: List<Expression>
     ): Block {
-        val mutableExpressionList = mutableListOf<Expression>()
-        var mutableSymbolContext = symbolTable
-        block.expressionList.forEach {
-            val expression = analyzer(mutableSymbolContext, null, it)
-            mutableExpressionList.add(expression)
-            if (expression is VariableDeclaration)
-                mutableSymbolContext = mutableSymbolContext.withVar(expression.name, expression.variableType!!)
+        return when (block.size) {
+            0 -> Block(emptyList())
+            // TODO expected type
+            1 -> Block(listOf(analyzer(table, null, block.first())))
+            else -> {
+                val analyzed = analyzer(table, null, block.first())
+                val newTable = if (analyzed is VariableDeclaration) table.withVar(analyzed.name, analyzed.variableType!!) else table
+                Block(listOf(analyzed) + analyzeExpressions(analyzer, newTable, expectedType, block.drop(1)))
+            }
         }
-        return Block(mutableExpressionList)
     }
 }

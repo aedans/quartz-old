@@ -8,36 +8,33 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-class Block(val expressionList: List<Expression>): Expression {
-    override val type = if (expressionList.isEmpty()) VoidType else expressionList.last().type
+class Block(expressionList: List<Expression>): Expression, List<Expression> by expressionList {
+    override val type = if (isEmpty()) VoidType else last().type
     override val isLValue = false
 
     operator fun plus(expression: Expression): Block {
-        return Block(expressionList + expression)
+        return Block(this + expression)
     }
 
     fun setLast(expression: Expression): Block {
-        return Block(expressionList.dropLast(1) + expression)
+        return Block(dropLast(1) + expression)
     }
 
     override fun withType(type: Type?): Block {
-        return if (expressionList.isEmpty())
-            this
-        else
-            Block(expressionList.dropLast(1) + expressionList.last().withType(type))
+        return if (isEmpty()) this else Block(dropLast(1) + last().withType(type))
     }
 
     override fun toString(): String {
         return "{ ${when {
-            expressionList.isEmpty() -> ""
-            expressionList.size == 1 -> expressionList.last().toString()
-            else -> "... ${expressionList.last()}"
+            isEmpty() -> ""
+            size == 1 -> last().toString()
+            else -> "... ${last()}"
         }} }"
     }
 
     override fun toString(i: Int): String {
         var s = ""
-        expressionList.forEach { s += "${it.toString(i)}\n" }
+        forEach { s += "${it.toString(i)}\n" }
         return s
     }
 }
