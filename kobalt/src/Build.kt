@@ -18,7 +18,7 @@ val QuartzParserGen = project {
     }
 
     sourceDirectories {
-        path("parsergen")
+        path("parsergen/src")
     }
 
     assemble {
@@ -72,7 +72,7 @@ val QuartzLibGen = project(Quartz) {
     version = "0.1"
 
     sourceDirectories {
-        path("stdgen")
+        path("stdgen/src")
     }
 
     assemble {

@@ -1,16 +1,10 @@
+*.iml
 /.idea
 /.kobalt
-/include
-/lib
 /std
 /kobaltBuild
 /src/quartz/compiler/parser
-/Quartz.iml
-/QuartzLibGen.iml
-/QuartzParserGen.iml
-/QuartzTestRunner.iml
 /*.qz
 /*.c
 /*.exe
 /*.out
-/src/org
