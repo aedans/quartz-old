@@ -7,9 +7,10 @@ import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.project
 import java.io.File
 
-val QuartzParserGen = project {
-    name = "QuartzParserGen"
+val ParserGen = project {
+    name = "ParserGen"
     group = "com.aedans"
+    directory = "parsergen"
     artifactId = name
     version = "0.1"
 
@@ -18,7 +19,7 @@ val QuartzParserGen = project {
     }
 
     sourceDirectories {
-        path("parsergen/src")
+        path("src")
     }
 
     assemble {
@@ -31,15 +32,17 @@ val QuartzParserGen = project {
     }
 }
 
-val Quartz = project(QuartzParserGen) {
+val Quartz = project(ParserGen) {
     name = "Quartz"
     group = "com.aedans"
     artifactId = name
     version = "0.1"
 
     dependencies {
-        compile("org.antlr:antlr4:jar:")
         compile("org.jetbrains.kotlin:kotlin-reflect:")
+        compile("org.jetbrains.kotlin:kotlin-stdlib:")
+        compile("org.antlr:antlr4:jar:")
+        compile("com.xenomachina:kotlin-argparser:")
     }
 
     dependenciesTest {
@@ -65,14 +68,15 @@ val Quartz = project(QuartzParserGen) {
     }
 }
 
-val QuartzLibGen = project(Quartz) {
-    name = "QuartzLibGen"
+val StdGen = project(Quartz) {
+    name = "StdGen"
     group = "com.aedans"
+    directory = "stdgen"
     artifactId = name
     version = "0.1"
 
     sourceDirectories {
-        path("stdgen/src")
+        path("src")
     }
 
     assemble {
@@ -92,11 +96,11 @@ val QuartzLibGen = project(Quartz) {
 )
 fun postAssemble(project: Project?): TaskResult {
     when (project) {
-        QuartzParserGen -> {
-            runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar")
+        ParserGen -> {
+            runCommand("java -jar ./${project.directory}/${project.buildDirectory}/libs/${project.name}-${project.version}.jar")
         }
-        QuartzLibGen -> {
-            runCommand("java -jar ./${project.buildDirectory}/libs/${project.name}-${project.version}.jar .")
+        StdGen -> {
+            runCommand("java -jar ./${project.directory}/${project.buildDirectory}/libs/${project.name}-${project.version}.jar .")
         }
     }
     return TaskResult(testResult = TestResult(true))
@@ -105,7 +109,7 @@ fun postAssemble(project: Project?): TaskResult {
 @Task(name = "clean-gen", alwaysRunAfter = arrayOf("clean"), description = "Cleans all Quartz files")
 fun cleanGen(project: Project?): TaskResult {
     when (project) {
-        QuartzParserGen -> {
+        ParserGen -> {
             File("./src/quartz/compiler/parser").deleteRecursively()
         }
         Quartz -> {
@@ -114,7 +118,7 @@ fun cleanGen(project: Project?): TaskResult {
             File("./test/out").deleteRecursively()
             File("./test/src").deleteRecursively()
         }
-        QuartzLibGen -> {
+        StdGen -> {
             File("./std").deleteRecursively()
         }
     }
