@@ -3,7 +3,6 @@ package quartz.compiler.semantics
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
-import quartz.compiler.tree.expression.Block
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
 
@@ -14,7 +13,6 @@ import quartz.compiler.tree.util.Type
 data class Analyzer(
         val analyzeFunctionDeclaration: Analyzer.(SymbolTable, FunctionDeclaration) -> FunctionDeclaration,
         val analyzeExternFunctionDeclaration: Analyzer.(SymbolTable, ExternFunctionDeclaration) -> ExternFunctionDeclaration,
-        val analyzeBlock: Analyzer.(SymbolTable, Block) -> Block,
         val analyzeExpression: Analyzer.(SymbolTable, Type?, Expression) -> Expression,
         val analyzeType: Analyzer.(SymbolTable, Type) -> Type
 ) {

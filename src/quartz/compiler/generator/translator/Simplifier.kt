@@ -1,11 +1,10 @@
 package quartz.compiler.generator.translator
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.tree.expression.Block
-import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.declarations.FunctionDeclaration
-import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.declarations.InlineC
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.*
 
 /**
  * Created by Aedan Smith.
@@ -15,10 +14,10 @@ fun FunctionDeclaration.simplify(): FunctionDeclaration {
     return copy(block = block.simplify((0..Integer.MAX_VALUE).iterator()))
 }
 
-fun Block.simplify(intIterator: IntIterator): BlockExpression {
+fun Block.simplify(intIterator: IntIterator): Block {
     val newExpressions = mutableListOf<Expression>()
     expressionList.forEach { newExpressions.add(it.simplify(newExpressions, intIterator, true)) }
-    return BlockExpression(newExpressions)
+    return Block(newExpressions)
 }
 
 fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: IntIterator, isTop: Boolean = false): Expression {
@@ -47,7 +46,7 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
         is VariableDeclaration -> copy(
                 expression = expression?.simplify(newExpressions, intIterator)
         )
-        is BlockExpression -> simplify(intIterator)
+        is Block -> simplify(intIterator)
         else -> throw QuartzException("Expected expression, found $this")
     }
 }

@@ -4,7 +4,7 @@ import quartz.compiler.semantics.analyzers.util.inferType
 import quartz.compiler.semantics.types.IntType
 import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.expression.expressions.BlockExpression
+import quartz.compiler.tree.expression.expressions.Block
 import quartz.compiler.tree.expression.expressions.IfExpression
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
@@ -20,11 +20,11 @@ object IfExpressionAnalyzer {
     }
 
     inline fun visitIfTrue(expressionVisitor: Visitor<Expression>, ifExpression: IfExpression): IfExpression {
-        return ifExpression.copy(ifTrue = expressionVisitor(ifExpression.ifTrue) as BlockExpression)
+        return ifExpression.copy(ifTrue = expressionVisitor(ifExpression.ifTrue) as Block)
     }
 
     inline fun visitIfFalse(expressionVisitor: Visitor<Expression>, ifExpression: IfExpression): IfExpression {
-        return ifExpression.copy(ifFalse = expressionVisitor(ifExpression.ifFalse) as BlockExpression)
+        return ifExpression.copy(ifFalse = expressionVisitor(ifExpression.ifFalse) as Block)
     }
 
     inline fun analyzeCondition(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression): IfExpression {

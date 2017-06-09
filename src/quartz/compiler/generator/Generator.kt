@@ -10,13 +10,12 @@ import quartz.compiler.semantics.types.NamedType
 import quartz.compiler.semantics.types.type
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.expression.Block
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.declarations.FunctionDeclaration
-import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
+import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.declarations.TypealiasDeclaration
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.nullableZip
 import java.io.OutputStream
@@ -101,7 +100,7 @@ object Generator {
                 is FunctionCall -> functionCall(expression)
                 is IfExpression -> ifExpression(expression)
                 is VariableDeclaration -> varDeclaration(expression)
-                is BlockExpression -> block(expression)
+                is Block -> block(expression)
                 else -> throw QuartzException("Unrecognized expression $expression")
             }
         }

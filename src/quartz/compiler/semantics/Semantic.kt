@@ -1,14 +1,13 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.errors.QuartzException
+import quartz.compiler.semantics.analyzers.FunctionDeclarationAnalyzer
 import quartz.compiler.semantics.analyzers.expression.*
-import quartz.compiler.semantics.analyzers.verifyType
+import quartz.compiler.semantics.analyzers.util.verifyType
 import quartz.compiler.semantics.tables.FunctionDeclarationSymbolTable
 import quartz.compiler.semantics.tables.ProgramSymbolTable
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.types.*
-import quartz.compiler.semantics.util.visitors.blockVisitor
-import quartz.compiler.semantics.util.visitors.functionDeclarationVisitor
 import quartz.compiler.semantics.visitors.ExternFunctionDeclarationVisitor
 import quartz.compiler.semantics.visitors.FunctionDeclarationVisitor
 import quartz.compiler.semantics.visitors.TypeVisitor
@@ -17,7 +16,6 @@ import quartz.compiler.tree.Program
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
-import quartz.compiler.tree.expression.Block
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Type
@@ -31,7 +29,6 @@ import quartz.compiler.util.partial
 private val analyzerImpl = Analyzer(
         Analyzer::analyzeFunctionDeclarationImpl,
         Analyzer::analyzeExternFunctionDeclarationImpl,
-        Analyzer::analyzeBlockImpl,
         Analyzer::analyzeExpressionImpl,
         Analyzer::analyzeTypeImpl
 )
@@ -64,15 +61,7 @@ private fun Analyzer.analyzeFunctionDeclarationImpl(
     val symbolTable = FunctionDeclarationSymbolTable(table, declaration)
     return declaration
             .let { FunctionDeclarationVisitor.visitTypes(analyzeType.bind(this).partial(symbolTable), it) }
-            .let(analyzeBlock.bind(this).partial(symbolTable).functionDeclarationVisitor())
-}
-
-private fun Analyzer.analyzeBlockImpl(
-        table: SymbolTable,
-        block: Block
-): Block {
-    return block
-            .let(analyzeExpression.bind(this).blockVisitor(table))
+            .let { FunctionDeclarationAnalyzer.block(analyzeExpression.bind(this).partial(symbolTable), it) }
 }
 
 private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type?, expression: Expression): Expression {
@@ -119,8 +108,8 @@ private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Typ
                     .let { VariableDeclarationAnalyzer.analyzeExpression(expressionAnalyzer, it) }
                     .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
                     .let { VariableDeclarationAnalyzer.visitVariableType(typeVisitor, it) }
-            is BlockExpression -> it
-                    .let { BlockExpressionAnalyzer.analyzeExpressions(expressionAnalyzer, it) }
+            is Block -> it
+                    .let { BlockAnalyzer.analyzeBlock(analyzeExpression.bind(this), table, it) }
             else -> throw Exception("Expected expression, found $it")
         }
     }

@@ -9,8 +9,8 @@ import quartz.compiler.tree.util.Type
 
 data class IfExpression(
         val condition: Expression,
-        val ifTrue: BlockExpression,
-        val ifFalse: BlockExpression,
+        val ifTrue: Block,
+        val ifFalse: Block,
         override val type: Type?
 ) : Expression {
     override val isLValue = false

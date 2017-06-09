@@ -44,7 +44,7 @@ fun QuartzParser.ExpressionContext.toNode(): Expression {
 }
 
 fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
-    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: BlockExpression(emptyList()), null)
+    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: Block(emptyList()), null)
 }
 
 fun QuartzParser.AssignmentExpressionContext.toNode(): Expression {

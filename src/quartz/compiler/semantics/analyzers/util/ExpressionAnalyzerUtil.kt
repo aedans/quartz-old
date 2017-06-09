@@ -1,4 +1,4 @@
-package quartz.compiler.semantics.analyzers
+package quartz.compiler.semantics.analyzers.util
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.tree.expression.Expression
