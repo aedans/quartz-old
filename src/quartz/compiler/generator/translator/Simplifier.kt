@@ -1,30 +1,27 @@
 package quartz.compiler.generator.translator
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.tree.Program
-import quartz.compiler.tree.function.Block
-import quartz.compiler.tree.function.Expression
-import quartz.compiler.tree.function.FunctionDeclaration
-import quartz.compiler.tree.function.expression.*
-import quartz.compiler.tree.misc.InlineC
+import quartz.compiler.semantics.types.VoidType
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.declarations.InlineC
+import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.util.withLast
 
 /**
  * Created by Aedan Smith.
  */
 
-// TODO migrate to visitor
-fun Program.simplify(): Program {
-    return copy(functionDeclarations = functionDeclarations.mapValues { it.value.simplify() })
-}
-
 fun FunctionDeclaration.simplify(): FunctionDeclaration {
-    return copy(block = block.simplify((0..Integer.MAX_VALUE).iterator()))
+    return copy(block = (
+                if (function.returnType == VoidType) block else Block(block.withLast(ReturnExpression(block.last())))
+            ).simplify((0..Integer.MAX_VALUE).iterator()))
 }
 
-fun Block.simplify(intIterator: IntIterator): BlockExpression {
+fun Block.simplify(intIterator: IntIterator): Block {
     val newExpressions = mutableListOf<Expression>()
-    expressionList.forEach { newExpressions.add(it.simplify(newExpressions, intIterator, true)) }
-    return BlockExpression(newExpressions)
+    forEach { newExpressions.add(it.simplify(newExpressions, intIterator, true)) }
+    return Block(newExpressions)
 }
 
 fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: IntIterator, isTop: Boolean = false): Expression {
@@ -49,16 +46,11 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
                 expression = expression.simplify(newExpressions, intIterator),
                 args = args.map { it.simplify(newExpressions, intIterator) }
         )
-        is MemberAccess -> copy(expression = expression.simplify(newExpressions, intIterator))
         is IfExpression -> simplify(newExpressions, intIterator, isTop)
-        is WhileExpression -> copy(
-                condition = condition.simplify(newExpressions, intIterator),
-                block = block.simplify(intIterator)
-        )
         is VariableDeclaration -> copy(
                 expression = expression?.simplify(newExpressions, intIterator)
         )
-        is BlockExpression -> simplify(intIterator)
+        is Block -> simplify(intIterator)
         else -> throw QuartzException("Expected expression, found $this")
     }
 }
@@ -67,12 +59,12 @@ fun IfExpression.simplify(newExpressions: MutableList<Expression>, intIterator: 
     return if (isTop) this else {
         type!!
         val name = "__${intIterator.next()}"
-        val identifier = Identifier(name, emptyList(), type)
+        val identifier = Identifier(name, type)
         newExpressions.add(VariableDeclaration(name, null, type))
         newExpressions.add(IfExpression(
                 condition.simplify(newExpressions, intIterator),
-                ifTrue.setLast(Assignment(identifier, ifTrue.expressionList.last(), type)).simplify(intIterator),
-                ifFalse.setLast(Assignment(identifier, ifFalse.expressionList.last(), type)).simplify(intIterator),
+                Block(ifTrue.withLast(Assignment(identifier, ifTrue.last(), type))).simplify(intIterator),
+                Block(ifFalse.withLast(Assignment(identifier, ifFalse.last(), type))).simplify(intIterator),
                 type
         ))
         return identifier

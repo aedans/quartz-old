@@ -1,18 +1,16 @@
-@file:Suppress("DEPRECATION") // TODO Fix
-
 package quartz.compiler
 
-import org.antlr.v4.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import quartz.compiler.builder.toNode
+import quartz.compiler.builder.toExpr
 import quartz.compiler.errors.ErrorListener
 import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.analyze
+import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.library.Library
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -27,19 +25,19 @@ object Compiler {
                 parser: InputStream.() -> QuartzParser.ProgramContext = {
                     errorScope({ "parser" }) {
                         val errorListener = ErrorListener()
-                        val qlexer = QuartzLexer(ANTLRInputStream(this)).apply { addErrorListener(errorListener) }
+                        val qlexer = QuartzLexer(CharStreams.fromReader(reader())).apply { addErrorListener(errorListener) }
                         val qparser = QuartzParser(CommonTokenStream(qlexer)).apply { addErrorListener(errorListener) }
                         qparser.program()
                     }
                 },
                 builder: QuartzParser.ProgramContext.() -> Program = {
-                    errorScope({ "ast builder" }) { toNode(library, parser) }
+                    errorScope({ "ast builder" }) { toExpr(library, parser) }
                 },
                 analyzer: Program.() -> Program = {
                     errorScope({ "semantic analyzer" }) { analyze() }
                 },
-                generator: Program.(OutputStream) -> Unit = { outputStream ->
-                    errorScope({ "generator" }) { Generator.write(this, outputStream) }
+                generator: Program.(OutputStream) -> Unit = {
+                    Generator.generate(it, this)
                 }
     ) {
         input.parser().builder().analyzer().generator(output)

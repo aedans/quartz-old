@@ -15,10 +15,6 @@ fun ProgramOutputStream.type(type: Type?) {
             type(type.type)
             string("*")
         }
-        is StructType -> {
-            name("struct")
-            name(type.string)
-        }
         is FunctionType -> {
             name("__${type.descriptiveString}_t ")
         }
@@ -31,6 +27,9 @@ fun ProgramOutputStream.type(type: Type?) {
         }
         is VoidType -> {
             name("void")
+        }
+        is InlineCType -> {
+            name(type.string)
         }
         else -> throw Exception("Expected type, found $type")
     }

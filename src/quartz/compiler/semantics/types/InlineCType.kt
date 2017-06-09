@@ -7,7 +7,7 @@ import quartz.compiler.tree.util.Type
  */
 
 data class InlineCType(override val string: String) : Type(string) {
-    override fun isInstance(type: Type): Boolean {
+    override fun isSupertype(type: Type): Boolean {
         return true
     }
 

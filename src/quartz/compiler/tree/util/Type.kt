@@ -7,7 +7,7 @@ package quartz.compiler.tree.util
 abstract class Type(val descriptiveString: String) {
     abstract val string: String
 
-    abstract fun isInstance(type: Type): Boolean
+    abstract fun isSupertype(type: Type): Boolean
 
     open fun isEqualTo(type: Type): Boolean {
         return type.string == this.string
@@ -18,11 +18,11 @@ abstract class Type(val descriptiveString: String) {
     }
 
     companion object {
-        fun Type?.isInstance(type: Type?): Boolean {
+        fun Type?.isSupertype(type: Type?): Boolean {
             return when {
                 this == null && type == null -> true
                 this == null || type == null -> false
-                else -> this.isInstance(type)
+                else -> this.isSupertype(type)
             }
         }
     }

@@ -9,8 +9,8 @@ import quartz.compiler.tree.util.Type
 object VoidType : Type("void") {
     override val string = "void"
 
-    override fun isInstance(type: Type): Boolean {
-        return true
+    override fun isSupertype(type: Type): Boolean {
+        return type == this
     }
 
     override fun toString(): String {

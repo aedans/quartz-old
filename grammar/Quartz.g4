@@ -11,7 +11,6 @@ program
 declaration
     : functionDeclaration
     | externFunctionDeclaration
-    | structDeclaration
     | typealiasDeclaration
     | inlineC
     ;
@@ -19,33 +18,11 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME ('<' genericArgumentList '>')? '(' fnArgumentList ')' (':' returnType=type)? atomicBlock
+    : 'fn' NAME '(' nameTypeList? ')' (':' returnType=type)? atomicBlock
     ;
 
 externFunctionDeclaration
-    : 'extern' signatureDefinition
-    ;
-
-signatureDefinition
-    : 'fn' NAME '(' typeList ')' (':' returnType=type)?
-    ;
-
-fnArgument
-    : (NAME ':' type)
-    ;
-
-fnArgumentList
-    : (fnArgument ',')* fnArgument?
-    ;
-
-// STRUCT DECLARATION
-
-structDeclaration
-    : extern='extern'? 'struct' NAME ('<' genericArgumentList '>')? '{' structMember* '}'
-    ;
-
-structMember
-    : NAME ':' type
+    : 'extern' 'fn' NAME '(' typeList? ')' (':' returnType=type)?
     ;
 
 // TYPEALIAS DECLARATION
@@ -61,14 +38,13 @@ importDeclaration
     ;
 
 packageList
-    : (NAME '.')* NAME
+    : NAME ('.' packageList)?
     ;
 
 // EXPRESSIONS
 
 expression
     : varDeclaration
-    | returnExpression
     | ifExpression
     | assignmentExpression
     ;
@@ -121,12 +97,8 @@ atomicExpression
     ;
 
 varDeclaration
-    : 'let' NAME ':' type
-    | 'let' NAME (':' type)? '=' expression
-    ;
-
-returnExpression
-    : 'return' expression
+    : 'val' nameType
+    | 'val' nameOptionalType '=' expression
     ;
 
 ifExpression
@@ -145,7 +117,7 @@ sizeof
     ;
 
 lambda
-    : ((fnArgumentList|nameList) '->' type?) atomicBlock
+    : ((nameTypeList?|nameList?) '->' type?) atomicBlock
     | atomicBlock
     ;
 
@@ -212,7 +184,6 @@ prefixOperation
 postfixOperation
     : cast
     | postfixCall
-    | memberAccess
     | dotCall
     ;
 
@@ -221,15 +192,11 @@ cast
     ;
 
 postfixCall
-    : '(' expressionList ')'
-    ;
-
-memberAccess
-    : '.' NAME
+    : '(' expressionList? ')'
     ;
 
 dotCall
-    : '.' identifier '(' expressionList ')'
+    : '.' identifier '(' expressionList? ')'
     ;
 
 // TYPES
@@ -267,28 +234,45 @@ primitiveType
     ;
 
 functionType
-    : '(' args=typeList ')' '->' returnType=type
+    : '(' args=typeList? ')' '->' returnType=type
     ;
 
 // LISTS
 
+nameTypeList
+    : nameType (',' nameTypeList)?
+    ;
+
+nameOptionalTypeList
+    : nameOptionalType (',' nameOptionalTypeList)?
+    ;
+
 expressionList
-    : (expression ',')* expression?
+    : expression (',' expressionList)?
     ;
 
 nameList
-    : (NAME ',')* NAME?
+    : NAME (',' nameList)?
     ;
 
 typeList
-    : (type ',')* (vararg='...'|type)?
+    : type (',' typeList)?
+    | vararg='...'
     ;
 
 genericArgumentList
-    : (genericArgument ',')* genericArgument?
+    : genericArgument (',' genericArgumentList)?
     ;
 
 // UTIL
+
+nameType
+    : NAME ':' type
+    ;
+
+nameOptionalType
+    : NAME (':' type)?
+    ;
 
 genericArgument
     : NAME
@@ -304,7 +288,7 @@ atomicBlock
     ;
 
 identifier
-    : NAME ('<' typeList '>')?
+    : NAME
     ;
 
 inlineC

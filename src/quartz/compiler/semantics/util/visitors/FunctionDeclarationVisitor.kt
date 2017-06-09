@@ -1,31 +1,19 @@
 package quartz.compiler.semantics.util.visitors
 
 import quartz.compiler.errors.errorScope
-import quartz.compiler.semantics.contexts.BlockContext
-import quartz.compiler.semantics.contexts.FunctionDeclarationContext
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.expression.expressions.Block
 import quartz.compiler.util.Visitor
 
 /**
  * Created by Aedan Smith.
  */
 
-fun Visitor<BlockContext>.functionDeclarationVisitor(): Visitor<FunctionDeclarationContext> {
+fun Visitor<Block>.functionDeclarationVisitor(): Visitor<FunctionDeclaration> {
     val blockVisitor = this
-    return { functionDeclarationContext ->
-        errorScope({ "function ${functionDeclarationContext.functionDeclaration.name}"}) {
-            val (newBlock, newFunctionDeclarationContext) = blockVisitor(BlockContext(
-                    functionDeclarationContext.functionDeclaration.block,
-                    functionDeclarationContext,
-                    emptyMap()
-            ))
-
-            newFunctionDeclarationContext as FunctionDeclarationContext
-
-            newFunctionDeclarationContext.copy(
-                    functionDeclaration = functionDeclarationContext.functionDeclaration.copy(
-                            block = newBlock
-                    )
-            )
+    return { functionDeclaration ->
+        errorScope({ "function ${functionDeclaration.name}"}) {
+            functionDeclaration.copy(block = blockVisitor(functionDeclaration.block))
         }
     }
 }

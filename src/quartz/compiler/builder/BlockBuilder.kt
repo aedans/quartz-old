@@ -1,19 +1,19 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.function.expression.BlockExpression
+import quartz.compiler.tree.expression.expressions.Block
 
 /**
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.BlockContext.toNode(): BlockExpression {
+fun QuartzParser.BlockContext.toExpr(): Block {
     return when {
-        expression() != null -> BlockExpression(listOf(expression().toNode()))
-        else -> atomicBlock().toNode()
+        expression() != null -> Block(listOf(expression().toExpr()))
+        else -> atomicBlock().toExpr()
     }
 }
 
-fun QuartzParser.AtomicBlockContext.toNode(): BlockExpression {
-    return BlockExpression(expression().map { it.toNode() })
+fun QuartzParser.AtomicBlockContext.toExpr(): Block {
+    return Block(expression().map { it.toExpr() })
 }
