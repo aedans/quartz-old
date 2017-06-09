@@ -7,6 +7,6 @@ import quartz.compiler.tree.declarations.InlineC
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.InlineCContext.toNode(): InlineC {
+fun QuartzParser.InlineCContext.toExpr(): InlineC {
     return InlineC(text.substring(2, text.length-2))
 }

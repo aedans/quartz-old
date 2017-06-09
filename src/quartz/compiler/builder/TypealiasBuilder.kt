@@ -8,7 +8,7 @@ import quartz.compiler.tree.declarations.TypealiasDeclaration
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.TypealiasDeclarationContext.toNode(): TypealiasDeclaration {
+fun QuartzParser.TypealiasDeclarationContext.toExpr(): TypealiasDeclaration {
     return errorScope({ "typealias ${NAME().text}" }) {
         TypealiasDeclaration(NAME().text, type().toType())
     }

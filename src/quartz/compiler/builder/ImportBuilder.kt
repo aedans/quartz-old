@@ -15,7 +15,7 @@ fun QuartzParser.ImportDeclarationContext.import(
         library: Library.LibraryPackage,
         parser: (InputStream) -> QuartzParser.ProgramContext
 ): List<QuartzParser.DeclarationContext> {
-    val path = packageList().NAME().map { it.text }.toMutableList()
+    val path = packageList().toList()
     return errorScope({ path.joinToString(".") }) {
         val file = library.get(path)
         val programs = parse(file, parser)

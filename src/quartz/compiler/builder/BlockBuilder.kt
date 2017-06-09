@@ -7,13 +7,13 @@ import quartz.compiler.tree.expression.expressions.Block
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.BlockContext.toNode(): Block {
+fun QuartzParser.BlockContext.toExpr(): Block {
     return when {
-        expression() != null -> Block(listOf(expression().toNode()))
-        else -> atomicBlock().toNode()
+        expression() != null -> Block(listOf(expression().toExpr()))
+        else -> atomicBlock().toExpr()
     }
 }
 
-fun QuartzParser.AtomicBlockContext.toNode(): Block {
-    return Block(expression().map { it.toNode() })
+fun QuartzParser.AtomicBlockContext.toExpr(): Block {
+    return Block(expression().map { it.toExpr() })
 }

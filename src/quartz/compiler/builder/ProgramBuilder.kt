@@ -12,7 +12,7 @@ import java.io.InputStream
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.ProgramContext.toNode(library: Library.LibraryPackage, parser: (InputStream) -> QuartzParser.ProgramContext): Program {
+fun QuartzParser.ProgramContext.toExpr(library: Library.LibraryPackage, parser: (InputStream) -> QuartzParser.ProgramContext): Program {
     val nodes: List<QuartzParser.DeclarationContext> = declaration() +
             importDeclaration().map { it.import(library, parser) }.flatten() +
             errorScope({ "_default.qz" }) {
@@ -25,10 +25,10 @@ private fun List<QuartzParser.DeclarationContext>.program(): Program {
     var program = emptyList<Declaration>()
     forEach {
         when {
-            it.inlineC() != null -> program += it.inlineC().toNode()
-            it.functionDeclaration() != null -> program += it.functionDeclaration().toNode()
-            it.externFunctionDeclaration() != null -> program += it.externFunctionDeclaration().toNode()
-            it.typealiasDeclaration() != null -> program += it.typealiasDeclaration().toNode()
+            it.inlineC() != null -> program += it.inlineC().toExpr()
+            it.functionDeclaration() != null -> program += it.functionDeclaration().toExpr()
+            it.externFunctionDeclaration() != null -> program += it.externFunctionDeclaration().toExpr()
+            it.typealiasDeclaration() != null -> program += it.typealiasDeclaration().toExpr()
             else -> throw QuartzException("Error translating ${it.text}")
         }
     }

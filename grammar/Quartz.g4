@@ -38,7 +38,7 @@ importDeclaration
     ;
 
 packageList
-    : (NAME '.')* NAME
+    : NAME ('.' packageList)?
     ;
 
 // EXPRESSIONS
@@ -245,27 +245,28 @@ functionType
 // LISTS
 
 nameTypeList
-    : (nameType ',')* nameType
+    : nameType (',' nameTypeList)?
     ;
 
 nameOptionalTypeList
-    : (nameOptionalType ',')* nameOptionalType
+    : nameOptionalType (',' nameOptionalTypeList)?
     ;
 
 expressionList
-    : (expression ',')* expression
+    : expression (',' expressionList)?
     ;
 
 nameList
-    : (NAME ',')* NAME
+    : NAME (',' nameList)?
     ;
 
 typeList
-    : (type ',')* (vararg='...'|type)
+    : type (',' typeList)?
+    | vararg='...'
     ;
 
 genericArgumentList
-    : (genericArgument ',')* genericArgument
+    : genericArgument (',' genericArgumentList)?
     ;
 
 // UTIL

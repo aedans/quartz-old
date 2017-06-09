@@ -2,7 +2,7 @@ package quartz.compiler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import quartz.compiler.builder.toNode
+import quartz.compiler.builder.toExpr
 import quartz.compiler.errors.ErrorListener
 import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.Generator
@@ -31,7 +31,7 @@ object Compiler {
                     }
                 },
                 builder: QuartzParser.ProgramContext.() -> Program = {
-                    errorScope({ "ast builder" }) { toNode(library, parser) }
+                    errorScope({ "ast builder" }) { toExpr(library, parser) }
                 },
                 analyzer: Program.() -> Program = {
                     errorScope({ "semantic analyzer" }) { analyze() }

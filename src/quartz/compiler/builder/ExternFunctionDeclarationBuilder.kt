@@ -9,13 +9,13 @@ import quartz.compiler.tree.util.Function
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.ExternFunctionDeclarationContext.toNode(): ExternFunctionDeclaration {
+fun QuartzParser.ExternFunctionDeclarationContext.toExpr(): ExternFunctionDeclaration {
     return ExternFunctionDeclaration(
             NAME().text,
             Function(
-                    typeList()?.type()?.map { it.toType() } ?: emptyList(),
+                    typeList().toList(),
                     returnType?.toType() ?: VoidType,
-                    typeList()?.vararg != null
+                    typeList().isVararg()
             )
     )
 }

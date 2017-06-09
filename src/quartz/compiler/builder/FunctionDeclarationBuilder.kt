@@ -7,8 +7,8 @@ import quartz.compiler.semantics.types.CharType
 import quartz.compiler.semantics.types.DoubleType
 import quartz.compiler.semantics.types.IntType
 import quartz.compiler.semantics.types.VoidType
-import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Function
 
@@ -16,47 +16,48 @@ import quartz.compiler.tree.util.Function
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.FunctionDeclarationContext.toNode(): FunctionDeclaration {
+fun QuartzParser.FunctionDeclarationContext.toExpr(): FunctionDeclaration {
     return errorScope({ "function ${NAME()?.text}" }) {
+        val nameTypeList = nameTypeList().toList()
         FunctionDeclaration(
                 NAME().text,
-                nameTypeList()?.nameType()?.map { it.NAME().text } ?: emptyList(),
+                nameTypeList.map { it.first },
                 Function(
-                        nameTypeList()?.nameType()?.map { it.type().toType() } ?: emptyList(),
+                        nameTypeList.map { it.second },
                         returnType?.toType() ?: VoidType,
                         false
                 ),
-                atomicBlock().toNode()
+                atomicBlock().toExpr()
         )
     }
 }
 
-fun QuartzParser.ExpressionContext.toNode(): Expression {
+fun QuartzParser.ExpressionContext.toExpr(): Expression {
     return errorScope({ "expression $text" }) {
         when {
-            varDeclaration() != null -> varDeclaration().toNode()
-            returnExpression() != null -> returnExpression().toNode()
-            ifExpression() != null -> ifExpression().toNode()
-            assignmentExpression() != null -> assignmentExpression().toNode()
+            varDeclaration() != null -> varDeclaration().toExpr()
+            returnExpression() != null -> returnExpression().toExpr()
+            ifExpression() != null -> ifExpression().toExpr()
+            assignmentExpression() != null -> assignmentExpression().toExpr()
             else -> throw Exception("Unrecognized expression $text")
         }
     }
 }
 
-fun QuartzParser.IfExpressionContext.toNode(): IfExpression {
-    return IfExpression(test.toNode(), ifTrue.toNode(), ifFalse?.toNode() ?: Block(emptyList()), null)
+fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
+    return IfExpression(test.toExpr(), ifTrue.toExpr(), ifFalse?.toExpr() ?: Block(emptyList()), null)
 }
 
-fun QuartzParser.AssignmentExpressionContext.toNode(): Expression {
+fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
     return when {
-        assignmentExpression() == null -> disjunction().toNode()
+        assignmentExpression() == null -> disjunction().toExpr()
         else -> when (assignmentOperation().text) {
-            "=" -> Assignment(disjunction().toNode(), assignmentExpression().toNode(), null)
+            "=" -> Assignment(disjunction().toExpr(), assignmentExpression().toExpr(), null)
             else -> Assignment(
-                    disjunction().toNode(),
+                    disjunction().toExpr(),
                     BinaryOperator(
-                            disjunction().toNode(),
-                            assignmentExpression().toNode(),
+                            disjunction().toExpr(),
+                            assignmentExpression().toExpr(),
                             assignmentOperation().ID,
                             null
                     ),
@@ -66,89 +67,89 @@ fun QuartzParser.AssignmentExpressionContext.toNode(): Expression {
     }
 }
 
-fun QuartzParser.DisjunctionContext.toNode(): Expression {
+fun QuartzParser.DisjunctionContext.toExpr(): Expression {
     return when {
-        disjunction() == null -> conjunction().toNode()
-        else -> BinaryOperator(conjunction().toNode(), disjunction().toNode(), disjunctionOperation().ID, null)
+        disjunction() == null -> conjunction().toExpr()
+        else -> BinaryOperator(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID, null)
     }
 }
 
-fun QuartzParser.ConjunctionContext.toNode(): Expression {
+fun QuartzParser.ConjunctionContext.toExpr(): Expression {
     return when {
-        conjunction() == null -> equalityComparison().toNode()
-        else -> BinaryOperator(equalityComparison().toNode(), conjunction().toNode(), conjunctionOperation().ID, null)
+        conjunction() == null -> equalityComparison().toExpr()
+        else -> BinaryOperator(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID, null)
     }
 }
 
-fun QuartzParser.EqualityComparisonContext.toNode(): Expression {
+fun QuartzParser.EqualityComparisonContext.toExpr(): Expression {
     return when {
-        equalityComparison() == null -> comparison().toNode()
-        else -> BinaryOperator(comparison().toNode(), equalityComparison().toNode(), equalityOperation().ID, null)
+        equalityComparison() == null -> comparison().toExpr()
+        else -> BinaryOperator(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID, null)
     }
 }
 
-fun QuartzParser.ComparisonContext.toNode(): Expression {
+fun QuartzParser.ComparisonContext.toExpr(): Expression {
     return when {
-        comparison() == null -> bitshiftExpression().toNode()
-        else -> BinaryOperator(bitshiftExpression().toNode(), comparison().toNode(), comparisonOperation().ID, null)
+        comparison() == null -> bitshiftExpression().toExpr()
+        else -> BinaryOperator(bitshiftExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
     }
 }
 
-fun QuartzParser.BitshiftExpressionContext.toNode(): Expression {
+fun QuartzParser.BitshiftExpressionContext.toExpr(): Expression {
     return when {
-        bitshiftExpression() == null -> additiveExpression().toNode()
-        else -> BinaryOperator(additiveExpression().toNode(), bitshiftExpression().toNode(), bitshiftOperation().ID, null)
+        bitshiftExpression() == null -> additiveExpression().toExpr()
+        else -> BinaryOperator(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID, null)
     }
 }
 
-fun QuartzParser.AdditiveExpressionContext.toNode(): Expression {
+fun QuartzParser.AdditiveExpressionContext.toExpr(): Expression {
     return when {
-        additiveExpression() == null -> multiplicativeExpression().toNode()
-        else -> BinaryOperator(multiplicativeExpression().toNode(), additiveExpression().toNode(), additiveOperation().ID, null)
+        additiveExpression() == null -> multiplicativeExpression().toExpr()
+        else -> BinaryOperator(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID, null)
     }
 }
 
-fun QuartzParser.MultiplicativeExpressionContext.toNode(): Expression {
+fun QuartzParser.MultiplicativeExpressionContext.toExpr(): Expression {
     return when {
-        multiplicativeExpression() == null -> operableExpression().toNode()
-        else -> BinaryOperator(operableExpression().toNode(), multiplicativeExpression().toNode(), multiplicativeOperation().ID, null)
+        multiplicativeExpression() == null -> operableExpression().toExpr()
+        else -> BinaryOperator(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID, null)
     }
 }
 
-fun QuartzParser.OperableExpressionContext.toNode(): Expression {
+fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
     return when {
-        prefixOperation() != null -> prefixOperation().toNode(operableExpression().toNode())
-        postfixOperation() != null -> postfixOperation().toNode(operableExpression().toNode())
-        atomicExpression() != null -> atomicExpression().toNode()
+        prefixOperation() != null -> prefixOperation().toExpr(operableExpression().toExpr())
+        postfixOperation() != null -> postfixOperation().toExpr(operableExpression().toExpr())
+        atomicExpression() != null -> atomicExpression().toExpr()
         else -> throw Exception("Unrecognized expression $text")
     }
 }
 
-fun QuartzParser.PrefixOperationContext.toNode(expression: Expression): Expression {
+fun QuartzParser.PrefixOperationContext.toExpr(expression: Expression): Expression {
     return UnaryOperator(expression, ID, null)
 }
 
-fun QuartzParser.PostfixOperationContext.toNode(expression: Expression): Expression {
+fun QuartzParser.PostfixOperationContext.toExpr(expression: Expression): Expression {
     return when {
-        cast() != null -> cast().toNode(expression)
-        postfixCall() != null -> postfixCall().toNode(expression)
-        dotCall() != null -> dotCall().toNode(expression)
+        cast() != null -> cast().toExpr(expression)
+        postfixCall() != null -> postfixCall().toExpr(expression)
+        dotCall() != null -> dotCall().toExpr(expression)
         else -> throw Exception("Unrecognized postfix operation $text")
     }
 }
 
-fun QuartzParser.AtomicExpressionContext.toNode(): Expression {
+fun QuartzParser.AtomicExpressionContext.toExpr(): Expression {
     return when {
-        expression() != null -> expression().toNode()
-        inlineC() != null -> inlineC().toNode()
-        literal() != null -> literal().toNode()
-        sizeof() != null -> sizeof().toNode()
-        identifier() != null -> identifier().toNode()
+        expression() != null -> expression().toExpr()
+        inlineC() != null -> inlineC().toExpr()
+        literal() != null -> literal().toExpr()
+        sizeof() != null -> sizeof().toExpr()
+        identifier() != null -> identifier().toExpr()
         else -> throw Exception("Unrecognized atomic expression $text")
     }
 }
 
-fun QuartzParser.LiteralContext.toNode(): Expression {
+fun QuartzParser.LiteralContext.toExpr(): Expression {
     return when {
         CHAR() != null -> NumberLiteral(text, CharType)
         INT() != null -> NumberLiteral(text, IntType)
@@ -158,48 +159,48 @@ fun QuartzParser.LiteralContext.toNode(): Expression {
     }
 }
 
-fun QuartzParser.SizeofContext.toNode(): Sizeof {
+fun QuartzParser.SizeofContext.toExpr(): Sizeof {
     return Sizeof(type().toType())
 }
 
-fun QuartzParser.ReturnExpressionContext.toNode(): ReturnExpression {
-    return ReturnExpression(expression().toNode())
+fun QuartzParser.ReturnExpressionContext.toExpr(): ReturnExpression {
+    return ReturnExpression(expression().toExpr())
 }
 
-fun QuartzParser.IdentifierContext.toNode(): Identifier {
+fun QuartzParser.IdentifierContext.toExpr(): Identifier {
     return Identifier(NAME().text, null)
 }
 
-fun QuartzParser.CastContext.toNode(expression: Expression): Cast {
+fun QuartzParser.CastContext.toExpr(expression: Expression): Cast {
     return Cast(expression, type().toType())
 }
 
-fun QuartzParser.PostfixCallContext.toNode(expression: Expression): FunctionCall {
+fun QuartzParser.PostfixCallContext.toExpr(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
-            expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>(),
+            expressionList().toList(),
             null
     )
 }
 
-fun QuartzParser.DotCallContext.toNode(expression: Expression): FunctionCall {
+fun QuartzParser.DotCallContext.toExpr(expression: Expression): FunctionCall {
     return FunctionCall(
-            identifier().toNode(),
-            listOf(expression) + (expressionList()?.expression()?.map { it.toNode() } ?: emptyList<Expression>()),
+            identifier().toExpr(),
+            listOf(expression) + (expressionList().toList()),
             null
     )
 }
 
-fun QuartzParser.VarDeclarationContext.toNode(): VariableDeclaration {
+fun QuartzParser.VarDeclarationContext.toExpr(): VariableDeclaration {
     return when {
         nameType() != null -> VariableDeclaration(
                 nameType().NAME().text,
-                expression()?.toNode(),
+                expression()?.toExpr(),
                 nameType().type().toType()
         )
         else -> VariableDeclaration(
                 nameOptionalType().NAME().text,
-                expression().toNode(),
+                expression().toExpr(),
                 nameOptionalType()?.type()?.toType()
         )
     }

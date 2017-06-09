@@ -165,6 +165,7 @@ fn main(): int {
 fn main(): int {
     val hello: *const char = 0;
     return 0;
+}
 """
 
 //    @Test
