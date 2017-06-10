@@ -12,7 +12,7 @@ object InferredType : Type {
     override val string: String
         get() = throw IllegalAccessError()
 
-    override fun isSupertype(type: Type): Boolean {
+    override fun isConvertibleTo(type: Type): Boolean {
         throw IllegalAccessError()
     }
 }

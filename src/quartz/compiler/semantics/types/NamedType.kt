@@ -9,11 +9,7 @@ import quartz.compiler.tree.util.Type
 data class NamedType(override val string: String) : Type {
     override val descriptiveString get() = string
 
-    override fun isSupertype(type: Type): Boolean {
-        return type is NamedType && type.string == this.string
-    }
-
-    override fun isEqualTo(type: Type): Boolean {
+    override fun isConvertibleTo(type: Type): Boolean {
         return type is NamedType && type.string == this.string
     }
 

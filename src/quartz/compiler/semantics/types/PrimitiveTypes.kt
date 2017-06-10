@@ -9,7 +9,7 @@ import quartz.compiler.tree.util.Type
 sealed class NumberType(override val string: String) : Type {
     override val descriptiveString by lazy { string.replace(' ', '_') }
 
-    override fun isSupertype(type: Type): Boolean {
+    override fun isConvertibleTo(type: Type): Boolean {
         return type is NumberType
     }
 

@@ -9,7 +9,7 @@ import quartz.compiler.tree.util.Type
 data class InlineCType(override val string: String) : Type {
     override val descriptiveString get() = string
 
-    override fun isSupertype(type: Type): Boolean {
+    override fun isConvertibleTo(type: Type): Boolean {
         return true
     }
 
