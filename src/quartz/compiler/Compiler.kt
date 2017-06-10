@@ -11,6 +11,7 @@ import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.analyze
 import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.toFancyString
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -18,28 +19,50 @@ import java.io.OutputStream
  * Created by Aedan Smith.
  */
 
+typealias CompilerParser = InputStream.() -> QuartzParser.ProgramContext
+typealias CompilerBuilder = QuartzParser.ProgramContext.(Library.LibraryPackage, CompilerParser) -> Program
+typealias CompilerAnalyzer = Program.() -> Program
+typealias CompilerGenerator = Program.(OutputStream) -> Unit
+
 object Compiler {
-    fun compile(input: InputStream,
-                output: OutputStream,
-                library: Library.LibraryPackage,
-                parser: InputStream.() -> QuartzParser.ProgramContext = {
-                    errorScope({ "parser" }) {
-                        val errorListener = ErrorListener()
-                        val qlexer = QuartzLexer(CharStreams.fromReader(reader())).apply { addErrorListener(errorListener) }
-                        val qparser = QuartzParser(CommonTokenStream(qlexer)).apply { addErrorListener(errorListener) }
-                        qparser.program()
-                    }
-                },
-                builder: QuartzParser.ProgramContext.() -> Program = {
-                    errorScope({ "ast builder" }) { toExpr(library, parser) }
-                },
-                analyzer: Program.() -> Program = {
-                    errorScope({ "semantic analyzer" }) { analyze() }
-                },
-                generator: Program.(OutputStream) -> Unit = {
-                    Generator.generate(it, this)
-                }
+    val defaultParser: CompilerParser = {
+        errorScope({ "parser" }) {
+            val errorListener = ErrorListener()
+            val qlexer = QuartzLexer(CharStreams.fromReader(reader())).apply { addErrorListener(errorListener) }
+            val qparser = QuartzParser(CommonTokenStream(qlexer)).apply { addErrorListener(errorListener) }
+            qparser.program()
+        }
+    }
+
+    val defaultBuilder: CompilerBuilder = { library, parser ->
+        errorScope({ "ast builder" }) { toExpr(library, parser) }
+    }
+
+    val debugBuilder: CompilerBuilder = { library, parser ->
+        defaultBuilder(library, parser).also { println(it.toFancyString()) }
+    }
+
+    val defaultAnalyzer: CompilerAnalyzer = {
+        errorScope({ "semantic analyzer" }) { analyze() }
+    }
+
+    val debugAnalyzer: CompilerAnalyzer = {
+        defaultAnalyzer().also { println(it.toFancyString()) }
+    }
+
+    val defaultGenerator: CompilerGenerator = {
+        Generator.generate(it, this)
+    }
+
+    fun compile(
+            input: InputStream,
+            output: OutputStream,
+            library: Library.LibraryPackage,
+            parser: CompilerParser,
+            builder: CompilerBuilder,
+            analyzer: CompilerAnalyzer,
+            generator: CompilerGenerator
     ) {
-        input.parser().builder().analyzer().generator(output)
+        input.parser().builder(library, parser).analyzer().generator(output)
     }
 }

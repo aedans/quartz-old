@@ -26,8 +26,25 @@ sealed class Library(val name: String) {
                 return file
         }
 
+        operator fun plus(libraries: List<Library>): LibraryPackage {
+            var new = this
+            libraries.forEach { new += it }
+            return new
+        }
+
         operator fun plus(library: Library): LibraryPackage {
+            return when (library) {
+                is LibraryPackage -> this + library
+                is LibraryFile -> this + library
+            }
+        }
+
+        operator fun plus(library: LibraryFile): LibraryPackage {
             return LibraryPackage(name, file, subLibraries + (library.name to library))
+        }
+
+        operator fun plus(library: LibraryPackage): LibraryPackage {
+            return LibraryPackage(name, file, subLibraries + library.subLibraries)
         }
 
         override fun toString(depth: Int): String {
@@ -54,7 +71,7 @@ sealed class Library(val name: String) {
             if (!file.isDirectory)
                 throw QuartzException("Could not find ${file.absolutePath}")
 
-            return LibraryPackage(file.name, file, file.listFiles().map { createLocal(it) }.map { it.name to it }.toMap())
+            return LibraryPackage(file.name, file, mapOf(file.name to createLocal(file)))
         }
 
         private fun createLocal(file: File): Library {

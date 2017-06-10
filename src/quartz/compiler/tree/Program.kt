@@ -5,3 +5,7 @@ package quartz.compiler.tree
  */
 
 typealias Program = List<Declaration>
+
+fun Program.toFancyString(): String {
+    return joinToString(separator = "\n")
+}

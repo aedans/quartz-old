@@ -59,7 +59,7 @@ val Quartz = project(QuartzParserGen) {
             name = "Quartz.jar"
             fatJar = true
             manifest {
-                attributes("Main-Class", "MainKt")
+                attributes("Main-Class", "quartz.compiler.cli.MainKt")
             }
         }
     }

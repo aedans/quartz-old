@@ -63,7 +63,7 @@ object QuartzCompilerRunner : CompilerRunner {
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
-                "java -jar $qc ${input.absolutePath} ${output.absolutePath}",
+                "java -jar $qc \"${input.absolutePath}\" -o \"${output.absolutePath}\"",
                 { file.subFile("debug/qz$count.txt").write(this) },
                 err
         )
