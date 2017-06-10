@@ -18,7 +18,6 @@
     - Add & operator
     - Improve standard library
     - Add collection literals, ranges, pairs, etc.
-    - Add for loops
     - Allow importing of functions, structs, etc.
     - Add optimizer
     - Add warnings

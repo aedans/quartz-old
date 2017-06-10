@@ -17,6 +17,6 @@ data class InlineC(val src: String, override val type: Type) : Declaration, Expr
     }
 
     override fun toString(): String {
-        return "InlineC"
+        return "%%$src%%"
     }
 }

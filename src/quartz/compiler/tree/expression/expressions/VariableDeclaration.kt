@@ -14,7 +14,7 @@ data class VariableDeclaration(
         val variableType: Type
 ): UnitExpression() {
     override fun toString(): String {
-        return "let $name: $variableType" +
+        return "val $name: $variableType" +
                 if (expression != null) " = $expression" else ""
     }
 }

@@ -39,7 +39,7 @@ object Compiler {
     }
 
     val debugBuilder: CompilerBuilder = { library, parser ->
-        defaultBuilder(library, parser).also { println(it.toFancyString()) }
+        defaultBuilder(library, parser).also { println("\nBuilder:\n\n${it.toFancyString()}") }
     }
 
     val defaultAnalyzer: CompilerAnalyzer = {
@@ -47,7 +47,7 @@ object Compiler {
     }
 
     val debugAnalyzer: CompilerAnalyzer = {
-        defaultAnalyzer().also { println(it.toFancyString()) }
+        defaultAnalyzer().also { println("\nAnalyzer:\n\n${it.toFancyString()}") }
     }
 
     val defaultGenerator: CompilerGenerator = {

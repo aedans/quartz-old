@@ -63,7 +63,7 @@ object QuartzCompilerRunner : CompilerRunner {
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
-                "java -jar $qc \"${input.absolutePath}\" -o \"${output.absolutePath}\"",
+                "java -jar $qc \"${input.absolutePath}\" -o \"${output.absolutePath}\" --debug-builder --debug-analyzer",
                 { file.subFile("debug/qz$count.txt").write(this) },
                 err
         )
@@ -77,14 +77,11 @@ object GccCompilerRunner : CompilerRunner {
     var count = 0
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
+        file.subFile("debug/gcc$count.c").write(input.readText())
         runCommand(
                 "gcc ${input.absolutePath} -o ${output.absolutePath} $flags",
-                { file.subFile("debug/gcc$count.txt").write(this) },
-                {
-                    if (isNotEmpty())
-                        input.copyTo(file.subFile("debug/gcc$count.c"))
-                    err()
-                }
+                { if (isNotEmpty()) file.subFile("debug/gcc$count.txt").write(this) },
+                err
         )
         count++
     }
@@ -97,6 +94,7 @@ object NvccCompilerRunner : CompilerRunner {
     var count = 0
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
+        file.subFile("debug/nvcc$count.c").write(input.readText())
         runCommand(
                 "nvcc ${input.absolutePath} -o ${output.absolutePath} $flags",
                 { file.subFile("debug/nvcc$count.txt").write(this) },
