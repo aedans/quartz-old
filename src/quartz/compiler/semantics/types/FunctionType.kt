@@ -2,13 +2,15 @@ package quartz.compiler.semantics.types
 
 import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.util.isSupertype
 
 /**
  * Created by Aedan Smith.
  */
 
-data class FunctionType(val function: Function) : Type(function.description()) {
-    override val string = function.toString()
+data class FunctionType(val function: Function) : Type {
+    override val descriptiveString by lazy { function.description() }
+    override val string by lazy { function.toString() }
 
     override fun isSupertype(type: Type): Boolean {
         return type is FunctionType

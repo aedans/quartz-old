@@ -6,8 +6,9 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class ConstType(val type: Type) : Type("const_${type.descriptiveString}") {
-    override val string = "const ${type.string}"
+data class ConstType(val type: Type) : Type {
+    override val descriptiveString by lazy { "const_${type.descriptiveString}" }
+    override val string by lazy { "const ${type.string}" }
 
     override fun isSupertype(type: Type): Boolean {
         return type.isSupertype(this.type)

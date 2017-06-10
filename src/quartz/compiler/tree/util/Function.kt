@@ -10,6 +10,6 @@ data class Function(
         val vararg: Boolean
 ) {
     override fun toString(): String {
-        return "${args?.joinToString(prefix = "(", postfix = ")") ?: "(???)"}${if (vararg) "..." else ""} -> ${returnType ?: "???"}"
+        return "${args?.joinToString(prefix = "(", postfix = ")") ?: "(???)"}${if (vararg) "..." else ""} -> $returnType"
     }
 }
