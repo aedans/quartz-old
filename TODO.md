@@ -1,24 +1,25 @@
 - Code maintenance
     - Rewrite generator
     - Migrate simplifier to visitor
-    - Optimize parser
     - Add more unit tests
 - Bug fixes
-    - Fix greatest common type
     - Implement immutability
 - Features
     - Add structs
     - Add templates
     - Add template inferencer
-    - Add extension functions
+    - Add overloads
+    - Add lambdas
+    - Add currying
+    - Add closures
+    - Add static vals
     - Add true, false, unit
-        - Add static vals
-    - Improve operators
-        - Add & operator
-        - Add operator overloading
+    - Add operator overloading
+    - Add & operator
+    - Improve standard library
     - Add collection literals, ranges, pairs, etc.
-        - Improve standard library
     - Add for loops
     - Allow importing of functions, structs, etc.
     - Add optimizer
     - Add warnings
+    - Improve errors
