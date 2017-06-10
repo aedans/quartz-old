@@ -7,10 +7,10 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class Identifier(val name: String, override val type: Type?) : Expression {
+data class Identifier(val name: String, override val type: Type) : Expression {
     override val isLValue = true
 
-    override fun withType(type: Type?): Identifier {
+    override fun withType(type: Type): Identifier {
         return Identifier(name, type)
     }
 

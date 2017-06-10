@@ -12,7 +12,7 @@ data class Sizeof(val sizeType: Type) : Expression {
     override val isLValue = false
     override val type = ULongType
 
-    override fun withType(type: Type?): Expression {
+    override fun withType(type: Type): Expression {
         return this
     }
 

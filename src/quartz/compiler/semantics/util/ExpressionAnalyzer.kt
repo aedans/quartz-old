@@ -7,4 +7,4 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-typealias ExpressionAnalyzer = (Type?, Expression) -> Expression
+typealias ExpressionAnalyzer = (Type, Expression) -> Expression

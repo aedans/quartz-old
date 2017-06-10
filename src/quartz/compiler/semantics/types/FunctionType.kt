@@ -2,7 +2,6 @@ package quartz.compiler.semantics.types
 
 import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
-import quartz.compiler.tree.util.isConvertibleTo
 
 /**
  * Created by Aedan Smith.
@@ -32,12 +31,12 @@ data class FunctionType(val function: Function) : Type {
             var string = ""
             when {
                 args.isEmpty() -> {
-                    string += returnType?.descriptiveString + "_supplier"
+                    string += returnType.descriptiveString + "_supplier"
                 }
                 else -> {
-                    args.forEach { string += it?.descriptiveString + '_' }
+                    args.forEach { string += it.descriptiveString + '_' }
                     string += "to_"
-                    string += returnType?.descriptiveString
+                    string += returnType.descriptiveString
                 }
             }
             if (vararg)

@@ -1,6 +1,7 @@
 package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.semantics.analyzers.util.inferType
+import quartz.compiler.semantics.types.UnknownType
 import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.Assignment
@@ -22,10 +23,10 @@ object AssignmentAnalyzer {
     }
 
     inline fun analyzeLValue(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment): Assignment {
-        return visitLValue(expressionAnalyzer.partial(null), assignment)
+        return visitLValue(expressionAnalyzer.partial(UnknownType), assignment)
     }
 
-    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment, expectedType: Type?): Assignment {
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, assignment: Assignment, expectedType: Type): Assignment {
         return visitExpression(expressionAnalyzer.partial(expectedType), assignment)
     }
 

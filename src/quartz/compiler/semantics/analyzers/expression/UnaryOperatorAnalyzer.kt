@@ -17,7 +17,7 @@ object UnaryOperatorAnalyzer {
         return unaryOperator.copy(expression = expressionVisitor(unaryOperator.expression))
     }
 
-    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, unaryOperator: UnaryOperator, expectedType: Type?): UnaryOperator {
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, unaryOperator: UnaryOperator, expectedType: Type): UnaryOperator {
         return visitExpression(expressionAnalyzer.partial(expectedType), unaryOperator)
     }
 

@@ -12,7 +12,7 @@ abstract class UnitExpression : Expression {
     override val type = VoidType
     override val isLValue: Boolean = false
 
-    override fun withType(type: Type?): Expression {
+    override fun withType(type: Type): Expression {
         if (type != VoidType)
             throw QuartzException("Could not set type of $this to $type")
         else return this

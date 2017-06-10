@@ -13,10 +13,10 @@ import quartz.compiler.tree.util.Type
 data class Analyzer(
         val analyzeFunctionDeclaration: Analyzer.(SymbolTable, FunctionDeclaration) -> FunctionDeclaration,
         val analyzeExternFunctionDeclaration: Analyzer.(SymbolTable, ExternFunctionDeclaration) -> ExternFunctionDeclaration,
-        val analyzeExpression: Analyzer.(SymbolTable, Type?, Expression) -> Expression,
+        val analyzeExpression: Analyzer.(SymbolTable, Type, Expression) -> Expression,
         val analyzeType: Analyzer.(SymbolTable, Type) -> Type
 ) {
-    operator fun plus(analyzer: Analyzer.(SymbolTable, Type?, Expression) -> Expression): Analyzer {
+    operator fun plus(analyzer: Analyzer.(SymbolTable, Type, Expression) -> Expression): Analyzer {
         return copy(analyzeExpression = { table, expected, expr ->
             this@Analyzer.analyzeExpression(this, table, expected, expr)
                     .let { analyzer(table, expected, it) }

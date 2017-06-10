@@ -11,7 +11,7 @@ import quartz.compiler.tree.util.Type
 data class VariableDeclaration(
         val name: String,
         val expression: Expression?,
-        val variableType: Type?
+        val variableType: Type
 ): UnitExpression() {
     override fun toString(): String {
         return "let $name: $variableType" +

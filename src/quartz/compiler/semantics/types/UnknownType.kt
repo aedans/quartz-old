@@ -6,13 +6,17 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-object InferredType : Type {
+object UnknownType : Type {
     override val descriptiveString: String
-        get() =  throw IllegalAccessError()
+        get() = "???"
     override val string: String
-        get() = throw IllegalAccessError()
+        get() = "???"
 
     override fun isConvertibleTo(type: Type): Boolean {
-        throw IllegalAccessError()
+        throw IllegalAccessError("Attempt to convert $this to $type")
+    }
+
+    override fun toString(): String {
+        return string
     }
 }

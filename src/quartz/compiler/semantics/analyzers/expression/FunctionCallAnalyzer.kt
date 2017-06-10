@@ -2,6 +2,7 @@ package quartz.compiler.semantics.analyzers.expression
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
+import quartz.compiler.semantics.types.UnknownType
 import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.FunctionCall
@@ -23,7 +24,7 @@ object FunctionCallAnalyzer {
     }
 
     inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
-        return visitExpression(expressionAnalyzer.partial(null), functionCall)
+        return visitExpression(expressionAnalyzer.partial(UnknownType), functionCall)
     }
 
     inline fun analyzeArguments(expressionAnalyzer: ExpressionAnalyzer, functionCall: FunctionCall): FunctionCall {
@@ -36,7 +37,7 @@ object FunctionCallAnalyzer {
 
         val expressions = functionCall.args.zip(function.args +
                 arrayOfNulls<Type>(functionCall.args.size - function.args.size))
-                .map { expressionAnalyzer(it.second, it.first) }
+                .map { expressionAnalyzer(it.second ?: UnknownType, it.first) }
 
         val newType = function.returnType
 

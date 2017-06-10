@@ -20,7 +20,7 @@ object CastAnalyzer {
         return cast.copy(expression = expressionVisitor(cast.expression))
     }
 
-    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, cast: Cast, expectedType: Type?): Cast {
+    inline fun analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, cast: Cast, expectedType: Type): Cast {
         return visitExpression(expressionAnalyzer.partial(expectedType), cast)
     }
 }

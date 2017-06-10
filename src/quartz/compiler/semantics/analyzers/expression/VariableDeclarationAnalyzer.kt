@@ -13,7 +13,7 @@ import quartz.compiler.util.partial
 
 object VariableDeclarationAnalyzer {
     inline fun visitVariableType(typeVisitor: Visitor<Type>, variableDeclaration: VariableDeclaration): VariableDeclaration {
-        return variableDeclaration.copy(variableType = variableDeclaration.variableType?.let(typeVisitor))
+        return variableDeclaration.copy(variableType = variableDeclaration.variableType.let(typeVisitor))
     }
 
     inline fun visitExpression(expressionVisitor: Visitor<Expression>, variableDeclaration: VariableDeclaration): VariableDeclaration {
@@ -25,6 +25,6 @@ object VariableDeclarationAnalyzer {
     }
 
     fun inferVariableTypeFromExpression(variableDeclaration: VariableDeclaration): VariableDeclaration {
-        return variableDeclaration.copy(variableType = variableDeclaration.expression?.type)
+        return variableDeclaration.copy(variableType = variableDeclaration.expression?.type ?: variableDeclaration.variableType)
     }
 }

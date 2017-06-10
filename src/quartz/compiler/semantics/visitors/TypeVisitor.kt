@@ -33,8 +33,8 @@ object TypeVisitor {
 
     inline fun visitFunctionTypes(typeVisitor: Visitor<Type>, function: Function): Function {
         return Function(
-                function.args?.map { it?.let(typeVisitor) },
-                function.returnType?.let(typeVisitor),
+                function.args?.map { it.let(typeVisitor) },
+                function.returnType.let(typeVisitor),
                 function.vararg
         )
     }

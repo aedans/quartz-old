@@ -21,11 +21,11 @@ object BinaryOperatorAnalyzer {
         return binaryOperator.copy(expr2 = expressionVisitor(binaryOperator.expr2))
     }
 
-    inline fun analyzeExpr1(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
+    inline fun analyzeExpr1(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type): BinaryOperator {
         return visitExpr1(expressionAnalyzer.partial(expectedType), binaryOperator)
     }
 
-    inline fun analyzeExpr2(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type?): BinaryOperator {
+    inline fun analyzeExpr2(expressionAnalyzer: ExpressionAnalyzer, binaryOperator: BinaryOperator, expectedType: Type): BinaryOperator {
         return visitExpr2(expressionAnalyzer.partial(expectedType), binaryOperator)
     }
 

@@ -32,11 +32,11 @@ object IfExpressionAnalyzer {
         return visitCondition(expressionAnalyzer.partial(IntType), ifExpression)
     }
 
-    inline fun analyzeIfTrue(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
+    inline fun analyzeIfTrue(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type): IfExpression {
         return visitIfTrue(expressionAnalyzer.partial(expectedType), ifExpression)
     }
 
-    inline fun analyzeIfFalse(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type?): IfExpression {
+    inline fun analyzeIfFalse(expressionAnalyzer: ExpressionAnalyzer, ifExpression: IfExpression, expectedType: Type): IfExpression {
         return visitIfFalse(expressionAnalyzer.partial(expectedType), ifExpression)
     }
 

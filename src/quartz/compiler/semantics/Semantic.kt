@@ -64,7 +64,7 @@ private fun Analyzer.analyzeFunctionDeclarationImpl(
             .let { FunctionDeclarationAnalyzer.analyzeBlock(analyzeExpression.bind(this).partial(symbolTable), it) }
 }
 
-private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type?, expression: Expression): Expression {
+private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type, expression: Expression): Expression {
     val typeVisitor = analyzeType.bind(this).partial(table)
     val expressionAnalyzer = analyzeExpression.bind(this).partial(table)
     return expression.let {
@@ -122,7 +122,8 @@ fun Analyzer.analyzeTypeImpl(
     return type
             .let {
                 when (it) {
-                    is VoidType -> it
+                    UnknownType -> it
+                    VoidType -> it
                     is NumberType -> it
                     is InlineCType -> it
                     is ConstType -> TypeVisitor.visitConstType(typeAnalyzer, it)
@@ -138,7 +139,7 @@ private fun Analyzer.analyzeIdentifierFunctionDeclaration(
         newProgram: LinkedHashMap<String, Declaration>,
         programSymbolTable: ProgramSymbolTable,
         symbolTable: SymbolTable,
-        type: Type?,
+        type: Type,
         expression: Expression
 ): Expression {
     return if (expression !is Identifier) expression
@@ -156,7 +157,7 @@ private fun Analyzer.analyzeIdentifierExternFunctionDeclaration(
         newProgram: LinkedHashMap<String, Declaration>,
         programSymbolTable: ProgramSymbolTable,
         symbolTable: SymbolTable,
-        type: Type?,
+        type: Type,
         expression: Expression
 ): Expression {
     return if (expression !is Identifier) expression

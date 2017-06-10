@@ -7,10 +7,10 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class UnaryOperator(val expression: Expression, val id: ID, override val type: Type?) : Expression {
+data class UnaryOperator(val expression: Expression, val id: ID, override val type: Type) : Expression {
     override val isLValue = false
 
-    override fun withType(type: Type?): UnaryOperator {
+    override fun withType(type: Type): UnaryOperator {
         return UnaryOperator(expression, id, type)
     }
 

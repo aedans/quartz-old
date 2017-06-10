@@ -12,7 +12,7 @@ class Block(expressionList: List<Expression>): Expression, List<Expression> by e
     override val type = if (isEmpty()) VoidType else last().type
     override val isLValue = false
 
-    override fun withType(type: Type?): Block {
+    override fun withType(type: Type): Block {
         return if (isEmpty()) this else Block(dropLast(1) + last().withType(type))
     }
 

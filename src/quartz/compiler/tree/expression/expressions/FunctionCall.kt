@@ -10,11 +10,11 @@ import quartz.compiler.tree.util.Type
 data class FunctionCall(
         val expression: Expression,
         val args: List<Expression>,
-        override val type: Type?
+        override val type: Type
 ) : Expression {
     override val isLValue = false
 
-    override fun withType(type: Type?): Expression {
+    override fun withType(type: Type): Expression {
         return FunctionCall(expression, args, type)
     }
 

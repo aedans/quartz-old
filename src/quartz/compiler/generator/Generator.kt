@@ -68,7 +68,7 @@ object Generator {
     }
 
     fun ProgramOutputStream.functionPrototype(functionDeclaration: FunctionDeclaration) {
-        type(functionDeclaration.function.returnType!!)
+        type(functionDeclaration.function.returnType)
         name(functionDeclaration.name)
         args(functionDeclaration.argNames.nullableZip(functionDeclaration.function.args))
         string(";")
@@ -77,7 +77,7 @@ object Generator {
 
     fun ProgramOutputStream.function(functionDeclaration: FunctionDeclaration) {
         margin {
-            type(functionDeclaration.function.returnType!!)
+            type(functionDeclaration.function.returnType)
             name(functionDeclaration.name)
             args(functionDeclaration.argNames.nullableZip(functionDeclaration.function.args))
             block(functionDeclaration.block)
@@ -172,7 +172,7 @@ object Generator {
     }
 
     fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
-        type(variableDeclaration.variableType ?: throw QuartzException("Unknown type for $variableDeclaration"))
+        type(variableDeclaration.variableType)
         name(variableDeclaration.name)
         variableDeclaration.expression?.apply {
             string("=")
@@ -200,9 +200,9 @@ object Generator {
     fun ProgramOutputStream.functionTypedef(type: FunctionType) {
         val name = type.descriptiveString
         (type.function.args ?: throw Exception("Unknown argument types for $type")).forEach {
-            declare(it ?: throw Exception("Unknown argument type for $type"))
+            declare(it)
         }
-        declare(type.function.returnType ?: throw Exception("Unknown return type for $type"))
+        declare(type.function.returnType)
         name("typedef")
         type(type.function.returnType)
         parentheses {

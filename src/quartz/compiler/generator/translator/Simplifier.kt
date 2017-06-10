@@ -57,7 +57,6 @@ fun Expression.simplify(newExpressions: MutableList<Expression>, intIterator: In
 
 fun IfExpression.simplify(newExpressions: MutableList<Expression>, intIterator: IntIterator, isTop: Boolean): Expression {
     return if (isTop) this else {
-        type!!
         val name = "__${intIterator.next()}"
         val identifier = Identifier(name, type)
         newExpressions.add(VariableDeclaration(name, null, type))
