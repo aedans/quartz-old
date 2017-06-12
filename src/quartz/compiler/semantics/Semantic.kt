@@ -65,11 +65,11 @@ private fun Analyzer.analyzeFunctionDeclarationImpl(
     }
 }
 
-private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type, expression: Expression): Expression {
-    errorScope({ expression.toString() }) {
+private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type, expr: Expression): Expression {
+    errorScope({ expr.toString() }) {
         val typeVisitor = analyzeType.bind(this).partial(table)
         val expressionAnalyzer = analyzeExpression.bind(this).partial(table)
-        return expression.let {
+        return expr.let {
             when (it) {
                 is InlineC -> it
                 is NumberLiteral -> it
