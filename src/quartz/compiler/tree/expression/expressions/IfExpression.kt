@@ -20,6 +20,6 @@ data class IfExpression(
     }
 
     override fun toString(): String {
-        return "if ($condition) $ifTrue else $ifFalse"
+        return "if $condition then $ifTrue else $ifFalse"
     }
 }

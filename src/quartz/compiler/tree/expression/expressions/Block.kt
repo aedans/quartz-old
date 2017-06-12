@@ -17,9 +17,9 @@ class Block(expressionList: List<Expression>): Expression, List<Expression> by e
     }
 
     override fun toString(): String {
-        return "{ ${when {
-            isEmpty() -> ""
-            size == 1 -> last().toString()
+        return "{ ${when (size) {
+            0 -> ""
+            1 -> last().toString()
             else -> "... ${last()}"
         }} }"
     }

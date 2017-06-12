@@ -1,16 +1,13 @@
 package quartz.compiler.semantics
 
 import quartz.compiler.errors.QuartzException
-import quartz.compiler.semantics.analyzers.FunctionDeclarationAnalyzer
-import quartz.compiler.semantics.analyzers.expression.*
-import quartz.compiler.semantics.analyzers.util.verifyType
+import quartz.compiler.errors.errorScope
 import quartz.compiler.semantics.tables.FunctionDeclarationSymbolTable
 import quartz.compiler.semantics.tables.ProgramSymbolTable
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.types.*
-import quartz.compiler.semantics.visitors.ExternFunctionDeclarationVisitor
-import quartz.compiler.semantics.visitors.FunctionDeclarationVisitor
-import quartz.compiler.semantics.visitors.TypeVisitor
+import quartz.compiler.semantics.util.analyze.*
+import quartz.compiler.semantics.util.analyze.expressions.*
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
@@ -50,89 +47,97 @@ private fun Analyzer.analyzeExternFunctionDeclarationImpl(
         table: SymbolTable,
         declaration: ExternFunctionDeclaration
 ): ExternFunctionDeclaration {
-    return declaration
-            .let { ExternFunctionDeclarationVisitor.visitTypes(analyzeType.bind(this).partial(table), it) }
+    errorScope({ declaration.name }) {
+        return declaration
+                .visitTypes(analyzeType.bind(this).partial(table))
+    }
 }
 
 private fun Analyzer.analyzeFunctionDeclarationImpl(
         table: SymbolTable,
         declaration: FunctionDeclaration
 ): FunctionDeclaration {
-    val symbolTable = FunctionDeclarationSymbolTable(table, declaration)
-    return declaration
-            .let { FunctionDeclarationVisitor.visitTypes(analyzeType.bind(this).partial(symbolTable), it) }
-            .let { FunctionDeclarationAnalyzer.analyzeBlock(analyzeExpression.bind(this).partial(symbolTable), it) }
+    errorScope({ declaration.name }) {
+        val symbolTable = FunctionDeclarationSymbolTable(table, declaration)
+        return declaration
+                .visitTypes(analyzeType.bind(this).partial(symbolTable))
+                .analyzeBlock(analyzeExpression.bind(this).partial(symbolTable))
+    }
 }
 
 private fun Analyzer.analyzeExpressionImpl(table: SymbolTable, expectedType: Type, expression: Expression): Expression {
-    val typeVisitor = analyzeType.bind(this).partial(table)
-    val expressionAnalyzer = analyzeExpression.bind(this).partial(table)
-    return expression.let {
-        when (it) {
-            is InlineC -> it
-            is NumberLiteral -> it
-            is StringLiteral -> it
-            is Identifier -> it
-                    .let { IdentifierAnalyzer.analyzeType(analyzeType.bind(this), table, it) }
-            is Sizeof -> it
-                    .let { SizeofAnalyzer.visitSizeofType(typeVisitor, it) }
-            is Cast -> it
-                    .let { CastAnalyzer.visitType(typeVisitor, it) }
-                    .let { CastAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-            is UnaryOperator -> it
-                    .let { UnaryOperatorAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-                    .let(UnaryOperatorAnalyzer::inferTypeFromExpression)
-            is BinaryOperator -> it
-                    .let { BinaryOperatorAnalyzer.analyzeExpr1(expressionAnalyzer, it, expectedType) }
-                    .let { BinaryOperatorAnalyzer.analyzeExpr2(expressionAnalyzer, it, expectedType) }
-                    .let(BinaryOperatorAnalyzer::inferTypeFromExpr1)
-                    .let(BinaryOperatorAnalyzer::inferTypeFromExpr2)
-            is Assignment -> it
-                    .let { AssignmentAnalyzer.analyzeLValue(expressionAnalyzer, it) }
-                    .let { AssignmentAnalyzer.analyzeExpression(expressionAnalyzer, it, expectedType) }
-                    .let(AssignmentAnalyzer::inferTypeFromLValue)
-                    .let(AssignmentAnalyzer::inferTypeFromExpression)
-            is FunctionCall -> it
-                    .let { FunctionCallAnalyzer.analyzeExpression(expressionAnalyzer, it) }
-                    .let { FunctionCallAnalyzer.analyzeArguments(expressionAnalyzer, it) }
-            is IfExpression -> it
-                    .let { IfExpressionAnalyzer.analyzeCondition(expressionAnalyzer, it) }
-                    .let { IfExpressionAnalyzer.analyzeIfTrue(expressionAnalyzer, it, expectedType) }
-                    .let { IfExpressionAnalyzer.analyzeIfFalse(expressionAnalyzer, it, expectedType) }
-                    .let(IfExpressionAnalyzer::inferTypeFromIfTrue)
-                    .let(IfExpressionAnalyzer::inferTypeFromIfFalse)
-            is VariableDeclaration -> it
-                    .let { VariableDeclarationAnalyzer.visitVariableType(typeVisitor, it) }
-                    .let { VariableDeclarationAnalyzer.analyzeExpression(expressionAnalyzer, it) }
-                    .let(VariableDeclarationAnalyzer::inferVariableTypeFromExpression)
-                    .let { VariableDeclarationAnalyzer.visitVariableType(typeVisitor, it) }
-            is Block -> it
-                    .let { BlockAnalyzer.analyzeExpressions(analyzeExpression.bind(this), table, expectedType, it) }
-            else -> throw Exception("Expected expression, found $it")
+    errorScope({ expression.toString() }) {
+        val typeVisitor = analyzeType.bind(this).partial(table)
+        val expressionAnalyzer = analyzeExpression.bind(this).partial(table)
+        return expression.let {
+            when (it) {
+                is InlineC -> it
+                is NumberLiteral -> it
+                is StringLiteral -> it
+                is Identifier -> it
+                        .analyzeType(analyzeType.bind(this), table)
+                is Sizeof -> it
+                        .visitSizeofType(typeVisitor)
+                is Cast -> it
+                        .visitType(typeVisitor)
+                        .analyzeExpression(expressionAnalyzer, expectedType)
+                is UnaryOperator -> it
+                        .analyzeExpression(expressionAnalyzer, expectedType)
+                        .inferTypeFrom { expression }
+                is BinaryOperator -> it
+                        .analyzeExpr1(expressionAnalyzer, expectedType)
+                        .analyzeExpr2(expressionAnalyzer, expectedType)
+                        .inferTypeFrom { expr1 }
+                        .inferTypeFrom { expr2 }
+                is Assignment -> it
+                        .analyzeLValue(expressionAnalyzer)
+                        .analyzeExpression(expressionAnalyzer, expectedType)
+                        .inferTypeFrom { lvalue }
+                        .inferTypeFrom { expression }
+                is FunctionCall -> it
+                        .analyzeExpression(expressionAnalyzer)
+                        .analyzeArguments(expressionAnalyzer)
+                is IfExpression -> it
+                        .analyzeCondition(expressionAnalyzer)
+                        .analyzeIfTrue(expressionAnalyzer, expectedType)
+                        .analyzeIfFalse(expressionAnalyzer, expectedType)
+                        .inferTypeFrom { ifTrue }
+                        .inferTypeFrom { ifFalse }
+                is VariableDeclaration -> it
+                        .visitVariableType(typeVisitor)
+                        .analyzeExpression(expressionAnalyzer)
+                        .inferVariableTypeFromExpression()
+                        .visitVariableType(typeVisitor)
+                is Block -> it
+                        .analyzeExpressions(analyzeExpression.bind(this), table, expectedType)
+                else -> throw Exception("Expected expression, found $it")
+            }
         }
+                .verifyType(expectedType)
     }
-            .let { verifyType(expectedType, it) }
 }
 
 fun Analyzer.analyzeTypeImpl(
         table: SymbolTable,
         type: Type
 ): Type {
-    val typeAnalyzer = analyzeType.bind(this).partial(table)
-    return type
-            .let {
-                when (it) {
-                    UnknownType -> it
-                    VoidType -> it
-                    is NumberType -> it
-                    is InlineCType -> it
-                    is ConstType -> TypeVisitor.visitConstType(typeAnalyzer, it)
-                    is PointerType -> TypeVisitor.visitPointerType(typeAnalyzer, it)
-                    is FunctionType -> TypeVisitor.visitFunctionType(typeAnalyzer, it)
-                    is NamedType -> TypeVisitor.visitNamedType(table::getType, typeAnalyzer, it)
-                    else -> throw Exception("Expected type, found $it")
+    errorScope({ type.toString() }) {
+        val typeAnalyzer = analyzeType.bind(this).partial(table)
+        return type
+                .let {
+                    when (it) {
+                        UnknownType -> it
+                        VoidType -> it
+                        is NumberType -> it
+                        is InlineCType -> it
+                        is ConstType -> it.visitConstType(typeAnalyzer)
+                        is PointerType -> it.visitPointerType(typeAnalyzer)
+                        is FunctionType -> it.visitFunctionType(typeAnalyzer)
+                        is NamedType -> it.visitNamedType(table::getType, typeAnalyzer)
+                        else -> throw Exception("Expected type, found $it")
+                    }
                 }
-            }
+    }
 }
 
 private fun Analyzer.analyzeIdentifierFunctionDeclaration(
