@@ -1,9 +1,8 @@
-import org.junit.Assert
-import org.junit.Test
+
+import org.testng.Assert
+import org.testng.annotations.BeforeClass
+import org.testng.annotations.Test
 import java.io.File
-import java.io.FileOutputStream
-import java.io.PrintStream
-import java.nio.file.Files
 
 /**
  * Created by Aedan Smith.
@@ -15,41 +14,32 @@ fun File.subFile(path: String): File {
     return file
 }
 
-val testFile = File("./test")
+val testFile = File("test")
 fun testFile(path: String): File {
     return testFile.subFile(path)
 }
 
 fun libFile(path: String): File {
-    return File("./kobaltBuild/libs/$path")
-}
-
-fun File.write(string: String) {
-    PrintStream(FileOutputStream(this)).println(string)
+    return File("kobaltBuild/libs/$path")
 }
 
 fun runCommand(command: String, out: String.() -> Unit, err: String.() -> Unit) {
+    println("Running $command")
     Runtime.getRuntime().exec(command).also {
         it.inputStream.reader().readText().out()
         it.errorStream.reader().readText().err()
     }.also { it.waitFor() }
 }
 
-fun String.withFile(name: String = "temp.txt", function: File.() -> Unit) {
-    val file = testFile("temp/$name")
-    Files.write(file.toPath(), toByteArray())
-    file.function()
-}
-
 val withErrors = true
 val withoutErrors = false
 
 val assertNoErrors: String.() -> Unit = {
-    Assert.assertTrue("\n$this", isEmpty())
+    Assert.assertTrue(isEmpty(), "\n$this")
 }
 
 val assertErrors: String.() -> Unit = {
-    Assert.assertFalse("Error test compiled without errors", isEmpty())
+    Assert.assertFalse(isEmpty(), "Error test compiled without errors")
 }
 
 interface CompilerRunner {
@@ -57,91 +47,75 @@ interface CompilerRunner {
 }
 
 object QuartzCompilerRunner : CompilerRunner {
-    val file = testFile(".")
+    val file = testFile
+    val flags = "--debug-builder --debug-analyzer -t"
     val qc = libFile("Quartz.jar")
-    var count = 0
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
-                "java -jar $qc \"${input.absolutePath}\" -o \"${output.absolutePath}\" --debug-builder --debug-analyzer",
-                { file.subFile("debug/qz$count.txt").write(this) },
+                "java -jar $qc $input -o $output $flags",
+                { file.subFile("debug/${input.nameWithoutExtension}.txt").writeText(this) },
                 err
         )
-        count++
     }
 }
 
-object GccCompilerRunner : CompilerRunner {
-    val file = testFile(".")
-    val flags = "-Wall -Wextra -Wno-ignored-qualifiers -Wno-discarded-qualifiers -Wno-format-security -Wno-unused-variable"
-    var count = 0
+object ClangCompilerRunner : CompilerRunner {
+    val file = testFile
+    val flags = "-Wall -Wextra -Wno-ignored-qualifiers -Wno-format-security -Wno-unused-variable -Wno-infinite-recursion -O0"
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
-        file.subFile("debug/gcc$count.c").write(input.readText())
         runCommand(
-                "gcc ${input.absolutePath} -o ${output.absolutePath} $flags",
-                { if (isNotEmpty()) file.subFile("debug/gcc$count.txt").write(this) },
+                "clang $input -o $output $flags",
+                { if (isNotEmpty()) file.subFile("debug/${input.nameWithoutExtension}.txt").writeText(this) },
                 err
         )
-        count++
-    }
-}
-
-// TODO
-object NvccCompilerRunner : CompilerRunner {
-    val file = testFile(".")
-    val flags = "--machine 32 -x cu -Wno-deprecated-gpu-targets --cudart shared"
-    var count = 0
-
-    override fun compile(input: File, output: File, err: String.() -> Unit) {
-        file.subFile("debug/nvcc$count.c").write(input.readText())
-        runCommand(
-                "nvcc ${input.absolutePath} -o ${output.absolutePath} $flags",
-                { file.subFile("debug/nvcc$count.txt").write(this) },
-                err
-        )
-        count++
     }
 }
 
 infix fun Boolean.compile(string: String) {
+    compile(string, Thread.currentThread().stackTrace[2].methodName)
+}
+
+infix fun String.isOutputOf(string: String) {
+    isOutputOf(string, Thread.currentThread().stackTrace[2].methodName)
+}
+
+fun Boolean.compile(string: String, name: String) {
     string.run {
-        withFile("temp.qz") quartz@ {
-            withFile("temp.c") c@ {
-                withFile("temp.exe") exe@ {
-                    if (this@compile) {
-                        QuartzCompilerRunner.compile(this@quartz, this@c, assertErrors)
-                    } else {
-                        QuartzCompilerRunner.compile(this@quartz, this@c, assertNoErrors)
-                        GccCompilerRunner.compile(this@c, this@exe, assertNoErrors)
-                    }
-                }
-            }
+        val quartz = testFile("debug/$name.qz")
+        val c = testFile("debug/$name.c")
+        val exe = testFile("debug/$name.exe")
+        quartz.writeText(string)
+        if (this@compile) {
+            QuartzCompilerRunner.compile(quartz, c, assertErrors)
+        } else {
+            QuartzCompilerRunner.compile(quartz, c, assertNoErrors)
+            ClangCompilerRunner.compile(c, exe, assertNoErrors)
         }
     }
 }
 
-infix fun String.isOutputOf(string: String) {
-    withoutErrors compile string
+fun String.isOutputOf(string: String, name: String) {
+    withoutErrors.compile(string, name)
     runCommand(
-            testFile("temp/temp.exe").absolutePath,
+            testFile("debug/$name.exe").path,
             { Assert.assertEquals(this@isOutputOf.trim(), this.trim()) },
             assertNoErrors
     )
 }
 
+@Test
 class QuartzTest {
-    init {
+    @BeforeClass
+    fun setUp() {
         testFile("debug").deleteRecursively()
-        testFile("temp").deleteRecursively()
     }
 
-    @Test
     fun empty() = withErrors compile
 """
 """
 
-    @Test
     fun simpleMain() = withoutErrors compile
 """
 fn main(): int {
@@ -149,7 +123,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun invalidCast() = withErrors compile
 """
 fn main(): int {
@@ -157,7 +130,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun invalidImplicitCast() = withErrors compile
 """
 fn main(): int {
@@ -166,7 +138,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun invalidReturn() = withErrors compile
 """
 fn main(): int {
@@ -174,7 +145,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun implicitNumberCasts() = withoutErrors compile
 """
 fn main(): int {
@@ -192,7 +162,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun implicitInlineCCasts() = withoutErrors compile
 """
 typealias i8 = %%int%%
@@ -204,7 +173,6 @@ fn main(): i8 {
 }
 """
 
-    @Test
     fun operators() = withoutErrors compile
 """
 fn main(): int {
@@ -240,7 +208,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun typealias1() = withoutErrors compile
 """
 typealias i = int
@@ -252,7 +219,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun typealias2() = withoutErrors compile
 """
 typealias i0 = int
@@ -265,7 +231,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun recursive1() = withoutErrors compile
 """
 fn main(): int {
@@ -277,7 +242,6 @@ fn identity(i: int): int {
 }
 """
 
-    @Test
     fun recursive2() = withoutErrors compile
 """
 fn main(): int {
@@ -297,7 +261,6 @@ fn main2() {
 }
 """
 
-    @Test
     fun depth() = withoutErrors compile
 """
 fn main(): int {
@@ -311,7 +274,6 @@ fn _100(): int {
 }
 """
 
-    @Test
     fun std() = withoutErrors compile
 """
 import std
@@ -321,7 +283,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun helloWorld1() = "Hello, world!" isOutputOf
 """
 import std.c.stdio
@@ -332,7 +293,6 @@ fn main(): int {
 }
 """
 
-    @Test
     fun helloWorld2() = "Hello, world!" isOutputOf
 """
 import std.c.stdio
@@ -354,7 +314,6 @@ fn helloWorld(): string {
 }
 """
 
-    @Test
     fun helloWorld3() = "Hello, world!" isOutputOf
 """
 import std.c.stdio
@@ -378,7 +337,6 @@ fn _false(): int {
 }
 """
 
-    @Test
     fun countToTen() = "0 1 2 3 4 5 6 7 8 9 10" isOutputOf
 """
 import std.c.stdio
@@ -400,7 +358,6 @@ fn print(i: int) {
 }
 """
 
-    @Test
     fun fibonacciRecursive() = "0 1 1 2 3 5 8 13 21 34 55" isOutputOf
 """
 import std.c.stdio
@@ -426,7 +383,6 @@ fn printInt(i: int) {
 }
 """
 
-    @Test
     fun fizzBuzzRecursive() = "1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz" isOutputOf
 """
 import std.c.stdio

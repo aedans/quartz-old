@@ -13,9 +13,9 @@ import java.io.File
 class QuartzArgs(args: Array<String>) {
     val parser = ArgParser(args, helpFormatter = QuartzHelpFormatter())
 
-    val inputFile by parser.positional("SOURCE", help = "the quartz source file") { File(this) }
-    val outputFile by parser.storing("-o", "--output", help = "set the output file") { File(this) }
-            .default(File("main.c"))
+    val inputFile by parser.positional("SOURCE", help = "the quartz source file") { File(this).absoluteFile!! }
+    val outputFile by parser.storing("-o", "--output", help = "set the output file") { File(this).absoluteFile!! }
+            .default(File("main.c").absoluteFile!!)
     val library by parser.storing("-l", "--library", help = "set the quartz standard library") { Library.create(File(this)) }
             .default(Library.create(File(System.getenv()["QZ_LIB"] ?: throw QuartzException("Environment variable QZ_LIB is not set"))))
     val includes by parser.adding("-I", "--include", help = "include libraries") { Library.create(File(this)) } // TODO test

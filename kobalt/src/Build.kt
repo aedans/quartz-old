@@ -4,6 +4,7 @@ import com.beust.kobalt.api.Project
 import com.beust.kobalt.api.annotation.Task
 import com.beust.kobalt.plugin.packaging.assemble
 import com.beust.kobalt.project
+import com.beust.kobalt.test
 import java.io.File
 
 val QuartzParserGen = project {
@@ -43,7 +44,11 @@ val Quartz = project(QuartzParserGen) {
     }
 
     dependenciesTest {
-        compile("junit:junit:")
+        compile("org.testng:testng:")
+    }
+
+    test {
+        args("test/testng.xml")
     }
 
     sourceDirectories {
