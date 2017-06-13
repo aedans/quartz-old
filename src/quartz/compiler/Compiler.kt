@@ -11,7 +11,6 @@ import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.analyze
 import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.toFancyString
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -38,16 +37,8 @@ object Compiler {
         errorScope({ "ast builder" }) { toExpr(library, parser) }
     }
 
-    val debugBuilder: CompilerBuilder = { library, parser ->
-        defaultBuilder(library, parser).also { println("\nBuilder:\n\n${it.toFancyString()}") }
-    }
-
     val defaultAnalyzer: CompilerAnalyzer = {
         errorScope({ "semantic analyzer" }) { analyze() }
-    }
-
-    val debugAnalyzer: CompilerAnalyzer = {
-        defaultAnalyzer().also { println("\nAnalyzer:\n\n${it.toFancyString()}") }
     }
 
     val defaultGenerator: CompilerGenerator = {

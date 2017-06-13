@@ -2,12 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
-import quartz.compiler.generator.translator.simplify
-import quartz.compiler.generator.util.args
-import quartz.compiler.generator.util.type
-import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.semantics.types.NamedType
-import quartz.compiler.semantics.types.type
+import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
@@ -55,7 +50,7 @@ object Generator {
     }
 
     fun ProgramOutputStream.generate(functionDeclaration: FunctionDeclaration) {
-        function(functionDeclaration.simplify())
+        function(functionDeclaration.desugar())
     }
 
     fun ProgramOutputStream.generate(inlineC: InlineC) {
@@ -225,5 +220,49 @@ object Generator {
         }
         string(";")
         newline()
+    }
+
+    fun ProgramOutputStream.type(type: Type?) {
+        type!!
+        when (type) {
+            is PointerType -> {
+                type(type.type)
+                string("*")
+            }
+            is FunctionType -> {
+                name("__${type.descriptiveString}_t ")
+            }
+            is ConstType -> {
+                name("const")
+                type(type.type)
+            }
+            is NumberType -> {
+                name(type.string)
+            }
+            is VoidType -> {
+                name("void")
+            }
+            is InlineCType -> {
+                name(type.string)
+            }
+            else -> throw Exception("Expected type, found $type")
+        }
+    }
+
+    fun ProgramOutputStream.args(args: List<Pair<String, Type?>>?) {
+        args!!
+        string("(")
+        args.dropLast(1).forEach {
+            arg(it.let { it.first to it.second!! })
+            string(", ")
+        }
+        if (!args.isEmpty())
+            arg(args.last().let { it.first to it.second!! })
+        string(")")
+    }
+
+    fun ProgramOutputStream.arg(arg: Pair<String, Type?>) {
+        type(arg.second)
+        name(arg.first)
     }
 }
