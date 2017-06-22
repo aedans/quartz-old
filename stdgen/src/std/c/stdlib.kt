@@ -23,10 +23,12 @@ fun File.stdlib() {
 
         todo("struct div_t")
 //        struct("__stdlib_div_t", "quot" to INT, "rem" to INT)
+        _typealias("div_t", "div_t".inlineC())
         newline()
 
         todo("struct ldiv_t")
 //        struct("__stdlib_ldiv_t", "quot" to LONG, "rem" to LONG)
+        _typealias("ldiv_t", "ldiv_t".inlineC())
         newline()
 
         externTypealias("wchar_t")

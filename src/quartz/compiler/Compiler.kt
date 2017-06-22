@@ -8,7 +8,7 @@ import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.analyze
+import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
 import java.io.InputStream
@@ -38,7 +38,7 @@ object Compiler {
     }
 
     val defaultAnalyzer: CompilerAnalyzer = {
-        errorScope({ "semantic analyzer" }) { analyze() }
+        errorScope({ "semantic analyzer" }) { SemanticAnalyzer.analyzeProgram(this) }
     }
 
     val defaultGenerator: CompilerGenerator = {

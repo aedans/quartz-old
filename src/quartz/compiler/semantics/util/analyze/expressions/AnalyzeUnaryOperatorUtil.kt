@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.util.analyze.expressions
 
-import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.UnaryOperator
 import quartz.compiler.tree.util.Type
@@ -15,6 +14,6 @@ inline fun UnaryOperator.visitExpression(expressionVisitor: Visitor<Expression>)
     return copy(expression = expressionVisitor(expression))
 }
 
-inline fun UnaryOperator.analyzeExpression(expressionAnalyzer: ExpressionAnalyzer, expectedType: Type): UnaryOperator {
+inline fun UnaryOperator.analyzeExpression(expressionAnalyzer: (Type, Expression) -> Expression, expectedType: Type): UnaryOperator {
     return visitExpression(expressionAnalyzer.partial(expectedType))
 }

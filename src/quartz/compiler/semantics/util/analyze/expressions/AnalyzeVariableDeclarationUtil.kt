@@ -1,6 +1,5 @@
 package quartz.compiler.semantics.util.analyze.expressions
 
-import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.VariableDeclaration
 import quartz.compiler.tree.util.Type
@@ -19,7 +18,7 @@ inline fun VariableDeclaration.visitExpression(expressionVisitor: Visitor<Expres
     return copy(expression = expression?.let(expressionVisitor))
 }
 
-inline fun VariableDeclaration.analyzeExpression(expressionAnalyzer: ExpressionAnalyzer): VariableDeclaration {
+inline fun VariableDeclaration.analyzeExpression(expressionAnalyzer: (Type, Expression) -> Expression): VariableDeclaration {
     return visitExpression(expressionAnalyzer.partial(variableType))
 }
 

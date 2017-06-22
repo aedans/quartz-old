@@ -6,10 +6,6 @@ import quartz.compiler.util.Visitor
  * Created by Aedan Smith.
  */
 
-fun <T> visitor(vararg visitors: Visitor<T>): Visitor<T> {
-    return {
-        var mutableIt = it
-        visitors.forEach { mutableIt = it(mutableIt) }
-        mutableIt
-    }
+inline fun <T, V> Visitor<V>.visit(it: T, getter: T.() -> V, setter: T.(V) -> T): T {
+    return it.setter(this(it.getter()))
 }

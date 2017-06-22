@@ -14,7 +14,7 @@ fun File.stdint() {
 
         include("stdint.h")
 
-        kotlin.collections.listOf("ptr", "max").forEach { cat ->
+        listOf("ptr", "max").forEach { cat ->
             newline()
             comment("int$cat definitions")
 
@@ -39,11 +39,11 @@ fun File.stdint() {
             }
             MIN_MAX.forEach { s ->
                 NORM_LEAST_FAST.forEach { itype ->
-                    externVal("INT_${itype.toUpperCase()}${i}_$s", "int${i}${itype}_t")
+                    externVal("INT_${itype.toUpperCase()}${i}_$s", "int${itype}${i}_t")
                 }
             }
             NORM_LEAST_FAST.forEach { itype ->
-                externVal("UINT_${itype.toUpperCase()}${i}_MAX", "uint${i}${itype}_t")
+                externVal("UINT_${itype.toUpperCase()}${i}_MAX", "uint${itype}${i}_t")
             }
         }
     }

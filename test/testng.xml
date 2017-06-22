@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<suite name="tests" parallel="methods" thread-count="4">
-    <test name="tests">
+<suite name="Tests" parallel="methods" thread-count="4">
+    <test name="Quartz">
         <classes>
             <class name="QuartzTest"/>
         </classes>

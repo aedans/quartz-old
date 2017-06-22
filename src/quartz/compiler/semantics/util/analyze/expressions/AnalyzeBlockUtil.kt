@@ -13,7 +13,7 @@ import quartz.compiler.tree.util.Type
  */
 
 fun Block.analyzeExpressions(
-        analyzer: ((SymbolTable, Type, Expression) -> Expression),
+        analyzer: (SymbolTable, Type, Expression) -> Expression,
         table: SymbolTable,
         expectedType: Type
 ): Block {
@@ -21,7 +21,7 @@ fun Block.analyzeExpressions(
 }
 
 fun List<Expression>.analyzeExpressionsContextually(
-        analyzer: ((SymbolTable, Type, Expression) -> Expression),
+        analyzer: (SymbolTable, Type, Expression) -> Expression,
         table: SymbolTable,
         expectedType: Type
 ): List<Expression> {

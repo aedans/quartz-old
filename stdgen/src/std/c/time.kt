@@ -22,6 +22,7 @@ fun File.time() {
         include("time.h")
         newline()
 
+        todo("struct tm")
 //        struct("tm",
 //                "tm_sec" to INT,
 //                "tm_min" to INT,
@@ -32,7 +33,7 @@ fun File.time() {
 //                "tm_wday" to INT,
 //                "tm_isds" to INT
 //        )
-        todo("struct tm")
+        _typealias("tm", "tm".inlineC())
         newline()
 
         externTypealias(CLOCK)

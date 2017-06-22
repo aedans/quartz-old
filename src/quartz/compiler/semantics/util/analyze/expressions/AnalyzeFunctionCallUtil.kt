@@ -3,7 +3,6 @@ package quartz.compiler.semantics.util.analyze.expressions
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.UnknownType
-import quartz.compiler.semantics.util.ExpressionAnalyzer
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.FunctionCall
 import quartz.compiler.tree.util.Type
@@ -22,11 +21,11 @@ inline fun FunctionCall.visitArgs(expressionVisitor: Visitor<Expression>): Funct
     return copy(args = args.map(expressionVisitor))
 }
 
-inline fun FunctionCall.analyzeExpression(expressionAnalyzer: ExpressionAnalyzer): FunctionCall {
+inline fun FunctionCall.analyzeExpression(expressionAnalyzer: (Type, Expression) -> Expression): FunctionCall {
     return visitExpression(expressionAnalyzer.partial( UnknownType))
 }
 
-inline fun FunctionCall.analyzeArguments(expressionAnalyzer: ExpressionAnalyzer): FunctionCall {
+inline fun FunctionCall.analyzeArguments(expressionAnalyzer: (Type, Expression) -> Expression): FunctionCall {
     val function = (expression.type as? FunctionType)?.function
             ?: throw QuartzException("Could not call ${expression.type}")
     function.args!!
