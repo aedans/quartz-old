@@ -268,7 +268,6 @@ val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
 
 val QuartzParser.PrefixOperationContext.ID: UnaryOperator.ID
     get() = when (text) {
-        "+" -> UnaryOperator.ID.PLUS
         "-" -> UnaryOperator.ID.MINUS
         "!" -> UnaryOperator.ID.NOT
         "~" -> UnaryOperator.ID.BNOT

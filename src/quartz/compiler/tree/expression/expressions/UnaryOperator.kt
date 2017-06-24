@@ -21,7 +21,6 @@ data class UnaryOperator(val expression: Expression, val id: ID, override val ty
     enum class ID(val string: String) {
         NOT("!"),
         BNOT("~"),
-        PLUS("+"),
         MINUS("-");
 
         override fun toString(): String {

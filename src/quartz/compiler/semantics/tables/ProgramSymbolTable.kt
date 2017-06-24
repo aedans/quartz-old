@@ -21,10 +21,10 @@ data class ProgramSymbolTable(
         val inlineCDeclarations: List<InlineC>
 ) : SymbolTable {
     constructor(program: Program) : this(
-            program.filterIsInstance(FunctionDeclaration::class.java).toMap(),
-            program.filterIsInstance(ExternFunctionDeclaration::class.java).toMap(),
-            program.filterIsInstance(TypealiasDeclaration::class.java).toMap(),
-            program.filterIsInstance(InlineC::class.java)
+            program.filterIsInstance<FunctionDeclaration>().toMap(),
+            program.filterIsInstance<ExternFunctionDeclaration>().toMap(),
+            program.filterIsInstance<TypealiasDeclaration>().toMap(),
+            program.filterIsInstance<InlineC>()
     )
 
     override fun getType(name: String): Type? {

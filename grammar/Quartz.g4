@@ -175,8 +175,7 @@ multiplicativeOperation
     ;
 
 prefixOperation
-    : '+'
-    | '-'
+    : '-'
     | '!'
     | '~'
     ;
