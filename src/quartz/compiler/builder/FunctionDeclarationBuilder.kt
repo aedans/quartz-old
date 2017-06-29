@@ -3,7 +3,10 @@ package quartz.compiler.builder
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.*
+import quartz.compiler.semantics.types.CharType
+import quartz.compiler.semantics.types.DoubleType
+import quartz.compiler.semantics.types.IntType
+import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
@@ -41,23 +44,23 @@ fun QuartzParser.ExpressionContext.toExpr(): Expression {
 }
 
 fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
-    return IfExpression(test.toExpr(), ifTrue.toExpr(), ifFalse?.toExpr() ?: Block(emptyList()), UnknownType)
+    return IfExpression(test.toExpr(), ifTrue.toExpr(), ifFalse?.toExpr() ?: Block(emptyList()), null)
 }
 
 fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
     return when {
         assignmentExpression() == null -> disjunction().toExpr()
         else -> when (assignmentOperation().text) {
-            "=" -> Assignment(disjunction().toExpr(), assignmentExpression().toExpr(), UnknownType)
+            "=" -> Assignment(disjunction().toExpr(), assignmentExpression().toExpr(), null)
             else -> Assignment(
                     disjunction().toExpr(),
                     BinaryOperator(
                             disjunction().toExpr(),
                             assignmentExpression().toExpr(),
                             assignmentOperation().ID,
-                            UnknownType
+                            null
                     ),
-                    UnknownType
+                    null
             )
         }
     }
@@ -66,49 +69,49 @@ fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
 fun QuartzParser.DisjunctionContext.toExpr(): Expression {
     return when {
         disjunction() == null -> conjunction().toExpr()
-        else -> BinaryOperator(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID, UnknownType)
+        else -> BinaryOperator(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID, null)
     }
 }
 
 fun QuartzParser.ConjunctionContext.toExpr(): Expression {
     return when {
         conjunction() == null -> equalityComparison().toExpr()
-        else -> BinaryOperator(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID, UnknownType)
+        else -> BinaryOperator(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID, null)
     }
 }
 
 fun QuartzParser.EqualityComparisonContext.toExpr(): Expression {
     return when {
         equalityComparison() == null -> comparison().toExpr()
-        else -> BinaryOperator(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID, UnknownType)
+        else -> BinaryOperator(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID, null)
     }
 }
 
 fun QuartzParser.ComparisonContext.toExpr(): Expression {
     return when {
         comparison() == null -> bitshiftExpression().toExpr()
-        else -> BinaryOperator(bitshiftExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, UnknownType)
+        else -> BinaryOperator(bitshiftExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
     }
 }
 
 fun QuartzParser.BitshiftExpressionContext.toExpr(): Expression {
     return when {
         bitshiftExpression() == null -> additiveExpression().toExpr()
-        else -> BinaryOperator(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID, UnknownType)
+        else -> BinaryOperator(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID, null)
     }
 }
 
 fun QuartzParser.AdditiveExpressionContext.toExpr(): Expression {
     return when {
         additiveExpression() == null -> multiplicativeExpression().toExpr()
-        else -> BinaryOperator(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID, UnknownType)
+        else -> BinaryOperator(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID, null)
     }
 }
 
 fun QuartzParser.MultiplicativeExpressionContext.toExpr(): Expression {
     return when {
         multiplicativeExpression() == null -> operableExpression().toExpr()
-        else -> BinaryOperator(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID, UnknownType)
+        else -> BinaryOperator(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID, null)
     }
 }
 
@@ -122,7 +125,7 @@ fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
 }
 
 fun QuartzParser.PrefixOperationContext.toExpr(expression: Expression): Expression {
-    return UnaryOperator(expression, ID, UnknownType)
+    return UnaryOperator(expression, ID, null)
 }
 
 fun QuartzParser.PostfixOperationContext.toExpr(expression: Expression): Expression {
@@ -160,7 +163,7 @@ fun QuartzParser.SizeofContext.toExpr(): Sizeof {
 }
 
 fun QuartzParser.IdentifierContext.toExpr(): Identifier {
-    return Identifier(NAME().text, UnknownType)
+    return Identifier(NAME().text, null)
 }
 
 fun QuartzParser.CastContext.toExpr(expression: Expression): Cast {
@@ -171,7 +174,7 @@ fun QuartzParser.PostfixCallContext.toExpr(expression: Expression): FunctionCall
     return FunctionCall(
             expression,
             expressionList().toList(),
-            UnknownType
+            null
     )
 }
 
@@ -179,7 +182,7 @@ fun QuartzParser.DotCallContext.toExpr(expression: Expression): FunctionCall {
     return FunctionCall(
             identifier().toExpr(),
             listOf(expression) + (expressionList().toList()),
-            UnknownType
+            null
     )
 }
 
@@ -193,7 +196,7 @@ fun QuartzParser.VarDeclarationContext.toExpr(): VariableDeclaration {
         else -> VariableDeclaration(
                 nameOptionalType().NAME().text,
                 expression().toExpr(),
-                nameOptionalType()?.type()?.toType() ?: UnknownType
+                nameOptionalType()?.type()?.toType()
         )
     }
 }

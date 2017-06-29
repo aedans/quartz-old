@@ -18,6 +18,6 @@ inline fun Cast.visitExpression(expressionVisitor: Visitor<Expression>): Cast {
     return copy(expression = expressionVisitor(expression))
 }
 
-inline fun Cast.analyzeExpression(expressionAnalyzer: (Type, Expression) -> Expression, expectedType: Type): Cast {
+inline fun Cast.analyzeExpression(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): Cast {
     return visitExpression(expressionAnalyzer.partial(expectedType))
 }

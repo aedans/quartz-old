@@ -10,7 +10,7 @@ import quartz.compiler.tree.util.Type
 
 data class Sizeof(val sizeType: Type) : Expression {
     override val isLValue = false
-    override val type = ULongType
+    override val type: Type? = ULongType
 
     override fun withType(type: Type): Expression {
         return this

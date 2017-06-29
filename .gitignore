@@ -3,7 +3,7 @@
 /.kobalt
 /std
 /kobaltBuild
-/src/quartz/compiler/parser
+parser
 /*.qz
 /*.c
 /*.exe

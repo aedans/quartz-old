@@ -8,7 +8,7 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class InlineC(val src: String, override val type: Type) : Declaration, Expression {
+data class InlineC(val src: String, override val type: Type?) : Declaration, Expression {
     override val isLValue = true
     override val name: String = "__InlineC${hashCode()}"
 

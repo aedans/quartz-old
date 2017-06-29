@@ -103,12 +103,12 @@ object SemanticAnalyzer {
         }
     }
 
-    private fun Type.analyze(
+    private fun Type?.analyze(
             newProgram: MutableMap<String, Declaration>,
             table: SymbolTable
     ) {
         return when (this) {
-            is UnknownType -> {}
+            null -> {}
             is VoidType -> {}
             is NumberType -> {}
             is InlineCType -> {}

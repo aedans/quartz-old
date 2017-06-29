@@ -41,7 +41,7 @@ object TypeAnalyzer {
 
     fun visitExpression(
             table: SymbolTable,
-            expectedType: Type,
+            expectedType: Type?,
             expr: Expression
     ): Expression {
         errorScope({ expr.toString() }) {
@@ -105,20 +105,18 @@ object TypeAnalyzer {
     ): Type {
         errorScope({ type.toString() }) {
             val typeAnalyzer = this::visitType.partial(table)
-            return type
-                    .let {
-                        when (it) {
-                            UnknownType -> it
-                            VoidType -> it
-                            is NumberType -> it
-                            is InlineCType -> it
-                            is ConstType -> it.visitConstType(typeAnalyzer)
-                            is PointerType -> it.visitPointerType(typeAnalyzer)
-                            is FunctionType -> it.visitFunctionType(typeAnalyzer)
-                            is NamedType -> it.visitNamedType(table::getType, typeAnalyzer)
-                            else -> throw Exception("Expected type, found $it")
-                        }
-                    }
+            return type.let {
+                when (it) {
+                    VoidType -> it
+                    is NumberType -> it
+                    is InlineCType -> it
+                    is ConstType -> it.visitConstType(typeAnalyzer)
+                    is PointerType -> it.visitPointerType(typeAnalyzer)
+                    is FunctionType -> it.visitFunctionType(typeAnalyzer)
+                    is NamedType -> it.visitNamedType(table::getType, typeAnalyzer)
+                    else -> throw Exception("Expected type, found $it")
+                }
+            }
         }
     }
 }

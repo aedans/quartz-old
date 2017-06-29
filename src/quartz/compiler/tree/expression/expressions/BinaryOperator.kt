@@ -7,7 +7,7 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, override val type: Type) : Expression {
+data class BinaryOperator(val expr1: Expression, val expr2: Expression, val id: ID, override val type: Type?) : Expression {
     override val isLValue = false
 
     override fun withType(type: Type): BinaryOperator {

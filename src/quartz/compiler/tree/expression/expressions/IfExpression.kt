@@ -11,7 +11,7 @@ data class IfExpression(
         val condition: Expression,
         val ifTrue: Block,
         val ifFalse: Block,
-        override val type: Type
+        override val type: Type?
 ) : Expression {
     override val isLValue = false
 

@@ -29,10 +29,10 @@ inline fun IfExpression.analyzeCondition(expressionAnalyzer: (Type, Expression) 
     return visitCondition(expressionAnalyzer.partial(IntType))
 }
 
-inline fun IfExpression.analyzeIfTrue(expressionAnalyzer: (Type, Expression) -> Expression, expectedType: Type): IfExpression {
+inline fun IfExpression.analyzeIfTrue(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): IfExpression {
     return visitIfTrue(expressionAnalyzer.partial(expectedType))
 }
 
-inline fun IfExpression.analyzeIfFalse(expressionAnalyzer: (Type, Expression) -> Expression, expectedType: Type): IfExpression {
+inline fun IfExpression.analyzeIfFalse(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): IfExpression {
     return visitIfFalse(expressionAnalyzer.partial(expectedType))
 }

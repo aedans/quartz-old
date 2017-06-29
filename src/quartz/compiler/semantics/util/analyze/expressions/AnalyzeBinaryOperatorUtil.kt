@@ -18,10 +18,10 @@ inline fun BinaryOperator.visitExpr2(expressionVisitor: Visitor<Expression>): Bi
     return copy(expr2 = expressionVisitor(expr2))
 }
 
-inline fun BinaryOperator.analyzeExpr1(expressionAnalyzer: (Type, Expression) -> Expression, expectedType: Type): BinaryOperator {
+inline fun BinaryOperator.analyzeExpr1(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): BinaryOperator {
     return visitExpr1(expressionAnalyzer.partial(expectedType))
 }
 
-inline fun BinaryOperator.analyzeExpr2(expressionAnalyzer: (Type, Expression) -> Expression, expectedType: Type): BinaryOperator {
+inline fun BinaryOperator.analyzeExpr2(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): BinaryOperator {
     return visitExpr2(expressionAnalyzer.partial(expectedType))
 }
