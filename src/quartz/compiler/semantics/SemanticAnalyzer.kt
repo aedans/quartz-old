@@ -1,6 +1,7 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.err
+import quartz.compiler.errors.except
 import quartz.compiler.semantics.tables.ProgramSymbolTable
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.types.*
@@ -23,7 +24,7 @@ object SemanticAnalyzer {
     fun analyzeProgram(program: Program): Program {
         val programSymbolTable = ProgramSymbolTable(program)
         val main = programSymbolTable.functionDeclarations["main"]
-                ?: throw QuartzException("Could not find function main")
+                ?: except { "Could not find function main" }
         val newProgram = mutableMapOf<String, Declaration>()
         main.analyze(newProgram, programSymbolTable)
         return programSymbolTable.inlineCDeclarations + newProgram.values
@@ -46,7 +47,7 @@ object SemanticAnalyzer {
                 is TypealiasDeclaration -> {
                     aliasedType.analyze(newProgram, table)
                 }
-                else -> throw Exception("Expected declaration, found $this")
+                else -> err { "Expected declaration, found $this" }
             }
         }
     }
@@ -102,7 +103,7 @@ object SemanticAnalyzer {
                 variableType.analyze(newProgram, table)
                 expression.analyze(newProgram, table)
             }
-            else -> throw Exception("Expected expression, found $this")
+            else -> err { "Expected expression, found $this" }
         }
     }
 
@@ -119,7 +120,7 @@ object SemanticAnalyzer {
             is PointerType -> type.analyze(newProgram, table)
             is NamedType -> analyze(newProgram, table)
             is FunctionType -> function.analyze(newProgram, table)
-            else -> throw Exception("Expected type, found $this")
+            else -> err { "Expected type, found $this" }
         }
     }
 

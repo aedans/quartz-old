@@ -1,7 +1,7 @@
 package quartz.compiler.builder
 
-import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.errors.except
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Library
@@ -29,7 +29,7 @@ private fun List<QuartzParser.DeclarationContext>.program(): Program {
             it.functionDeclaration() != null -> program += it.functionDeclaration().toExpr()
             it.externFunctionDeclaration() != null -> program += it.externFunctionDeclaration().toExpr()
             it.typealiasDeclaration() != null -> program += it.typealiasDeclaration().toExpr()
-            else -> throw QuartzException("Error translating ${it.text}")
+            else -> except { "Error translating ${it.text}" }
         }
     }
     return program

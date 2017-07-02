@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.util.analyze
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
 
@@ -15,7 +15,7 @@ fun Expression.verifyType(type: Type?): Expression {
         thisType == null -> this
         type.isConvertibleTo(thisType) -> this
         thisType.isConvertibleTo(type) -> this
-        else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
+        else -> except { "Could not cast $this (${this.type}) to $type" }
     }
 }
 

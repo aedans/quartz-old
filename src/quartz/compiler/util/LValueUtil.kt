@@ -1,6 +1,6 @@
 package quartz.compiler.util
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.LValue
 
@@ -9,5 +9,5 @@ import quartz.compiler.tree.expression.LValue
  */
 
 fun Expression.lValueOrError(): LValue {
-    return if (this is LValue) this else throw QuartzException("$this is not an lvalue")
+    return if (this is LValue) this else except { "$this is not an lvalue" }
 }

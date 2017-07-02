@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.util.analyze
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.semantics.types.ConstType
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.semantics.types.NamedType
@@ -27,7 +27,7 @@ inline fun FunctionType.visitFunctionType(typeVisitor: Visitor<Type>): FunctionT
 
 inline fun NamedType.visitNamedType(typeProvider: (String) -> Type?, typeVisitor: Visitor<Type>): Type {
     return typeVisitor(typeProvider(string)
-            ?: throw QuartzException("Unknown type $string"))
+            ?: except { "Unknown type $string" })
 }
 
 inline fun Function.visitFunctionTypes(typeVisitor: Visitor<Type>): Function {

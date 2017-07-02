@@ -2,7 +2,7 @@ package quartz.compiler.cli
 
 import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.default
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.tree.Library
 import java.io.File
 
@@ -17,7 +17,7 @@ class QuartzArgs(args: Array<String>) {
     val outputFile by parser.storing("-o", "--output", help = "set the output file") { File(this).absoluteFile!! }
             .default(File("main.c").absoluteFile!!)
     val library by parser.storing("-l", "--library", help = "set the quartz standard library") { Library.create(File(this)) }
-            .default(Library.create(File(System.getenv()["QZ_LIB"] ?: throw QuartzException("Environment variable QZ_LIB is not set"))))
+            .default(Library.create(File(System.getenv()["QZ_LIB"] ?: except { "Environment variable QZ_LIB is not set" })))
     val includes by parser.adding("-I", "--include", help = "include libraries") { Library.create(File(this)) } // TODO test
     val time by parser.flagging("-t", "--time", help = "time the compiler in milliseconds").default(false)
     val debugBuilder by parser.flagging("--debug-builder", help = "enable debug builder").default(false)

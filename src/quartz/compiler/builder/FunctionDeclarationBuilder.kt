@@ -1,7 +1,8 @@
 package quartz.compiler.builder
 
-import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.errors.err
+import quartz.compiler.errors.except
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.CharType
 import quartz.compiler.semantics.types.DoubleType
@@ -34,11 +35,11 @@ fun QuartzParser.FunctionDeclarationContext.toExpr(): FunctionDeclaration {
 }
 
 fun QuartzParser.ExpressionContext.toExpr(): Expression {
-    return errorScope({ "value $text" }) {
+    return errorScope({ "expression $text" }) {
         when {
             letExpression() != null -> letExpression().toExpr()
             disjunction() != null -> disjunction().toExpr()
-            else -> throw Exception("Unrecognized value $text")
+            else -> err { "Unrecognized value $text" }
         }
     }
 }
@@ -123,7 +124,7 @@ fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
         prefixOperation() != null -> prefixOperation().toExpr(operableExpression().toExpr())
         postfixOperation() != null -> postfixOperation().toExpr(operableExpression().toExpr())
         atomicExpression() != null -> atomicExpression().toExpr()
-        else -> throw Exception("Unrecognized value $text")
+        else -> err { "Unrecognized value $text" }
     }
 }
 
@@ -136,7 +137,7 @@ fun QuartzParser.PostfixOperationContext.toExpr(expression: Expression): Express
         cast() != null -> cast().toExpr(expression)
         postfixCall() != null -> postfixCall().toExpr(expression)
         dotCall() != null -> dotCall().toExpr(expression)
-        else -> throw Exception("Unrecognized postfix operation $text")
+        else -> err { "Unrecognized postfix operation $text" }
     }
 }
 
@@ -148,7 +149,7 @@ fun QuartzParser.AtomicExpressionContext.toExpr(): Expression {
         sizeof() != null -> sizeof().toExpr()
         identifier() != null -> identifier().toExpr()
         ifExpression() != null -> ifExpression().toExpr()
-        else -> throw Exception("Unrecognized atomic value $text")
+        else -> err { "Unrecognized atomic value $text" }
     }
 }
 
@@ -158,7 +159,7 @@ fun QuartzParser.LiteralContext.toExpr(): Expression {
         INT() != null -> NumberLiteral(text, IntType)
         DOUBLE() != null -> NumberLiteral(text, DoubleType)
         STRING() != null -> StringLiteral(text.substring(1, text.length-1))
-        else -> throw QuartzException("Error translating $this")
+        else -> err { "Error translating $this" }
     }
 }
 
@@ -176,7 +177,7 @@ fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
 
 fun List<QuartzParser.IfBranchContext>.toExpr(`else`: Expression?): IfExpression {
     return when (size) {
-        0 -> throw QuartzException("Cannot have empty if value")
+        0 -> except { "Cannot have empty if value" }
         1 -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), `else`, null) }
         else -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), drop(1).toExpr(`else`), null) }
     }
@@ -231,7 +232,7 @@ val QuartzParser.AssignmentOperationContext.ID: BinaryOperation.ID
         "^=" -> BinaryOperation.ID.BXOR
         "<<=" -> BinaryOperation.ID.SHL
         ">>=" -> BinaryOperation.ID.SHR
-        else -> throw Exception("Unrecognized assignment operation $text")
+        else -> err { "Unrecognized assignment operation $text" }
     }
 
 val QuartzParser.DisjunctionOperationContext.ID: BinaryOperation.ID
@@ -239,21 +240,21 @@ val QuartzParser.DisjunctionOperationContext.ID: BinaryOperation.ID
         "||" -> BinaryOperation.ID.OR
         "|" -> BinaryOperation.ID.BOR
         "^" -> BinaryOperation.ID.BXOR
-        else -> throw Exception("Unrecognized disjunction $text")
+        else -> err { "Unrecognized disjunction $text" }
     }
 
 val QuartzParser.ConjunctionOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
         "&&" -> BinaryOperation.ID.AND
         "&" -> BinaryOperation.ID.BAND
-        else -> throw Exception("Unrecognized conjunction $text")
+        else -> err { "Unrecognized conjunction $text" }
     }
 
 val QuartzParser.EqualityOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
         "==" -> BinaryOperation.ID.EQ
         "!=" -> BinaryOperation.ID.NEQ
-        else -> throw Exception("Unrecognized equality operation $text")
+        else -> err { "Unrecognized equality operation $text" }
     }
 
 val QuartzParser.ComparisonOperationContext.ID: BinaryOperation.ID
@@ -262,21 +263,21 @@ val QuartzParser.ComparisonOperationContext.ID: BinaryOperation.ID
         "<" -> BinaryOperation.ID.LT
         ">=" -> BinaryOperation.ID.GEQ
         "<=" -> BinaryOperation.ID.LEQ
-        else -> throw Exception("Unrecognized comparison operation $text")
+        else -> err { "Unrecognized comparison operation $text" }
     }
 
 val QuartzParser.BitshiftOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
         ">>" -> BinaryOperation.ID.SHR
         "<<" -> BinaryOperation.ID.SHL
-        else -> throw Exception("Unrecognized bitshift operation $text")
+        else -> err { "Unrecognized bitshift operation $text" }
     }
 
 val QuartzParser.AdditiveOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
         "+" -> BinaryOperation.ID.ADD
         "-" -> BinaryOperation.ID.SUBT
-        else -> throw Exception("Unrecognized additive operation $text")
+        else -> err { "Unrecognized additive operation $text" }
     }
 
 val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperation.ID
@@ -284,7 +285,7 @@ val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperation.ID
         "*" -> BinaryOperation.ID.MULT
         "/" -> BinaryOperation.ID.DIV
         "%" -> BinaryOperation.ID.MOD
-        else -> throw Exception("Unrecognized multiplicative operation $text")
+        else -> err { "Unrecognized multiplicative operation $text" }
     }
 
 val QuartzParser.PrefixOperationContext.ID: UnaryOperation.ID
@@ -292,5 +293,5 @@ val QuartzParser.PrefixOperationContext.ID: UnaryOperation.ID
         "-" -> UnaryOperation.ID.MINUS
         "!" -> UnaryOperation.ID.NOT
         "~" -> UnaryOperation.ID.BNOT
-        else -> throw Exception("Unrecognized prefix operation $text")
+        else -> err { "Unrecognized prefix operation $text" }
     }

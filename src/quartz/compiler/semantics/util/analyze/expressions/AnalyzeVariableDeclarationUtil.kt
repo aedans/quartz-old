@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.util.analyze.expressions
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.util.withVar
 import quartz.compiler.tree.expression.Expression
@@ -35,7 +35,7 @@ inline fun LetExpression.analyzeExpression(
         expectedType: Type?
 ): LetExpression {
     return visitExpression(expressionAnalyzer.partial(symbolTable.withVar(name, variableType ?:
-            throw QuartzException("Could not infer type for $this")
+            except { "Could not infer type for $this" }
     )).partial(expectedType))
 }
 

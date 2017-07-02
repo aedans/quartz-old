@@ -1,6 +1,6 @@
 package quartz.compiler.tree
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.util.times
 import java.io.File
 
@@ -21,7 +21,7 @@ sealed class Library(val name: String) {
         override fun get(path: List<String>): File {
             if (path.isNotEmpty())
                 return subLibraries[path.first()]?.get(path.drop(1))
-                        ?: throw QuartzException("Could not find package $path")
+                        ?: except { "Could not find package $path" }
             else
                 return file
         }
@@ -57,7 +57,7 @@ sealed class Library(val name: String) {
     class LibraryFile(name: String, val file: File) : Library(name) {
         override fun get(path: List<String>): File {
             if (!path.isEmpty())
-                throw QuartzException("Could not find $path")
+                except { "Could not find $path" }
             return file
         }
 
@@ -69,7 +69,7 @@ sealed class Library(val name: String) {
     companion object {
         fun create(file: File): LibraryPackage {
             if (!file.isDirectory)
-                throw QuartzException("Could not find ${file.absolutePath}")
+                except { "Could not find ${file.absolutePath}" }
 
             return LibraryPackage(file.name, file, mapOf(file.name to createLocal(file)))
         }

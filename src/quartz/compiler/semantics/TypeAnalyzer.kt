@@ -1,7 +1,8 @@
 package quartz.compiler.semantics
 
-import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.errors.err
+import quartz.compiler.errors.except
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.types.*
 import quartz.compiler.semantics.util.analyze.*
@@ -34,7 +35,7 @@ object TypeAnalyzer {
                 is FunctionDeclaration -> declaration
                         .visitTypes(table, this::visitType)
                         .analyzeExpression(table, this::visitExpression)
-                else -> throw Exception("Expected declaration, found $declaration")
+                else -> err { "Expected declaration, found $declaration" }
             }
         }
     }
@@ -55,7 +56,7 @@ object TypeAnalyzer {
                     is StringLiteral -> it
                     is Identifier -> it
                             .inferTypeAs { typeVisitor(table.getVar(name)
-                                    ?: throw QuartzException("Could not find variable $name")) }
+                                    ?: except { "Could not find variable $name" }) }
                     is Sizeof -> it
                             .visitSizeofType(typeVisitor)
                     is Cast -> it
@@ -92,7 +93,7 @@ object TypeAnalyzer {
                             .inferVariableTypeFromExpression()
                             .visitVariableType(typeVisitor)
                             .analyzeExpression(this::visitExpression, table, expectedType)
-                    else -> throw Exception("Expected expression, found $it")
+                    else -> err { "Expected expression, found $it" }
                 }
             }
                     .verifyType(expectedType)
@@ -114,7 +115,7 @@ object TypeAnalyzer {
                     is PointerType -> it.visitPointerType(typeAnalyzer)
                     is FunctionType -> it.visitFunctionType(typeAnalyzer)
                     is NamedType -> it.visitNamedType(table::getType, typeAnalyzer)
-                    else -> throw Exception("Expected type, found $it")
+                    else -> err { "Expected type, found $it" }
                 }
             }
         }

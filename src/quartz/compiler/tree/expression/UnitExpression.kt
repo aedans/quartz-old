@@ -1,6 +1,6 @@
 package quartz.compiler.tree.expression
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.util.Type
 
@@ -13,7 +13,7 @@ abstract class UnitExpression : Expression {
 
     override fun withType(type: Type): Expression {
         if (type != VoidType)
-            throw QuartzException("Could not set type of $this to $type")
+            except { "Could not set type of $this to $type" }
         else return this
     }
 }

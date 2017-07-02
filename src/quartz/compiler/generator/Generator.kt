@@ -1,7 +1,7 @@
 package quartz.compiler.generator
 
-import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.errors.err
 import quartz.compiler.generator.expressions.VariableDeclaration
 import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Declaration
@@ -36,7 +36,7 @@ object Generator {
                 functionPrototype(declaration)
             }
             is ExternFunctionDeclaration -> functionTypedef(declaration.type())
-            else -> throw Exception("Expected declaration, found $declaration")
+            else -> err { "Expected declaration, found $declaration" }
         }
     }
 
@@ -46,7 +46,7 @@ object Generator {
             is ExternFunctionDeclaration -> { }
             is FunctionDeclaration -> generate(declaration)
             is InlineC -> generate(declaration)
-            else -> throw Exception("Expected declaration, found $declaration")
+            else -> err { "Expected declaration, found $declaration" }
         }
     }
 
@@ -99,7 +99,7 @@ object Generator {
                 is IfExpression -> ifExpression(expression)
                 is VariableDeclaration -> variableDeclaration(expression)
                 is ExpressionList -> block(expression)
-                else -> throw QuartzException("Unrecognized value $expression")
+                else -> err { "Unrecognized expression $expression" }
             }
         }
     }
@@ -201,13 +201,13 @@ object Generator {
     fun ProgramOutputStream.declare(type: Type) {
         when (type) {
             is FunctionType -> functionTypedef(type)
-            is NamedType -> throw QuartzException("Unresolved type $type")
+            is NamedType -> err { "Unresolved type $type" }
         }
     }
 
     fun ProgramOutputStream.functionTypedef(type: FunctionType) {
         val name = type.descriptiveString
-        (type.function.args ?: throw Exception("Unknown argument types for $type")).forEach {
+        (type.function.args ?: err { "Unknown argument types for $type" }).forEach {
             declare(it)
         }
         declare(type.function.returnType)
@@ -258,7 +258,7 @@ object Generator {
             is InlineCType -> {
                 name(type.string)
             }
-            else -> throw Exception("Expected type, found $type")
+            else -> err { "Expected type, found $type" }
         }
     }
 

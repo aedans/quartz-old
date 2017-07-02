@@ -1,6 +1,7 @@
 package quartz.compiler.generator
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.err
+import quartz.compiler.errors.except
 import quartz.compiler.generator.expressions.VariableDeclaration
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
@@ -53,7 +54,7 @@ fun Expression.desugar(newExpressions: MutableList<Expression>, intIterator: Int
         is LetExpression -> desugar(newExpressions, intIterator, isStatement)
         is VariableDeclaration -> desugar(newExpressions, intIterator, isStatement)
         is ExpressionList -> desugar(newExpressions, intIterator, isStatement)
-        else -> throw QuartzException("Expected expression, found $this")
+        else -> err { "Expected expression, found $this" }
     }
 }
 
@@ -72,7 +73,7 @@ fun ExpressionPair.desugar(newExpressions: MutableList<Expression>, intIterator:
 fun ReturnExpression.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {
     return if (isStatement) {
         copy(expression = expression.desugar(newExpressions, intIterator))
-    } else throw QuartzException("$this in invalid context")
+    } else except { "$this in invalid context" }
 }
 
 fun IfExpression.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {

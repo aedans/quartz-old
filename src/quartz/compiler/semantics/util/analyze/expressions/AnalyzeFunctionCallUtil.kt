@@ -1,6 +1,6 @@
 package quartz.compiler.semantics.util.analyze.expressions
 
-import quartz.compiler.errors.QuartzException
+import quartz.compiler.errors.except
 import quartz.compiler.semantics.types.FunctionType
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.FunctionCall
@@ -26,11 +26,11 @@ inline fun FunctionCall.analyzeExpression(expressionAnalyzer: (Type?, Expression
 
 inline fun FunctionCall.analyzeArguments(expressionAnalyzer: (Type?, Expression) -> Expression): FunctionCall {
     val function = (expression.type as? FunctionType)?.function
-            ?: throw QuartzException("Could not call ${expression.type}")
+            ?: except { "Could not call ${expression.type}" }
     function.args!!
 
     if (!function.vararg && function.args.size != args.size)
-        throw quartz.compiler.errors.QuartzException("Incorrect number of arguments for $this")
+        except { "Incorrect number of arguments for $this" }
 
     val expressions = args.zip(function.args +
             arrayOfNulls<Type>(args.size - function.args.size))

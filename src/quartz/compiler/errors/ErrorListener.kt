@@ -14,7 +14,7 @@ import java.util.*
 
 class ErrorListener : ANTLRErrorListener {
     override fun syntaxError(parser: Recognizer<*, *>?, p1: Any?, line: Int, char: Int, message: String?, e: RecognitionException?) {
-        throw QuartzException("line $line:$char $message", emptyList())
+        except { "line $line:$char $message" }
     }
 
     override fun reportAmbiguity(p0: Parser?, p1: DFA?, p2: Int, p3: Int, p4: Boolean, p5: BitSet?, p6: ATNConfigSet?) {

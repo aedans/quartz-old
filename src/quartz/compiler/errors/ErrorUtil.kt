@@ -4,6 +4,14 @@ package quartz.compiler.errors
  * Created by Aedan Smith.
  */
 
+inline fun err(message: () -> String): Nothing {
+    throw QuartzError(message())
+}
+
+inline fun except(message: () -> String): Nothing {
+    throw QuartzException(message())
+}
+
 inline fun <T> errorScope(name: () -> String, function: () -> T): T {
     return try {
         function()
