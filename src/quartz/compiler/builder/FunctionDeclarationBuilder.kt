@@ -27,24 +27,20 @@ fun QuartzParser.FunctionDeclarationContext.toExpr(): FunctionDeclaration {
                         returnType?.toType() ?: VoidType,
                         false
                 ),
-                atomicBlock().toExpr()
+                expression().toExpr()
         )
     }
 }
 
 fun QuartzParser.ExpressionContext.toExpr(): Expression {
-    return errorScope({ "expression $text" }) {
+    return errorScope({ "value $text" }) {
         when {
-            varDeclaration() != null -> varDeclaration().toExpr()
-            ifExpression() != null -> ifExpression().toExpr()
+            letExpression() != null -> letExpression().toExpr()
+            expression() != null -> ExpressionPair(assignmentExpression().toExpr(), expression().toExpr())
             assignmentExpression() != null -> assignmentExpression().toExpr()
-            else -> throw Exception("Unrecognized expression $text")
+            else -> throw Exception("Unrecognized value $text")
         }
     }
-}
-
-fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
-    return IfExpression(test.toExpr(), ifTrue.toExpr(), ifFalse?.toExpr() ?: Block(emptyList()), null)
 }
 
 fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
@@ -120,7 +116,7 @@ fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
         prefixOperation() != null -> prefixOperation().toExpr(operableExpression().toExpr())
         postfixOperation() != null -> postfixOperation().toExpr(operableExpression().toExpr())
         atomicExpression() != null -> atomicExpression().toExpr()
-        else -> throw Exception("Unrecognized expression $text")
+        else -> throw Exception("Unrecognized value $text")
     }
 }
 
@@ -144,7 +140,8 @@ fun QuartzParser.AtomicExpressionContext.toExpr(): Expression {
         literal() != null -> literal().toExpr()
         sizeof() != null -> sizeof().toExpr()
         identifier() != null -> identifier().toExpr()
-        else -> throw Exception("Unrecognized atomic expression $text")
+        ifExpression() != null -> ifExpression().toExpr()
+        else -> throw Exception("Unrecognized atomic value $text")
     }
 }
 
@@ -166,6 +163,18 @@ fun QuartzParser.IdentifierContext.toExpr(): Identifier {
     return Identifier(NAME().text, null)
 }
 
+fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
+    return ifBranch().toExpr(expression()?.toExpr())
+}
+
+fun List<QuartzParser.IfBranchContext>.toExpr(`else`: Expression?): IfExpression {
+    return when (size) {
+        0 -> throw QuartzException("Cannot have empty if value")
+        1 -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), `else`, null) }
+        else -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), drop(1).toExpr(`else`), null) }
+    }
+}
+
 fun QuartzParser.CastContext.toExpr(expression: Expression): Cast {
     return Cast(expression, type().toType())
 }
@@ -173,7 +182,7 @@ fun QuartzParser.CastContext.toExpr(expression: Expression): Cast {
 fun QuartzParser.PostfixCallContext.toExpr(expression: Expression): FunctionCall {
     return FunctionCall(
             expression,
-            expressionList().toList(),
+            atomicExpression().map { it.toExpr() },
             null
     )
 }
@@ -181,22 +190,24 @@ fun QuartzParser.PostfixCallContext.toExpr(expression: Expression): FunctionCall
 fun QuartzParser.DotCallContext.toExpr(expression: Expression): FunctionCall {
     return FunctionCall(
             identifier().toExpr(),
-            listOf(expression) + (expressionList().toList()),
+            listOf(expression) + postfixCall().atomicExpression().map { it.toExpr() },
             null
     )
 }
 
-fun QuartzParser.VarDeclarationContext.toExpr(): VariableDeclaration {
+fun QuartzParser.LetExpressionContext.toExpr(): LetExpression {
     return when {
-        nameType() != null -> VariableDeclaration(
+        nameType() != null -> LetExpression(
                 nameType().NAME().text,
-                expression()?.toExpr(),
-                nameType().type().toType()
+                value?.toExpr(),
+                nameType().type().toType(),
+                expr.toExpr()
         )
-        else -> VariableDeclaration(
+        else -> LetExpression(
                 nameOptionalType().NAME().text,
-                expression().toExpr(),
-                nameOptionalType()?.type()?.toType()
+                value.toExpr(),
+                nameOptionalType()?.type()?.toType(),
+                expr.toExpr()
         )
     }
 }

@@ -37,12 +37,12 @@ fun PrintStream.externFunction(name: String, ret: String?, vararg types: String)
 }
 
 fun PrintStream.externVal(name: String, type: String) {
-    println("fn get_$name(): $type { %%$name%%; }")
+    println("fn get_$name(): $type\n\t%%$name%%")
 }
 
 fun PrintStream.externVar(name: String, type: String) {
     externVal(name, type)
-    println("fn set_$name(value: $type) { %%$name = value%%; }")
+    println("fn set_$name(value: $type)\n\t%%$name = value%%")
 }
 
 fun PrintStream.include(string: String) {

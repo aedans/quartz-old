@@ -19,6 +19,6 @@ inline fun FunctionDeclaration.visitTypes(
             name,
             argNames,
             function.visitFunctionTypes(typeAnalyzer.partial(symbolTable)),
-            block
+            expression
     )
 }

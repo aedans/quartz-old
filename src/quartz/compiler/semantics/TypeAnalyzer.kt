@@ -33,7 +33,7 @@ object TypeAnalyzer {
                         .visitTypes(this::visitType.partial(table))
                 is FunctionDeclaration -> declaration
                         .visitTypes(table, this::visitType)
-                        .analyzeBlock(table, this::visitExpression)
+                        .analyzeExpression(table, this::visitExpression)
                 else -> throw Exception("Expected declaration, found $declaration")
             }
         }
@@ -49,6 +49,7 @@ object TypeAnalyzer {
             val expressionAnalyzer = this::visitExpression.partial(table)
             return expr.let {
                 when (it) {
+                    EmptyExpression -> it
                     is InlineC -> it
                     is NumberLiteral -> it
                     is StringLiteral -> it
@@ -68,6 +69,10 @@ object TypeAnalyzer {
                             .analyzeExpr2(expressionAnalyzer, expectedType)
                             .inferTypeFrom { expr1 }
                             .inferTypeFrom { expr2 }
+                    is ExpressionPair -> it
+                            .analyzeExpr1(expressionAnalyzer)
+                            .analyzeExpr2(expressionAnalyzer, expectedType)
+                            .inferTypeFrom { expr2 }
                     is Assignment -> it
                             .analyzeLValue(expressionAnalyzer)
                             .analyzeExpression(expressionAnalyzer, expectedType)
@@ -81,17 +86,12 @@ object TypeAnalyzer {
                             .analyzeIfFalse(expressionAnalyzer, expectedType)
                             .inferTypeFrom { ifTrue }
                             .inferTypeFrom { ifFalse }
-                    is VariableDeclaration -> it
+                    is LetExpression -> it
                             .visitVariableType(typeVisitor)
-                            .analyzeExpression(expressionAnalyzer)
+                            .analyzeValue(expressionAnalyzer)
                             .inferVariableTypeFromExpression()
                             .visitVariableType(typeVisitor)
-                    is Block -> it
-                            .analyzeExpressions(
-                                    this::visitExpression,
-                                    table,
-                                    expectedType
-                            )
+                            .analyzeExpression(this::visitExpression, table, expectedType)
                     else -> throw Exception("Expected expression, found $it")
                 }
             }

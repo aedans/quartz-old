@@ -1,4 +1,4 @@
-package quartz.compiler.tree.expression.expressions
+package quartz.compiler.generator.expressions
 
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.UnitExpression
@@ -10,11 +10,10 @@ import quartz.compiler.tree.util.Type
 
 data class VariableDeclaration(
         val name: String,
-        val expression: Expression?,
-        val variableType: Type?
-): UnitExpression() {
+        val variableType: Type?,
+        val value: Expression?
+) : UnitExpression() {
     override fun toString(): String {
-        return "val $name: $variableType" +
-                if (expression != null) " = $expression" else ""
+        return "$variableType $name = $value"
     }
 }

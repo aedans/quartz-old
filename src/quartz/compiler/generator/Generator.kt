@@ -2,6 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.QuartzException
 import quartz.compiler.errors.errorScope
+import quartz.compiler.generator.expressions.VariableDeclaration
 import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
@@ -75,13 +76,14 @@ object Generator {
             type(functionDeclaration.function.returnType)
             name(functionDeclaration.name)
             args(functionDeclaration.argNames.nullableZip(functionDeclaration.function.args))
-            block(functionDeclaration.block)
+            block(functionDeclaration.expression as Block)
         }
     }
 
     fun ProgramOutputStream.expression(expression: Expression) {
-        errorScope({ "expression $expression" }) {
+        errorScope({ "value $expression" }) {
             when (expression) {
+                EmptyExpression -> string("{}")
                 is InlineC -> inlineC(expression)
                 is NumberLiteral -> numberLiteral(expression)
                 is StringLiteral -> stringLiteral(expression)
@@ -91,12 +93,13 @@ object Generator {
                 is ReturnExpression -> returnExpression(expression)
                 is UnaryOperator -> prefixUnaryOperator(expression)
                 is BinaryOperator -> binaryOperator(expression)
+                is ExpressionPair -> expressionPair(expression)
                 is Assignment -> assignment(expression)
                 is FunctionCall -> functionCall(expression)
                 is IfExpression -> ifExpression(expression)
-                is VariableDeclaration -> varDeclaration(expression)
+                is VariableDeclaration -> variableDeclaration(expression)
                 is Block -> block(expression)
-                else -> throw QuartzException("Unrecognized expression $expression")
+                else -> throw QuartzException("Unrecognized value $expression")
             }
         }
     }
@@ -139,6 +142,14 @@ object Generator {
         parentheses { expression(binaryOperator.expr2) }
     }
 
+    fun ProgramOutputStream.expressionPair(expressionPair: ExpressionPair) {
+        parentheses { expression(expressionPair.expr1) }
+        string(",")
+        newline()
+        string("\t")
+        parentheses { expression(expressionPair.expr2) }
+    }
+
     fun ProgramOutputStream.assignment(assignment: Assignment) {
         expression(assignment.lvalue)
         string("=")
@@ -161,15 +172,17 @@ object Generator {
     fun ProgramOutputStream.ifExpression(ifExpression: IfExpression) {
         name("if")
         parentheses { expression(ifExpression.condition) }
-        expression(ifExpression.ifTrue)
-        name("else")
-        expression(ifExpression.ifFalse)
+        block(ifExpression.ifTrue as Block)
+        if (ifExpression.ifFalse != null) {
+            name("else")
+            block(ifExpression.ifFalse as Block)
+        }
     }
 
-    fun ProgramOutputStream.varDeclaration(variableDeclaration: VariableDeclaration) {
+    fun ProgramOutputStream.variableDeclaration(variableDeclaration: VariableDeclaration) {
         type(variableDeclaration.variableType)
         name(variableDeclaration.name)
-        variableDeclaration.expression?.apply {
+        variableDeclaration.value?.apply {
             string("=")
             expression(this)
         }

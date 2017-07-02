@@ -62,7 +62,8 @@ object QuartzCompilerRunner : CompilerRunner {
 
 object ClangCompilerRunner : CompilerRunner {
     val file = testFile
-    val flags = "-Wall -Wextra -Wno-ignored-qualifiers -Wno-format-security -Wno-unused-variable -Wno-infinite-recursion -O0"
+    val flags = "-Wall -Wextra -Wno-unused-value -Wno-ignored-qualifiers -Wno-format-security -Wno-unused-variable " +
+                "-Wno-infinite-recursion -O0"
 
     override fun compile(input: File, output: File, err: String.() -> Unit) {
         runCommand(
@@ -118,105 +119,97 @@ class QuartzTest {
 
     fun simpleMain() = withoutErrors compile
 """
-fn main(): int {
-    0;
-}
+fn main(): int
+    0
 """
 
     fun invalidCast() = withErrors compile
 """
-fn main(): int {
-    0 as *const char;
-}
+fn main(): int
+    0 as *const char
 """
 
     fun invalidImplicitCast() = withErrors compile
 """
-fn main(): int {
-    val hello: *const char = 0;
-    0;
-}
+fn main(): int
+    let hello: *const char = 0 in
+    0
 """
 
     fun invalidReturn() = withErrors compile
 """
-fn main(): int {
-    "Hello, world!";
-}
+fn main(): int
+    "Hello, world!"
 """
 
     fun implicitNumberCasts() = withoutErrors compile
 """
-fn main(): int {
-    val a: char = 0;
-    val b: short = 0;
-    val c: int = 0;
-    val d: long = 0;
-    val e: uchar = 0;
-    val f: ushort = 0;
-    val g: uint = 0;
-    val h: ulong = 0;
-    val i: float = 0;
-    val j: double = 0;
-    0.0;
-}
+fn main(): int
+    let a: char = 0 in
+    let b: short = 0 in
+    let c: int = 0 in
+    let d: long = 0 in
+    let e: uchar = 0 in
+    let f: ushort = 0 in
+    let g: uint = 0 in
+    let h: ulong = 0 in
+    let i: float = 0 in
+    let j: double = 0 in
+    0.0
 """
 
     fun implicitInlineCCasts() = withoutErrors compile
 """
 typealias i8 = %%int%%
 
-fn main(): i8 {
-    val a = 0 as i8;
-    val b: i8 = 0;
-    a + b;
-}
+fn main(): i8
+    let a = 0 as i8 in
+    let b: i8 = 0 in
+    a + b
 """
 
     fun operators() = withoutErrors compile
 """
-fn main(): int {
-    val a = 0 + 0;
-    val b = 0 - 0;
-    val c = 0 / 1;
-    val d = 0 * 0;
-    val e = 0 % 1;
-    val f = 0 << 0;
-    val g = 0 >> 0;
-    val h = 0 > 0;
-    val i = 0 < 0;
-    val j = 0 >= 0;
-    val k = 0 <= 0;
-    val l = 0 == 0;
-    val m = 0 != 0;
-    val n = 0 && 0;
-    val o = 0 & 0;
-    val p = 0 || 0;
-    val q = 0 | 0;
-    val r = 0 ^ 0;
-    a += 0;
-    b -= 0;
-    c *= 0;
-    d /= 1;
-    e %= 1;
-    f &= 0;
-    g |= 0;
-    h ^= 0;
-    i <<= 0;
-    j >>= 0;
-    0;
-}
+fn main(): int
+    let a = 0 + 0 in
+    let b = 0 - 0 in
+    let c = 0 / 1 in
+    let d = 0 * 0 in
+    let e = 0 % 1 in
+    let f = 0 << 0 in
+    let g = 0 >> 0 in
+    let h = 0 > 0 in
+    let i = 0 < 0 in
+    let j = 0 >= 0 in
+    let k = 0 <= 0 in
+    let l = 0 == 0 in
+    let m = 0 != 0 in
+    let n = 0 && 0 in
+    let o = 0 & 0 in
+    let p = 0 || 0 in
+    let q = 0 | 0 in
+    let r = 0 ^ 0 in
+    a += 0,
+    b -= 0,
+    c *= 0,
+    d /= 1,
+    e %= 1,
+    f &= 0,
+    g |= 0,
+    h ^= 0,
+    i <<= 0,
+    j >>= 0,
+    0
 """
 
     fun typealias1() = withoutErrors compile
 """
 typealias i = int
 
-fn main(): int {
-    val a = 0 as i;
-    val b: i = 0;
-    a + b;
-}
+fn main(): int
+    let a = 0 as i in
+    let b: i = 0 in
+    a + b
 """
 
     fun typealias2() = withoutErrors compile
@@ -224,73 +217,63 @@ fn main(): int {
 typealias i0 = int
 ${(1..100).map { "typealias i$it = i${it - 1}" }.joinToString(prefix = "", postfix = "", separator = "\n")}
 
-fn main(): int {
-    val a = 0 ${(0..99).map { "as i$it" }.joinToString(prefix = "", postfix = "", separator = " ")};
-    val b: i100 = 0;
-    a + b;
-}
+fn main(): int
+    let a = 0 ${(0..99).map { "as i$it" }.joinToString(prefix = "", postfix = "", separator = " ")} in
+    let b: i100 = 0 in
+    a + b
 """
 
     fun recursive1() = withoutErrors compile
 """
-fn main(): int {
-    0.identity();
-}
+fn main(): int
+    identity 0
 
-fn identity(i: int): int {
-    i.identity();
-}
+fn identity(i: int): int
+    identity i
 """
 
     fun recursive2() = withoutErrors compile
 """
-fn main(): int {
-    main1();
-    main2();
-    0;
-}
+fn main(): int
+    main1(),
+    main2(),
+    0
 
-fn main1() {
-    main1();
-    main2();
-}
+fn main1()
+    main1(),
+    main2()
 
-fn main2() {
-    main1();
-    main2();
-}
+fn main2()
+    main1(),
+    main2()
 """
 
     fun depth() = withoutErrors compile
 """
-fn main(): int {
-    _0();
-}
+fn main(): int
+    _0()
 
-${(0..99).map { "fn _$it(): int { _${it + 1}(); }" }.joinToString(prefix = "", postfix = "", separator = "\n")}
+${(0..99).map { "fn _$it(): int \n\t_${it + 1}()" }.joinToString(prefix = "", postfix = "", separator = "\n")}
 
-fn _100(): int {
-    0;
-}
+fn _100(): int
+    0
 """
 
     fun std() = withoutErrors compile
 """
 import std
 
-fn main(): int {
-    0;
-}
+fn main(): int
+    0
 """
 
     fun helloWorld1() = "Hello, world!" isOutputOf
 """
 import std.c.stdio
 
-fn main(): int {
-    printf("Hello, world!");
-    0;
-}
+fn main(): int
+    printf "Hello, world!",
+    0
 """
 
     fun helloWorld2() = "Hello, world!" isOutputOf
@@ -299,110 +282,95 @@ import std.c.stdio
 
 typealias string = *char
 
-fn main(): int {
-    val _greeter = greeter;
-    _greeter()().printf();
-    0;
-}
+fn main(): int
+    let _greeter = greeter in
+    _greeter()().printf(),
+    0
 
-fn greeter(): () -> string {
-    helloWorld;
-}
+fn greeter(): () -> string
+    helloWorld
 
-fn helloWorld(): string {
-    "Hello, world!";
-}
+fn helloWorld(): string
+    "Hello, world!"
 """
 
     fun helloWorld3() = "Hello, world!" isOutputOf
 """
 import std.c.stdio
 
-fn main(): int {
-    val l = if _false() then "Failed" else helloWorld();
-    (if _true() then l else "Failed").printf();
-    0;
-}
+fn main(): int
+    let l = if _false() { "Failed" } else { helloWorld() } in
+    printf if _true() { l } else { "Failed" },
+    0
 
-fn helloWorld(): *char {
-    "Hello, world!";
-}
+fn helloWorld(): *char
+    "Hello, world!"
 
-fn _true(): int {
-    1;
-}
+fn _true(): int
+    1
 
-fn _false(): int {
-    0;
-}
+fn _false(): int
+    0
 """
 
     fun countToTen() = "0 1 2 3 4 5 6 7 8 9 10" isOutputOf
 """
 import std.c.stdio
 
-fn main(): int {
-    val counter = countTo;
-    counter(10, print);
-    0;
-}
+fn main(): int
+    let counter = countTo in
+    counter 10 print,
+    0
 
-fn countTo(i: int, printer: (int) -> void) {
-    val counter = countTo;
-    if i > 0 then (i - 1).counter(printer);
-    printer(i);
-}
+fn countTo(i: int, printer: (int) -> void)
+    let counter = countTo in
+    if i > 0 { counter (i - 1) printer },
+    printer i
 
-fn print(i: int) {
-    printf("%d ", i);
-}
+fn print(i: int)
+    printf "%d " i
 """
 
     fun fibonacciRecursive() = "0 1 1 2 3 5 8 13 21 34 55" isOutputOf
 """
 import std.c.stdio
 
-fn main(): int {
-    10.fibBelow();
-    0;
-}
+fn main(): int
+    fibBelow 10,
+    0
 
-fn fibBelow(i: int) {
-    if i > 0 then (i - 1).fibBelow();
-    i.fib().printInt();
-}
+fn fibBelow(i: int)
+    if i > 0 { fibBelow (i - 1) },
+    printInt (fib i)
 
-fn fib(i: int): int {
-    if i == 0 then 0
-        else if i == 1 then 1
-        else (i - 1).fib() + (i - 2).fib();
-}
+fn fib(i: int): int
+    if
+        i == 0 { 0 }
+        i == 1 { 1 }
+        else { fib (i - 1) + fib (i - 2) }
 
-fn printInt(i: int) {
-    printf("%d ", i);
-}
+fn printInt(i: int)
+    printf "%d " i
 """
 
     fun fizzBuzzRecursive() = "1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz" isOutputOf
 """
 import std.c.stdio
 
-fn main(): int {
-    15.fizzBuzz();
-    0;
-}
+fn main(): int
+    fizzBuzz 15,
+    0
 
-fn fizzBuzz(i: int) {
-    if i > 1 then (i - 1).fizzBuzz();
+fn fizzBuzz(i: int)
+    if i > 1 { fizzBuzz (i - 1) },
 
-    if i % 5 == 0 && i % 3 == 0 then printf("FizzBuzz ")
-    else if i % 3 == 0 then printf("Fizz ")
-    else if i % 5 == 0 then printf("Buzz ")
-    else printInt(i);
-}
+    if
+        i % 5 == 0 && i % 3 == 0 { printf "FizzBuzz " }
+        i % 3 == 0 { printf "Fizz " }
+        i % 5 == 0 { printf "Buzz " }
+        else { printInt i }
 
-fn printInt(i: int) {
-    printf("%d ", i);
-}
+fn printInt(i: int)
+    printf "%d " i
 """
 }

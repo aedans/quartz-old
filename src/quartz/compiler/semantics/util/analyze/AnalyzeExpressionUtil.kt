@@ -9,11 +9,12 @@ import quartz.compiler.tree.util.Type
  */
 
 fun Expression.verifyType(type: Type?): Expression {
+    val thisType = this.type
     return when {
         type == null -> this
-        this.type == null -> this
-        type.isConvertibleTo(this.type!!) -> this
-        this.type!!.isConvertibleTo(type) -> this
+        thisType == null -> this
+        type.isConvertibleTo(thisType) -> this
+        thisType.isConvertibleTo(type) -> this
         else -> throw QuartzException("Could not cast $this (${this.type}) to $type")
     }
 }

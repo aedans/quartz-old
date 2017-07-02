@@ -1,7 +1,7 @@
 package quartz.compiler.tree.declarations
 
 import quartz.compiler.tree.Declaration
-import quartz.compiler.tree.expression.expressions.Block
+import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Function
 
 /**
@@ -12,9 +12,9 @@ data class FunctionDeclaration(
         override val name: String,
         val argNames: List<String>,
         val function: Function,
-        val block: Block
+        val expression: Expression
 ) : Declaration {
     override fun toString(): String {
-        return "$name$function {\n${block.toString(1)}}"
+        return "$name$function {\n${expression.toString(1)}}"
     }
 }

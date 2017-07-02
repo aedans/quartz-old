@@ -5,18 +5,17 @@ import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.expression.expressions.Block
 import quartz.compiler.tree.util.Type
 
 /**
  * Created by Aedan Smith.
  */
 
-inline fun FunctionDeclaration.analyzeBlock(
+inline fun FunctionDeclaration.analyzeExpression(
         table: SymbolTable,
         expressionAnalyzer: (SymbolTable, Type?, Expression) -> Expression
 ): FunctionDeclaration {
     val symbolTable = FunctionDeclarationSymbolTable(table, this)
     val expected = if (function.returnType == VoidType) null else function.returnType
-    return copy(block = expressionAnalyzer(symbolTable, expected, block) as Block)
+    return copy(expression = expressionAnalyzer(symbolTable, expected, expression))
 }

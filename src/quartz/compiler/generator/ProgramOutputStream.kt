@@ -23,6 +23,13 @@ class ProgramOutputStream(outputStream: OutputStream) {
         newline()
     }
 
+    fun nbraces(function: ProgramOutputStream.() -> Unit) {
+        braces {
+            newline()
+            function()
+        }
+    }
+
     fun braces(function: ProgramOutputStream.() -> Unit) {
         string("{")
         indent++

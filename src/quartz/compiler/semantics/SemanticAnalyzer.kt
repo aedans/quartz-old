@@ -41,7 +41,7 @@ object SemanticAnalyzer {
                 }
                 is FunctionDeclaration -> {
                     function.analyze(newProgram, table)
-                    block.analyze(newProgram, table)
+                    expression.analyze(newProgram, table)
                 }
                 is TypealiasDeclaration -> {
                     aliasedType.analyze(newProgram, table)
@@ -56,6 +56,7 @@ object SemanticAnalyzer {
             table: SymbolTable
     ) {
         return when (this) {
+            EmptyExpression -> {}
             is InlineC -> {}
             is NumberLiteral -> {}
             is StringLiteral -> {}
@@ -79,6 +80,10 @@ object SemanticAnalyzer {
                 expr1.analyze(newProgram, table)
                 expr2.analyze(newProgram, table)
             }
+            is ExpressionPair -> {
+                expr1.analyze(newProgram, table)
+                expr2.analyze(newProgram, table)
+            }
             is Assignment -> {
                 lvalue.analyze(newProgram, table)
                 expression.analyze(newProgram, table)
@@ -90,14 +95,12 @@ object SemanticAnalyzer {
             is IfExpression -> {
                 condition.analyze(newProgram, table)
                 ifTrue.analyze(newProgram, table)
-                ifFalse.analyze(newProgram, table)
+                ifFalse?.analyze(newProgram, table) ?: Unit
             }
-            is VariableDeclaration -> {
-                expression?.analyze(newProgram, table)
+            is LetExpression -> {
+                value?.analyze(newProgram, table)
                 variableType.analyze(newProgram, table)
-            }
-            is Block -> {
-                this.forEach { it.analyze(newProgram, table) }
+                expression.analyze(newProgram, table)
             }
             else -> throw Exception("Expected expression, found $this")
         }

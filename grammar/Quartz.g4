@@ -18,7 +18,7 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME '(' nameTypeList? ')' (':' returnType=type)? atomicBlock
+    : 'fn' NAME '(' nameTypeList? ')' (':' returnType=type)? expression
     ;
 
 externFunctionDeclaration
@@ -44,9 +44,8 @@ packageList
 // EXPRESSIONS
 
 expression
-    : varDeclaration
-    | ifExpression
-    | assignmentExpression
+    : letExpression
+    | assignmentExpression (',' expression)?
     ;
 
 assignmentExpression
@@ -92,17 +91,22 @@ atomicExpression
     | inlineC
     | literal
     | sizeof
-    | lambda
     | identifier
+    | ifExpression
     ;
 
-varDeclaration
-    : 'val' nameType
-    | 'val' nameOptionalType '=' expression
+letExpression
+    : ( 'let' nameType
+      | 'let' nameOptionalType '=' value=expression
+      ) 'in' expr=expression
     ;
 
 ifExpression
-    : 'if' test=expression 'then' ifTrue=block ('else' ifFalse=block)?
+    : 'if' ifBranch+ ('else' '{' expression '}')?
+    ;
+
+ifBranch
+    : condition=expression '{' ifTrue=expression '}'
     ;
 
 literal
@@ -114,11 +118,6 @@ literal
 
 sizeof
     : 'sizeof' '(' type ')'
-    ;
-
-lambda
-    : ((nameTypeList?|nameList?) '->' type?) atomicBlock
-    | atomicBlock
     ;
 
 assignmentOperation
@@ -191,11 +190,11 @@ cast
     ;
 
 postfixCall
-    : '(' expressionList? ')'
+    : ('(' ')'|atomicExpression+)
     ;
 
 dotCall
-    : '.' identifier '(' expressionList? ')'
+    : '.' identifier postfixCall
     ;
 
 // TYPES
@@ -275,15 +274,6 @@ nameOptionalType
 
 genericArgument
     : NAME
-    ;
-
-block
-    : atomicBlock
-    | expression
-    ;
-
-atomicBlock
-    : '{' (expression ';')* '}'
     ;
 
 identifier
