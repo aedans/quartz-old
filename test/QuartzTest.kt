@@ -189,16 +189,16 @@ fn main(): int
     let p = 0 || 0 in
     let q = 0 | 0 in
     let r = 0 ^ 0 in
-    a += 0,
-    b -= 0,
-    c *= 0,
-    d /= 1,
-    e %= 1,
-    f &= 0,
-    g |= 0,
-    h ^= 0,
-    i <<= 0,
-    j >>= 0,
+    a += 0;
+    b -= 0;
+    c *= 0;
+    d /= 1;
+    e %= 1;
+    f &= 0;
+    g |= 0;
+    h ^= 0;
+    i <<= 0;
+    j >>= 0;
     0
 """
 
@@ -235,16 +235,16 @@ fn identity(i: int): int
     fun recursive2() = withoutErrors compile
 """
 fn main(): int
-    main1(),
-    main2(),
+    main1();
+    main2();
     0
 
 fn main1()
-    main1(),
+    main1();
     main2()
 
 fn main2()
-    main1(),
+    main1();
     main2()
 """
 
@@ -272,7 +272,7 @@ fn main(): int
 import std.c.stdio
 
 fn main(): int
-    printf "Hello, world!",
+    printf "Hello, world!";
     0
 """
 
@@ -284,7 +284,7 @@ typealias string = *char
 
 fn main(): int
     let _greeter = greeter in
-    _greeter()().printf(),
+    _greeter()().printf();
     0
 
 fn greeter(): () -> string
@@ -300,7 +300,7 @@ import std.c.stdio
 
 fn main(): int
     let l = if _false() { "Failed" } else { helloWorld() } in
-    printf if _true() { l } else { "Failed" },
+    printf if _true() { l } else { "Failed" };
     0
 
 fn helloWorld(): *char
@@ -319,12 +319,12 @@ import std.c.stdio
 
 fn main(): int
     let counter = countTo in
-    counter 10 print,
+    counter 10 print;
     0
 
 fn countTo(i: int, printer: (int) -> void)
     let counter = countTo in
-    if i > 0 { counter (i - 1) printer },
+    if i > 0 { counter (i - 1) printer };
     printer i
 
 fn print(i: int)
@@ -336,11 +336,11 @@ fn print(i: int)
 import std.c.stdio
 
 fn main(): int
-    fibBelow 10,
+    fibBelow 10;
     0
 
 fn fibBelow(i: int)
-    if i > 0 { fibBelow (i - 1) },
+    if i > 0 { fibBelow (i - 1) };
     printInt (fib i)
 
 fn fib(i: int): int
@@ -358,11 +358,11 @@ fn printInt(i: int)
 import std.c.stdio
 
 fn main(): int
-    fizzBuzz 15,
+    fizzBuzz 15;
     0
 
 fn fizzBuzz(i: int)
-    if i > 1 { fizzBuzz (i - 1) },
+    if i > 1 { fizzBuzz (i - 1) };
 
     if
         i % 5 == 0 && i % 3 == 0 { printf "FizzBuzz " }

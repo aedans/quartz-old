@@ -148,7 +148,7 @@ comparisonOperation
     ;
 
 delegateOperation
-    : ','
+    : ';'
     ;
 
 assignmentOperation
