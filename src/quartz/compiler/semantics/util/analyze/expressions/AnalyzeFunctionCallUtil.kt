@@ -32,7 +32,7 @@ inline fun FunctionCall.analyzeArguments(expressionAnalyzer: (Type?, Expression)
     if (!function.vararg && function.args.size != args.size)
         except { "Incorrect number of arguments for $this" }
 
-    val expressions = args.zip(function.args +
+    val expressions = (args zip function.args +
             arrayOfNulls<Type>(args.size - function.args.size))
             .map { expressionAnalyzer(it.second, it.first) }
 
