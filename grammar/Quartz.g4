@@ -45,7 +45,11 @@ packageList
 
 expression
     : letExpression
-    | assignmentExpression (',' expression)?
+    | delegateExpression
+    ;
+
+delegateExpression
+    : assignmentExpression (',' delegateExpression)?
     ;
 
 assignmentExpression

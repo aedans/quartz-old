@@ -36,10 +36,16 @@ fun QuartzParser.ExpressionContext.toExpr(): Expression {
     return errorScope({ "value $text" }) {
         when {
             letExpression() != null -> letExpression().toExpr()
-            expression() != null -> ExpressionPair(assignmentExpression().toExpr(), expression().toExpr())
-            assignmentExpression() != null -> assignmentExpression().toExpr()
+            delegateExpression() != null -> delegateExpression().toExpr()
             else -> throw Exception("Unrecognized value $text")
         }
+    }
+}
+
+fun QuartzParser.DelegateExpressionContext.toExpr(): Expression {
+    return when {
+        delegateExpression() == null -> assignmentExpression().toExpr()
+        else -> ExpressionPair(assignmentExpression().toExpr(), delegateExpression().toExpr())
     }
 }
 
