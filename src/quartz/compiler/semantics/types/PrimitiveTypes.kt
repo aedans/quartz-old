@@ -6,9 +6,7 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-sealed class NumberType(override val string: String) : Type {
-    override val descriptiveString by lazy { string.replace(' ', '_') }
-
+sealed class NumberType(val string: String) : Type {
     override fun isConvertibleTo(type: Type): Boolean {
         return type is NumberType
     }

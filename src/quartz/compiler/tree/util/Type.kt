@@ -5,8 +5,5 @@ package quartz.compiler.tree.util
  */
 
 interface Type {
-    val descriptiveString: String
-    val string: String
-
     fun isConvertibleTo(type: Type): Boolean
 }

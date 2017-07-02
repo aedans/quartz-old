@@ -8,9 +8,6 @@ import quartz.compiler.tree.util.Type
  */
 
 data class FunctionType(val function: Function) : Type {
-    override val descriptiveString by lazy { function.description() }
-    override val string by lazy { function.toString() }
-
     override fun isConvertibleTo(type: Type): Boolean {
         return type is FunctionType
                 && type.function.vararg == function.vararg
@@ -22,27 +19,6 @@ data class FunctionType(val function: Function) : Type {
     }
 
     override fun toString(): String {
-        return string
-    }
-
-    companion object {
-        fun Function.description(): String {
-            val args = args ?: emptyList()
-            var string = ""
-            when {
-                args.isEmpty() -> {
-                    string += returnType.descriptiveString + "_supplier"
-                }
-                else -> {
-                    args.forEach { string += it.descriptiveString + '_' }
-                    string += "to_"
-                    string += returnType.descriptiveString
-                }
-            }
-            if (vararg)
-                string += "_vararg"
-
-            return string
-        }
+        return function.toString()
     }
 }

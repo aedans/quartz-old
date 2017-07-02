@@ -7,14 +7,11 @@ import quartz.compiler.tree.util.Type
  */
 
 object VoidType : Type {
-    override val string = "void"
-    override val descriptiveString get() = string
-
     override fun isConvertibleTo(type: Type): Boolean {
         return type == this
     }
 
     override fun toString(): String {
-        return string
+        return "void"
     }
 }

@@ -1,7 +1,7 @@
 package quartz.compiler.generator
 
-import quartz.compiler.errors.errorScope
 import quartz.compiler.errors.err
+import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.expressions.VariableDeclaration
 import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Declaration
@@ -206,7 +206,7 @@ object Generator {
     }
 
     fun ProgramOutputStream.functionTypedef(type: FunctionType) {
-        val name = type.descriptiveString
+        val name = type.description()
         (type.function.args ?: err { "Unknown argument types for $type" }).forEach {
             declare(it)
         }
@@ -243,7 +243,7 @@ object Generator {
                 string("*")
             }
             is FunctionType -> {
-                name("__${type.descriptiveString}_t ")
+                name("__${type.description()}_t ")
             }
             is ConstType -> {
                 name("const")

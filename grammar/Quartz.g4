@@ -211,17 +211,9 @@ type
     : NAME
     | INLINE_C
     | primitiveType
-    | functionType
     | pointerType
     | constType
-    ;
-
-pointerType
-    : '*' type
-    ;
-
-constType
-    : 'const' type
+    | functionType
     ;
 
 primitiveType
@@ -237,6 +229,14 @@ primitiveType
     | floatType='float'
     | doubleType='double'
     | voidType='void'
+    ;
+
+pointerType
+    : '*' type
+    ;
+
+constType
+    : 'const' type
     ;
 
 functionType

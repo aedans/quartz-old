@@ -6,9 +6,7 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class NamedType(override val string: String) : Type {
-    override val descriptiveString get() = string
-
+data class NamedType(val string: String) : Type {
     override fun isConvertibleTo(type: Type): Boolean {
         return type is NamedType && type.string == this.string
     }
