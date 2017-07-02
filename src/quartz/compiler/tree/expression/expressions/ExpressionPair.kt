@@ -10,7 +10,6 @@ import quartz.compiler.util.times
 
 data class ExpressionPair(val expr1: Expression, val expr2: Expression): Expression {
     override val type = expr2.type
-    override val isLValue get() = false
 
     override fun withType(type: Type): Expression {
         return copy(expr2 = expr2.withType(type))

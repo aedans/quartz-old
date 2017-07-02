@@ -61,10 +61,10 @@ object TypeAnalyzer {
                     is Cast -> it
                             .visitType(typeVisitor)
                             .analyzeExpression(expressionAnalyzer, expectedType)
-                    is UnaryOperator -> it
+                    is UnaryOperation -> it
                             .analyzeExpression(expressionAnalyzer, expectedType)
                             .inferTypeFrom { expression }
-                    is BinaryOperator -> it
+                    is BinaryOperation -> it
                             .analyzeExpr1(expressionAnalyzer, expectedType)
                             .analyzeExpr2(expressionAnalyzer, expectedType)
                             .inferTypeFrom { expr1 }

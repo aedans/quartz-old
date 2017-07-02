@@ -8,8 +8,6 @@ import quartz.compiler.tree.util.Type
  */
 
 data class Cast(val expression: Expression, override val type: Type) : Expression {
-    override val isLValue = false
-
     override fun withType(type: Type): Cast {
         return Cast(expression, type)
     }

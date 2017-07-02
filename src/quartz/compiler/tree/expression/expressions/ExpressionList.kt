@@ -10,7 +10,6 @@ import quartz.compiler.tree.util.Type
 
 class ExpressionList(expressionList: List<Expression>): Expression, List<Expression> by expressionList {
     override val type: Type? = if (isEmpty()) VoidType else last().type
-    override val isLValue = false
 
     override fun withType(type: Type): ExpressionList {
         return if (isEmpty()) this else ExpressionList(dropLast(1) + last().withType(type))

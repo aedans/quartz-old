@@ -4,6 +4,7 @@ import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.Assignment
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
+import quartz.compiler.util.lValueOrError
 import quartz.compiler.util.partial
 
 /**
@@ -11,7 +12,7 @@ import quartz.compiler.util.partial
  */
 
 inline fun Assignment.visitLValue(expressionVisitor: Visitor<Expression>): Assignment {
-    return copy(lvalue = expressionVisitor(lvalue))
+    return copy(lvalue = expressionVisitor(lvalue).lValueOrError())
 }
 
 inline fun Assignment.visitExpression(expressionVisitor: Visitor<Expression>): Assignment {

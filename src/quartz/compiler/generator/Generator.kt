@@ -76,7 +76,7 @@ object Generator {
             type(functionDeclaration.function.returnType)
             name(functionDeclaration.name)
             args(functionDeclaration.argNames.nullableZip(functionDeclaration.function.args))
-            block(functionDeclaration.expression as Block)
+            block(functionDeclaration.expression as ExpressionList)
         }
     }
 
@@ -91,14 +91,14 @@ object Generator {
                 is Sizeof -> sizeof(expression)
                 is Cast -> cast(expression)
                 is ReturnExpression -> returnExpression(expression)
-                is UnaryOperator -> prefixUnaryOperator(expression)
-                is BinaryOperator -> binaryOperator(expression)
+                is UnaryOperation -> prefixUnaryOperator(expression)
+                is BinaryOperation -> binaryOperator(expression)
                 is ExpressionPair -> expressionPair(expression)
                 is Assignment -> assignment(expression)
                 is FunctionCall -> functionCall(expression)
                 is IfExpression -> ifExpression(expression)
                 is VariableDeclaration -> variableDeclaration(expression)
-                is Block -> block(expression)
+                is ExpressionList -> block(expression)
                 else -> throw QuartzException("Unrecognized value $expression")
             }
         }
@@ -131,15 +131,15 @@ object Generator {
         expression(returnExpression.expression)
     }
 
-    fun ProgramOutputStream.prefixUnaryOperator(unaryOperator: UnaryOperator) {
-        string(unaryOperator.id)
-        parentheses { expression(unaryOperator.expression) }
+    fun ProgramOutputStream.prefixUnaryOperator(unaryOperation: UnaryOperation) {
+        string(unaryOperation.id)
+        parentheses { expression(unaryOperation.expression) }
     }
 
-    fun ProgramOutputStream.binaryOperator(binaryOperator: BinaryOperator) {
-        parentheses { expression(binaryOperator.expr1) }
-        string(binaryOperator.id)
-        parentheses { expression(binaryOperator.expr2) }
+    fun ProgramOutputStream.binaryOperator(binaryOperation: BinaryOperation) {
+        parentheses { expression(binaryOperation.expr1) }
+        string(binaryOperation.id)
+        parentheses { expression(binaryOperation.expr2) }
     }
 
     fun ProgramOutputStream.expressionPair(expressionPair: ExpressionPair) {
@@ -172,10 +172,10 @@ object Generator {
     fun ProgramOutputStream.ifExpression(ifExpression: IfExpression) {
         name("if")
         parentheses { expression(ifExpression.condition) }
-        block(ifExpression.ifTrue as Block)
+        block(ifExpression.ifTrue as ExpressionList)
         if (ifExpression.ifFalse != null) {
             name("else")
-            block(ifExpression.ifFalse as Block)
+            block(ifExpression.ifFalse as ExpressionList)
         }
     }
 
@@ -188,7 +188,7 @@ object Generator {
         }
     }
 
-    fun ProgramOutputStream.block(block: Block) {
+    fun ProgramOutputStream.block(block: ExpressionList) {
         braces {
             block.forEach {
                 newline()

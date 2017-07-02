@@ -12,7 +12,6 @@ import quartz.compiler.tree.util.Type
  */
 
 data class StringLiteral(val string: String) : Expression {
-    override val isLValue = false
     override val type: Type? = ConstType(PointerType(CharType))
 
     override fun withType(type: Type): Expression {

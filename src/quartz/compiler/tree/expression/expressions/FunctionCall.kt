@@ -12,8 +12,6 @@ data class FunctionCall(
         val args: List<Expression>,
         override val type: Type?
 ) : Expression {
-    override val isLValue = false
-
     override fun withType(type: Type): Expression {
         return FunctionCall(expression, args, type)
     }

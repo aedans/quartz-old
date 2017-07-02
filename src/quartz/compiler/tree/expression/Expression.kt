@@ -9,7 +9,6 @@ import quartz.compiler.util.times
 
 interface Expression {
     val type: Type?
-    val isLValue: Boolean
 
     fun withType(type: Type): Expression
 

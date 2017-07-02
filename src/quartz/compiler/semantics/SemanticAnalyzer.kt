@@ -73,10 +73,10 @@ object SemanticAnalyzer {
             is ReturnExpression -> {
                 expression.analyze(newProgram, table)
             }
-            is UnaryOperator -> {
+            is UnaryOperation -> {
                 expression.analyze(newProgram, table)
             }
-            is BinaryOperator -> {
+            is BinaryOperation -> {
                 expr1.analyze(newProgram, table)
                 expr2.analyze(newProgram, table)
             }

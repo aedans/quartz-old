@@ -14,7 +14,6 @@ data class LetExpression(
         val expression: Expression
 ): Expression {
     override val type = expression.type
-    override val isLValue = false
 
     override fun withType(type: Type): Expression {
         return copy(expression = expression.withType(type))

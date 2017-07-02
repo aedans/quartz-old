@@ -13,8 +13,6 @@ data class IfExpression(
         val ifFalse: Expression?,
         override val type: Type?
 ) : Expression {
-    override val isLValue = false
-
     override fun withType(type: Type): IfExpression {
         return IfExpression(condition, ifTrue, ifFalse, type)
     }

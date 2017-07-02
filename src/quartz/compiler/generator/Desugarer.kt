@@ -7,6 +7,7 @@ import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.util.lValueOrError
 
 /**
  * Created by Aedan Smith.
@@ -18,10 +19,10 @@ fun FunctionDeclaration.desugar(): FunctionDeclaration {
                     .desugar((0..Integer.MAX_VALUE).iterator()))
 }
 
-fun Expression.desugar(intIterator: IntIterator): Block {
+fun Expression.desugar(intIterator: IntIterator): ExpressionList {
     val newExpressions = mutableListOf<Expression>()
     newExpressions.add(desugar(newExpressions, intIterator, true))
-    return Block(newExpressions)
+    return ExpressionList(newExpressions)
 }
 
 fun Expression.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean = false): Expression {
@@ -33,13 +34,13 @@ fun Expression.desugar(newExpressions: MutableList<Expression>, intIterator: Int
         is Identifier -> this
         is Sizeof -> this
         is Cast -> copy(expression = expression.desugar(newExpressions, intIterator))
-        is UnaryOperator -> copy(expression = expression.desugar(newExpressions, intIterator))
-        is BinaryOperator -> copy(
+        is UnaryOperation -> copy(expression = expression.desugar(newExpressions, intIterator))
+        is BinaryOperation -> copy(
                 expr1 = expr1.desugar(newExpressions, intIterator),
                 expr2 = expr2.desugar(newExpressions, intIterator)
         )
         is Assignment -> copy(
-                lvalue = lvalue.desugar(newExpressions, intIterator),
+                lvalue = lvalue.desugar(newExpressions, intIterator).lValueOrError(),
                 expression = expression.desugar(newExpressions, intIterator)
         )
         is FunctionCall -> copy(
@@ -51,7 +52,7 @@ fun Expression.desugar(newExpressions: MutableList<Expression>, intIterator: Int
         is IfExpression -> desugar(newExpressions, intIterator, isStatement)
         is LetExpression -> desugar(newExpressions, intIterator, isStatement)
         is VariableDeclaration -> desugar(newExpressions, intIterator, isStatement)
-        is Block -> desugar(newExpressions, intIterator, isStatement)
+        is ExpressionList -> desugar(newExpressions, intIterator, isStatement)
         else -> throw QuartzException("Expected expression, found $this")
     }
 }
@@ -109,11 +110,11 @@ fun VariableDeclaration.desugar(newExpressions: MutableList<Expression>, intIter
     }
 }
 
-fun Block.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {
+fun ExpressionList.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {
     return if (isStatement) {
         val localNewExpressions = mutableListOf<Expression>()
         forEach { newExpressions.add(it.desugar(newExpressions, intIterator, true)) }
-        Block(localNewExpressions)
+        ExpressionList(localNewExpressions)
     } else {
         val name = "__${intIterator.next()}"
         newExpressions.add(VariableDeclaration(name, type, null))

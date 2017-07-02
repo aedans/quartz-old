@@ -11,6 +11,7 @@ import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Function
+import quartz.compiler.util.lValueOrError
 
 /**
  * Created by Aedan Smith.
@@ -45,28 +46,28 @@ fun QuartzParser.ExpressionContext.toExpr(): Expression {
 fun QuartzParser.DisjunctionContext.toExpr(): Expression {
     return when {
         disjunction() == null -> conjunction().toExpr()
-        else -> BinaryOperator(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID, null)
+        else -> BinaryOperation(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID, null)
     }
 }
 
 fun QuartzParser.ConjunctionContext.toExpr(): Expression {
     return when {
         conjunction() == null -> equalityComparison().toExpr()
-        else -> BinaryOperator(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID, null)
+        else -> BinaryOperation(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID, null)
     }
 }
 
 fun QuartzParser.EqualityComparisonContext.toExpr(): Expression {
     return when {
         equalityComparison() == null -> comparison().toExpr()
-        else -> BinaryOperator(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID, null)
+        else -> BinaryOperation(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID, null)
     }
 }
 
 fun QuartzParser.ComparisonContext.toExpr(): Expression {
     return when {
         comparison() == null -> delegateExpression().toExpr()
-        else -> BinaryOperator(delegateExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
+        else -> BinaryOperation(delegateExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
     }
 }
 
@@ -81,10 +82,10 @@ fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
     return when {
         assignmentExpression() == null -> bitshiftExpression().toExpr()
         else -> when (assignmentOperation().text) {
-            "=" -> Assignment(bitshiftExpression().toExpr(), assignmentExpression().toExpr(), null)
+            "=" -> Assignment(bitshiftExpression().toExpr().lValueOrError(), assignmentExpression().toExpr(), null)
             else -> Assignment(
-                    bitshiftExpression().toExpr(),
-                    BinaryOperator(
+                    bitshiftExpression().toExpr().lValueOrError(),
+                    BinaryOperation(
                             bitshiftExpression().toExpr(),
                             assignmentExpression().toExpr(),
                             assignmentOperation().ID,
@@ -99,21 +100,21 @@ fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
 fun QuartzParser.BitshiftExpressionContext.toExpr(): Expression {
     return when {
         bitshiftExpression() == null -> additiveExpression().toExpr()
-        else -> BinaryOperator(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID, null)
+        else -> BinaryOperation(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID, null)
     }
 }
 
 fun QuartzParser.AdditiveExpressionContext.toExpr(): Expression {
     return when {
         additiveExpression() == null -> multiplicativeExpression().toExpr()
-        else -> BinaryOperator(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID, null)
+        else -> BinaryOperation(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID, null)
     }
 }
 
 fun QuartzParser.MultiplicativeExpressionContext.toExpr(): Expression {
     return when {
         multiplicativeExpression() == null -> operableExpression().toExpr()
-        else -> BinaryOperator(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID, null)
+        else -> BinaryOperation(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID, null)
     }
 }
 
@@ -127,7 +128,7 @@ fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
 }
 
 fun QuartzParser.PrefixOperationContext.toExpr(expression: Expression): Expression {
-    return UnaryOperator(expression, ID, null)
+    return UnaryOperation(expression, ID, null)
 }
 
 fun QuartzParser.PostfixOperationContext.toExpr(expression: Expression): Expression {
@@ -218,78 +219,78 @@ fun QuartzParser.LetExpressionContext.toExpr(): LetExpression {
     }
 }
 
-val QuartzParser.AssignmentOperationContext.ID: BinaryOperator.ID
+val QuartzParser.AssignmentOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        "+=" -> BinaryOperator.ID.ADD
-        "-=" -> BinaryOperator.ID.SUBT
-        "*=" -> BinaryOperator.ID.MULT
-        "/=" -> BinaryOperator.ID.DIV
-        "%=" -> BinaryOperator.ID.MOD
-        "&=" -> BinaryOperator.ID.BAND
-        "|=" -> BinaryOperator.ID.BOR
-        "^=" -> BinaryOperator.ID.BXOR
-        "<<=" -> BinaryOperator.ID.SHL
-        ">>=" -> BinaryOperator.ID.SHR
+        "+=" -> BinaryOperation.ID.ADD
+        "-=" -> BinaryOperation.ID.SUBT
+        "*=" -> BinaryOperation.ID.MULT
+        "/=" -> BinaryOperation.ID.DIV
+        "%=" -> BinaryOperation.ID.MOD
+        "&=" -> BinaryOperation.ID.BAND
+        "|=" -> BinaryOperation.ID.BOR
+        "^=" -> BinaryOperation.ID.BXOR
+        "<<=" -> BinaryOperation.ID.SHL
+        ">>=" -> BinaryOperation.ID.SHR
         else -> throw Exception("Unrecognized assignment operation $text")
     }
 
-val QuartzParser.DisjunctionOperationContext.ID: BinaryOperator.ID
+val QuartzParser.DisjunctionOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        "||" -> BinaryOperator.ID.OR
-        "|" -> BinaryOperator.ID.BOR
-        "^" -> BinaryOperator.ID.BXOR
+        "||" -> BinaryOperation.ID.OR
+        "|" -> BinaryOperation.ID.BOR
+        "^" -> BinaryOperation.ID.BXOR
         else -> throw Exception("Unrecognized disjunction $text")
     }
 
-val QuartzParser.ConjunctionOperationContext.ID: BinaryOperator.ID
+val QuartzParser.ConjunctionOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        "&&" -> BinaryOperator.ID.AND
-        "&" -> BinaryOperator.ID.BAND
+        "&&" -> BinaryOperation.ID.AND
+        "&" -> BinaryOperation.ID.BAND
         else -> throw Exception("Unrecognized conjunction $text")
     }
 
-val QuartzParser.EqualityOperationContext.ID: BinaryOperator.ID
+val QuartzParser.EqualityOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        "==" -> BinaryOperator.ID.EQ
-        "!=" -> BinaryOperator.ID.NEQ
+        "==" -> BinaryOperation.ID.EQ
+        "!=" -> BinaryOperation.ID.NEQ
         else -> throw Exception("Unrecognized equality operation $text")
     }
 
-val QuartzParser.ComparisonOperationContext.ID: BinaryOperator.ID
+val QuartzParser.ComparisonOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        ">" -> BinaryOperator.ID.GT
-        "<" -> BinaryOperator.ID.LT
-        ">=" -> BinaryOperator.ID.GEQ
-        "<=" -> BinaryOperator.ID.LEQ
+        ">" -> BinaryOperation.ID.GT
+        "<" -> BinaryOperation.ID.LT
+        ">=" -> BinaryOperation.ID.GEQ
+        "<=" -> BinaryOperation.ID.LEQ
         else -> throw Exception("Unrecognized comparison operation $text")
     }
 
-val QuartzParser.BitshiftOperationContext.ID: BinaryOperator.ID
+val QuartzParser.BitshiftOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        ">>" -> BinaryOperator.ID.SHR
-        "<<" -> BinaryOperator.ID.SHL
+        ">>" -> BinaryOperation.ID.SHR
+        "<<" -> BinaryOperation.ID.SHL
         else -> throw Exception("Unrecognized bitshift operation $text")
     }
 
-val QuartzParser.AdditiveOperationContext.ID: BinaryOperator.ID
+val QuartzParser.AdditiveOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        "+" -> BinaryOperator.ID.ADD
-        "-" -> BinaryOperator.ID.SUBT
+        "+" -> BinaryOperation.ID.ADD
+        "-" -> BinaryOperation.ID.SUBT
         else -> throw Exception("Unrecognized additive operation $text")
     }
 
-val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperator.ID
+val QuartzParser.MultiplicativeOperationContext.ID: BinaryOperation.ID
     get() = when (text) {
-        "*" -> BinaryOperator.ID.MULT
-        "/" -> BinaryOperator.ID.DIV
-        "%" -> BinaryOperator.ID.MOD
+        "*" -> BinaryOperation.ID.MULT
+        "/" -> BinaryOperation.ID.DIV
+        "%" -> BinaryOperation.ID.MOD
         else -> throw Exception("Unrecognized multiplicative operation $text")
     }
 
-val QuartzParser.PrefixOperationContext.ID: UnaryOperator.ID
+val QuartzParser.PrefixOperationContext.ID: UnaryOperation.ID
     get() = when (text) {
-        "-" -> UnaryOperator.ID.MINUS
-        "!" -> UnaryOperator.ID.NOT
-        "~" -> UnaryOperator.ID.BNOT
+        "-" -> UnaryOperation.ID.MINUS
+        "!" -> UnaryOperation.ID.NOT
+        "~" -> UnaryOperation.ID.BNOT
         else -> throw Exception("Unrecognized prefix operation $text")
     }
