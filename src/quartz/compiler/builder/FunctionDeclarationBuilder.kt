@@ -36,34 +36,8 @@ fun QuartzParser.ExpressionContext.toExpr(): Expression {
     return errorScope({ "value $text" }) {
         when {
             letExpression() != null -> letExpression().toExpr()
-            delegateExpression() != null -> delegateExpression().toExpr()
+            disjunction() != null -> disjunction().toExpr()
             else -> throw Exception("Unrecognized value $text")
-        }
-    }
-}
-
-fun QuartzParser.DelegateExpressionContext.toExpr(): Expression {
-    return when {
-        delegateExpression() == null -> assignmentExpression().toExpr()
-        else -> ExpressionPair(assignmentExpression().toExpr(), delegateExpression().toExpr())
-    }
-}
-
-fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
-    return when {
-        assignmentExpression() == null -> disjunction().toExpr()
-        else -> when (assignmentOperation().text) {
-            "=" -> Assignment(disjunction().toExpr(), assignmentExpression().toExpr(), null)
-            else -> Assignment(
-                    disjunction().toExpr(),
-                    BinaryOperator(
-                            disjunction().toExpr(),
-                            assignmentExpression().toExpr(),
-                            assignmentOperation().ID,
-                            null
-                    ),
-                    null
-            )
         }
     }
 }
@@ -91,8 +65,34 @@ fun QuartzParser.EqualityComparisonContext.toExpr(): Expression {
 
 fun QuartzParser.ComparisonContext.toExpr(): Expression {
     return when {
-        comparison() == null -> bitshiftExpression().toExpr()
-        else -> BinaryOperator(bitshiftExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
+        comparison() == null -> delegateExpression().toExpr()
+        else -> BinaryOperator(delegateExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
+    }
+}
+
+fun QuartzParser.DelegateExpressionContext.toExpr(): Expression {
+    return when {
+        delegateExpression() == null -> assignmentExpression().toExpr()
+        else -> ExpressionPair(assignmentExpression().toExpr(), delegateExpression().toExpr())
+    }
+}
+
+fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
+    return when {
+        assignmentExpression() == null -> bitshiftExpression().toExpr()
+        else -> when (assignmentOperation().text) {
+            "=" -> Assignment(bitshiftExpression().toExpr(), assignmentExpression().toExpr(), null)
+            else -> Assignment(
+                    bitshiftExpression().toExpr(),
+                    BinaryOperator(
+                            bitshiftExpression().toExpr(),
+                            assignmentExpression().toExpr(),
+                            assignmentOperation().ID,
+                            null
+                    ),
+                    null
+            )
+        }
     }
 }
 

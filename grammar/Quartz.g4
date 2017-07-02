@@ -45,15 +45,7 @@ packageList
 
 expression
     : letExpression
-    | delegateExpression
-    ;
-
-delegateExpression
-    : assignmentExpression (',' delegateExpression)?
-    ;
-
-assignmentExpression
-    : disjunction (assignmentOperation assignmentExpression)?
+    | disjunction
     ;
 
 disjunction
@@ -69,7 +61,15 @@ equalityComparison
     ;
 
 comparison
-    : bitshiftExpression (comparisonOperation comparison)?
+    : delegateExpression (comparisonOperation comparison)?
+    ;
+
+delegateExpression
+    : assignmentExpression (delegateOperation delegateExpression)?
+    ;
+
+assignmentExpression
+    : bitshiftExpression (assignmentOperation assignmentExpression)?
     ;
 
 bitshiftExpression
@@ -124,20 +124,6 @@ sizeof
     : 'sizeof' '(' type ')'
     ;
 
-assignmentOperation
-    : '='
-    | '+='
-    | '-='
-    | '*='
-    | '/='
-    | '%='
-    | '&='
-    | '|='
-    | '^='
-    | '<' '<' '='
-    | '>' '>' '='
-    ;
-
 disjunctionOperation
     : '||'
     | '|'
@@ -159,6 +145,24 @@ comparisonOperation
     | '<'
     | '>' '='
     | '<' '='
+    ;
+
+delegateOperation
+    : ','
+    ;
+
+assignmentOperation
+    : '='
+    | '+='
+    | '-='
+    | '*='
+    | '/='
+    | '%='
+    | '&='
+    | '|='
+    | '^='
+    | '<' '<' '='
+    | '>' '>' '='
     ;
 
 bitshiftOperation
