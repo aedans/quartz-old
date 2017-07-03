@@ -17,7 +17,7 @@ import quartz.compiler.util.lValueOrError
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.FunctionDeclarationContext.toExpr(): FunctionDeclaration {
+fun QuartzParser.FunctionDeclarationContext.toDecl(): FunctionDeclaration {
     return errorScope({ "function ${NAME()?.text}" }) {
         val nameTypeList = nameTypeList().toList()
         FunctionDeclaration(

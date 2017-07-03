@@ -1,16 +1,14 @@
 package quartz.compiler.semantics.tables
 
-import quartz.compiler.tree.Declaration
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.TypeDeclaration
+import quartz.compiler.tree.VariableDeclaration
 
 /**
  * Created by Aedan Smith.
  */
 
 interface SymbolTable {
-    fun getVar(name: String): Type?
+    fun getVariableDeclaration(name: String): VariableDeclaration?
 
-    fun getType(name: String): Type?
-
-    fun getDeclaration(name: String): Declaration?
+    fun getTypeDeclaration(name: String): TypeDeclaration?
 }

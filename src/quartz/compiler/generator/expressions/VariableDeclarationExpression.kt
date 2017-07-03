@@ -8,7 +8,7 @@ import quartz.compiler.tree.util.Type
  * Created by Aedan Smith.
  */
 
-data class VariableDeclaration(
+data class VariableDeclarationExpression(
         val name: String,
         val variableType: Type?,
         val value: Expression?

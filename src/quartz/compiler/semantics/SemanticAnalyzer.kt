@@ -26,7 +26,7 @@ object SemanticAnalyzer {
                 ?: except { "Could not find function main" }
         val newProgram = mutableMapOf<String, Declaration>()
         main.analyze(newProgram, programSymbolTable)
-        return programSymbolTable.inlineCDeclarations + newProgram.values
+        return programSymbolTable.inlineC + newProgram.values.toList()
     }
 
     private fun Declaration.analyze(
@@ -44,7 +44,7 @@ object SemanticAnalyzer {
                     expression.analyze(newProgram, table)
                 }
                 is TypealiasDeclaration -> {
-                    aliasedType.analyze(newProgram, table)
+                    type.analyze(newProgram, table)
                 }
                 else -> err { "Expected declaration, found $this" }
             }
@@ -137,7 +137,7 @@ object SemanticAnalyzer {
             newProgram: MutableMap<String, Declaration>,
             symbolTable: SymbolTable
     ) {
-        val declaration = symbolTable.getDeclaration(name) ?: return
+        val declaration = symbolTable.getVariableDeclaration(name) ?: return
         if (!newProgram.contains(name)) {
             declaration.analyze(newProgram, symbolTable)
         }
@@ -147,7 +147,7 @@ object SemanticAnalyzer {
             newProgram: MutableMap<String, Declaration>,
             symbolTable: SymbolTable
     ) {
-        val declaration = symbolTable.getDeclaration(string) ?: return
+        val declaration = symbolTable.getTypeDeclaration(string) ?: return
         if (!newProgram.contains(string)) {
             declaration.analyze(newProgram, symbolTable)
         }

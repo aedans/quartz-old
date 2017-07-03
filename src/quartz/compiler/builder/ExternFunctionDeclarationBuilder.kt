@@ -8,7 +8,7 @@ import quartz.compiler.tree.declarations.ExternFunctionDeclaration
  * Created by Aedan Smith.
  */
 
-fun QuartzParser.ExternFunctionDeclarationContext.toExpr(): ExternFunctionDeclaration {
+fun QuartzParser.ExternFunctionDeclarationContext.toDecl(): ExternFunctionDeclaration {
     return ExternFunctionDeclaration(
             NAME().text,
             typeList().toList(),

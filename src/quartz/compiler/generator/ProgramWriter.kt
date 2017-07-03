@@ -2,7 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
-import quartz.compiler.generator.expressions.VariableDeclaration
+import quartz.compiler.generator.expressions.VariableDeclarationExpression
 import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
@@ -109,8 +109,8 @@ class ProgramWriter(outputStream: OutputStream) {
             }
             is ExternFunctionDeclaration -> {
             }
+            is InlineC -> generate()
             is FunctionDeclaration -> this.desugar().generate()
-            is InlineC -> this.generate()
             else -> err { "Expected declaration, found $this" }
         }
     }
@@ -141,7 +141,7 @@ class ProgramWriter(outputStream: OutputStream) {
                 is Assignment -> generate()
                 is FunctionCall -> generate()
                 is IfExpression -> generate()
-                is VariableDeclaration -> generate()
+                is VariableDeclarationExpression -> generate()
                 is ExpressionList -> generate()
                 else -> err { "Unrecognized expression ${this}" }
             }
@@ -227,7 +227,7 @@ class ProgramWriter(outputStream: OutputStream) {
         }
     }
 
-    private fun VariableDeclaration.generate() {
+    private fun VariableDeclarationExpression.generate() {
         variableType.generate()
         name(name)
         value?.apply {

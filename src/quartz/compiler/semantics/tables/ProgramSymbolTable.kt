@@ -1,13 +1,12 @@
 package quartz.compiler.semantics.tables
 
-import quartz.compiler.semantics.types.type
-import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.TypeDeclaration
+import quartz.compiler.tree.VariableDeclaration
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.declarations.TypealiasDeclaration
-import quartz.compiler.tree.util.Type
 import quartz.compiler.tree.util.toMap
 
 /**
@@ -18,7 +17,7 @@ data class ProgramSymbolTable(
         val functionDeclarations: Map<String, FunctionDeclaration>,
         val externFunctionDeclarations: Map<String, ExternFunctionDeclaration>,
         val typealiasDeclarations: Map<String, TypealiasDeclaration>,
-        val inlineCDeclarations: List<InlineC>
+        val inlineC: List<InlineC>
 ) : SymbolTable {
     constructor(program: Program) : this(
             program.filterIsInstance<FunctionDeclaration>().toMap(),
@@ -27,18 +26,12 @@ data class ProgramSymbolTable(
             program.filterIsInstance<InlineC>()
     )
 
-    override fun getType(name: String): Type? {
-        return typealiasDeclarations[name]?.aliasedType
-    }
-
-    override fun getVar(name: String): Type? {
-        return functionDeclarations[name]?.type()
-                ?: externFunctionDeclarations[name]?.type()
-    }
-
-    override fun getDeclaration(name: String): Declaration? {
+    override fun getVariableDeclaration(name: String): VariableDeclaration? {
         return functionDeclarations[name]
                 ?: externFunctionDeclarations[name]
-                ?: typealiasDeclarations[name]
+    }
+
+    override fun getTypeDeclaration(name: String): TypeDeclaration? {
+        return typealiasDeclarations[name]
     }
 }

@@ -4,9 +4,9 @@ import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
 import quartz.compiler.errors.except
 import quartz.compiler.semantics.tables.FunctionDeclarationSymbolTable
+import quartz.compiler.semantics.tables.LetExpressionSymbolTable
 import quartz.compiler.semantics.tables.SymbolTable
 import quartz.compiler.semantics.types.*
-import quartz.compiler.semantics.util.withVar
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
@@ -29,7 +29,6 @@ object TypeAnalyzer {
     ): Declaration {
         return errorScope({ declaration.name }) {
             when (declaration) {
-                is InlineC -> declaration
                 is TypealiasDeclaration -> declaration
                 is ExternFunctionDeclaration -> declaration
                         .analyzeTypes(this::visitType.partial(table))
@@ -56,7 +55,7 @@ object TypeAnalyzer {
                     is NumberLiteral -> it
                     is StringLiteral -> it
                     is Identifier -> it
-                            .resolveType(table::getVar, typeVisitor)
+                            .resolveType(typeVisitor) { table.getVariableDeclaration(it)?.type }
                     is Sizeof -> it
                             .visitSizeType(typeVisitor)
                     is Cast -> it
@@ -107,7 +106,7 @@ object TypeAnalyzer {
                     is ConstType -> it.visitType(typeAnalyzer)
                     is PointerType -> it.visitType(typeAnalyzer)
                     is FunctionType -> it.visitTypes(typeAnalyzer)
-                    is NamedType -> it.resolveNamedType(table::getType, typeAnalyzer)
+                    is NamedType -> it.resolveNamedType(typeAnalyzer) { table.getTypeDeclaration(it)?.type }
                     else -> err { "Expected type, found $it" }
                 }
             }
@@ -152,7 +151,7 @@ object TypeAnalyzer {
         }
     }
 
-    inline fun Identifier.resolveType(getVar: (String) -> Type?, typeVisitor: Visitor<Type>): Identifier {
+    inline fun Identifier.resolveType(typeVisitor: Visitor<Type>, getVar: (String) -> Type?): Identifier {
         return copy(type = typeVisitor(getVar(name) ?: except { "Could not find variable $name" }))
     }
 
@@ -230,9 +229,8 @@ object TypeAnalyzer {
             symbolTable: SymbolTable,
             expectedType: Type?
     ): LetExpression {
-        return visitExpression(expressionAnalyzer.partial(symbolTable.withVar(name, variableType ?:
-                except { "Could not infer type for $this" }
-        )).partial(expectedType))
+        return visitExpression(expressionAnalyzer.partial(
+                LetExpressionSymbolTable(symbolTable, this)).partial(expectedType))
     }
 
     fun LetExpression.inferVariableTypeFromExpression(): LetExpression {
@@ -242,7 +240,7 @@ object TypeAnalyzer {
     //
     // visitType util
     //
-    inline fun NamedType.resolveNamedType(typeProvider: (String) -> Type?, typeVisitor: Visitor<Type>): Type {
+    inline fun NamedType.resolveNamedType(typeVisitor: Visitor<Type>, typeProvider: (String) -> Type?): Type {
         return typeVisitor(typeProvider(string)
                 ?: except { "Unknown type $string" })
     }

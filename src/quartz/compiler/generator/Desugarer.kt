@@ -2,7 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.err
 import quartz.compiler.errors.except
-import quartz.compiler.generator.expressions.VariableDeclaration
+import quartz.compiler.generator.expressions.VariableDeclarationExpression
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
@@ -52,7 +52,7 @@ fun Expression.desugar(newExpressions: MutableList<Expression>, intIterator: Int
         is ReturnExpression -> desugar(newExpressions, intIterator, isStatement)
         is IfExpression -> desugar(newExpressions, intIterator, isStatement)
         is LetExpression -> desugar(newExpressions, intIterator, isStatement)
-        is VariableDeclaration -> desugar(newExpressions, intIterator, isStatement)
+        is VariableDeclarationExpression -> desugar(newExpressions, intIterator, isStatement)
         is ExpressionList -> desugar(newExpressions, intIterator, isStatement)
         else -> err { "Expected expression, found $this" }
     }
@@ -86,7 +86,7 @@ fun IfExpression.desugar(newExpressions: MutableList<Expression>, intIterator: I
     } else {
         val name = "__${intIterator.next()}"
         val identifier = Identifier(name, type)
-        newExpressions.add(VariableDeclaration(name, type, null))
+        newExpressions.add(VariableDeclarationExpression(name, type, null))
         newExpressions.add(IfExpression(
                 condition,
                 Assignment(identifier, ifTrue),
@@ -97,11 +97,11 @@ fun IfExpression.desugar(newExpressions: MutableList<Expression>, intIterator: I
 }
 
 fun LetExpression.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {
-    newExpressions.add(VariableDeclaration(name, variableType, value).desugar(newExpressions, intIterator, true))
+    newExpressions.add(VariableDeclarationExpression(name, variableType, value).desugar(newExpressions, intIterator, true))
     return expression.desugar(newExpressions, intIterator, isStatement)
 }
 
-fun VariableDeclaration.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {
+fun VariableDeclarationExpression.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean): Expression {
     return if (isStatement) {
         copy(value = value?.desugar(newExpressions, intIterator))
     } else {
@@ -117,7 +117,7 @@ fun ExpressionList.desugar(newExpressions: MutableList<Expression>, intIterator:
         ExpressionList(localNewExpressions)
     } else {
         val name = "__${intIterator.next()}"
-        newExpressions.add(VariableDeclaration(name, type, null))
+        newExpressions.add(VariableDeclarationExpression(name, type, null))
         newExpressions.add(desugar(newExpressions, intIterator, true))
         Identifier(name, type)
     }

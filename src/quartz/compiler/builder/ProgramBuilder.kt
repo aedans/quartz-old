@@ -4,8 +4,8 @@ import quartz.compiler.errors.errorScope
 import quartz.compiler.errors.except
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.Declaration
-import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.util.Library
 import java.io.InputStream
 
 /**
@@ -22,13 +22,13 @@ fun QuartzParser.ProgramContext.toExpr(library: Library.LibraryPackage, parser: 
 }
 
 private fun List<QuartzParser.DeclarationContext>.program(): Program {
-    var program = emptyList<Declaration>()
+    val program = mutableListOf<Declaration>()
     forEach {
         when {
-            it.inlineC() != null -> program += it.inlineC().toExpr()
-            it.functionDeclaration() != null -> program += it.functionDeclaration().toExpr()
-            it.externFunctionDeclaration() != null -> program += it.externFunctionDeclaration().toExpr()
-            it.typealiasDeclaration() != null -> program += it.typealiasDeclaration().toExpr()
+            it.functionDeclaration() != null -> program.add(it.functionDeclaration().toDecl())
+            it.externFunctionDeclaration() != null -> program.add(it.externFunctionDeclaration().toDecl())
+            it.typealiasDeclaration() != null -> program.add(it.typealiasDeclaration().toExpr())
+            it.inlineC() != null -> program.add(it.inlineC().toExpr())
             else -> except { "Error translating ${it.text}" }
         }
     }

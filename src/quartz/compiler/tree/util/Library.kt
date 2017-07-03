@@ -1,4 +1,4 @@
-package quartz.compiler.tree
+package quartz.compiler.tree.util
 
 import quartz.compiler.errors.except
 import quartz.compiler.util.times

@@ -9,8 +9,8 @@ import quartz.compiler.generator.Generator
 import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.SemanticAnalyzer
-import quartz.compiler.tree.Library
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.util.Library
 import java.io.InputStream
 import java.io.OutputStream
 
