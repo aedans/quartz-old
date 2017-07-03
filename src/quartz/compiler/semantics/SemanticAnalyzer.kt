@@ -22,7 +22,7 @@ import quartz.compiler.tree.util.Type
 object SemanticAnalyzer {
     fun analyzeProgram(program: Program): Program {
         val programSymbolTable = ProgramSymbolTable(program)
-        val main = programSymbolTable.functionDeclarations["main"]
+        val main = programSymbolTable.variableDeclarations["main"] as? FunctionDeclaration
                 ?: except { "Could not find function main" }
         val newProgram = mutableMapOf<String, Declaration>()
         main.analyze(newProgram, programSymbolTable)

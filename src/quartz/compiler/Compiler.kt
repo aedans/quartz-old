@@ -2,7 +2,7 @@ package quartz.compiler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
-import quartz.compiler.builder.toExpr
+import quartz.compiler.builder.program
 import quartz.compiler.errors.ErrorListener
 import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.Generator
@@ -34,7 +34,7 @@ object Compiler {
     }
 
     val defaultBuilder: CompilerBuilder = { library, parser ->
-        errorScope({ "ast builder" }) { toExpr(library, parser) }
+        errorScope({ "ast builder" }) { program(library, parser) }
     }
 
     val defaultAnalyzer: CompilerAnalyzer = {
