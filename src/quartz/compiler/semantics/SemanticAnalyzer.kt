@@ -13,7 +13,6 @@ import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.declarations.TypealiasDeclaration
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
-import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
 
 /**
@@ -38,10 +37,10 @@ object SemanticAnalyzer {
             newProgram += name to this
             when (this) {
                 is ExternFunctionDeclaration -> {
-                    function.analyze(newProgram, table)
+                    analyzeFunction(args, returnType, newProgram, table)
                 }
                 is FunctionDeclaration -> {
-                    function.analyze(newProgram, table)
+                    analyzeFunction(argTypes, returnType, newProgram, table)
                     expression.analyze(newProgram, table)
                 }
                 is TypealiasDeclaration -> {
@@ -119,15 +118,17 @@ object SemanticAnalyzer {
             is ConstType -> type.analyze(newProgram, table)
             is PointerType -> type.analyze(newProgram, table)
             is NamedType -> analyze(newProgram, table)
-            is FunctionType -> function.analyze(newProgram, table)
+            is FunctionType -> analyzeFunction(args, returnType, newProgram, table)
             else -> err { "Expected type, found $this" }
         }
     }
 
-    private fun Function.analyze(
+    private fun analyzeFunction(
+            args: List<Type>?,
+            returnType: Type,
             newProgram: MutableMap<String, Declaration>,
-            declarationContext: SymbolTable)
-    {
+            declarationContext: SymbolTable
+    ) {
         returnType.analyze(newProgram, declarationContext)
         args?.forEach { it.analyze(newProgram, declarationContext) }
     }

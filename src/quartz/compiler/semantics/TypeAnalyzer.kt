@@ -106,7 +106,7 @@ object TypeAnalyzer {
                     is InlineCType -> it
                     is ConstType -> it.visitType(typeAnalyzer)
                     is PointerType -> it.visitType(typeAnalyzer)
-                    is FunctionType -> it.visitFunctionType(typeAnalyzer)
+                    is FunctionType -> it.visitTypes(typeAnalyzer)
                     is NamedType -> it.resolveNamedType(table::getType, typeAnalyzer)
                     else -> err { "Expected type, found $it" }
                 }
@@ -122,7 +122,7 @@ object TypeAnalyzer {
             typeAnalyzer: (SymbolTable, Type) -> Type
     ): FunctionDeclaration {
         val symbolTable = FunctionDeclarationSymbolTable(table, this)
-        return visitFunction { it.visitTypes(typeAnalyzer.partial(symbolTable)) }
+        return visitTypes(typeAnalyzer.partial(symbolTable))
     }
 
     inline fun FunctionDeclaration.analyzeExpression(
@@ -130,12 +130,12 @@ object TypeAnalyzer {
             expressionAnalyzer: (SymbolTable, Type?, Expression) -> Expression
     ): FunctionDeclaration {
         val symbolTable = FunctionDeclarationSymbolTable(table, this)
-        val expected = if (function.returnType == VoidType) null else function.returnType
+        val expected = if (returnType == VoidType) null else returnType
         return copy(expression = expressionAnalyzer(symbolTable, expected, expression))
     }
 
     inline fun ExternFunctionDeclaration.analyzeTypes(typeVisitor: Visitor<Type>): ExternFunctionDeclaration {
-        return visitFunction { it.visitTypes(typeVisitor) }
+        return visitTypes(typeVisitor)
     }
 
     //
@@ -193,9 +193,8 @@ object TypeAnalyzer {
     }
 
     inline fun FunctionCall.analyzeArguments(expressionAnalyzer: (Type?, Expression) -> Expression): FunctionCall {
-        val function = (expression.type as? FunctionType)?.function
+        val function = expression.type as? FunctionType
                 ?: except { "Could not call ${expression.type}" }
-        function.args!!
 
         if (!function.vararg && function.args.size != args.size)
             except { "Incorrect number of arguments for $this" }

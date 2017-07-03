@@ -3,7 +3,6 @@ package quartz.compiler.builder
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.*
-import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
 
 /**
@@ -43,11 +42,11 @@ fun QuartzParser.PrimitiveTypeContext.toType(): Type {
 }
 
 fun QuartzParser.FunctionTypeContext.toType(): FunctionType {
-    return FunctionType(Function(
+    return FunctionType(
             args.toList(),
             returnType.toType(),
             args.isVararg()
-    ))
+    )
 }
 
 fun QuartzParser.PointerTypeContext.toType(): Type {

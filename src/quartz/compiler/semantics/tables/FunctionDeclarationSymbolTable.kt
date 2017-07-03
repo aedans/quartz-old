@@ -3,7 +3,6 @@ package quartz.compiler.semantics.tables
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.nullableZip
 
 /**
  * Created by Aedan Smith.
@@ -18,8 +17,8 @@ data class FunctionDeclarationSymbolTable(
     }
 
     override fun getVar(name: String): Type? {
-        return functionDeclaration.argNames.nullableZip(functionDeclaration.function.args)
-                ?.firstOrNull { it.first == name }?.second
+        return functionDeclaration.args
+                .firstOrNull { it.first == name }?.second
                 ?: symbolTable.getVar(name)
     }
 

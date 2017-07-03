@@ -11,7 +11,6 @@ import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
-import quartz.compiler.tree.util.Function
 import quartz.compiler.util.lValueOrError
 
 /**
@@ -23,12 +22,8 @@ fun QuartzParser.FunctionDeclarationContext.toExpr(): FunctionDeclaration {
         val nameTypeList = nameTypeList().toList()
         FunctionDeclaration(
                 NAME().text,
-                nameTypeList.map { it.first },
-                Function(
-                        nameTypeList.map { it.second },
-                        returnType?.toType() ?: VoidType,
-                        false
-                ),
+                nameTypeList,
+                returnType?.toType() ?: VoidType,
                 expression().toExpr()
         )
     }

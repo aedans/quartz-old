@@ -2,7 +2,6 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.err
 import quartz.compiler.semantics.types.*
-import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
 
 /**
@@ -17,12 +16,13 @@ fun Type.description(): String {
         is VoidType -> "void"
         is PointerType -> "ptr_${type.description()}"
         is ConstType -> "const_${type.description()}"
-        is FunctionType -> function.description()
+        is FunctionType -> functionDescription(args, returnType, vararg)
         else -> err { "Expected type, found $this" }
     }
 }
 
-fun Function.description(): String {
+fun functionDescription(args: List<Type>?, returnType: Type, vararg: Boolean): String {
+    @Suppress("NAME_SHADOWING")
     val args = args ?: emptyList()
     var string = ""
     when {

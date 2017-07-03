@@ -12,7 +12,6 @@ import quartz.compiler.tree.declarations.TypealiasDeclaration
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.nullableZip
 import java.io.OutputStream
 import java.io.PrintStream
 import java.util.*
@@ -53,9 +52,9 @@ class ProgramWriter(outputStream: OutputStream) {
 
     private fun FunctionDeclaration.declare() {
         declare {
-            function.returnType.generate()
+            returnType.generate()
             name(name)
-            argNames.nullableZip(function.args).generate()
+            args.generate()
             string(";")
             newline()
         }
@@ -71,26 +70,26 @@ class ProgramWriter(outputStream: OutputStream) {
     private fun FunctionType.declare() {
         declare {
             val name = description()
-            (function.args ?: err { "Unknown argument types for $this" }).forEach {
+            args.forEach {
                 it.declare()
             }
-            function.returnType.declare()
+            returnType.declare()
             name("typedef")
-            function.returnType.generate()
+            returnType.generate()
             parentheses {
                 string("*")
                 string("__$name")
                 string("_t")
             }
             parentheses {
-                function.args.dropLast(1).forEach {
+                args.dropLast(1).forEach {
                     it.generate()
                     string(", ")
                 }
-                if (function.args.isNotEmpty())
-                    function.args.last().generate()
-                if (function.vararg) {
-                    if (function.args.isNotEmpty())
+                if (args.isNotEmpty())
+                    args.last().generate()
+                if (vararg) {
+                    if (args.isNotEmpty())
                         string(", ")
                     string("...")
                 }
@@ -118,9 +117,9 @@ class ProgramWriter(outputStream: OutputStream) {
 
     private fun FunctionDeclaration.generate() {
         margin {
-            function.returnType.generate()
+            returnType.generate()
             name(name)
-            argNames.nullableZip(function.args).generate()
+            args.generate()
             (expression as ExpressionList).generate()
         }
     }

@@ -16,7 +16,7 @@ import quartz.compiler.util.lValueOrError
 
 fun FunctionDeclaration.desugar(): FunctionDeclaration {
     return copy(
-            expression = (if (function.returnType == VoidType) expression else ReturnExpression(expression))
+            expression = (if (returnType == VoidType) expression else ReturnExpression(expression))
                     .desugar((0..Integer.MAX_VALUE).iterator()))
 }
 

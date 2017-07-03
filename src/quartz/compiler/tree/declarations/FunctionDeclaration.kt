@@ -2,7 +2,8 @@ package quartz.compiler.tree.declarations
 
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Function
+import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.util.functionString
 import quartz.compiler.util.Visitor
 
 /**
@@ -11,12 +12,27 @@ import quartz.compiler.util.Visitor
 
 data class FunctionDeclaration(
         override val name: String,
-        val argNames: List<String>,
-        val function: Function,
+        val args: List<Pair<String, Type>>,
+        val returnType: Type,
         val expression: Expression
 ) : Declaration {
-    inline fun visitFunction(functionVisitor: Visitor<Function>): FunctionDeclaration {
-        return copy(function = functionVisitor(function))
+    val argNames get() = args.map { it.first }
+    val argTypes get() = args.map { it.second }
+
+    inline fun visitArgs(argVisitor: Visitor<Pair<String, Type>>): FunctionDeclaration {
+        return copy(args = args.map(argVisitor))
+    }
+
+    inline fun visitArgTypes(typeVisitor: Visitor<Type>): FunctionDeclaration {
+        return visitArgs { it.copy(second = typeVisitor(it.second)) }
+    }
+
+    inline fun visitReturnType(typeVisitor: Visitor<Type>): FunctionDeclaration {
+        return copy(returnType = typeVisitor(returnType))
+    }
+
+    inline fun visitTypes(typeVisitor: Visitor<Type>): FunctionDeclaration {
+        return visitArgTypes(typeVisitor).visitReturnType(typeVisitor)
     }
 
     inline fun visitExpression(expressionVisitor: Visitor<Expression>): FunctionDeclaration {
@@ -24,6 +40,6 @@ data class FunctionDeclaration(
     }
 
     override fun toString(): String {
-        return "$name$function\n${expression.toString(1)}"
+        return "$name${functionString(argTypes, returnType, false)}\n${expression.toString(1)}"
     }
 }

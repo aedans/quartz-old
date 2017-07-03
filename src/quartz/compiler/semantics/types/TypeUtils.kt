@@ -1,21 +1,16 @@
 package quartz.compiler.semantics.types
 
-import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
-import quartz.compiler.tree.util.Function
+import quartz.compiler.tree.declarations.FunctionDeclaration
 
 /**
  * Created by Aedan Smith.
  */
 
 fun FunctionDeclaration.type(): FunctionType {
-    return function.type()
+    return FunctionType(argTypes, returnType, false)
 }
 
 fun ExternFunctionDeclaration.type(): FunctionType {
-    return function.type()
-}
-
-fun Function.type(): FunctionType {
-    return FunctionType(this)
+    return FunctionType(args, returnType, vararg)
 }
