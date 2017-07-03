@@ -8,10 +8,8 @@ import quartz.compiler.util.Visitor
  * Created by Aedan Smith.
  */
 
-data class UnaryOperation(val expression: Expression, val id: ID, override val type: Type?) : Expression {
-    override fun withType(type: Type): UnaryOperation {
-        return UnaryOperation(expression, id, type)
-    }
+data class UnaryOperation(val expression: Expression, val id: ID) : Expression {
+    override val type = expression.type
 
     inline fun visitExpression(expressionVisitor: Visitor<Expression>): UnaryOperation {
         return copy(expression = expressionVisitor(expression))

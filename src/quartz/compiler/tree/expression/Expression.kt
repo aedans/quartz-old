@@ -10,8 +10,6 @@ import quartz.compiler.util.times
 interface Expression {
     val type: Type?
 
-    fun withType(type: Type): Expression
-
     fun toString(i: Int): String {
         return ("\t" * i) + toString()
     }

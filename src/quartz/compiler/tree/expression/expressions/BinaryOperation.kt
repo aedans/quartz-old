@@ -8,10 +8,8 @@ import quartz.compiler.util.Visitor
  * Created by Aedan Smith.
  */
 
-data class BinaryOperation(val expr1: Expression, val expr2: Expression, val id: ID, override val type: Type?) : Expression {
-    override fun withType(type: Type): BinaryOperation {
-        return BinaryOperation(expr1, expr2, id, type)
-    }
+data class BinaryOperation(val expr1: Expression, val expr2: Expression, val id: ID) : Expression {
+    override val type = Type.greatestCommonType(expr1.type, expr2.type)
 
     inline fun visitExpr1(expressionVisitor: Visitor<Expression>): BinaryOperation {
         return copy(expr1 = expressionVisitor(expr1))

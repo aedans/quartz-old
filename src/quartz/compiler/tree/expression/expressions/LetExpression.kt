@@ -17,10 +17,6 @@ data class LetExpression(
 ): Expression {
     override val type = expression.type
 
-    override fun withType(type: Type): Expression {
-        return copy(expression = expression.withType(type))
-    }
-
     inline fun visitVariableType(typeVisitor: Visitor<Type>): LetExpression {
         return copy(variableType = variableType?.let(typeVisitor))
     }

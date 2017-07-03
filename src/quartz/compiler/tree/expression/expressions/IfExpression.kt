@@ -11,12 +11,9 @@ import quartz.compiler.util.Visitor
 data class IfExpression(
         val condition: Expression,
         val ifTrue: Expression,
-        val ifFalse: Expression?,
-        override val type: Type?
+        val ifFalse: Expression?
 ) : Expression {
-    override fun withType(type: Type): IfExpression {
-        return IfExpression(condition, ifTrue, ifFalse, type)
-    }
+    override val type = Type.greatestCommonType(ifTrue.type, ifFalse?.type)
 
     inline fun visitCondition(expressionVisitor: Visitor<Expression>): IfExpression {
         return copy(condition = expressionVisitor(condition))

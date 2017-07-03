@@ -9,10 +9,6 @@ import quartz.compiler.util.Visitor
  */
 
 data class Cast(val expression: Expression, override val type: Type) : Expression {
-    override fun withType(type: Type): Cast {
-        return Cast(expression, type)
-    }
-
     inline fun visitExpression(expressionVisitor: Visitor<Expression>): Cast {
         return copy(expression = expressionVisitor(expression))
     }

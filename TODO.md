@@ -1,6 +1,5 @@
 - Code maintenance
     - Rewrite generator
-    - Migrate simplifier to visitor
     - Add more unit tests
 - Bug fixes
     - Implement immutability

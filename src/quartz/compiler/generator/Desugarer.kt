@@ -89,9 +89,8 @@ fun IfExpression.desugar(newExpressions: MutableList<Expression>, intIterator: I
         newExpressions.add(VariableDeclaration(name, type, null))
         newExpressions.add(IfExpression(
                 condition,
-                Assignment(identifier, ifTrue, type),
-                ifFalse?.let { Assignment(identifier, it, type) },
-                type
+                Assignment(identifier, ifTrue),
+                ifFalse?.let { Assignment(identifier, it) }
         ).desugar(newExpressions, intIterator, true))
         identifier
     }

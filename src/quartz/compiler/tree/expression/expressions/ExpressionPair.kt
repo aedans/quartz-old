@@ -12,10 +12,6 @@ import quartz.compiler.util.times
 data class ExpressionPair(val expr1: Expression, val expr2: Expression): Expression {
     override val type = expr2.type
 
-    override fun withType(type: Type): Expression {
-        return copy(expr2 = expr2.withType(type))
-    }
-
     inline fun visitExpr1(expressionVisitor: Visitor<Expression>): ExpressionPair {
         return copy(expr1 = expressionVisitor(expr1))
     }

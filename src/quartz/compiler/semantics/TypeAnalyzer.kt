@@ -64,20 +64,15 @@ object TypeAnalyzer {
                             .analyzeExpression(expressionAnalyzer, expectedType)
                     is UnaryOperation -> it
                             .analyzeExpression(expressionAnalyzer, expectedType)
-                            .inferTypeFrom { expression }
                     is BinaryOperation -> it
                             .analyzeExpr1(expressionAnalyzer, expectedType)
                             .analyzeExpr2(expressionAnalyzer, expectedType)
-                            .inferTypeFrom { expr1 }
-                            .inferTypeFrom { expr2 }
                     is ExpressionPair -> it
                             .analyzeExpr1(expressionAnalyzer)
                             .analyzeExpr2(expressionAnalyzer, expectedType)
-                            .inferTypeFrom { expr2 }
                     is Assignment -> it
                             .analyzeLValue(expressionAnalyzer)
                             .analyzeExpression(expressionAnalyzer, expectedType)
-                            .inferTypeFrom { lvalue }
                     is FunctionCall -> it
                             .analyzeExpression(expressionAnalyzer)
                             .analyzeArguments(expressionAnalyzer)
@@ -85,8 +80,6 @@ object TypeAnalyzer {
                             .analyzeCondition(expressionAnalyzer)
                             .analyzeIfTrue(expressionAnalyzer, expectedType)
                             .analyzeIfFalse(expressionAnalyzer, expectedType)
-                            .inferTypeFrom { ifTrue }
-                            .inferTypeFrom { ifFalse }
                     is LetExpression -> it
                             .visitVariableType(typeVisitor)
                             .analyzeValue(expressionAnalyzer)
@@ -159,22 +152,8 @@ object TypeAnalyzer {
         }
     }
 
-    inline fun <reified T : Expression> T.inferTypeFrom(exprGetter: T.() -> Expression?): T {
-        return inferTypeAs { exprGetter()?.type }
-    }
-
-    // TODO greatest common type
-    inline fun <reified T : Expression> T.inferTypeAs(typeGetter: T.() -> Type?): T {
-        val type = typeGetter()
-        return when (type) {
-            null -> this
-            else -> this.withType(type) as T
-        }
-    }
-
     inline fun Identifier.resolveType(getVar: (String) -> Type?, typeVisitor: Visitor<Type>): Identifier {
-        return inferTypeAs { typeVisitor(getVar(name)
-                ?: except { "Could not find variable $name" }) }
+        return copy(type = typeVisitor(getVar(name) ?: except { "Could not find variable $name" }))
     }
 
     inline fun Cast.analyzeExpression(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): Cast {

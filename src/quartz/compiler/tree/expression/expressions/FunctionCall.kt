@@ -13,10 +13,6 @@ data class FunctionCall(
         val args: List<Expression>,
         override val type: Type?
 ) : Expression {
-    override fun withType(type: Type): Expression {
-        return FunctionCall(expression, args, type)
-    }
-
     inline fun visitExpression(expressionVisitor: Visitor<Expression>): FunctionCall {
         return copy(expression = expressionVisitor(expression))
     }

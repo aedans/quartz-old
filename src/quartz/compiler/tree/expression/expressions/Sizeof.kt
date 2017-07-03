@@ -10,11 +10,7 @@ import quartz.compiler.util.Visitor
  */
 
 data class Sizeof(val sizeType: Type) : Expression {
-    override val type: Type? = ULongType
-
-    override fun withType(type: Type): Expression {
-        return this
-    }
+    override val type = ULongType
 
     inline fun visitSizeType(typeVisitor: Visitor<Type>): Sizeof {
         return copy(sizeType = typeVisitor(sizeType))

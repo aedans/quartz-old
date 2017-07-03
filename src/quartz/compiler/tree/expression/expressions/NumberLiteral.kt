@@ -8,10 +8,6 @@ import quartz.compiler.tree.util.Type
  */
 
 data class NumberLiteral(val string: String, override val type: Type) : Expression {
-    override fun withType(type: Type): NumberLiteral {
-        return NumberLiteral(string, type)
-    }
-
     override fun toString(): String {
         return string
     }

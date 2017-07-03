@@ -1,7 +1,7 @@
 package quartz.compiler.builder
 
-import quartz.compiler.errors.errorScope
 import quartz.compiler.errors.err
+import quartz.compiler.errors.errorScope
 import quartz.compiler.errors.except
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.types.CharType
@@ -47,28 +47,28 @@ fun QuartzParser.ExpressionContext.toExpr(): Expression {
 fun QuartzParser.DisjunctionContext.toExpr(): Expression {
     return when {
         disjunction() == null -> conjunction().toExpr()
-        else -> BinaryOperation(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID, null)
+        else -> BinaryOperation(conjunction().toExpr(), disjunction().toExpr(), disjunctionOperation().ID)
     }
 }
 
 fun QuartzParser.ConjunctionContext.toExpr(): Expression {
     return when {
         conjunction() == null -> equalityComparison().toExpr()
-        else -> BinaryOperation(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID, null)
+        else -> BinaryOperation(equalityComparison().toExpr(), conjunction().toExpr(), conjunctionOperation().ID)
     }
 }
 
 fun QuartzParser.EqualityComparisonContext.toExpr(): Expression {
     return when {
         equalityComparison() == null -> comparison().toExpr()
-        else -> BinaryOperation(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID, null)
+        else -> BinaryOperation(comparison().toExpr(), equalityComparison().toExpr(), equalityOperation().ID)
     }
 }
 
 fun QuartzParser.ComparisonContext.toExpr(): Expression {
     return when {
         comparison() == null -> delegateExpression().toExpr()
-        else -> BinaryOperation(delegateExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID, null)
+        else -> BinaryOperation(delegateExpression().toExpr(), comparison().toExpr(), comparisonOperation().ID)
     }
 }
 
@@ -83,16 +83,14 @@ fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
     return when {
         assignmentExpression() == null -> bitshiftExpression().toExpr()
         else -> when (assignmentOperation().text) {
-            "=" -> Assignment(bitshiftExpression().toExpr().lValueOrError(), assignmentExpression().toExpr(), null)
+            "=" -> Assignment(bitshiftExpression().toExpr().lValueOrError(), assignmentExpression().toExpr())
             else -> Assignment(
                     bitshiftExpression().toExpr().lValueOrError(),
                     BinaryOperation(
                             bitshiftExpression().toExpr(),
                             assignmentExpression().toExpr(),
-                            assignmentOperation().ID,
-                            null
-                    ),
-                    null
+                            assignmentOperation().ID
+                    )
             )
         }
     }
@@ -101,21 +99,21 @@ fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
 fun QuartzParser.BitshiftExpressionContext.toExpr(): Expression {
     return when {
         bitshiftExpression() == null -> additiveExpression().toExpr()
-        else -> BinaryOperation(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID, null)
+        else -> BinaryOperation(additiveExpression().toExpr(), bitshiftExpression().toExpr(), bitshiftOperation().ID)
     }
 }
 
 fun QuartzParser.AdditiveExpressionContext.toExpr(): Expression {
     return when {
         additiveExpression() == null -> multiplicativeExpression().toExpr()
-        else -> BinaryOperation(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID, null)
+        else -> BinaryOperation(multiplicativeExpression().toExpr(), additiveExpression().toExpr(), additiveOperation().ID)
     }
 }
 
 fun QuartzParser.MultiplicativeExpressionContext.toExpr(): Expression {
     return when {
         multiplicativeExpression() == null -> operableExpression().toExpr()
-        else -> BinaryOperation(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID, null)
+        else -> BinaryOperation(operableExpression().toExpr(), multiplicativeExpression().toExpr(), multiplicativeOperation().ID)
     }
 }
 
@@ -129,7 +127,7 @@ fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
 }
 
 fun QuartzParser.PrefixOperationContext.toExpr(expression: Expression): Expression {
-    return UnaryOperation(expression, ID, null)
+    return UnaryOperation(expression, ID)
 }
 
 fun QuartzParser.PostfixOperationContext.toExpr(expression: Expression): Expression {
@@ -178,8 +176,8 @@ fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
 fun List<QuartzParser.IfBranchContext>.toExpr(`else`: Expression?): IfExpression {
     return when (size) {
         0 -> except { "Cannot have empty if value" }
-        1 -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), `else`, null) }
-        else -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), drop(1).toExpr(`else`), null) }
+        1 -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), `else`) }
+        else -> first().run { IfExpression(condition.toExpr(), ifTrue.toExpr(), drop(1).toExpr(`else`)) }
     }
 }
 

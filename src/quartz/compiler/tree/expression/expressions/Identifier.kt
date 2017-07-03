@@ -8,10 +8,6 @@ import quartz.compiler.tree.util.Type
  */
 
 data class Identifier(val name: String, override val type: Type?) : LValue {
-    override fun withType(type: Type): Identifier {
-        return Identifier(name, type)
-    }
-
     override fun toString(): String {
         return name
     }
