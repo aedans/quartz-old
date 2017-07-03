@@ -1,7 +1,6 @@
 package quartz.compiler.tree.expression.expressions
 
 import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
 import quartz.compiler.util.times
 
@@ -25,6 +24,6 @@ data class ExpressionPair(val expr1: Expression, val expr2: Expression): Express
     }
 
     override fun toString(i: Int): String {
-        return "$expr1,\n${"\t" * (i + 1)}$expr2"
+        return "${"\t" * i}$expr1,\n${"\t" * i}$expr2"
     }
 }

@@ -34,7 +34,7 @@ data class LetExpression(
     }
 
     override fun toString(i: Int): String {
-        return "let $name: $variableType${if (value != null) " = $value" else ""} in\n" +
+        return "${"\t" * i}let $name: $variableType${if (value != null) " = $value" else ""} in\n" +
                 "${"\t" * i}$expression"
     }
 }
