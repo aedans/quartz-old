@@ -3,16 +3,21 @@ package quartz.compiler.tree.expression.expressions
 import quartz.compiler.semantics.types.VoidType
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
+import quartz.compiler.util.Visitor
 
 /**
  * Created by Aedan Smith.
  */
 
 class ExpressionList(expressionList: List<Expression>): Expression, List<Expression> by expressionList {
-    override val type: Type? = if (isEmpty()) VoidType else last().type
+    override val type = if (isEmpty()) VoidType else last().type
 
     override fun withType(type: Type): ExpressionList {
         return if (isEmpty()) this else ExpressionList(dropLast(1) + last().withType(type))
+    }
+
+    inline fun visitExpressions(expressionVisitor: Visitor<Expression>): ExpressionList {
+        return ExpressionList(map(expressionVisitor))
     }
 
     override fun toString(): String {

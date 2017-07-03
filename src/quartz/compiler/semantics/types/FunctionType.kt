@@ -2,6 +2,7 @@ package quartz.compiler.semantics.types
 
 import quartz.compiler.tree.util.Function
 import quartz.compiler.tree.util.Type
+import quartz.compiler.util.Visitor
 
 /**
  * Created by Aedan Smith.
@@ -16,6 +17,10 @@ data class FunctionType(val function: Function) : Type {
                 && type.function.args
                 ?.zip(function.args ?: emptyList())
                 ?.all { it.first.isConvertibleTo(it.second) } ?: true
+    }
+
+    inline fun visitFunctionType(typeVisitor: Visitor<Type>): FunctionType {
+        return copy(function = function.visitTypes(typeVisitor))
     }
 
     override fun toString(): String {

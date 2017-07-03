@@ -121,7 +121,7 @@ literal
     ;
 
 sizeof
-    : 'sizeof' '(' type ')'
+    : 'sizeof' '<' type '>'
     ;
 
 disjunctionOperation

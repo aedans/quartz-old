@@ -9,7 +9,7 @@ import quartz.compiler.tree.util.Type
  */
 
 abstract class UnitExpression : Expression {
-    override val type: Type? = VoidType
+    override val type = VoidType
 
     override fun withType(type: Type): Expression {
         if (type != VoidType)

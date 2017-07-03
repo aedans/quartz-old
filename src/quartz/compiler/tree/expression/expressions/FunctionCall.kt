@@ -2,6 +2,7 @@ package quartz.compiler.tree.expression.expressions
 
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
+import quartz.compiler.util.Visitor
 
 /**
  * Created by Aedan Smith.
@@ -14,6 +15,14 @@ data class FunctionCall(
 ) : Expression {
     override fun withType(type: Type): Expression {
         return FunctionCall(expression, args, type)
+    }
+
+    inline fun visitExpression(expressionVisitor: Visitor<Expression>): FunctionCall {
+        return copy(expression = expressionVisitor(expression))
+    }
+
+    inline fun visitArgs(expressionVisitor: Visitor<Expression>): FunctionCall {
+        return copy(args = args.map(expressionVisitor))
     }
 
     override fun toString(): String {
