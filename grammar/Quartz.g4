@@ -65,7 +65,12 @@ comparison
     ;
 
 delegateExpression
-    : assignmentExpression (delegateOperation delegateExpression)?
+    : statementExpression (delegateOperation delegateExpression)?
+    ;
+
+statementExpression
+    : ifExpression
+    | assignmentExpression
     ;
 
 assignmentExpression
@@ -96,7 +101,6 @@ atomicExpression
     | literal
     | sizeof
     | identifier
-    | ifExpression
     ;
 
 letExpression
@@ -106,11 +110,8 @@ letExpression
     ;
 
 ifExpression
-    : 'if' ifBranch+ ('else' '{' expression '}')?
-    ;
-
-ifBranch
-    : condition=expression '{' ifTrue=expression '}'
+    : 'if' condition=expression 'then' ifTrue1=statementExpression
+    | 'if' condition=expression 'then' ifTrue2=expression 'else' ifFalse=statementExpression
     ;
 
 literal

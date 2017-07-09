@@ -101,7 +101,7 @@ fun String.isOutputOf(string: String, name: String) {
     withoutErrors.compile(string, name)
     runCommand(
             testFile("debug/$name.exe").path,
-            { Assert.assertEquals(this@isOutputOf.trim(), this.trim()) },
+            { Assert.assertEquals(this.trim(), this@isOutputOf.trim()) },
             assertNoErrors
     )
 }
@@ -299,8 +299,8 @@ fn helloWorld(): string
 import std.c.stdio
 
 fn main(): int
-    let l = if _false() { "Failed" } else { helloWorld() } in
-    printf if _true() { l } else { "Failed" };
+    let l = if _false() then "Failed" else helloWorld() in
+    printf (if _true() then l else "Failed");
     0
 
 fn helloWorld(): *char
@@ -324,7 +324,7 @@ fn main(): int
 
 fn countTo(i: int, printer: (int) -> void)
     let counter = countTo in
-    if i > 0 { counter (i - 1) printer };
+    if i > 0 then counter (i - 1) printer;
     printer i
 
 fn print(i: int)
@@ -340,14 +340,13 @@ fn main(): int
     0
 
 fn fibBelow(i: int)
-    if i > 0 { fibBelow (i - 1) };
+    if i > 0 then fibBelow (i - 1);
     printInt (fib i)
 
 fn fib(i: int): int
-    if
-        i == 0 { 0 }
-        i == 1 { 1 }
-        else { fib (i - 1) + fib (i - 2) }
+    if i <= 0 then 0
+    else if i == 1 then 1
+    else fib (i - 1) + fib (i - 2)
 
 fn printInt(i: int)
     printf "%d " i
@@ -362,13 +361,12 @@ fn main(): int
     0
 
 fn fizzBuzz(i: int)
-    if i > 1 { fizzBuzz (i - 1) };
+    if i > 1 then fizzBuzz (i - 1);
 
-    if
-        i % 5 == 0 && i % 3 == 0 { printf "FizzBuzz " }
-        i % 3 == 0 { printf "Fizz " }
-        i % 5 == 0 { printf "Buzz " }
-        else { printInt i }
+    if i % 5 == 0 && i % 3 == 0 then printf "FizzBuzz "
+    else if i % 3 == 0 then printf "Fizz "
+    else if i % 5 == 0 then printf "Buzz "
+    else printInt i
 
 fn printInt(i: int)
     printf "%d " i
