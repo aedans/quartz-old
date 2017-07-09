@@ -1,8 +1,6 @@
 package quartz.compiler.tree.expression.expressions
 
 import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
-import quartz.compiler.util.Visitor
 
 /**
  * Created by Aedan Smith.
@@ -10,10 +8,6 @@ import quartz.compiler.util.Visitor
 
 data class UnaryOperation(val expression: Expression, val id: ID) : Expression {
     override val type = expression.type
-
-    inline fun visitExpression(expressionVisitor: Visitor<Expression>): UnaryOperation {
-        return copy(expression = expressionVisitor(expression))
-    }
 
     override fun toString(): String {
         return "$id$expression"

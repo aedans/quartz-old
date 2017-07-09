@@ -4,7 +4,6 @@ import quartz.compiler.errors.except
 import quartz.compiler.tree.VariableDeclaration
 import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.util.Type
-import quartz.compiler.util.Visitor
 import quartz.compiler.util.times
 
 /**
@@ -18,18 +17,6 @@ data class LetExpression(
         val expression: Expression
 ): Expression {
     override val type = expression.type
-
-    inline fun visitVariableType(typeVisitor: Visitor<Type>): LetExpression {
-        return copy(variableType = variableType?.let(typeVisitor))
-    }
-
-    inline fun visitValue(expressionVisitor: Visitor<Expression>): LetExpression {
-        return copy(value = value?.let(expressionVisitor))
-    }
-
-    inline fun visitExpression(expressionVisitor: Visitor<Expression>): LetExpression {
-        return copy(expression = expression.let(expressionVisitor))
-    }
 
     fun declaration(): LetDeclaration {
         return LetDeclaration(name, variableType ?: except { "Unable to infer type for $this" })

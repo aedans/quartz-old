@@ -16,6 +16,7 @@ import quartz.compiler.tree.expression.Expression
 import quartz.compiler.tree.expression.expressions.*
 import quartz.compiler.tree.util.Type
 import quartz.compiler.util.Visitor
+import quartz.compiler.util.lValueOrError
 import quartz.compiler.util.partial
 
 /**
@@ -31,7 +32,7 @@ object TypeAnalyzer {
             when (declaration) {
                 is TypealiasDeclaration -> declaration
                 is ExternFunctionDeclaration -> declaration
-                        .analyzeTypes(this::visitType.partial(table))
+                        .visitTypes(this::visitType.partial(table))
                 is FunctionDeclaration -> declaration
                         .analyzeTypes(table, this::visitType)
                         .analyzeExpression(table, this::visitExpression)
@@ -121,7 +122,8 @@ object TypeAnalyzer {
             typeAnalyzer: (SymbolTable, Type) -> Type
     ): FunctionDeclaration {
         val symbolTable = FunctionDeclarationSymbolTable(table, this)
-        return visitTypes(typeAnalyzer.partial(symbolTable))
+        val typeVisitor = typeAnalyzer.partial(symbolTable)
+        return copy(args = argNames zip argTypes.map(typeVisitor), returnType = returnType.let(typeVisitor))
     }
 
     inline fun FunctionDeclaration.analyzeExpression(
@@ -133,8 +135,8 @@ object TypeAnalyzer {
         return copy(expression = expressionAnalyzer(symbolTable, expected, expression))
     }
 
-    inline fun ExternFunctionDeclaration.analyzeTypes(typeVisitor: Visitor<Type>): ExternFunctionDeclaration {
-        return visitTypes(typeVisitor)
+    inline fun ExternFunctionDeclaration.visitTypes(typeVisitor: Visitor<Type>): ExternFunctionDeclaration {
+        return copy(args = args.map(typeVisitor), returnType = returnType.let(typeVisitor))
     }
 
     //
@@ -155,40 +157,48 @@ object TypeAnalyzer {
         return copy(type = typeVisitor(getVar(name) ?: except { "Could not find variable $name" }))
     }
 
+    inline fun Sizeof.visitSizeType(typeVisitor: Visitor<Type>): Sizeof {
+        return copy(sizeType = sizeType.let(typeVisitor))
+    }
+
+    inline fun Cast.visitType(typeVisitor: Visitor<Type>): Cast {
+        return copy(type = type.let(typeVisitor))
+    }
+
     inline fun Cast.analyzeExpression(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): Cast {
-        return visitExpression(expressionAnalyzer.partial(expectedType))
+        return copy(expression = expression.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun UnaryOperation.analyzeExpression(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): UnaryOperation {
-        return visitExpression(expressionAnalyzer.partial(expectedType))
+        return copy(expression = expression.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun BinaryOperation.analyzeExpr1(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): BinaryOperation {
-        return visitExpr1(expressionAnalyzer.partial(expectedType))
+        return copy(expr1 = expr1.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun BinaryOperation.analyzeExpr2(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): BinaryOperation {
-        return visitExpr2(expressionAnalyzer.partial(expectedType))
+        return copy(expr2 = expr2.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun ExpressionPair.analyzeExpr1(expressionAnalyzer: (Type?, Expression) -> Expression): ExpressionPair {
-        return visitExpr1(expressionAnalyzer.partial(null))
+        return copy(expr1 = expr1.let(expressionAnalyzer.partial(null)))
     }
 
     inline fun ExpressionPair.analyzeExpr2(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): ExpressionPair {
-        return visitExpr2(expressionAnalyzer.partial(expectedType))
+        return copy(expr2 = expr2.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun Assignment.analyzeLValue(expressionAnalyzer: (Type?, Expression) -> Expression): Assignment {
-        return visitLValue(expressionAnalyzer.partial(null))
+        return copy(lvalue = lvalue.let(expressionAnalyzer.partial(null)).lValueOrError())
     }
 
     inline fun Assignment.analyzeExpression(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): Assignment {
-        return visitExpression(expressionAnalyzer.partial(expectedType))
+        return copy(expression = expression.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun FunctionCall.analyzeExpression(expressionAnalyzer: (Type?, Expression) -> Expression): FunctionCall {
-        return visitExpression(expressionAnalyzer.partial(null))
+        return copy(expression = expression.let(expressionAnalyzer.partial(null)))
     }
 
     inline fun FunctionCall.analyzeArguments(expressionAnalyzer: (Type?, Expression) -> Expression): FunctionCall {
@@ -209,19 +219,23 @@ object TypeAnalyzer {
 
     inline fun IfExpression.analyzeCondition(expressionAnalyzer: (Type, Expression) -> Expression): IfExpression {
         // TODO BoolType
-        return visitCondition(expressionAnalyzer.partial(IntType))
+        return copy(condition = condition.let(expressionAnalyzer.partial(IntType)))
     }
 
     inline fun IfExpression.analyzeIfTrue(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): IfExpression {
-        return visitIfTrue(expressionAnalyzer.partial(expectedType))
+        return copy(ifTrue = ifTrue.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun IfExpression.analyzeIfFalse(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): IfExpression {
-        return visitIfFalse(expressionAnalyzer.partial(expectedType))
+        return copy(ifFalse = ifFalse?.let(expressionAnalyzer.partial(expectedType)))
+    }
+
+    inline fun LetExpression.visitVariableType(typeVisitor: Visitor<Type>): LetExpression {
+        return copy(variableType = variableType?.let(typeVisitor))
     }
 
     inline fun LetExpression.analyzeValue(expressionAnalyzer: (Type?, Expression) -> Expression): LetExpression {
-        return visitValue(expressionAnalyzer.partial(variableType))
+        return copy(value = value?.let(expressionAnalyzer.partial(variableType)))
     }
 
     inline fun LetExpression.analyzeExpression(
@@ -229,8 +243,9 @@ object TypeAnalyzer {
             symbolTable: SymbolTable,
             expectedType: Type?
     ): LetExpression {
-        return visitExpression(expressionAnalyzer.partial(
-                LetExpressionSymbolTable(symbolTable, this)).partial(expectedType))
+        return copy(expression = expression.let(
+                expressionAnalyzer.partial(LetExpressionSymbolTable(symbolTable, this)).partial(expectedType)
+        ))
     }
 
     fun LetExpression.inferVariableTypeFromExpression(): LetExpression {
@@ -243,5 +258,17 @@ object TypeAnalyzer {
     inline fun NamedType.resolveNamedType(typeVisitor: Visitor<Type>, typeProvider: (String) -> Type?): Type {
         return typeVisitor(typeProvider(string)
                 ?: except { "Unknown type $string" })
+    }
+
+    inline fun ConstType.visitType(typeVisitor: Visitor<Type>): ConstType {
+        return copy(type = type.let(typeVisitor))
+    }
+
+    inline fun PointerType.visitType(typeVisitor: Visitor<Type>): PointerType {
+        return copy(type = type.let(typeVisitor))
+    }
+
+    inline fun FunctionType.visitTypes(typeVisitor: Visitor<Type>): FunctionType {
+        return copy(args = args.map(typeVisitor), returnType = returnType.let(typeVisitor))
     }
 }
