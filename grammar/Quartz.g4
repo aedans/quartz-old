@@ -154,16 +154,6 @@ delegateOperation
 
 assignmentOperation
     : '='
-    | '+='
-    | '-='
-    | '*='
-    | '/='
-    | '%='
-    | '&='
-    | '|='
-    | '^='
-    | '<' '<' '='
-    | '>' '>' '='
     ;
 
 bitshiftOperation

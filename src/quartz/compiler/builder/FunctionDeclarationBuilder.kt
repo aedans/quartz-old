@@ -97,17 +97,10 @@ fun QuartzParser.StatementExpressionContext.toExpr(): Expression {
 
 fun QuartzParser.AssignmentExpressionContext.toExpr(): Expression {
     return when {
-        assignmentExpression() != null -> when (assignmentOperation().text) {
-            "=" -> Assignment(bitshiftExpression().toExpr().lValueOrError(), assignmentExpression().toExpr())
-            else -> Assignment(
-                    bitshiftExpression().toExpr().lValueOrError(),
-                    BinaryOperation(
-                            bitshiftExpression().toExpr(),
-                            assignmentExpression().toExpr(),
-                            assignmentOperation().ID
-                    )
-            )
-        }
+        assignmentExpression() != null -> Assignment(
+                bitshiftExpression().toExpr().lValueOrError(),
+                assignmentExpression().toExpr()
+        )
         else -> bitshiftExpression().toExpr()
     }
 }
