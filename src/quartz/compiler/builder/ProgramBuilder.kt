@@ -1,11 +1,12 @@
 package quartz.compiler.builder
 
+import quartz.compiler.builder.import.Library
+import quartz.compiler.builder.import.import
 import quartz.compiler.errors.errorScope
 import quartz.compiler.errors.except
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
-import quartz.compiler.tree.util.Library
 import java.io.InputStream
 
 /**

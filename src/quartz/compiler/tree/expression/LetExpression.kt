@@ -1,10 +1,9 @@
-package quartz.compiler.tree.expression.expressions
+package quartz.compiler.tree.expression
 
 import quartz.compiler.errors.except
-import quartz.compiler.tree.VariableDeclaration
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
-import quartz.compiler.util.times
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
+import quartz.compiler.tree.declarations.VariableDeclaration
 
 /**
  * Created by Aedan Smith.
@@ -23,12 +22,7 @@ data class LetExpression(
     }
 
     override fun toString(): String {
-        return "let $name: $variableType${if (value != null) " = $value" else ""} in $expression"
-    }
-
-    override fun toString(i: Int): String {
-        return "${"\t" * i}let $name: $variableType${if (value != null) " = $value" else ""} in\n" +
-                "${"\t" * i}$expression"
+        return "let $name${variableType?.let { ": $it" } ?: ""}${value?.let { "= $it" } ?: ""} in $expression"
     }
 
     class LetDeclaration(override val name: String, override val type: Type) : VariableDeclaration

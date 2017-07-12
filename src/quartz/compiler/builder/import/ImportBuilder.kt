@@ -1,8 +1,8 @@
-package quartz.compiler.builder
+package quartz.compiler.builder.import
 
+import quartz.compiler.builder.toList
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.util.Library
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

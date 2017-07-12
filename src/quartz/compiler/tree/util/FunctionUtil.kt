@@ -1,5 +1,7 @@
 package quartz.compiler.tree.util
 
+import quartz.compiler.tree.Type
+
 /**
  * Created by Aedan Smith.
  */

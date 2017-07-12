@@ -1,9 +1,8 @@
 package quartz.compiler.tree.declarations
 
-import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.tree.VariableDeclaration
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
+import quartz.compiler.tree.types.FunctionType
 import quartz.compiler.tree.util.functionString
 
 /**
@@ -22,7 +21,7 @@ data class FunctionDeclaration(
     override val type = FunctionType(argTypes, returnType, false)
 
     override fun toString(): String {
-        return "$name${functionString(argTypes, returnType, false)}\n${expression.toString(1)}"
+        return "$name${functionString(argTypes, returnType, false)}$expression"
     }
 
     data class ArgumentDeclaration(override val name: String, override val type: Type) : VariableDeclaration

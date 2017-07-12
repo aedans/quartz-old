@@ -1,7 +1,6 @@
 package quartz.compiler.tree.declarations
 
-import quartz.compiler.tree.TypeDeclaration
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.

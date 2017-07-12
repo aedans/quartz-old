@@ -1,8 +1,8 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.

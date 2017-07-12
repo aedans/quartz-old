@@ -2,9 +2,13 @@ package quartz.compiler.cli
 
 import com.xenomachina.argparser.SystemExitException
 import quartz.compiler.Compiler
+import quartz.compiler.Compiler.defaultAnalyzer
+import quartz.compiler.Compiler.defaultBuilder
+import quartz.compiler.Compiler.defaultGenerator
+import quartz.compiler.Compiler.defaultParser
 import quartz.compiler.CompilerAnalyzer
 import quartz.compiler.CompilerBuilder
-import quartz.compiler.tree.toFancyString
+import quartz.compiler.tree.pretty.printPretty
 import kotlin.system.measureTimeMillis
 
 /**
@@ -12,11 +16,17 @@ import kotlin.system.measureTimeMillis
  */
 
 val debugBuilder: CompilerBuilder = { library, parser ->
-    Compiler.defaultBuilder(this, library, parser).also { println("\nBuilder:\n\n${it.toFancyString()}") }
+    Compiler.defaultBuilder(this, library, parser).also {
+        println("Builder:\n")
+        it.printPretty(System.out)
+    }
 }
 
 val debugAnalyzer: CompilerAnalyzer = {
-    Compiler.defaultAnalyzer(this).also { println("\nAnalyzer:\n\n${it.toFancyString()}") }
+    Compiler.defaultAnalyzer(this).also {
+        println("Analyzer:\n")
+        it.printPretty(System.out)
+    }
 }
 
 fun main(args: Array<String>) {

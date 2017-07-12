@@ -1,7 +1,7 @@
-package quartz.compiler.tree.expression.expressions
+package quartz.compiler.tree.expression
 
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.
@@ -15,6 +15,6 @@ data class IfExpression(
     override val type = Type.greatestCommonType(ifTrue.type, ifFalse?.type)
 
     override fun toString(): String {
-        return "if $condition then $ifTrue else $ifFalse"
+        return "if $condition then $ifTrue${ifFalse?.let { " else $it" } ?: ""}"
     }
 }

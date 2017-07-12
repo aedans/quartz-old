@@ -1,7 +1,7 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.VoidType
+import quartz.compiler.tree.types.VoidType
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 
 /**

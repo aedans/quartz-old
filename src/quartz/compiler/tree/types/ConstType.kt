@@ -1,6 +1,6 @@
-package quartz.compiler.semantics.types
+package quartz.compiler.tree.types
 
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.
@@ -13,6 +13,6 @@ data class ConstType(val type: Type) : Type {
     }
 
     override fun toString(): String {
-        return "Const($type)"
+        return "const $type"
     }
 }

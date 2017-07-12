@@ -3,7 +3,7 @@ package quartz.compiler.cli
 import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.default
 import quartz.compiler.errors.except
-import quartz.compiler.tree.util.Library
+import quartz.compiler.builder.import.Library
 import java.io.File
 
 /**

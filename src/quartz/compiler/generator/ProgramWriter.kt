@@ -3,15 +3,15 @@ package quartz.compiler.generator
 import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
 import quartz.compiler.generator.expressions.VariableDeclarationExpression
-import quartz.compiler.semantics.types.*
 import quartz.compiler.tree.Declaration
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.declarations.TypealiasDeclaration
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.expression.expressions.*
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.expression.*
+import quartz.compiler.tree.types.*
 import java.io.OutputStream
 import java.io.PrintStream
 import java.util.*
@@ -42,10 +42,10 @@ class ProgramWriter(outputStream: OutputStream) {
             is InlineC -> {
             }
             is FunctionDeclaration -> {
-                type().declare()
+                type.declare()
                 this.declare()
             }
-            is ExternFunctionDeclaration -> type().declare()
+            is ExternFunctionDeclaration -> type.declare()
             else -> err { "Expected declaration, found $this" }
         }
     }

@@ -1,8 +1,8 @@
-package quartz.compiler.tree.expression.expressions
+package quartz.compiler.tree.expression
 
-import quartz.compiler.semantics.types.ULongType
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
+import quartz.compiler.tree.types.ULongType
 
 /**
  * Created by Aedan Smith.

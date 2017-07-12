@@ -3,13 +3,13 @@ package quartz.compiler.builder
 import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.CharType
-import quartz.compiler.semantics.types.DoubleType
-import quartz.compiler.semantics.types.IntType
-import quartz.compiler.semantics.types.VoidType
+import quartz.compiler.tree.types.CharType
+import quartz.compiler.tree.types.DoubleType
+import quartz.compiler.tree.types.IntType
+import quartz.compiler.tree.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.expression.*
 import quartz.compiler.util.lValueOrError
 
 /**
@@ -175,7 +175,7 @@ fun QuartzParser.LiteralContext.toExpr(): Expression {
         CHAR() != null -> NumberLiteral(text, CharType)
         INT() != null -> NumberLiteral(text, IntType)
         DOUBLE() != null -> NumberLiteral(text, DoubleType)
-        STRING() != null -> StringLiteral(text.substring(1, text.length-1))
+        STRING() != null -> StringLiteral(text.substring(1, text.length - 1))
         else -> err { "Error translating $this" }
     }
 }

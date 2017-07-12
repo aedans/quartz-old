@@ -1,8 +1,8 @@
 package quartz.compiler.tree.declarations
 
 import quartz.compiler.tree.Declaration
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.

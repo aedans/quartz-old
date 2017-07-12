@@ -2,8 +2,8 @@ package quartz.compiler.builder
 
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.semantics.types.*
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.types.*
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.

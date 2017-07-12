@@ -1,8 +1,8 @@
 package quartz.compiler.generator
 
 import quartz.compiler.errors.err
-import quartz.compiler.semantics.types.*
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Type
+import quartz.compiler.tree.types.*
 
 /**
  * Created by Aedan Smith.

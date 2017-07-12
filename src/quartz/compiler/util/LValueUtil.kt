@@ -1,7 +1,7 @@
 package quartz.compiler.util
 
 import quartz.compiler.errors.except
-import quartz.compiler.tree.expression.Expression
+import quartz.compiler.tree.Expression
 import quartz.compiler.tree.expression.LValue
 
 /**

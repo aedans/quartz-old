@@ -4,16 +4,16 @@ import quartz.compiler.errors.err
 import quartz.compiler.errors.except
 import quartz.compiler.semantics.tables.ProgramSymbolTable
 import quartz.compiler.semantics.tables.SymbolTable
-import quartz.compiler.semantics.types.*
+import quartz.compiler.tree.types.*
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.declarations.TypealiasDeclaration
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.expression.expressions.*
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.Type
+import quartz.compiler.tree.expression.*
 
 /**
  * Created by Aedan Smith.

@@ -1,8 +1,7 @@
 package quartz.compiler.tree.declarations
 
-import quartz.compiler.semantics.types.FunctionType
-import quartz.compiler.tree.VariableDeclaration
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Type
+import quartz.compiler.tree.types.FunctionType
 import quartz.compiler.tree.util.functionString
 
 /**

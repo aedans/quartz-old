@@ -1,7 +1,7 @@
 package quartz.compiler.semantics.tables
 
-import quartz.compiler.tree.TypeDeclaration
-import quartz.compiler.tree.VariableDeclaration
+import quartz.compiler.tree.declarations.TypeDeclaration
+import quartz.compiler.tree.declarations.VariableDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 
 /**

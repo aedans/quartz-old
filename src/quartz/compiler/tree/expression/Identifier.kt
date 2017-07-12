@@ -1,7 +1,6 @@
-package quartz.compiler.tree.expression.expressions
+package quartz.compiler.tree.expression
 
-import quartz.compiler.tree.expression.LValue
-import quartz.compiler.tree.util.Type
+import quartz.compiler.tree.Type
 
 /**
  * Created by Aedan Smith.

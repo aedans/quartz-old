@@ -3,11 +3,11 @@ package quartz.compiler.generator
 import quartz.compiler.errors.err
 import quartz.compiler.errors.except
 import quartz.compiler.generator.expressions.VariableDeclarationExpression
-import quartz.compiler.semantics.types.VoidType
+import quartz.compiler.tree.types.VoidType
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
-import quartz.compiler.tree.expression.Expression
-import quartz.compiler.tree.expression.expressions.*
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.expression.*
 import quartz.compiler.util.lValueOrError
 
 /**
