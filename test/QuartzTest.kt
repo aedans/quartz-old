@@ -270,6 +270,15 @@ fn main: () -> int
 """
 import std.c.stdio
 
+fn main: () -> int
+    when 1 printf "Hello, world!";
+    0
+"""
+
+    fun helloWorld3() = "Hello, world!" isOutputOf
+"""
+import std.c.stdio
+
 typealias string = *char
 
 fn main: () -> int
@@ -284,7 +293,7 @@ fn helloWorld: () -> string
     "Hello, world!"
 """
 
-    fun helloWorld3() = "Hello, world!" isOutputOf
+    fun helloWorld4() = "Hello, world!" isOutputOf
 """
 import std.c.stdio
 

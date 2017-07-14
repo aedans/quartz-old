@@ -95,7 +95,7 @@ object SemanticAnalyzer {
             is IfExpression -> {
                 condition.analyze(newProgram, table)
                 ifTrue.analyze(newProgram, table)
-                ifFalse.analyze(newProgram, table)
+                ifFalse?.analyze(newProgram, table) ?: Unit
             }
             is LetExpression -> {
                 value?.analyze(newProgram, table)

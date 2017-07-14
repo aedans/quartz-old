@@ -202,7 +202,7 @@ fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
 }
 
 fun QuartzParser.WhenExpressionContext.toExpr(): IfExpression {
-    return IfExpression(condition.toExpr(), ifTrue.toExpr(), EmptyExpression)
+    return IfExpression(condition.toExpr(), ifTrue.toExpr(), null)
 }
 
 fun QuartzParser.CastContext.toExpr(expression: Expression): Cast {

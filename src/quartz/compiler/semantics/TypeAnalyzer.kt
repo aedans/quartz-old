@@ -227,7 +227,7 @@ object TypeAnalyzer {
     }
 
     inline fun IfExpression.analyzeIfFalse(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): IfExpression {
-        return copy(ifFalse = ifFalse.let(expressionAnalyzer.partial(expectedType)))
+        return copy(ifFalse = ifFalse?.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun LetExpression.visitVariableType(typeVisitor: Visitor<Type>): LetExpression {

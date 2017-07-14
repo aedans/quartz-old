@@ -81,7 +81,7 @@ fun IfExpression.desugar(newExpressions: MutableList<Expression>, intIterator: I
         copy(
                 condition = condition.desugar(newExpressions, intIterator),
                 ifTrue = ifTrue.desugar(intIterator),
-                ifFalse = ifFalse.desugar(intIterator)
+                ifFalse = ifFalse?.desugar(intIterator)
         )
     } else {
         val name = "__${intIterator.next()}"
@@ -90,7 +90,7 @@ fun IfExpression.desugar(newExpressions: MutableList<Expression>, intIterator: I
         newExpressions.add(IfExpression(
                 condition,
                 Assignment(identifier, ifTrue),
-                ifFalse.let { Assignment(identifier, it) }
+                ifFalse?.let { Assignment(identifier, it) }
         ).desugar(newExpressions, intIterator, true))
         identifier
     }
