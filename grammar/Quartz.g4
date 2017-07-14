@@ -18,11 +18,11 @@ declaration
 // FN DECLARATION
 
 functionDeclaration
-    : 'fn' NAME '(' nameTypeList? ')' (':' returnType=type)? expression
+    : 'fn' name=NAME NAME* ':' functionType expression
     ;
 
 externFunctionDeclaration
-    : 'extern' 'fn' NAME '(' typeList? ')' (':' returnType=type)?
+    : 'extern' 'fn' NAME ':' functionType
     ;
 
 // TYPEALIAS DECLARATION
@@ -70,6 +70,7 @@ delegateExpression
 
 statementExpression
     : ifExpression
+    | whenExpression
     | assignmentExpression
     ;
 
@@ -91,8 +92,8 @@ multiplicativeExpression
 
 operableExpression
     : prefixOperation operableExpression
-    | operableExpression postfixOperation
-    | atomicExpression
+    | operableExpression atomicPostfixOperation
+    | atomicExpression postfixOperation?
     ;
 
 atomicExpression
@@ -104,14 +105,18 @@ atomicExpression
     ;
 
 letExpression
-    : ( 'let' nameType
-      | 'let' nameOptionalType '=' value=expression
-      ) 'in' expr=expression
+    : 'let' NAME
+        ( ':' type
+        | (':' type)? '=' value=expression
+        ) 'in' expr=expression
     ;
 
 ifExpression
-    : 'if' condition=expression 'then' ifTrue1=statementExpression
-    | 'if' condition=expression 'then' ifTrue2=expression 'else' ifFalse=statementExpression
+    : 'if' condition=expression 'then' ifTrue=expression 'else' ifFalse=statementExpression
+    ;
+
+whenExpression
+    : 'when' condition=atomicExpression ifTrue=statementExpression
     ;
 
 literal
@@ -179,32 +184,53 @@ prefixOperation
     ;
 
 postfixOperation
-    : cast
+    : atomicPostfixOperation
     | postfixCall
     | dotCall
+    ;
+
+atomicPostfixOperation
+    : cast
+    | atomicPostfixCall
+    | atomicDotCall
     ;
 
 cast
     : 'as' type
     ;
 
+atomicPostfixCall
+    : '(' ')'
+    ;
+
+atomicDotCall
+    : '.' identifier atomicPostfixCall
+    ;
+
 postfixCall
-    : ('(' ')'|atomicExpression+)
+    : atomicPostfixCall
+    | atomicExpression+
     ;
 
 dotCall
-    : '.' identifier postfixCall
+    : atomicDotCall
+    | '.' identifier postfixCall?
     ;
 
 // TYPES
 
 type
-    : NAME
+    : atomicType
+    | functionType
+    ;
+
+atomicType
+    : '(' type ')'
+    | NAME
     | INLINE_C
     | primitiveType
     | pointerType
     | constType
-    | functionType
     ;
 
 primitiveType
@@ -223,57 +249,28 @@ primitiveType
     ;
 
 pointerType
-    : '*' type
+    : '*' atomicType
     ;
 
 constType
-    : 'const' type
+    : 'const' atomicType
     ;
 
 functionType
-    : '(' args=typeList? ')' '->' returnType=type
+    : ('(' ')'|atomicTypeList (vararg='...')?) '->' type
     ;
 
 // LISTS
-
-nameTypeList
-    : nameType (',' nameTypeList)?
-    ;
-
-nameOptionalTypeList
-    : nameOptionalType (',' nameOptionalTypeList)?
-    ;
-
-expressionList
-    : expression (',' expressionList)?
-    ;
 
 nameList
     : NAME (',' nameList)?
     ;
 
-typeList
-    : type (',' typeList)?
-    | vararg='...'
-    ;
-
-genericArgumentList
-    : genericArgument (',' genericArgumentList)?
+atomicTypeList
+    : atomicType (',' atomicTypeList)?
     ;
 
 // UTIL
-
-nameType
-    : NAME ':' type
-    ;
-
-nameOptionalType
-    : NAME (':' type)?
-    ;
-
-genericArgument
-    : NAME
-    ;
 
 identifier
     : NAME
@@ -292,7 +289,7 @@ INT: [0-9]+;
 DOUBLE: [0-9]*'.'[0-9]+;
 INLINE_C: DMOD .*? DMOD;
 
-NAME: ([_a-zA-Z][_a-zA-Z0-9]*);
+NAME: [_a-zA-Z][_a-zA-Z0-9]*;
 
 // WHITESPACE
 

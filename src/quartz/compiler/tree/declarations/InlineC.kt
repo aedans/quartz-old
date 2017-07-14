@@ -12,6 +12,10 @@ data class InlineC(val src: String, override val type: Type?) : Declaration, Exp
     override val name: String = "__InlineC${hashCode()}"
 
     override fun toString(): String {
-        return "%%$src%%"
+        return "%%${src.map { when (it) {
+            '\r' -> "\\r"
+            '\n' -> "\\n"
+            else -> "$it"
+        } }.joinToString(prefix = "", postfix = "", separator = "")}%%"
     }
 }

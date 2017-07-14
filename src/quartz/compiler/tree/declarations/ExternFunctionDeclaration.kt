@@ -10,11 +10,11 @@ import quartz.compiler.tree.util.functionString
 
 data class ExternFunctionDeclaration(
         override val name: String,
-        val args: List<Type>,
-        val returnType: Type,
-        val vararg: Boolean
+        override val type: FunctionType
 ) : VariableDeclaration {
-    override val type = FunctionType(args, returnType, vararg)
+    val args: List<Type> get() = type.args
+    val returnType: Type get() = type.returnType
+    val vararg: Boolean get() = type.vararg
 
     override fun toString(): String {
         return "$name${functionString(args, returnType, vararg)}"

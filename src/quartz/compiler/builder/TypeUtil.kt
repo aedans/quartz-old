@@ -1,25 +1,34 @@
 package quartz.compiler.builder
 
+import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.types.*
 import quartz.compiler.tree.Type
+import quartz.compiler.tree.types.*
 
 /**
  * Created by Aedan Smith.
  */
 
 fun QuartzParser.TypeContext.toType(): Type {
-    return errorScope({ "variableType $text" }) {
+    return errorScope({ "type $text" }) {
         when {
-            NAME() != null -> NamedType(NAME().text)
-            INLINE_C() != null -> InlineCType(INLINE_C().text.substring(2, INLINE_C().text.length-2))
-            primitiveType() != null -> primitiveType().toType()
+            atomicType() != null -> atomicType().toType()
             functionType() != null -> functionType().toType()
-            pointerType() != null -> pointerType().toType()
-            constType() != null -> constType().toType()
-            else -> throw Exception("Unknown type $text")
+            else -> err { "Unknown type $text" }
         }
+    }
+}
+
+fun QuartzParser.AtomicTypeContext.toType(): Type {
+    return when {
+        type() != null -> type().toType()
+        NAME() != null -> NamedType(NAME().text)
+        INLINE_C() != null -> InlineCType(INLINE_C().text.substring(2, INLINE_C().text.length - 2))
+        primitiveType() != null -> primitiveType().toType()
+        pointerType() != null -> pointerType().toType()
+        constType() != null -> constType().toType()
+        else -> err { "Unknown type $text" }
     }
 }
 
@@ -41,18 +50,18 @@ fun QuartzParser.PrimitiveTypeContext.toType(): Type {
     }
 }
 
-fun QuartzParser.FunctionTypeContext.toType(): FunctionType {
-    return FunctionType(
-            args.toList(),
-            returnType.toType(),
-            args.isVararg()
-    )
-}
-
 fun QuartzParser.PointerTypeContext.toType(): Type {
-    return PointerType(type().toType())
+    return PointerType(atomicType().toType())
 }
 
 fun QuartzParser.ConstTypeContext.toType(): Type {
-    return ConstType(type().toType())
+    return ConstType(atomicType().toType())
+}
+
+fun QuartzParser.FunctionTypeContext.toType(): FunctionType {
+    return FunctionType(
+            atomicTypeList().toList(),
+            type().toType(),
+            vararg != null
+    )
 }

@@ -43,14 +43,14 @@ fun File.time() {
         externVal("CLOCKS_PER_SEC", ULONG)
         newline()
 
-        externFunction("asctime", CHAR.ptr(), TM.ptr())
-        externFunction("clock", CLOCK)
-        externFunction("ctime", CHAR.ptr(), TIME.ptr())
-        externFunction("difftime", DOUBLE, TIME, TIME)
-        externFunction("gmtime", TM.ptr(), TIME.ptr())
-        externFunction("localtime", TM.ptr(), TIME.ptr())
-        externFunction("mktime", TIME.ptr(), TM.ptr())
-        externFunction("strftime", SIZE, CHAR.ptr(), SIZE, CHAR.ptr(), TM.ptr())
-        externFunction("time", TIME, TIME.ptr())
+        externFunction("asctime", CHAR.ptr().func(TM.ptr()))
+        externFunction("clock", CLOCK.func())
+        externFunction("ctime", CHAR.ptr().func(TIME.ptr()))
+        externFunction("difftime", DOUBLE.func(TIME, TIME))
+        externFunction("gmtime", TM.ptr().func(TIME.ptr()))
+        externFunction("localtime", TM.ptr().func(TIME.ptr()))
+        externFunction("mktime", TIME.ptr().func(TM.ptr()))
+        externFunction("strftime", SIZE.func(CHAR.ptr(), SIZE, CHAR.ptr(), TM.ptr()))
+        externFunction("time", TIME.func(TIME.ptr()))
     }
 }

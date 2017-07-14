@@ -21,8 +21,18 @@ fun String.ptr(): String {
     return "*$this"
 }
 
-fun String?.func(vararg args: String): String {
-    return args.joinToString(prefix = "(", postfix = ")") + (if (this != null) " -> $this" else "")
+fun Any?.func(vararg args: String): String {
+    return (this?.toString() ?: VOID).func(*args)
+}
+
+fun String.func(vararg args: String, vararg: Boolean = false): String {
+    return (if (args.isEmpty()) "()" else args.joinToString(prefix = "", postfix = "")) +
+            (if (vararg) " ..." else "") +
+            " -> $this"
+}
+
+fun String.paren(): String {
+    return "($this)"
 }
 
 fun String.inlineC(): String {

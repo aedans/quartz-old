@@ -16,33 +16,30 @@ fun File.write(string: String, func: PrintStream.() -> Unit) {
     func(printStream)
 }
 
-fun PrintStream.struct(name: String, vararg members: Pair<String, String>) {
-    println("struct $name {")
-    members.forEach {
-        println("    ${it.first}: ${it.second}")
-    }
-    println("}")
+fun PrintStream.function(name: String, argNames: List<String>, type: String, expression: String) {
+    println("fn $name${argNames.joinToString(prefix = "", postfix = "", separator = "") { " $it" }}: $type\n" +
+            "    $expression")
 }
 
-fun PrintStream.externTypealias(name: String) {
-    _typealias(name, name.inlineC())
+fun PrintStream.externFunction(name: String, type: String) {
+    println("extern fn $name: $type")
 }
 
 fun PrintStream._typealias(name: String, type: String) {
     println("typealias $name = $type")
 }
 
-fun PrintStream.externFunction(name: String, ret: String?, vararg types: String) {
-    println("extern fn $name${types.joinToString(prefix = "(", postfix = ")")}${if (ret != null) ": $ret" else ""}")
+fun PrintStream.externTypealias(name: String) {
+    _typealias(name, name.inlineC())
 }
 
 fun PrintStream.externVal(name: String, type: String) {
-    println("fn get_$name(): $type\n\t%%$name%%")
+    function("get_$name", emptyList(), type.func(), "%%$name%%")
 }
 
 fun PrintStream.externVar(name: String, type: String) {
     externVal(name, type)
-    println("fn set_$name(value: $type)\n\t%%$name = value%%")
+    function("set_$name", listOf("value"), VOID.func(), "%%$name = value%%")
 }
 
 fun PrintStream.include(string: String) {

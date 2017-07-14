@@ -2,6 +2,7 @@ package quartz.compiler
 
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
+import quartz.compiler.builder.import.Library
 import quartz.compiler.builder.program
 import quartz.compiler.errors.ErrorListener
 import quartz.compiler.errors.errorScope
@@ -10,7 +11,6 @@ import quartz.compiler.parser.QuartzLexer
 import quartz.compiler.parser.QuartzParser
 import quartz.compiler.semantics.SemanticAnalyzer
 import quartz.compiler.tree.Program
-import quartz.compiler.builder.import.Library
 import java.io.InputStream
 import java.io.OutputStream
 

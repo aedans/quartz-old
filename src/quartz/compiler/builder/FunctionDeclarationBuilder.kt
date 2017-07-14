@@ -3,13 +3,12 @@ package quartz.compiler.builder
 import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
 import quartz.compiler.parser.QuartzParser
+import quartz.compiler.tree.Expression
+import quartz.compiler.tree.declarations.FunctionDeclaration
+import quartz.compiler.tree.expression.*
 import quartz.compiler.tree.types.CharType
 import quartz.compiler.tree.types.DoubleType
 import quartz.compiler.tree.types.IntType
-import quartz.compiler.tree.types.VoidType
-import quartz.compiler.tree.declarations.FunctionDeclaration
-import quartz.compiler.tree.Expression
-import quartz.compiler.tree.expression.*
 import quartz.compiler.util.lValueOrError
 
 /**
@@ -17,12 +16,11 @@ import quartz.compiler.util.lValueOrError
  */
 
 fun QuartzParser.FunctionDeclarationContext.toDecl(): FunctionDeclaration {
-    return errorScope({ "function ${NAME()?.text}" }) {
-        val nameTypeList = nameTypeList().toList()
+    return errorScope({ "function ${name.text}" }) {
         FunctionDeclaration(
-                NAME().text,
-                nameTypeList,
-                returnType?.toType() ?: VoidType,
+                name.text,
+                functionType().toType(),
+                NAME().drop(1).map { it.text },
                 expression().toExpr()
         )
     }
@@ -91,6 +89,7 @@ fun QuartzParser.DelegateExpressionContext.toExpr(): Expression {
 fun QuartzParser.StatementExpressionContext.toExpr(): Expression {
     return when {
         ifExpression() != null -> ifExpression().toExpr()
+        whenExpression() != null -> whenExpression().toExpr()
         else -> assignmentExpression().toExpr()
     }
 }
@@ -141,7 +140,8 @@ fun QuartzParser.MultiplicativeExpressionContext.toExpr(): Expression {
 fun QuartzParser.OperableExpressionContext.toExpr(): Expression {
     return when {
         prefixOperation() != null -> prefixOperation().toExpr(operableExpression().toExpr())
-        postfixOperation() != null -> postfixOperation().toExpr(operableExpression().toExpr())
+        atomicPostfixOperation() != null -> atomicPostfixOperation().toExpr(operableExpression().toExpr())
+        postfixOperation() != null -> postfixOperation().toExpr(atomicExpression().toExpr())
         else -> atomicExpression().toExpr()
     }
 }
@@ -152,9 +152,18 @@ fun QuartzParser.PrefixOperationContext.toExpr(expression: Expression): Expressi
 
 fun QuartzParser.PostfixOperationContext.toExpr(expression: Expression): Expression {
     return when {
-        cast() != null -> cast().toExpr(expression)
+        atomicPostfixOperation() != null -> atomicPostfixOperation().toExpr(expression)
         postfixCall() != null -> postfixCall().toExpr(expression)
         dotCall() != null -> dotCall().toExpr(expression)
+        else -> err { "Unrecognized postfix operation $text" }
+    }
+}
+
+fun QuartzParser.AtomicPostfixOperationContext.toExpr(expression: Expression): Expression {
+    return when {
+        cast() != null -> cast().toExpr(expression)
+        atomicPostfixCall() != null -> atomicPostfixCall().toExpr(expression)
+        atomicDotCall() != null -> atomicDotCall().toExpr(expression)
         else -> err { "Unrecognized postfix operation $text" }
     }
 }
@@ -189,14 +198,24 @@ fun QuartzParser.IdentifierContext.toExpr(): Identifier {
 }
 
 fun QuartzParser.IfExpressionContext.toExpr(): IfExpression {
-    return if (ifFalse == null)
-        IfExpression(condition.toExpr(), ifTrue1.toExpr(), null)
-    else
-        IfExpression(condition.toExpr(), ifTrue2.toExpr(), ifFalse.toExpr())
+    return IfExpression(condition.toExpr(), ifTrue.toExpr(), ifFalse.toExpr())
+}
+
+fun QuartzParser.WhenExpressionContext.toExpr(): IfExpression {
+    return IfExpression(condition.toExpr(), ifTrue.toExpr(), EmptyExpression)
 }
 
 fun QuartzParser.CastContext.toExpr(expression: Expression): Cast {
     return Cast(expression, type().toType())
+}
+
+@Suppress("unused")
+fun QuartzParser.AtomicPostfixCallContext.toExpr(expression: Expression): FunctionCall {
+    return FunctionCall(expression, emptyList(), null)
+}
+
+fun QuartzParser.AtomicDotCallContext.toExpr(expression: Expression): FunctionCall {
+    return FunctionCall(identifier().toExpr(), listOf(expression), null)
 }
 
 fun QuartzParser.PostfixCallContext.toExpr(expression: Expression): FunctionCall {
@@ -216,20 +235,7 @@ fun QuartzParser.DotCallContext.toExpr(expression: Expression): FunctionCall {
 }
 
 fun QuartzParser.LetExpressionContext.toExpr(): LetExpression {
-    return when {
-        nameType() != null -> LetExpression(
-                nameType().NAME().text,
-                value?.toExpr(),
-                nameType().type().toType(),
-                expr.toExpr()
-        )
-        else -> LetExpression(
-                nameOptionalType().NAME().text,
-                value.toExpr(),
-                nameOptionalType()?.type()?.toType(),
-                expr.toExpr()
-        )
-    }
+    return LetExpression(NAME().text, value?.toExpr(), type()?.toType(), expr.toExpr())
 }
 
 val QuartzParser.AssignmentOperationContext.ID: BinaryOperation.ID

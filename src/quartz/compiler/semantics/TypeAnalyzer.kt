@@ -123,7 +123,7 @@ object TypeAnalyzer {
     ): FunctionDeclaration {
         val symbolTable = FunctionDeclarationSymbolTable(table, this)
         val typeVisitor = typeAnalyzer.partial(symbolTable)
-        return copy(args = argNames zip argTypes.map(typeVisitor), returnType = returnType.let(typeVisitor))
+        return copy(type = type.visitTypes(typeVisitor))
     }
 
     inline fun FunctionDeclaration.analyzeExpression(
@@ -136,7 +136,7 @@ object TypeAnalyzer {
     }
 
     inline fun ExternFunctionDeclaration.visitTypes(typeVisitor: Visitor<Type>): ExternFunctionDeclaration {
-        return copy(args = args.map(typeVisitor), returnType = returnType.let(typeVisitor))
+        return copy(type = type.visitTypes(typeVisitor))
     }
 
     //
@@ -227,7 +227,7 @@ object TypeAnalyzer {
     }
 
     inline fun IfExpression.analyzeIfFalse(expressionAnalyzer: (Type?, Expression) -> Expression, expectedType: Type?): IfExpression {
-        return copy(ifFalse = ifFalse?.let(expressionAnalyzer.partial(expectedType)))
+        return copy(ifFalse = ifFalse.let(expressionAnalyzer.partial(expectedType)))
     }
 
     inline fun LetExpression.visitVariableType(typeVisitor: Visitor<Type>): LetExpression {

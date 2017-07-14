@@ -11,17 +11,17 @@ import quartz.compiler.tree.util.functionString
 
 data class FunctionDeclaration(
         override val name: String,
-        val args: List<Pair<String, Type>>,
-        val returnType: Type,
+        override val type: FunctionType,
+        val argNames: List<String>,
         val expression: Expression
 ) : VariableDeclaration {
-    val argNames get() = args.map { it.first }
-    val argTypes get() = args.map { it.second }
+    val args get() = argNames zip argTypes
+    val argTypes get() = type.args
+    val returnType get() = type.returnType
     val argDeclarations get() = args.map { ArgumentDeclaration(it.first, it.second) }
-    override val type = FunctionType(argTypes, returnType, false)
 
     override fun toString(): String {
-        return "$name${functionString(argTypes, returnType, false)}$expression"
+        return "$name${functionString(argTypes, returnType, false)} = $expression"
     }
 
     data class ArgumentDeclaration(override val name: String, override val type: Type) : VariableDeclaration

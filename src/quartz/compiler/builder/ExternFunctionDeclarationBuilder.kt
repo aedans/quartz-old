@@ -1,7 +1,6 @@
 package quartz.compiler.builder
 
 import quartz.compiler.parser.QuartzParser
-import quartz.compiler.tree.types.VoidType
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 
 /**
@@ -11,8 +10,6 @@ import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 fun QuartzParser.ExternFunctionDeclarationContext.toDecl(): ExternFunctionDeclaration {
     return ExternFunctionDeclaration(
             NAME().text,
-            typeList().toList(),
-            returnType?.toType() ?: VoidType,
-            typeList().isVararg()
+            functionType().toType()
     )
 }

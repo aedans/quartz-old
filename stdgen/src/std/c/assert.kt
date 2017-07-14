@@ -15,6 +15,6 @@ fun File.assert() {
         include("assert.h")
         newline()
 
-        externFunction("assert", null, INT)
+        externFunction("assert", VOID.func(INT))
     }
 }

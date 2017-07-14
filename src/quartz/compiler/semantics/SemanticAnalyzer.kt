@@ -4,16 +4,16 @@ import quartz.compiler.errors.err
 import quartz.compiler.errors.except
 import quartz.compiler.semantics.tables.ProgramSymbolTable
 import quartz.compiler.semantics.tables.SymbolTable
-import quartz.compiler.tree.types.*
 import quartz.compiler.tree.Declaration
+import quartz.compiler.tree.Expression
 import quartz.compiler.tree.Program
+import quartz.compiler.tree.Type
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
 import quartz.compiler.tree.declarations.InlineC
 import quartz.compiler.tree.declarations.TypealiasDeclaration
-import quartz.compiler.tree.Expression
-import quartz.compiler.tree.Type
 import quartz.compiler.tree.expression.*
+import quartz.compiler.tree.types.*
 
 /**
  * Created by Aedan Smith.
@@ -95,7 +95,7 @@ object SemanticAnalyzer {
             is IfExpression -> {
                 condition.analyze(newProgram, table)
                 ifTrue.analyze(newProgram, table)
-                ifFalse?.analyze(newProgram, table) ?: Unit
+                ifFalse.analyze(newProgram, table)
             }
             is LetExpression -> {
                 value?.analyze(newProgram, table)

@@ -221,10 +221,8 @@ class ProgramWriter(outputStream: OutputStream) {
         name("if")
         parentheses { condition.generate() }
         (ifTrue as ExpressionList).generate()
-        if (ifFalse != null) {
-            name("else")
-            (ifFalse as ExpressionList).generate()
-        }
+        name("else")
+        (ifFalse as ExpressionList).generate()
     }
 
     private fun VariableDeclarationExpression.generate() {

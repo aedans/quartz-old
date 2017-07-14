@@ -22,7 +22,7 @@ data class LetExpression(
     }
 
     override fun toString(): String {
-        return "let $name${variableType?.let { ": $it" } ?: ""}${value?.let { "= $it" } ?: ""} in $expression"
+        return "let $name${variableType?.let { ": $it" } ?: ""}${value?.let { " = $it" } ?: ""} in $expression"
     }
 
     class LetDeclaration(override val name: String, override val type: Type) : VariableDeclaration

@@ -119,32 +119,32 @@ class QuartzTest {
 
     fun simpleMain() = withoutErrors compile
 """
-fn main(): int
+fn main: () -> int
     0
 """
 
     fun invalidCast() = withErrors compile
 """
-fn main(): int
+fn main: () -> int
     0 as *const char
 """
 
     fun invalidImplicitCast() = withErrors compile
 """
-fn main(): int
+fn main: () -> int
     let hello: *const char = 0 in
     0
 """
 
     fun invalidReturn() = withErrors compile
 """
-fn main(): int
+fn main: () -> int
     "Hello, world!"
 """
 
     fun implicitNumberCasts() = withoutErrors compile
 """
-fn main(): int
+fn main: () -> int
     let a: char = 0 in
     let b: short = 0 in
     let c: int = 0 in
@@ -162,7 +162,7 @@ fn main(): int
 """
 typealias i8 = %%int%%
 
-fn main(): i8
+fn main: () -> i8
     let a = 0 as i8 in
     let b: i8 = 0 in
     a + b
@@ -170,7 +170,7 @@ fn main(): i8
 
     fun operators() = withoutErrors compile
 """
-fn main(): int
+fn main: () -> int
     let a = 0 + 0 in
     let b = 0 - 0 in
     let c = 0 / 1 in
@@ -196,7 +196,7 @@ fn main(): int
 """
 typealias i = int
 
-fn main(): int
+fn main: () -> int
     let a = 0 as i in
     let b: i = 0 in
     a + b
@@ -207,7 +207,7 @@ fn main(): int
 typealias i0 = int
 ${(1..100).map { "typealias i$it = i${it - 1}" }.joinToString(prefix = "", postfix = "", separator = "\n")}
 
-fn main(): int
+fn main: () -> int
     let a = 0 ${(0..99).map { "as i$it" }.joinToString(prefix = "", postfix = "", separator = " ")} in
     let b: i100 = 0 in
     a + b
@@ -215,37 +215,37 @@ fn main(): int
 
     fun recursive1() = withoutErrors compile
 """
-fn main(): int
+fn main: () -> int
     identity 0
 
-fn identity(i: int): int
+fn identity i: int -> int
     identity i
 """
 
     fun recursive2() = withoutErrors compile
 """
-fn main(): int
+fn main: () -> int
     main1();
     main2();
     0
 
-fn main1()
+fn main1: () -> void
     main1();
     main2()
 
-fn main2()
+fn main2: () -> void
     main1();
     main2()
 """
 
     fun depth() = withoutErrors compile
 """
-fn main(): int
+fn main: () -> int
     _0()
 
-${(0..99).map { "fn _$it(): int \n\t_${it + 1}()" }.joinToString(prefix = "", postfix = "", separator = "\n")}
+${(0..99).map { "fn _$it: () -> int \n\t_${it + 1}()" }.joinToString(prefix = "", postfix = "", separator = "\n")}
 
-fn _100(): int
+fn _100: () -> int
     0
 """
 
@@ -253,7 +253,7 @@ fn _100(): int
 """
 import std
 
-fn main(): int
+fn main: () -> int
     0
 """
 
@@ -261,7 +261,7 @@ fn main(): int
 """
 import std.c.stdio
 
-fn main(): int
+fn main: () -> int
     printf "Hello, world!";
     0
 """
@@ -272,15 +272,15 @@ import std.c.stdio
 
 typealias string = *char
 
-fn main(): int
+fn main: () -> int
     let _greeter = greeter in
     _greeter()().printf();
     0
 
-fn greeter(): () -> string
+fn greeter: () -> () -> string
     helloWorld
 
-fn helloWorld(): string
+fn helloWorld: () -> string
     "Hello, world!"
 """
 
@@ -288,18 +288,18 @@ fn helloWorld(): string
 """
 import std.c.stdio
 
-fn main(): int
+fn main: () -> int
     let l = if _false() then "Failed" else helloWorld() in
     printf (if _true() then l else "Failed");
     0
 
-fn helloWorld(): *char
+fn helloWorld: () -> *char
     "Hello, world!"
 
-fn _true(): int
+fn _true: () -> int
     1
 
-fn _false(): int
+fn _false: () -> int
     0
 """
 
@@ -307,17 +307,17 @@ fn _false(): int
 """
 import std.c.stdio
 
-fn main(): int
+fn main: () -> int
     let counter = countTo in
     counter 10 print;
     0
 
-fn countTo(i: int, printer: (int) -> void)
+fn countTo i printer: int, (int -> void) -> void
     let counter = countTo in
-    if i > 0 then counter (i - 1) printer;
+    when (i > 0) counter (i - 1) printer;
     printer i
 
-fn print(i: int)
+fn print i: int -> void
     printf "%d " i
 """
 
@@ -325,20 +325,20 @@ fn print(i: int)
 """
 import std.c.stdio
 
-fn main(): int
+fn main: () -> int
     fibBelow 10;
     0
 
-fn fibBelow(i: int)
-    if i > 0 then fibBelow (i - 1);
+fn fibBelow i: int -> void
+    when (i > 0) fibBelow (i - 1);
     printInt (fib i)
 
-fn fib(i: int): int
+fn fib i: int -> int
     if i <= 0 then 0
     else if i == 1 then 1
     else fib (i - 1) + fib (i - 2)
 
-fn printInt(i: int)
+fn printInt i : int -> void
     printf "%d " i
 """
 
@@ -346,19 +346,19 @@ fn printInt(i: int)
 """
 import std.c.stdio
 
-fn main(): int
+fn main: () -> int
     fizzBuzz 15;
     0
 
-fn fizzBuzz(i: int)
-    if i > 1 then fizzBuzz (i - 1);
+fn fizzBuzz i: int -> void
+    when (i > 1) fizzBuzz (i - 1);
 
     if i % 5 == 0 && i % 3 == 0 then printf "FizzBuzz "
     else if i % 3 == 0 then printf "Fizz "
     else if i % 5 == 0 then printf "Buzz "
     else printInt i
 
-fn printInt(i: int)
+fn printInt i: int -> void
     printf "%d " i
 """
 }
