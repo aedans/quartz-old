@@ -2,6 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.err
 import quartz.compiler.errors.errorScope
+import quartz.compiler.generator.expressions.ExpressionList
 import quartz.compiler.generator.expressions.VariableDeclarationExpression
 import quartz.compiler.tree.Declaration
 import quartz.compiler.tree.Expression
@@ -127,7 +128,6 @@ class ProgramWriter(outputStream: OutputStream) {
     private fun Expression.generate() {
         errorScope({ "value ${this}" }) {
             when (this) {
-                EmptyExpression -> string("{}")
                 is InlineC -> generate()
                 is NumberLiteral -> generate()
                 is StringLiteral -> generate()

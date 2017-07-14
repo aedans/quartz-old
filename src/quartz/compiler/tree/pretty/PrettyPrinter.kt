@@ -5,7 +5,7 @@ import quartz.compiler.tree.Expression
 import quartz.compiler.tree.Program
 import quartz.compiler.tree.declarations.ExternFunctionDeclaration
 import quartz.compiler.tree.declarations.FunctionDeclaration
-import quartz.compiler.tree.expression.ExpressionList
+import quartz.compiler.generator.expressions.ExpressionList
 import quartz.compiler.tree.expression.ExpressionPair
 import quartz.compiler.tree.expression.LetExpression
 import quartz.compiler.util.times

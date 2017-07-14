@@ -2,6 +2,7 @@ package quartz.compiler.generator
 
 import quartz.compiler.errors.err
 import quartz.compiler.errors.except
+import quartz.compiler.generator.expressions.ExpressionList
 import quartz.compiler.generator.expressions.VariableDeclarationExpression
 import quartz.compiler.tree.Expression
 import quartz.compiler.tree.declarations.FunctionDeclaration
@@ -28,7 +29,6 @@ fun Expression.desugar(intIterator: IntIterator): ExpressionList {
 
 fun Expression.desugar(newExpressions: MutableList<Expression>, intIterator: IntIterator, isStatement: Boolean = false): Expression {
     return when (this) {
-        EmptyExpression -> this
         is InlineC -> this
         is NumberLiteral -> this
         is StringLiteral -> this

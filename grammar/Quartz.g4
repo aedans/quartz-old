@@ -257,7 +257,7 @@ constType
     ;
 
 functionType
-    : ('(' ')'|atomicTypeList (vararg='...')?) '->' type
+    : ('(' ')'|atomicTypeList vararg='...'?) '->' type
     ;
 
 // LISTS

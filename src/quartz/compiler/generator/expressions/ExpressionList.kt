@@ -1,4 +1,4 @@
-package quartz.compiler.tree.expression
+package quartz.compiler.generator.expressions
 
 import quartz.compiler.tree.Expression
 import quartz.compiler.tree.types.VoidType

@@ -56,12 +56,11 @@ object SemanticAnalyzer {
             table: SymbolTable
     ) {
         return when (this) {
-            EmptyExpression -> {}
             is InlineC -> {}
             is NumberLiteral -> {}
             is StringLiteral -> {}
             is Sizeof -> {
-                type.analyze(newProgram, table)
+                sizeType.analyze(newProgram, table)
             }
             is Identifier -> {
                 analyze(newProgram, table)

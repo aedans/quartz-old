@@ -51,7 +51,6 @@ object TypeAnalyzer {
             val expressionAnalyzer = this::visitExpression.partial(table)
             return expr.let {
                 when (it) {
-                    EmptyExpression -> it
                     is InlineC -> it
                     is NumberLiteral -> it
                     is StringLiteral -> it
